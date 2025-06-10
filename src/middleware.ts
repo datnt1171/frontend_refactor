@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
 
     // Redirect if token exists and accessing a public path
     if (token && isPublicPath) {
-      return NextResponse.redirect(new URL(`/${locale}/dashboard`, request.url));
+      return NextResponse.redirect(new URL(`/${locale}/task-management/processes`, request.url));
     }
   }
 
