@@ -1,19 +1,30 @@
 import api from './client'
+import type { AxiosResponse } from 'axios'
+import type { 
+  SentTask, 
+  ReceivedTask, 
+  TaskDetail, 
+  TaskCreate, 
+  TaskAction 
+} from '@/types/api'
 
-export const getSentTasks = () => api.get("/tasks/sent/")
+export const getSentTasks = (): Promise<AxiosResponse<SentTask[]>> => 
+  api.get("/tasks/sent/")
 
-export const getReceivedTasks = () => api.get("/tasks/received/")
+export const getReceivedTasks = (): Promise<AxiosResponse<ReceivedTask[]>> => 
+  api.get("/tasks/received/")
 
-export const getTaskById = (id: string | number) => api.get(`/tasks/${id}/`)
+export const getTaskById = (id: string): Promise<AxiosResponse<TaskDetail>> => 
+  api.get(`/tasks/${id}/`)
 
-export const createTask = (data: any) =>
+export const createTask = (data: TaskCreate): Promise<AxiosResponse<TaskDetail>> =>
   api.post("/tasks/", data)
 
 export const performTaskAction = (
-  id: string | number,
-  actionData: any,
+  id: string,
+  actionData: TaskAction,
   isFormData: boolean = false
-) =>
+): Promise<AxiosResponse<TaskDetail>> =>
   api.post(
     `/tasks/${id}/actions/`,
     actionData,

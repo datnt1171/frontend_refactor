@@ -8,11 +8,9 @@ import type { UserDetail } from "@/types/api"
 export function useAuth() {
   const [user, setUser] = useState<UserDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    setIsClient(true)
     fetchCurrentUser()
 
     // Set up token refresh interval
