@@ -13,21 +13,11 @@ import { getReceivedTasks } from "@/lib/api"
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { useTranslations } from 'next-intl'
-
-interface Task {
-  id: string
-  title: string
-  process: string
-  state: string
-  state_type: string
-  created_at: string
-  created_by: string
-  action?: string
-}
+import type { ReceivedTask } from "@/types/backend/task"
 
 export default function ReceivedTasksPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<ReceivedTask[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')

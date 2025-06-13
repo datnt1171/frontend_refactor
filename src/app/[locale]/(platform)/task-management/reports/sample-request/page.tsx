@@ -8,21 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { getStatusColor } from "@/lib/utils/format"
 import { useTranslations } from "next-intl"
-
-interface SPRReportRow {
-  task_id: string
-  title: string
-  created_at: string
-  username: string
-  user_id: string
-  state_type: string
-  ["Name of customer"]: string
-  ["Finishing code"]: string
-  ["Customer's color name"]: string
-  ["Customer/Collection"]: string
-  ["Quantity requirement"]: string
-  Deadline: string
-}
+import type { SPRReportRow } from "@/types/backend/report"
 
 export default function SPRReportPage() {
   const [data, setData] = useState<SPRReportRow[]>([])

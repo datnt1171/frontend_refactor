@@ -12,20 +12,11 @@ import { Search, MoreHorizontal, Plus, Loader2 } from "lucide-react"
 import { getSentTasks } from "@/lib/api"
 import { getStatusColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
-
-interface Task {
-  id: string
-  title: string
-  process: string
-  state: string
-  state_type: string
-  created_at: string
-  recipient: string
-}
+import type { SentTask } from "@/types/backend/task"
 
 export default function SentTasksPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<SentTask[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')

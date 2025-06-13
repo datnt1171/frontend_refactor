@@ -8,21 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input"
 import { FileText, Search, Loader2 } from "lucide-react"
 import { getProcesses } from "@/lib/api"
-
-interface Process {
-  id: string
-  name: string
-  description: string
-  version: number
-  fields: Array<{
-    id: string
-    name: string
-    field_type: string
-    order: number
-    required: boolean
-    options: string[] | null
-  }>
-}
+import type { Process } from "@/types/backend/process"
 
 export default function FormsPage() {
   const [searchQuery, setSearchQuery] = useState("")

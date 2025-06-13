@@ -10,63 +10,7 @@ import { getTaskById, performTaskAction } from "@/lib/api"
 import { getStatusColor, getActionColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import { Input } from "@/components/ui/input"
-
-interface TaskData {
-  field: {
-    id: string
-    name: string
-    type: string
-  }
-  value: string | null
-  files: Array<{
-    original_filename: string
-    uploaded_file: string
-  }>
-}
-
-interface ActionLog {
-  id: string
-  user: {
-    id: string
-    username: string
-  }
-  action: {
-    id: string
-    name: string
-    description: string
-    type: string
-  }
-  created_at: string
-  comment: string
-  file?: string // <-- add file field
-}
-
-interface Task {
-  id: string
-  title: string
-  process: {
-    id: string
-    name: string
-  }
-  state: {
-    id: string
-    name: string
-    type: string
-  }
-  created_by: {
-    id: string
-    username: string
-  }
-  created_at: string
-  data: Array<TaskData>
-  action_logs: Array<ActionLog>
-  available_actions: Array<{
-    id: string
-    name: string
-    description: string
-    type: string
-  }>
-}
+import { Task } from "@/types/backend/task"
 
 export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -99,7 +43,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
     if (!task) return
     setActionLoading(actionid)
     try {
-      let payload: any = { action_id: actionid }
+      const payload: any = { action_id: actionid }
       if (actionComment) payload.comment = actionComment
 
       // If file is selected, use FormData

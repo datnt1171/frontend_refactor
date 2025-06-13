@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { cookies, headers } from "next/headers"
 import axios from "axios"
+import type { ApiErrorResponse } from "@/types/common"
+import type { UserList } from "@/types/api"
 
 export async function GET() {
   try {
@@ -8,13 +10,16 @@ export async function GET() {
     const token = cookieStore.get("access_token")?.value
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json<ApiErrorResponse>(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      )
     }
 
     const headersList = await headers()
     const acceptLanguage = headersList.get("accept-language") || "en-US,en;q=0.9"
     
-    const response = await axios.get(`${process.env.API_URL}/api/users/`, {
+    const response = await axios.get<UserList>(`${process.env.API_URL}/api/users/`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -22,12 +27,24 @@ export async function GET() {
       },
     })
 
-    return NextResponse.json(response.data)
-  } catch (error: any) {
-    console.error("Error fetching users:", error.response?.data || error.message)
-    return NextResponse.json(
-      { error: error.response?.data || "Failed to fetch users" },
-      { status: error.response?.status || 500 },
+    return NextResponse.json<UserList>(response.data)
+  } catch (error: unknown) {
+    let errorMessage = "Authentication failed"
+    let statusCode = 500
+
+    // Handle Axios error
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data?.detail || error.response.data || error.message
+      statusCode = error.response.status || 500
+    }
+    // Handle generic JS error
+    else if (error instanceof Error) {
+      errorMessage = error.message
+    }
+
+    return NextResponse.json<ApiErrorResponse>(
+      { success: false, error: errorMessage },
+      { status: statusCode }
     )
   }
 }

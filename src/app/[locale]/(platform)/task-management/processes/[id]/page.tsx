@@ -11,35 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Send, Loader2, Eye } from "lucide-react"
 import { getProcessById, getUsers, createTask } from "@/lib/api"
 import { useTranslations } from 'next-intl'
-
-interface Field {
-  id: string
-  name: string
-  field_type: string
-  order: number
-  required: boolean
-  options: string[] | null
-}
-
-interface Process {
-  id: string
-  name: string
-  description: string
-  fields: Field[]
-}
-
-interface User {
-  id: string
-  username: string
-  first_name?: string
-  last_name?: string
-}
+import type { Process, ProcessField } from "@/types/backend/process"
+import type { BaseUser } from "@/types/backend/user"
 
 export default function FormPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
   const [process, setProcess] = useState<Process | null>(null)
-  const [users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<BaseUser[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, any>>({})
@@ -115,7 +94,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
   }
 };
 
-  const renderField = (field: Field) => {
+  const renderField = (field: ProcessField) => {
     switch (field.field_type) {
       case "assignee":
         return (
@@ -242,7 +221,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
     }
   }
 
-  const displayFieldValue = (field: Field) => {
+  const displayFieldValue = (field: ProcessField) => {
     if (!formValues[field.id]) {
       return <span className="text-muted-foreground italic">{t('createTask.noValueProvided')}</span>
     }
