@@ -1,6 +1,7 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import axios from "axios"
+import type { ApiSuccessResponse, ApiErrorResponse } from "@/types/common"
 
 export async function GET() {
   try {
@@ -8,7 +9,7 @@ export async function GET() {
     const refreshToken = cookieStore.get("refresh_token")?.value
 
     if (!refreshToken) {
-      return NextResponse.json(
+      return NextResponse.json<ApiErrorResponse>(
         { success: false, error: "No refresh token found" },
         { status: 401 }
       )
@@ -33,21 +34,24 @@ export async function GET() {
       path: "/",
     })
 
-    return NextResponse.json({ success: true })
-  } catch (error: any) {
-    console.error("Token refresh error:", error.response?.data || error.message)
-    
-    // Clear both tokens on refresh failure
-    const cookieStore = await cookies()
-    cookieStore.delete("access_token")
-    cookieStore.delete("refresh_token")
+    return NextResponse.json<ApiSuccessResponse>({ success: true })
+  } catch (error: unknown) {
+    let errorMessage = "Authentication failed"
+    let statusCode = 500
 
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: "Token refresh failed. Please login again." 
-      },
-      { status: 401 }
+    // Handle Axios error
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data?.detail || error.response.data || error.message
+      statusCode = error.response.status || 500
+    }
+    // Handle generic JS error
+    else if (error instanceof Error) {
+      errorMessage = error.message
+    }
+
+    return NextResponse.json<ApiErrorResponse>(
+      { success: false, error: errorMessage },
+      { status: statusCode }
     )
   }
 }

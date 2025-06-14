@@ -6,12 +6,12 @@ interface UserProfileCardProps {
   user: {
     id: string;
     username: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    department?: { id: string; name: string };
-    role?: { id: string; name: string };
-    supervisor?: { id: string; username: string; first_name: string; last_name: string };
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    department: { id: string; name: string };
+    role: { id: string; name: string };
+    supervisor?: { id: string; username: string; first_name?: string; last_name?: string };
   };
 }
 

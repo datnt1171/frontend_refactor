@@ -1,5 +1,6 @@
 "use client"
 
+import axios from 'axios'
 import { useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { Loader2 } from "lucide-react"
@@ -33,18 +34,28 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+
+    if (!username.trim() || !password.trim()) {
+      setError("Username and password are required.");
+       return;
+    }
+
     setIsLoading(true)
 
     try {
       await login({ username, password })
       router.push("/task-management/processes")
-    } catch (err: any) {
-      // Suppress Axios error from propagating to the console
-      if (err.response?.status === 401) {
-        const errorMessage = err.response?.data?.error || translations.authError
-        setError(errorMessage)
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        if (err.response?.status === 401) {
+          const errorMessage =
+            err.response.data?.error || translations.authError;
+          setError(errorMessage);
+        } else {
+          console.error("Unexpected Axios error:", err);
+        }
       } else {
-        console.error("Unexpected error:", err)
+        console.error("Unexpected non-Axios error:", err);
       }
     } finally {
       setIsLoading(false)
@@ -80,7 +91,7 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
               disabled={isLoading}
             />
           </div>
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-red-500" aria-live="polite">{error}</p>}
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? (
               <>

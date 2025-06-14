@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { getCurrentUser, logout, refreshToken } from "@/lib/api"
-import type { User } from "@/contexts/UserContext"
+import type { UserDetail } from "@/types/api"
 
 export function useAuth() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<UserDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 

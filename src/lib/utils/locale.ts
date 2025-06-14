@@ -4,7 +4,7 @@ export const getCurrentLocale = (): string => {
     const segments = pathname.split('/')
     const potentialLocale = segments[1]
     const supportedLocales = ['en', 'vi', 'zh-hant']
-    if (supportedLocales.includes(potentialLocale)) {
+    if (potentialLocale && supportedLocales.includes(potentialLocale)) {
       return potentialLocale
     }
     return localStorage.getItem('locale') || 'en'

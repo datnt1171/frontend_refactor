@@ -34,3 +34,9 @@ export type TaskActionLog = components['schemas']['TaskActionLog']
 export type TaskDetail = components['schemas']['TaskDetail']
 
 export type SPRReportRow = components['schemas']['SPRReportRow']
+
+// Pagination
+export type PaginatedProcessListList = components['schemas']['PaginatedProcessListList']
+export type PaginatedReceivedTaskList = components['schemas']['PaginatedReceivedTaskList']
+export type PaginatedSentTaskList = components['schemas']['PaginatedSentTaskList']
+export type PaginatedUserList = components['schemas']['PaginatedUserList']
