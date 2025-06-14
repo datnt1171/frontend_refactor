@@ -36,10 +36,7 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
     setIsLoading(true)
 
     try {
-      const response = await login({ username, password })
-
-      // Store user info in localStorage (non-sensitive data only)
-      localStorage.setItem("user", JSON.stringify({ username: response.data.user.username }))
+      await login({ username, password })
       router.push("/task-management/processes")
     } catch (err: any) {
       // Suppress Axios error from propagating to the console

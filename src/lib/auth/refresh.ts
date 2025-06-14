@@ -51,7 +51,6 @@ export const setupTokenRefreshInterceptor = () => {
           return api(originalRequest)
         } catch (refreshError) {
           processQueue(refreshError)
-          localStorage.removeItem("user")
           if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
             window.location.href = "/login"
           }

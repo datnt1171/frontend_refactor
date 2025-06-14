@@ -8,25 +8,11 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Input } from "@/components/ui/input"
 import { FileText, Search, Loader2 } from "lucide-react"
 import { getProcesses } from "@/lib/api"
-
-interface Process {
-  id: string
-  name: string
-  description: string
-  version: number
-  fields: Array<{
-    id: string
-    name: string
-    field_type: string
-    order: number
-    required: boolean
-    options: string[] | null
-  }>
-}
+import type { ProcessList } from "@/types/api"
 
 export default function FormsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [processes, setProcesses] = useState<Process[]>([])
+  const [processes, setProcesses] = useState<ProcessList[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')
@@ -103,9 +89,6 @@ export default function FormsPage() {
                 <p className="text-sm text-muted-foreground">
                   {process.description || t('formTemplateFor', { name: process.name })}
                 </p>
-                <div className="mt-2">
-                  <p className="text-xs text-muted-foreground">{process.fields.length} {t('process.fields')}</p>
-                </div>
               </CardContent>
               <CardFooter className="bg-muted/50 pt-3">
                 <Link href={`/task-management/processes/${process.id}`} className="w-full">
