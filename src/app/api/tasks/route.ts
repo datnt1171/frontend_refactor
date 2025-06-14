@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 import axios from "axios"
 import FormData from "form-data"
+import type { ApiErrorResponse } from "@/types/common"
 
 export async function POST(request: Request) {
   try {
@@ -10,7 +11,10 @@ export async function POST(request: Request) {
     const token = cookieStore.get("access_token")?.value
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json<ApiErrorResponse>(
+        { success: false, error: "Unauthorized" },
+        { status: 401 }
+      )
     }
 
     // Handle multipart/form-data
@@ -65,11 +69,23 @@ export async function POST(request: Request) {
     )
 
     return NextResponse.json(response.data)
-  } catch (error: any) {
-    const status = error.response?.status || 500
-    const message = error.response?.data || "Failed to create task"
-    console.error("Task creation failed:", message)
-    console.error("Task creation failed:", JSON.stringify(message, null, 2))
-    return NextResponse.json({ error: message }, { status })
+  } catch (error: unknown) {
+    let errorMessage = "Authentication failed"
+    let statusCode = 500
+
+    // Handle Axios error
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = error.response.data?.detail || error.response.data || error.message
+      statusCode = error.response.status || 500
+    }
+    // Handle generic JS error
+    else if (error instanceof Error) {
+      errorMessage = error.message
+    }
+
+    return NextResponse.json<ApiErrorResponse>(
+      { success: false, error: errorMessage },
+      { status: statusCode }
+    )
   }
 }
