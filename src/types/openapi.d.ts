@@ -657,7 +657,7 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             name: string;
-            state_type?: components["schemas"]["StateTypeEnum"];
+            state_type: components["schemas"]["StateTypeEnum"];
         };
         /**
          * @description * `pending_approve` - Pending Approve
@@ -719,7 +719,7 @@ export interface components {
             readonly created_at: string;
             data: components["schemas"]["TaskData"][];
             action_logs: components["schemas"]["TaskActionLog"][];
-            readonly available_actions: components["schemas"]["Action"];
+            readonly available_actions: components["schemas"]["Action"][];
         };
         TaskFileData: {
             original_filename?: string;

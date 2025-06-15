@@ -10,73 +10,18 @@ import { getTaskById, performTaskAction } from "@/lib/api"
 import { getStatusColor, getActionColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import { Input } from "@/components/ui/input"
+import type { TaskDetail } from "@/types/api"
 
-interface TaskData {
-  field: {
-    id: string
-    name: string
-    type: string
-  }
-  value: string | null
-  files: Array<{
-    original_filename: string
-    uploaded_file: string
-  }>
-}
-
-interface ActionLog {
-  id: string
-  user: {
-    id: string
-    username: string
-  }
-  action: {
-    id: string
-    name: string
-    description: string
-    type: string
-  }
-  created_at: string
-  comment: string
-  file?: string // <-- add file field
-}
-
-interface Task {
-  id: string
-  title: string
-  process: {
-    id: string
-    name: string
-  }
-  state: {
-    id: string
-    name: string
-    type: string
-  }
-  created_by: {
-    id: string
-    username: string
-  }
-  created_at: string
-  data: Array<TaskData>
-  action_logs: Array<ActionLog>
-  available_actions: Array<{
-    id: string
-    name: string
-    description: string
-    type: string
-  }>
-}
 
 export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const router = useRouter()
-  const [task, setTask] = useState<Task | null>(null)
+  const [task, setTask] = useState<TaskDetail | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [actionComment, setActionComment] = useState<string>("")
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [actionFile, setActionFile] = useState<File | null>(null)
-  const { id } = use(params)
   const t = useTranslations('dashboard')
   useEffect(() => {
     fetchTaskData()
@@ -86,7 +31,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
     setIsLoading(true)
     try {
       const response = await getTaskById(id)
-      setTask(response.data)
+      setTask(response)
     } catch (err: any) {
       console.error("Error fetching task:", err)
       setError(err.response?.data?.error || t('taskDetail.failedToLoadTaskDetails'))
@@ -159,7 +104,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
           <h1 className="text-2xl font-bold tracking-tight">{task.title}</h1>
           <div className="flex items-center space-x-2 mt-1">
             <Badge variant="outline">{task.process.name}</Badge>
-            <Badge variant="outline" className={getStatusColor(task.state.type)}>
+            <Badge variant="outline" className={getStatusColor(task.state.state_type)}>
               {task.state.name}
             </Badge>
           </div>
@@ -174,10 +119,10 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
             </CardHeader>
             <CardContent className="space-y-6">
               {task.data.map((data) => (
-                <div key={data.field.id} className="space-y-2">
-                  <label className="text-sm font-medium">{data.field.name}</label>
+                <div key={data.field.id as string} className="space-y-2">
+                  <label className="text-sm font-medium">{data.field.name as string}</label>
                   <div className="p-3 bg-muted rounded-md space-y-1">
-                    {data.field.type === "file" ? (
+                    {data.field.field_type === "file" ? (
                       data.files && data.files.length > 0 ? (
                         data.files.map((file, index) => (
                           <p key={index}>
@@ -274,7 +219,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
               <CardTitle>{t('taskDetail.availableActions')}</CardTitle>
             </CardHeader>
             <CardContent>
-              {task.available_actions.length > 0 ? (
+              { task.available_actions.length > 0 ? (
                 <>
                   {/* File uploader */}
                   <Input
@@ -311,7 +256,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                   {task.available_actions.map((action) => (
                     <Button
                       key={action.id}
-                      className={`w-full justify-start mb-2 ${getActionColor(action.type)}`}
+                      className={`w-full justify-start mb-2 ${getActionColor(action.action_type)}`}
                       variant="outline"
                       onClick={() => handleActionClick(action.id)}
                       disabled={actionLoading !== null}

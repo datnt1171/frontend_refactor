@@ -20,7 +20,7 @@ export const getStatusColor = (stateType: string) => {
 };
 
 export const getActionColor = (actionType: string) => {
-  switch (actionType.toLowerCase()) {
+  switch (actionType) {
     case "approve":
       return "bg-green-100 text-green-800";
     case "adjust":

@@ -12,20 +12,11 @@ import { Search, MoreHorizontal, Plus, Loader2 } from "lucide-react"
 import { getSentTasks } from "@/lib/api"
 import { getStatusColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
-
-interface Task {
-  id: string
-  title: string
-  process: string
-  state: string
-  state_type: string
-  created_at: string
-  recipient: string
-}
+import type { SentTask } from "@/types/api"
 
 export default function SentTasksPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<SentTask[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')
@@ -38,7 +29,7 @@ export default function SentTasksPage() {
     setIsLoading(true)
     try {
       const response = await getSentTasks()
-      setTasks(response.data.results)
+      setTasks(response)
     } catch (err: any) {
       console.error("Error fetching sent tasks:", err)
       setError(err.response?.data?.error || "Failed to load sent tasks")
@@ -50,8 +41,7 @@ export default function SentTasksPage() {
   const filteredTasks = tasks.filter(
     (task) =>
       task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.process.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.recipient.toLowerCase().includes(searchQuery.toLowerCase()),
+      task.process.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
@@ -77,7 +67,7 @@ export default function SentTasksPage() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="w-full"
         />
-        <Button type="submit" size="icon" variant="ghost">
+        <Button type="button" size="icon" variant="ghost">
           <Search className="h-4 w-4" />
         </Button>
       </div>

@@ -13,21 +13,12 @@ import { getReceivedTasks } from "@/lib/api"
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { useTranslations } from 'next-intl'
+import type { ReceivedTask } from "@/types/api"
 
-interface Task {
-  id: string
-  title: string
-  process: string
-  state: string
-  state_type: string
-  created_at: string
-  created_by: string
-  action?: string
-}
 
 export default function ReceivedTasksPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<ReceivedTask[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')
@@ -40,7 +31,7 @@ export default function ReceivedTasksPage() {
     setIsLoading(true)
     try {
       const response = await getReceivedTasks()
-      setTasks(response.data.results)
+      setTasks(response)
     } catch (err: any) {
       console.error("Error fetching received tasks:", err)
       setError(err.response?.data?.error || "Failed to load received tasks")

@@ -2,4 +2,4 @@ import api from './client'
 
 export const getProcesses = () => api.get("/processes/")
 
-export const getProcessById = (id: string | number) => api.get(`/processes/${id}/`)
+export const getProcessById = (id: string) => api.get(`/processes/${id}/`)
