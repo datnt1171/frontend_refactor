@@ -6,43 +6,29 @@ import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { FileText, Send, Inbox, Clock, Loader2 } from "lucide-react"
 import { getProcesses, getSentTasks, getReceivedTasks } from "@/lib/api/"
+import type { ProcessList, ReceivedTask, SentTask } from "@/types/api"
 
 export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [dashboardData, setDashboardData] = useState({
-    formTemplatesCount: 0,
-    sentTasksCount: 0,
-    receivedTasksCount: 0,
-    pendingTasksCount: 0,
-  })
+
+  // Separate states for each data type
+  const [processes, setProcesses] = useState<ProcessList[]>([])
+  const [sentTasks, setSentTasks] = useState<SentTask[]>([])
+  const [receivedTasks, setReceivedTasks] = useState<ReceivedTask[]>([])
 
   useEffect(() => {
     async function fetchDashboardData() {
       setIsLoading(true)
       try {
-        // Fetch all data in parallel
         const [processesRes, sentTasksRes, receivedTasksRes] = await Promise.all([
           getProcesses(),
           getSentTasks(),
           getReceivedTasks(),
-        ])
-
-        interface Task {
-          state: string;
-        }
-
-        // Count pending tasks (tasks with state containing "pending" in lowercase)
-        const pendingTasks = receivedTasksRes.data.results.filter((task: Task) =>
-          task.state.toLowerCase().includes("pending"),
-        )
-
-        setDashboardData({
-          formTemplatesCount: processesRes.data.count,
-          sentTasksCount: sentTasksRes.data.count,
-          receivedTasksCount: receivedTasksRes.data.count,
-          pendingTasksCount: pendingTasks.length,
-        })
+        ]);
+        setProcesses(processesRes.results)
+        setSentTasks(sentTasksRes)
+        setReceivedTasks(receivedTasksRes)
       } catch (err) {
         console.error("Error fetching dashboard data:", err)
         setError("Failed to load dashboard data. Please try again later.")
@@ -53,6 +39,12 @@ export default function Dashboard() {
 
     fetchDashboardData()
   }, [])
+
+  // Compute dashboard counts from state
+  const processCount = processes.length
+  const sentTasksCount = sentTasks.length
+  const receivedTasksCount = receivedTasks.length
+  const sentTasksDoneCount = sentTasks.filter(task => task.state_type === "closed").length
 
   if (isLoading) {
     return (
@@ -88,7 +80,7 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold">{dashboardData.formTemplatesCount}</div>
+            <div className="text-2xl font-bold">{processCount}</div>
             <p className="text-xs text-muted-foreground">Available templates</p>
           </CardContent>
         </Card>
@@ -101,7 +93,7 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold">{dashboardData.sentTasksCount}</div>
+            <div className="text-2xl font-bold">{sentTasksCount}</div>
             <p className="text-xs text-muted-foreground">Tasks you've sent</p>
           </CardContent>
         </Card>
@@ -114,7 +106,7 @@ export default function Dashboard() {
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold">{dashboardData.receivedTasksCount}</div>
+            <div className="text-2xl font-bold">{receivedTasksCount}</div>
             <p className="text-xs text-muted-foreground">Tasks to complete</p>
           </CardContent>
         </Card>
@@ -123,12 +115,12 @@ export default function Dashboard() {
           <CardHeader className="flex items-center justify-between pb-4">
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-sm font-medium">Pending</CardTitle>
+              <CardTitle className="text-sm font-medium">Sent Tasks Done</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
-            <div className="text-2xl font-bold">{dashboardData.pendingTasksCount}</div>
-            <p className="text-xs text-muted-foreground">Tasks awaiting response</p>
+            <div className="text-2xl font-bold">{sentTasksDoneCount}</div>
+            <p className="text-xs text-muted-foreground">Sent tasks completed</p>
           </CardContent>
         </Card>
       </div>
@@ -196,3 +188,4 @@ export default function Dashboard() {
     </div>
   )
 }
+
