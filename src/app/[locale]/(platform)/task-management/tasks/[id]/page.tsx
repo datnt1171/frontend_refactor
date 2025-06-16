@@ -11,6 +11,7 @@ import { getStatusColor, getActionColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import { Input } from "@/components/ui/input"
 import type { TaskDetail } from "@/types/api"
+import { formatDateToUTC7 } from "@/lib/utils/date"
 
 
 export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -167,7 +168,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                           </a>
                         </p>
                       )}
-                      <p className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground"> {formatDateToUTC7(log.created_at)} </p>
                     </div>
                   </div>
                 ))}
@@ -192,7 +193,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">{t('taskDetail.createdOn')}</p>
-                  <p className="text-sm text-muted-foreground">{new Date(task.created_at).toLocaleDateString()}</p>
+                  <p className="text-sm text-muted-foreground"> {formatDateToUTC7(task.created_at)} </p>
                 </div>
               </div>
 
@@ -248,7 +249,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                   {task.available_actions.map((action) => (
                     <Button
                       key={action.id}
-                      className={`w-full justify-start mb-2 ${getActionColor(action.action_type)}`}
+                      className={`w-full justify-center font-bold mb-2 ${getActionColor(action.action_type)}`}
                       variant="outline"
                       onClick={() => handleActionClick(action.id)}
                       disabled={actionLoading !== null}

@@ -165,7 +165,7 @@
       "changing": "Changing..."
     },
     "sprReport": {
-      "title": "Title",
+      "title": "ID",
       "createdAt": "Created At",
       "username": "Username",
       "state": "State",

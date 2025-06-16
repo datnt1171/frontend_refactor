@@ -165,13 +165,13 @@
       "changing": "Đang thay đổi..."
     },
     "sprReport": {
-      "title": "Tiêu đề",
+      "title": "ID",
       "createdAt": "Ngày tạo",
       "username": "Người tạo",
       "state": "Trạng thái",
       "customerName": "Tên khách hàng",
       "finishingCode": "Mã hoàn thiện",
-      "customerColorName": "Tên màu khách hàng",
+      "customerColorName": "Tên màu KH",
       "collection": "Bộ sưu tập",
       "quantity": "Số lượng",
       "deadline": "Hạn chót",

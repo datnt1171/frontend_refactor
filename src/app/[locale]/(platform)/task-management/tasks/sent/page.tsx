@@ -13,6 +13,7 @@ import { getSentTasks } from "@/lib/api"
 import { getStatusColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import type { SentTask } from "@/types/api"
+import { formatDateToUTC7 } from "@/lib/utils/date"
 
 export default function SentTasksPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -112,7 +113,7 @@ export default function SentTasksPage() {
                     </TableCell>
                     <TableCell>{task.recipient}</TableCell>
                     <TableCell>{task.process}</TableCell>
-                    <TableCell>{new Date(task.created_at).toLocaleDateString()}</TableCell>
+                    <TableCell>{ formatDateToUTC7(task.created_at) }</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={getStatusColor(task.state_type)}>
                         {task.state}

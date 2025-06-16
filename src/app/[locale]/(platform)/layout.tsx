@@ -45,7 +45,7 @@ export default function RootLayout({
         />
 
         {/* Main content */}
-        <div className="md:pl-64 flex flex-col flex-1" style={{ paddingTop: '64px' }}>
+        <div className="md:pl-64 flex flex-col flex-1 overflow-x-auto" style={{ paddingTop: '64px' }}>
           <main className="flex-1 p-4 md:p-6">{children}</main>
         </div>
       </div>

@@ -1,27 +1,21 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import type { BetterColumnDef } from "@/components/ui/datatable";
 import { getSPRReport } from "@/lib/api"
 import { Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table"
+import { Link } from "@/i18n/navigation"
 import { Badge } from "@/components/ui/badge"
 import { getStatusColor } from "@/lib/utils/format"
 import { useTranslations } from "next-intl"
 import type { SPRReportRow } from "@/types/api"
+import { formatDateToUTC7 } from "@/lib/utils/date"
+import { DataTable, createSortableHeader } from "@/components/ui/datatable"
 
 export default function SPRReportPage() {
   const [data, setData] = useState<SPRReportRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
   const t = useTranslations('dashboard')
 
   useEffect(() => {
@@ -38,6 +32,127 @@ export default function SPRReportPage() {
     }
     fetchData()
   }, [])
+
+  // Define columns for TanStack Table
+  const columns: BetterColumnDef<SPRReportRow, unknown>[] = [
+    {
+      accessorKey: "title",
+      header: t('sprReport.title'),
+      headerRenderer: createSortableHeader(t('sprReport.title')),
+      enableSorting: false,
+      enableColumnFilter: false,
+      cell: ({ row }) => (
+        <Link 
+          href={`/task-management/tasks/${row.original.task_id}`} 
+          className="hover:underline font-medium text-black-600 hover:text-black-800"
+          title={t('sprReport.viewTask')}
+        >
+          {row.getValue("title")}
+        </Link>
+      ),
+    },
+    {
+      accessorKey: "customer_name",
+      header: t('sprReport.customerName'),
+      headerRenderer: createSortableHeader(t('sprReport.customerName')),
+      enableSorting: false,
+      enableColumnFilter: true,
+      filterFn: (row, id, value) => {
+        if (!value?.length) return true
+        return value.includes(row.getValue(id))
+      },
+    },
+    {
+      accessorKey: "finishing_code",
+      header: t('sprReport.finishingCode'),
+      headerRenderer: createSortableHeader(t('sprReport.finishingCode')),
+      enableSorting: false,
+      enableColumnFilter: true,
+      filterFn: (row, id, value) => {
+        if (!value?.length) return true
+        return value.includes(row.getValue(id))
+      },
+    },
+    {
+      accessorKey: "customer_color_name",
+      header: t('sprReport.customerColorName'),
+      headerRenderer: createSortableHeader(t('sprReport.customerColorName')),
+      enableSorting: false,
+      enableColumnFilter: true,
+      filterFn: (row, id, value) => {
+        if (!value?.length) return true
+        return value.includes(row.getValue(id))
+      },
+    },
+    {
+      accessorKey: "collection",
+      header: t('sprReport.collection'),
+      headerRenderer: createSortableHeader(t('sprReport.collection')),
+      enableSorting: false,
+      enableColumnFilter: true,
+      filterFn: (row, id, value) => {
+        if (!value?.length) return true
+        return value.includes(row.getValue(id))
+      },
+    },
+    {
+      accessorKey: "quantity",
+      header: t('sprReport.quantity'),
+      headerRenderer: createSortableHeader(t('sprReport.quantity')),
+      enableSorting: false,
+      enableColumnFilter: false,
+      cell: ({ row }) => (
+        <div className="text-center">
+          {row.getValue("quantity")}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "created_at",
+      header: t('sprReport.createdAt'),
+      headerRenderer: createSortableHeader(t('sprReport.createdAt')),
+      enableSorting: true,
+      enableColumnFilter: false,
+      cell: ({ row }) => formatDateToUTC7(row.getValue("created_at")),
+    },
+    {
+      accessorKey: "deadline",
+      header: t('sprReport.deadline'),
+      headerRenderer: createSortableHeader(t('sprReport.deadline')),
+      enableSorting: true,
+      enableColumnFilter: false,
+    },
+    {
+      accessorKey: "created_by",
+      header: t('sprReport.username'),
+      headerRenderer: createSortableHeader(t('sprReport.username')),
+      enableSorting: false,
+      enableColumnFilter: true,
+      filterFn: (row, id, value) => {
+        if (!value?.length) return true
+        return value.includes(row.getValue(id))
+      },
+    },
+    {
+      accessorKey: "state_type",
+      header: t('sprReport.state'),
+      headerRenderer: createSortableHeader(t('sprReport.state')),
+      enableSorting: false,
+      enableColumnFilter: true,
+      cell: ({ row }) => {
+        const status = row.getValue("state_type") as string
+        return (
+          <Badge variant="outline" className={getStatusColor(status)}>
+            {status}
+          </Badge>
+        )
+      },
+      filterFn: (row, id, value) => {
+        if (!value?.length) return true
+        return value.includes(row.getValue(id))
+      },
+    },
+  ]
 
   if (loading) {
     return (
@@ -66,54 +181,8 @@ export default function SPRReportPage() {
   }
 
   return (
-    <div className="overflow-x-auto py-6 px-2">
-      <Table className="border rounded-lg shadow-sm bg-white">
-        <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.title')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.createdAt')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.username')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.state')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.customerName')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.finishingCode')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.customerColorName')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.collection')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.quantity')}</TableHead>
-            <TableHead className="font-semibold text-gray-700">{t('sprReport.deadline')}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.map((row, idx) => (
-            <TableRow
-              key={row.task_id}
-              className={`${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100`}
-            >
-              <TableCell
-                className="text-blue-600 underline cursor-pointer font-medium"
-                onClick={() => router.push(`/task-management/tasks/${row.task_id}`)}
-                title={t('sprReport.viewTask')}
-              >
-                {row.title}
-              </TableCell>
-              <TableCell className="text-gray-700">
-                {new Date(row.created_at).toLocaleString()}
-              </TableCell>
-              <TableCell className="text-gray-700">{row.created_by}</TableCell>
-              <TableCell>
-                <Badge variant="outline" className={getStatusColor(row.state_type)}>
-                  {row.state_type}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-gray-700">{row.customer_name}</TableCell>
-              <TableCell className="text-gray-700">{row.finishing_code}</TableCell>
-              <TableCell className="text-gray-700">{row.customer_color_name}</TableCell>
-              <TableCell className="text-gray-700">{row.collection}</TableCell>
-              <TableCell className="text-gray-700 text-center">{row.quantity}</TableCell>
-              <TableCell className="text-gray-700">{row.deadline}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="py-6 px-2">
+      <DataTable columns={columns} data={data} pageSize={20} />
     </div>
   )
 }

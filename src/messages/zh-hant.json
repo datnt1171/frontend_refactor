@@ -165,7 +165,7 @@
       "changing": "正在變更..."
     },
     "sprReport": {
-      "title": "標題",
+      "title": "ID",
       "createdAt": "建立日期",
       "username": "建立者",
       "state": "狀態",

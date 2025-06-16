@@ -94,7 +94,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
             <div className="text-2xl font-bold">{sentTasksCount}</div>
-            <p className="text-xs text-muted-foreground">Tasks you've sent</p>
+            <p className="text-xs text-muted-foreground">Tasks you have sent</p>
           </CardContent>
         </Card>
 
