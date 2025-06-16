@@ -25,7 +25,7 @@ export default function FormsPage() {
     setIsLoading(true)
     try {
       const response = await getProcesses()
-      setProcesses(response.data.results)
+      setProcesses(response.results)
     } catch (err: any) {
       console.error("Error fetching processes:", err)
       setError(err.response?.data?.error || "Failed to load form templates")

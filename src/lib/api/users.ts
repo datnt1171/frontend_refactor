@@ -1,9 +1,12 @@
 import api from './client'
-import type { UserDetail, UserList, SetPasswordRetype } from '@/types/api'
+import type { UserDetail, PaginatedUserList, SetPasswordRetype } from '@/types/api'
 
 export const getCurrentUser = () => api.get<UserDetail>("/users/me")
 
-export const getUsers = () => api.get<UserList[]>("/users/")
+export const getUsers = async (): Promise<PaginatedUserList> => {
+  const res = await api.get<PaginatedUserList>("/users/")
+  return res.data;
+}
 
 export const changePassword = (data: SetPasswordRetype) => 
   api.post<SetPasswordRetype>("/users/set_password", data)

@@ -1,5 +1,13 @@
 import api from './client'
 
-export const getProcesses = () => api.get("/processes/")
+import type { PaginatedProcessListList, ProcessDetail } from '@/types/api';
 
-export const getProcessById = (id: string) => api.get(`/processes/${id}/`)
+export const getProcesses = async (): Promise<PaginatedProcessListList> => {
+  const res = await api.get<PaginatedProcessListList>("/processes/");
+  return res.data;
+};
+
+export const getProcessById = async (id: string): Promise<ProcessDetail> => {
+  const res = await api.get<ProcessDetail>(`/processes/${id}/`);
+  return res.data;
+};

@@ -676,7 +676,7 @@ export interface components {
             action_id: string;
             comment?: string | null;
             /** Format: uri */
-            file?: string | null;
+            file?: File;
         };
         TaskActionLog: {
             /** Format: uuid */
@@ -695,9 +695,7 @@ export interface components {
             fields: components["schemas"]["TaskDataInput"][];
         };
         TaskData: {
-            readonly field: {
-                [key: string]: unknown;
-            };
+            readonly field: components["schemas"]["ProcessField"];
             value?: string | null;
             files: components["schemas"]["TaskFileData"][];
         };

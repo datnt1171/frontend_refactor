@@ -6,40 +6,18 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+// import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowLeft, Send, Loader2, Eye } from "lucide-react"
 import { getProcessById, getUsers, createTask } from "@/lib/api"
 import { useTranslations } from 'next-intl'
-
-interface Field {
-  id: string
-  name: string
-  field_type: string
-  order: number
-  required: boolean
-  options: string[] | null
-}
-
-interface Process {
-  id: string
-  name: string
-  description: string
-  fields: Field[]
-}
-
-interface User {
-  id: string
-  username: string
-  first_name?: string
-  last_name?: string
-}
+import type { ProcessDetail, UserList, ProcessField } from "@/types/api"
 
 export default function FormPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
-  const [process, setProcess] = useState<Process | null>(null)
-  const [users, setUsers] = useState<User[]>([])
+  const [process, setProcess] = useState<ProcessDetail | null>(null)
+  const [users, setUsers] = useState<UserList[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, any>>({})
@@ -52,8 +30,8 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
       setIsLoading(true)
       try {
         const [processResponse, usersResponse] = await Promise.all([getProcessById(id), getUsers()])
-        setProcess(processResponse.data)
-        setUsers(usersResponse.data || [])
+        setProcess(processResponse)
+        setUsers(usersResponse.results);
       } catch (err: any) {
         console.error("Error fetching data:", err)
         setError(err.response?.data?.error || "Failed to load form data")
@@ -115,7 +93,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
   }
 };
 
-  const renderField = (field: Field) => {
+  const renderField = (field: ProcessField) => {
     switch (field.field_type) {
       case "assignee":
         return (
@@ -179,17 +157,21 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
             disabled={showReview}
           />
         )
-      case "textarea":
-        return (
-          <Textarea
-            id={`field-${field.id}`}
-            value={formValues[field.id] || ""}
-            onChange={(e) => handleInputChange(field.id, e.target.value)}
-            required={field.required}
-            disabled={showReview}
-          />
-        )
+      // case "textarea":
+      //   return (
+      //     <Textarea
+      //       id={`field-${field.id}`}
+      //       value={formValues[field.id] || ""}
+      //       onChange={(e) => handleInputChange(field.id, e.target.value)}
+      //       required={field.required}
+      //       disabled={showReview}
+      //     />
+      //   )
       case "select":
+        // Ensure options is an array of strings
+        const optionsArray: string[] = Array.isArray(field.options)
+          ? field.options as string[]
+          : [];
         return (
           <Select
             value={formValues[field.id] || ""}
@@ -200,7 +182,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent>
-              {(field.options || []).map(option => (
+              {optionsArray.map(option => (
                 <SelectItem key={option} value={option}>
                   {option}
                 </SelectItem>
@@ -242,16 +224,13 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
     }
   }
 
-  const displayFieldValue = (field: Field) => {
+  const displayFieldValue = (field: ProcessField) => {
     if (!formValues[field.id]) {
       return <span className="text-muted-foreground italic">{t('createTask.noValueProvided')}</span>
     }
     if (field.field_type === "assignee") {
       const user = users.find(u => u.id.toString() === formValues[field.id])
       return user ? `${user.first_name} ${user.last_name} (${user.username})` : formValues[field.id]
-    }
-    if (field.field_type === "checkbox") {
-      return formValues[field.id] ? t('createTask.yes') : t('createTask.no')
     }
     if (field.field_type === "file" && formValues[field.id] instanceof File) {
       return formValues[field.id].name

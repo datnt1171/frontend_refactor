@@ -40,44 +40,36 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
     }
   }
 
-  const handleActionClick = async (actionid: string) => {
-    if (!task) return
-    setActionLoading(actionid)
+  const handleActionClick = async (actionId: string) => {
+    if (!task) return;
+    setActionLoading(actionId);
     try {
-      let payload: any = { action_id: actionid }
-      if (actionComment) payload.comment = actionComment
-
-      // If file is selected, use FormData
-      if (actionFile) {
-        const formData = new FormData()
-        formData.append("action_id", actionid)
-        if (actionComment) formData.append("comment", actionComment)
-        formData.append("file", actionFile)
-        await performTaskAction(task.id, formData, true)
-      } else {
-        await performTaskAction(task.id, payload)
-      }
-
-      alert(t('taskDetail.actionPerformedSuccessfully'))
-      setActionComment("")
-      setActionFile(null)
-      fetchTaskData()
+      const payload = {
+        action_id: actionId,
+        comment: actionComment || undefined,
+        file: actionFile || undefined,
+      };
+      await performTaskAction(task.id, payload);
+      alert(t('taskDetail.actionPerformedSuccessfully'));
+      setActionComment("");
+      setActionFile(null);
+      fetchTaskData();
     } catch (err: any) {
-      console.error("Error performing action:", err)
-      alert(err.response?.data?.error || t('taskDetail.failedToPerformAction'))
+      console.error("Error performing action:", err);
+      alert(err.response?.data?.error || t('taskDetail.failedToPerformAction'));
     } finally {
-      setActionLoading(null)
+      setActionLoading(null);
     }
-  }
+  };
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">{t('taskDetail.loadingTaskDetails')}</p>
-      </div>
-    )
-  }
+    if (isLoading) {
+      return (
+        <div className="flex flex-col items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
+          <p className="text-muted-foreground">{t('taskDetail.loadingTaskDetails')}</p>
+        </div>
+      )
+    }
 
   if (error || !task) {
     return (
