@@ -152,7 +152,15 @@
     "user": {
       "loading": "Loading...",
       "back": "Back",
-      "changePassword":"Change Password"
+      "changePassword": "Change Password",
+      "username": "Username",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "userDetail": "User Detail",
+      "noUsersFound": "No users found.",
+      "userNotFound": "User not found.",
+      "errorLoadingUsers": "Failed to fetch users",
+      "errorLoadingUser": "Failed to fetch user"
     },
     "changePassword": {
       "back": "Back",
