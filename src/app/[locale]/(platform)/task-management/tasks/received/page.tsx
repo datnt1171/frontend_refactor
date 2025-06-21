@@ -1,60 +1,31 @@
-"use client"
 
-import { useState, useEffect } from "react"
 import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-import { Search, MoreHorizontal, Loader2 } from "lucide-react"
-import { getReceivedTasks } from "@/lib/api"
+import { MoreHorizontal } from "lucide-react"
+
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
-import { useTranslations } from 'next-intl'
+
 import type { ReceivedTask } from "@/types/api"
+import { getReceivedTasksServer } from "@/lib/api/processes.server"
+import { getTranslations } from "next-intl/server"
 
+export default async function ReceivedTasksPage() {
+  const t = await getTranslations('dashboard')
+  const response = await getReceivedTasksServer()
+  const tasks: ReceivedTask[] = response.results
 
-export default function ReceivedTasksPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [tasks, setTasks] = useState<ReceivedTask[]>([])
-  const t = useTranslations('dashboard')
-
-  useEffect(() => {
-    fetchReceivedTasks()
-  }, [])
-
-  const fetchReceivedTasks = async () => {
-      const response = await getReceivedTasks()
-      setTasks(response)
-  }
-
-  const filteredTasks = tasks.filter(
-    (task) =>
-      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.process.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.created_by.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">{t('receivedTask.receivedTasks')}</h1>
         <p className="text-muted-foreground mt-2">{t('receivedTask.receivedTasksDescription')}</p>
-      </div>
-
-      <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input
-          type="text"
-          placeholder={t('receivedTask.searchTasksPlaceholder')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full"
-        />
-        <Button type="submit" size="icon" variant="ghost">
-          <Search className="h-4 w-4" />
-        </Button>
       </div>
         <Card>
           <CardHeader className="pb-3">
@@ -73,7 +44,7 @@ export default function ReceivedTasksPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredTasks.map((task) => (
+                {tasks.map((task) => (
                   <TableRow key={task.id}>
                     <TableCell className="font-medium">
                       <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
@@ -108,7 +79,7 @@ export default function ReceivedTasksPage() {
               </TableBody>
             </Table>
 
-            {filteredTasks.length === 0 && (
+            {tasks.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <h3 className="text-lg font-medium">{t('receivedTask.noTasksFound')}</h3>
                 <p className="text-muted-foreground mt-2">{t('receivedTask.noAssignedTasks')}</p>
