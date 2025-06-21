@@ -18,8 +18,6 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
   const { id } = use(params)
   const router = useRouter()
   const [task, setTask] = useState<TaskDetail | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [actionComment, setActionComment] = useState<string>("")
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [actionFile, setActionFile] = useState<File | null>(null)
@@ -29,16 +27,8 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
   }, [id])
 
   const fetchTaskData = async () => {
-    setIsLoading(true)
-    try {
-      const response = await getTaskById(id)
-      setTask(response)
-    } catch (err: any) {
-      console.error("Error fetching task:", err)
-      setError(err.response?.data?.error || t('taskDetail.failedToLoadTaskDetails'))
-    } finally {
-      setIsLoading(false)
-    }
+    const response = await getTaskById(id)
+    setTask(response)
   }
 
   const handleActionClick = async (actionId: string) => {
@@ -62,29 +52,8 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
       setActionLoading(null);
     }
   };
-
-    if (isLoading) {
-      return (
-        <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">{t('taskDetail.loadingTaskDetails')}</p>
-        </div>
-      )
-    }
-
-  if (error || !task) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <h3 className="text-lg font-medium">{t('taskDetail.taskNotFound')}</h3>
-        <p className="text-muted-foreground mt-2">{error || t('taskDetail.requestedTaskDoesNotExist')}</p>
-        <Link href="/task-management/dashboard">
-          <Button variant="outline" className="mt-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('taskDetail.backToDashboard')}
-          </Button>
-        </Link>
-      </div>
-    )
+  if (!task) {
+    return <div>Loading...</div>;
   }
 
   return (

@@ -18,8 +18,6 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
   const router = useRouter()
   const [process, setProcess] = useState<ProcessDetail | null>(null)
   const [users, setUsers] = useState<UserList[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const [formValues, setFormValues] = useState<Record<string, any>>({})
   const [showReview, setShowReview] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -27,17 +25,9 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
 
   useEffect(() => {
     async function fetchData() {
-      setIsLoading(true)
-      try {
-        const [processResponse, usersResponse] = await Promise.all([getProcessById(id), getUsers()])
-        setProcess(processResponse)
-        setUsers(usersResponse.results);
-      } catch (err: any) {
-        console.error("Error fetching data:", err)
-        setError(err.response?.data?.error || "Failed to load form data")
-      } finally {
-        setIsLoading(false)
-      }
+      const [processResponse, usersResponse] = await Promise.all([getProcessById(id), getUsers()])
+      setProcess(processResponse)
+      setUsers(usersResponse.results);
     }
     fetchData()
   }, [id])
@@ -238,30 +228,6 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
     return formValues[field.id]
   }
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">{t('createTask.loadingFormTemplate')}</p>
-      </div>
-    )
-  }
-
-  if (error || !process) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <h3 className="text-lg font-medium">{t('createTask.templateNotFound')}</h3>
-        <p className="text-muted-foreground mt-2">{error || t('createTask.requestedFormTemplateNotExist')}</p>
-        <Link href="/task-management/processes">
-          <Button variant="outline" className="mt-4">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {t('createTask.backToTemplates')}
-          </Button>
-        </Link>
-      </div>
-    )
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -271,7 +237,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold tracking-tight">{process.name}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{process?.name}</h1>
         </div>
       </div>
 
@@ -281,7 +247,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
             <CardTitle>{t('createTask.reviewTask')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {process.fields.map(field => (
+            {process?.fields.map(field => (
               <div key={field.id} className="space-y-2">
                 <Label>
                   {field.name}
@@ -318,7 +284,7 @@ export default function FormPage({ params }: { params: Promise<{ id: string }> }
           </CardHeader>
           <form onSubmit={handleReview}>
             <CardContent className="space-y-4">
-              {process.fields.map((field) => (
+              {process?.fields.map((field) => (
                 <div key={field.id} className="space-y-2">
                   <Label htmlFor={`field-${field.id}`}>
                     {field.name}
