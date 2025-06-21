@@ -14,21 +14,12 @@ import { DataTable, createSortableHeader } from "@/components/ui/datatable"
 
 export default function SPRReportPage() {
   const [data, setData] = useState<SPRReportRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
-      try {
-        const rows = await getSPRReport()
-        setData(rows)
-      } catch (err: any) {
-        setError(err.response?.data?.error || "Failed to fetch report")
-      } finally {
-        setLoading(false)
-      }
+      const rows = await getSPRReport()
+      setData(rows)
     }
     fetchData()
   }, [])
@@ -153,25 +144,6 @@ export default function SPRReportPage() {
       },
     },
   ]
-
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">{t('sprReport.loading')}</p>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
-        <h3 className="text-lg font-medium">{t('sprReport.failedToLoad')}</h3>
-        <p className="text-muted-foreground mt-2">{error}</p>
-      </div>
-    )
-  }
-
   if (!data.length) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">

@@ -4,13 +4,11 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
-import { FileText, Send, Inbox, Clock, Loader2 } from "lucide-react"
+import { FileText, Send, Inbox, Clock } from "lucide-react"
 import { getProcesses, getSentTasks, getReceivedTasks } from "@/lib/api/"
 import type { ProcessList, ReceivedTask, SentTask } from "@/types/api"
 
 export default function Dashboard() {
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   // Separate states for each data type
   const [processes, setProcesses] = useState<ProcessList[]>([])
@@ -19,8 +17,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     async function fetchDashboardData() {
-      setIsLoading(true)
-      try {
         const [processesRes, sentTasksRes, receivedTasksRes] = await Promise.all([
           getProcesses(),
           getSentTasks(),
@@ -29,12 +25,6 @@ export default function Dashboard() {
         setProcesses(processesRes.results)
         setSentTasks(sentTasksRes)
         setReceivedTasks(receivedTasksRes)
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err)
-        setError("Failed to load dashboard data. Please try again later.")
-      } finally {
-        setIsLoading(false)
-      }
     }
 
     fetchDashboardData()
@@ -45,24 +35,6 @@ export default function Dashboard() {
   const sentTasksCount = sentTasks.length
   const receivedTasksCount = receivedTasks.length
   const sentTasksDoneCount = sentTasks.filter(task => task.state_type === "closed").length
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
-        <p className="text-muted-foreground">Loading dashboard data...</p>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full py-12">
-        <p className="text-destructive mb-4">{error}</p>
-        <Button onClick={() => window.location.reload()}>Retry</Button>
-      </div>
-    )
-  }
 
   return (
     <div className="space-y-6">

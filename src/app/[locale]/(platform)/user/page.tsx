@@ -16,49 +16,32 @@ import { useTranslations } from "next-intl"
 
 export default function UserListPage() {
   const [users, setUsers] = useState<UserList[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const t = useTranslations("dashboard.user")
 
   useEffect(() => {
     const fetchUsers = async () => {
-      setLoading(true)
-      try {
-        const res = await getUsers()
-        setUsers(res.results)
-      } catch (err: any) {
-        setError(t("errorLoadingUsers", { defaultValue: "Failed to fetch users" }))
-      } finally {
-        setLoading(false)
-      }
+      const res = await getUsers()
+      setUsers(res.results)
     }
     fetchUsers()
   }, [])
-
-  if (loading) {
-    return <div className="p-8 text-center">{t("loading", { defaultValue: "Loading..." })}</div>
-  }
-
-  if (error) {
-    return <div className="p-8 text-center text-red-500">{error}</div>
-  }
-
+  console.log(users)
   return (
     <div className="p-6">
       <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("username", { defaultValue: "Username" })}</TableHead>
-              <TableHead>{t("firstName", { defaultValue: "First Name" })}</TableHead>
-              <TableHead>{t("lastName", { defaultValue: "Last Name" })}</TableHead>
+              <TableHead>{t("username")}</TableHead>
+              <TableHead>{t("firstName")}</TableHead>
+              <TableHead>{t("lastName")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={3} className="text-center">
-                  {t("noUsersFound", { defaultValue: "No users found." })}
+                  {t("noUsersFound")}
                 </TableCell>
               </TableRow>
             ) : (

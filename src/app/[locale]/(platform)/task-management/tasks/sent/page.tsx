@@ -18,8 +18,6 @@ import { formatDateToUTC7 } from "@/lib/utils/date"
 export default function SentTasksPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [tasks, setTasks] = useState<SentTask[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
   const t = useTranslations('dashboard')
 
   useEffect(() => {
@@ -27,16 +25,8 @@ export default function SentTasksPage() {
   }, [])
 
   const fetchSentTasks = async () => {
-    setIsLoading(true)
-    try {
-      const response = await getSentTasks()
-      setTasks(response)
-    } catch (err: any) {
-      console.error("Error fetching sent tasks:", err)
-      setError(err.response?.data?.error || "Failed to load sent tasks")
-    } finally {
-      setIsLoading(false)
-    }
+    const response = await getSentTasks()
+    setTasks(response)
   }
 
   const filteredTasks = tasks.filter(
@@ -72,21 +62,6 @@ export default function SentTasksPage() {
           <Search className="h-4 w-4" />
         </Button>
       </div>
-
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-4" />
-          <p className="text-muted-foreground">{t('sentTask.loadingSentTasks')}</p>
-        </div>
-      ) : error ? (
-        <div className="flex flex-col items-center justify-center py-12 text-center">
-          <h3 className="text-lg font-medium text-destructive">{t('sentTask.errorLoadingTasks')}</h3>
-          <p className="text-muted-foreground mt-2">{error}</p>
-          <Button variant="outline" className="mt-4" onClick={fetchSentTasks}>
-            {t('sentTask.retry')}
-          </Button>
-        </div>
-      ) : (
         <Card>
           <CardHeader className="pb-3">
             <CardTitle>{t('sentTask.yourSentTasks')}</CardTitle>
@@ -149,7 +124,6 @@ export default function SentTasksPage() {
             )}
           </CardContent>
         </Card>
-      )}
     </div>
   )
 }
