@@ -15,6 +15,14 @@
     "authError": "使用者名稱或密碼錯誤。",
     "footerText": "© TE-1 --- Viet Lien"
   },
+  "general": {
+      "loading": "載入中...",
+      "notFoundTitle": "404 – 找不到頁面",
+      "notFoundDescription": "很抱歉，您要查找的頁面不存在。",
+      "errorTitle": "發生錯誤",
+      "errorDescription": "發生未預期的錯誤，請稍後再試。",
+      "tryAgain": "再試一次"
+    },
   "dashboard": {
     "title": "任務管理",
     "navigation": {

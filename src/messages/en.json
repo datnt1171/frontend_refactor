@@ -3,6 +3,14 @@
     "title": "Hello world!",
     "about": "Go to the about page"
   },
+  "root": {
+    "loading": "Loading...",
+    "notFoundTitle": "404 – Page Not Found",
+    "notFoundDescription": "Sorry, the page you are looking for does not exist.",
+    "errorTitle": "Something went wrong",
+    "errorDescription": "An unexpected error occurred. Please try again later.",
+    "tryAgain": "Try Again"
+  },
   "login": {
     "title": "Task Management System",
     "Login": "Login",
