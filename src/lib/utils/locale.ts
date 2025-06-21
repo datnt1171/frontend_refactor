@@ -7,9 +7,9 @@ export const getCurrentLocale = (): string => {
     if (potentialLocale && supportedLocales.includes(potentialLocale)) {
       return potentialLocale
     }
-    return localStorage.getItem('locale') || 'en'
+    return localStorage.getItem('locale') || 'vi'
   }
-  return 'en'
+  return 'vi'
 }
 
 export const getAcceptLanguage = (locale: string): string => {
@@ -18,5 +18,5 @@ export const getAcceptLanguage = (locale: string): string => {
     'vi': 'vi-VN,vi;q=0.9,en;q=0.8',
     'zh-hant': 'zh-TW,zh;q=0.9,en;q=0.8'
   }
-  return localeMap[locale] || 'en-US,en;q=0.9'
+  return localeMap[locale] || 'vi-VN,vi;q=0.9,en;q=0.8'
 }
