@@ -1,7 +1,14 @@
-export default function Loading() {
+import { getTranslations } from 'next-intl/server';
+import { Loader2 } from "lucide-react";
+
+export default async function Loading() {
+  const t = await getTranslations('root');
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <span className="text-gray-500">Loading...</span>
+    <div className="flex min-h-screen items-center justify-center">
+      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <span className="ml-2 text-muted-foreground">
+        {t('loading')}
+      </span>
     </div>
   );
 }

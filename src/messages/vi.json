@@ -3,6 +3,14 @@
     "title": "Xin chào thế giới!",
     "about": "Đi đến trang giới thiệu"
   },
+  "root": {
+    "loading": "Đang tải...",
+    "notFoundTitle": "404 – Không tìm thấy trang",
+    "notFoundDescription": "Xin lỗi, trang bạn tìm kiếm không tồn tại.",
+    "errorTitle": "Đã xảy ra lỗi",
+    "errorDescription": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
+    "tryAgain": "Thử lại"
+  },
   "login": {
     "title": "Hệ thống quản lý công việc",
     "Login": "Đăng nhập",
