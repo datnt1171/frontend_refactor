@@ -1,39 +1,19 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
-import { Search, MoreHorizontal, Plus, Loader2 } from "lucide-react"
-import { getSentTasks } from "@/lib/api"
+import { MoreHorizontal, Plus } from "lucide-react"
+import { getSentTasks } from "@/lib/api/server"
 import { getStatusColor } from "@/lib/utils/format"
-import { useTranslations } from 'next-intl'
-import type { SentTask } from "@/types/api"
+import { getTranslations } from "next-intl/server"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 
-export default function SentTasksPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [tasks, setTasks] = useState<SentTask[]>([])
-  const t = useTranslations('dashboard')
-
-  useEffect(() => {
-    fetchSentTasks()
-  }, [])
-
-  const fetchSentTasks = async () => {
-    const response = await getSentTasks()
-    setTasks(response)
-  }
-
-  const filteredTasks = tasks.filter(
-    (task) =>
-      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.process.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+export default async function SentTasksPage() {
+  const t = await getTranslations('dashboard')
+  const response = await getSentTasks()
+  const tasks = response.results
 
   return (
     <div className="space-y-6">
@@ -48,19 +28,6 @@ export default function SentTasksPage() {
             {t('sentTask.createNewTask')}
           </Button>
         </Link>
-      </div>
-
-      <div className="flex w-full max-w-sm items-center space-x-2">
-        <Input
-          type="text"
-          placeholder={t('sentTask.searchTasksPlaceholder')}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full"
-        />
-        <Button type="button" size="icon" variant="ghost">
-          <Search className="h-4 w-4" />
-        </Button>
       </div>
         <Card>
           <CardHeader className="pb-3">
@@ -79,7 +46,7 @@ export default function SentTasksPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredTasks.map((task) => (
+                {tasks.map((task) => (
                   <TableRow key={task.id}>
                     <TableCell className="font-medium">
                       <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
@@ -116,7 +83,7 @@ export default function SentTasksPage() {
               </TableBody>
             </Table>
 
-            {filteredTasks.length === 0 && (
+            {tasks.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <h3 className="text-lg font-medium">{t('sentTask.noTasksFound')}</h3>
                 <p className="text-muted-foreground mt-2">{t('sentTask.tryAdjustingSearchOrCreateTask')}</p>

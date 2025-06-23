@@ -12,12 +12,12 @@ import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 
 import type { ReceivedTask } from "@/types/api"
-import { getReceivedTasksServer } from "@/lib/api/processes.server"
+import { getReceivedTasks } from "@/lib/api/server"
 import { getTranslations } from "next-intl/server"
 
 export default async function ReceivedTasksPage() {
   const t = await getTranslations('dashboard')
-  const response = await getReceivedTasksServer()
+  const response = await getReceivedTasks()
   const tasks: ReceivedTask[] = response.results
 
 

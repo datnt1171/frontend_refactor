@@ -1,67 +1,34 @@
-"use client"
-
-import { use, useState, useEffect } from "react"
-import { useRouter, Link } from "@/i18n/navigation"
-import { Button } from "@/components/ui/button"
+import { getTask } from "@/lib/api/server"
+import { getTranslations } from "next-intl/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Calendar, User, Loader2, Clock } from "lucide-react"
-import { getTaskById, performTaskAction } from "@/lib/api"
-import { getStatusColor, getActionColor } from "@/lib/utils/format"
-import { useTranslations } from 'next-intl'
-import { Input } from "@/components/ui/input"
-import type { TaskDetail } from "@/types/api"
+import { Calendar, User, Clock } from "lucide-react"
+import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
+import TaskActions from "./TaskAction"
+import BackButton from "@/components/ui/BackButton"
 
+export default async function TaskDetailPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  const { id } = await params
+  
+  // Fetch data and translations on server
+  const [task, t] = await Promise.all([
+    getTask(id),
+    getTranslations('dashboard')
+  ])
 
-export default function TaskDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
-  const router = useRouter()
-  const [task, setTask] = useState<TaskDetail | null>(null)
-  const [actionComment, setActionComment] = useState<string>("")
-  const [actionLoading, setActionLoading] = useState<string | null>(null)
-  const [actionFile, setActionFile] = useState<File | null>(null)
-  const t = useTranslations('dashboard')
-  useEffect(() => {
-    fetchTaskData()
-  }, [id])
-
-  const fetchTaskData = async () => {
-    const response = await getTaskById(id)
-    setTask(response)
-  }
-
-  const handleActionClick = async (actionId: string) => {
-    if (!task) return;
-    setActionLoading(actionId);
-    try {
-      const payload = {
-        action_id: actionId,
-        comment: actionComment || undefined,
-        file: actionFile || undefined,
-      };
-      await performTaskAction(task.id, payload);
-      alert(t('taskDetail.actionPerformedSuccessfully'));
-      setActionComment("");
-      setActionFile(null);
-      fetchTaskData();
-    } catch (err: any) {
-      console.error("Error performing action:", err);
-      alert(err.response?.data?.error || t('taskDetail.failedToPerformAction'));
-    } finally {
-      setActionLoading(null);
-    }
-  };
   if (!task) {
-    return <div>Loading...</div>;
+    return <div>Task not found</div>
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
+        <BackButton />
         <div>
           <h1 className="text-2xl font-bold tracking-tight">{task.title}</h1>
           <div className="flex items-center space-x-2 mt-1">
@@ -129,7 +96,6 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                       {log.comment && (
                         <p className="text-xs text-muted-foreground">{t('taskDetail.comment')}: {log.comment}</p>
                       )}
-                      {/* Show file link if present */}
                       {log.file && (
                         <p className="text-xs text-blue-600 mt-1">
                           <a href={log.file} target="_blank" rel="noopener noreferrer" className="underline">
@@ -137,7 +103,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                           </a>
                         </p>
                       )}
-                      <p className="text-xs text-muted-foreground"> {formatDateToUTC7(log.created_at)} </p>
+                      <p className="text-xs text-muted-foreground">{formatDateToUTC7(log.created_at)}</p>
                     </div>
                   </div>
                 ))}
@@ -162,7 +128,7 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
                   <p className="text-sm font-medium">{t('taskDetail.createdOn')}</p>
-                  <p className="text-sm text-muted-foreground"> {formatDateToUTC7(task.created_at)} </p>
+                  <p className="text-sm text-muted-foreground">{formatDateToUTC7(task.created_at)}</p>
                 </div>
               </div>
 
@@ -176,69 +142,8 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('taskDetail.availableActions')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              { task.available_actions.length > 0 ? (
-                <>
-                  {/* File uploader */}
-                  <Input
-                    type="file"
-                    className="mb-2"
-                    accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx"
-                    onChange={e => {
-                      const file = e.target.files?.[0] || null;
-                      if (file) {
-                        const allowedTypes = [
-                          "image/jpeg", "image/png", "application/pdf",
-                          "application/msword", // .doc
-                          "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-                          "application/vnd.ms-excel", // .xls
-                          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // .xlsx
-                        ];
-                        if (!allowedTypes.includes(file.type)) {
-                          alert("Invalid file type. Please select a valid file.");
-                          e.target.value = ""; // Reset file input
-                          setActionFile(null);
-                          return;
-                        }
-                      }
-                      setActionFile(file);
-                    }}
-                    disabled={actionLoading !== null}
-                  />
-                  <textarea
-                    className="w-full p-2 border rounded-md mb-2"
-                    placeholder={t('taskDetail.addCommentOptional')}
-                    value={actionComment}
-                    onChange={(e) => setActionComment(e.target.value)}
-                  />
-                  {task.available_actions.map((action) => (
-                    <Button
-                      key={action.id}
-                      className={`w-full justify-center font-bold mb-2 ${getActionColor(action.action_type)}`}
-                      variant="outline"
-                      onClick={() => handleActionClick(action.id)}
-                      disabled={actionLoading !== null}
-                    >
-                      {actionLoading === action.id ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t('taskDetail.processing')}
-                        </>
-                      ) : (
-                        action.name
-                      )}
-                    </Button>
-                  ))}
-                </>
-              ) : (
-                <p className="text-sm text-muted-foreground">{t('taskDetail.noActionsAvailable')}</p>
-              )}
-            </CardContent>
-          </Card>
+          {/* Client component for actions */}
+          <TaskActions task={task} />
         </div>
       </div>
     </div>

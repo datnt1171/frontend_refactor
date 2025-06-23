@@ -10,7 +10,6 @@ export * from './auth'
 export * from './users'
 export * from './processes'
 export * from './tasks'
-export * from './reports'
 
 // Export client for direct use if needed
 export { default as api } from './client'

@@ -3,12 +3,12 @@ import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText } from "lucide-react"
-import { getProcessesServer } from "@/lib/api/processes.server"
+import { getProcesses } from "@/lib/api/server"
 import type { ProcessList } from "@/types/api"
 
 export default async function FormsPage() {
   const t = await getTranslations('dashboard')
-  const response = await getProcessesServer()
+  const response = await getProcesses()
   const processes: ProcessList[] = response.results
 
   return (
