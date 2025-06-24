@@ -1,8 +1,4 @@
-"use client"
-
-import { useEffect, useState } from "react"
-import { getUsers } from "@/lib/api/users"
-import type { UserList } from "@/types/api"
+import { getUsers } from "@/lib/api/server"
 import {
   Table,
   TableHeader,
@@ -12,20 +8,12 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { Link } from "@/i18n/navigation"
-import { useTranslations } from "next-intl"
+import { getTranslations } from "next-intl/server"
 
-export default function UserListPage() {
-  const [users, setUsers] = useState<UserList[]>([])
-  const t = useTranslations("dashboard.user")
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await getUsers()
-      setUsers(res.results)
-    }
-    fetchUsers()
-  }, [])
-  console.log(users)
+export default async function UserListPage() {
+  const t = await getTranslations("dashboard.user")
+  const response = await getUsers()
+  const users = response.results
   return (
     <div className="p-6">
       <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">

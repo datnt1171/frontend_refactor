@@ -155,7 +155,8 @@
       "availableActions": "Hành động khả dụng",
       "addCommentOptional": "Thêm bình luận (không bắt buộc)...",
       "processing": "Đang xử lý...",
-      "noActionsAvailable": "Không có hành động nào cho phiếu này."
+      "noActionsAvailable": "Không có hành động nào cho phiếu này.",
+      "noFileUploaded": "Không có file được tải lên"
     },
     "user": {
       "loading": "Đang tải...",

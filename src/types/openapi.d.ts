@@ -185,6 +185,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/users/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_users_retrieve"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users/me/": {
         parameters: {
             query?: never;
@@ -531,7 +547,7 @@ export interface components {
              * @example http://api.example.org/accounts/?offset=200&limit=100
              */
             previous?: string | null;
-            results: components["schemas"]["User"][];
+            results: components["schemas"]["UserList"][];
         };
         PaginatedUserListList: {
             /** @example 123 */
@@ -686,8 +702,7 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
             comment?: string | null;
-            /** Format: uri */
-            file?: string;
+            readonly file: string;
         };
         TaskCreate: {
             /** Format: uuid */
@@ -721,8 +736,7 @@ export interface components {
         };
         TaskFileData: {
             original_filename?: string;
-            /** Format: uri */
-            uploaded_file?: string;
+            readonly uploaded_file: string;
         };
         TokenObtainPair: {
             username: string;
@@ -1055,6 +1069,27 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginatedUserListList"];
+                };
+            };
+        };
+    };
+    api_users_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserList"];
                 };
             };
         };

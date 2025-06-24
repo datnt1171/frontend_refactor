@@ -155,7 +155,8 @@
       "availableActions": "Available Actions",
       "addCommentOptional": "Add a comment (optional)...",
       "processing": "Processing...",
-      "noActionsAvailable": "No actions available for this task."
+      "noActionsAvailable": "No actions available for this task.",
+      "noFileUploaded": "No file uploaded"
     },
     "user": {
       "loading": "Loading...",

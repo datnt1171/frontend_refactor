@@ -155,7 +155,8 @@
       "availableActions": "可用操作",
       "addCommentOptional": "新增評論（可選）...",
       "processing": "處理中...",
-      "noActionsAvailable": "此任務沒有可用操作。"
+      "noActionsAvailable": "此任務沒有可用操作。",
+      "noFileUploaded": "未上傳文件"
     },
     "user": {
       "loading": "載入中...",
