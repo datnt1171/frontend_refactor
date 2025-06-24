@@ -1,8 +1,4 @@
 {
-  "HomePage": {
-    "title": "Hello world!",
-    "about": "Go to the about page"
-  },
   "root": {
     "loading": "Loading...",
     "notFoundTitle": "404 – Page Not Found",
@@ -13,7 +9,7 @@
   },
   "login": {
     "title": "Task Management System",
-    "Login": "Login",
+    "login": "Login",
     "username": "Username",
     "password": "Password",
     "usernamePlaceholder": "Enter your username",
@@ -23,25 +19,28 @@
     "authError": "Invalid username or password.",
     "footerText": "© TE-1 --- Viet Lien"
   },
-  "dashboard": {
-    "title": "Task Management",
-    "navigation": {
-      "dashboard": "Dashboard",
-      "formTemplates": "Form Templates",
-      "sentTasks": "Sent Tasks",
-      "receivedTasks": "Received Tasks",
-      "SPR": "All Sample Request"
-    },
+  "navBar": {
+    "appTitle": "Task Management",
     "userMenu": {
       "profile": "Profile",
       "logout": "Logout"
     },
     "externalApps": {
       "apps": "Apps",
-      "crmSystem": "App 1",
-      "hrPortal": "App 1",
-      "financeApp": "App 1",
-      "reports": "Dashboard"
+      "Task": "Task",
+      "CRM": "CRM",
+      "HRM": "HRM",
+      "Dashboard": "Dashboard"
+    }
+  },
+
+  "taskManagement": {
+    "navigation": {
+      "dashboard": "Dashboard",
+      "formTemplates": "Form Templates",
+      "sentTasks": "Sent Tasks",
+      "receivedTasks": "Received Tasks",
+      "SPR": "All Sample Request"
     },
     "languages": {
       "english": "English",

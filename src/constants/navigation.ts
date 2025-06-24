@@ -3,7 +3,11 @@ import {
   FileText, 
   Send, 
   Inbox,
-  Table
+  Table,
+  Factory,
+  BarChart3,
+  ListCheck,
+  UserSearch
 } from "lucide-react"
 
 // Navigation items with translation keys
@@ -24,8 +28,8 @@ export const languages = [
 
 // External apps with translation keys
 export const externalApps = [
-  { nameKey: 'dashboard.externalApps.crmSystem', url: 'https://crm.yourcompany.com', icon: '✎' },
-  { nameKey: 'dashboard.externalApps.hrPortal', url: '/user', icon: '⌨' },
-  { nameKey: 'dashboard.externalApps.financeApp', url: 'https://finance.yourcompany.com', icon: '▚' },
-  { nameKey: 'dashboard.externalApps.reports', url: 'https://reports.yourcompany.com', icon: '📈' }
+  { nameKey: 'dashboard.externalApps.Task', href: '/task-management', icon: ListCheck },
+  { nameKey: 'dashboard.externalApps.CRM', href: '/crm', icon: Factory },
+  { nameKey: 'dashboard.externalApps.HRM', href: '/user', icon: UserSearch },
+  { nameKey: 'dashboard.externalApps.Dashboard', href: '/dashboard', icon: BarChart3 }
 ]
