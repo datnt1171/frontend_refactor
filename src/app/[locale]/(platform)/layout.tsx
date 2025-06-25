@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-import { useTranslations } from 'next-intl'
 import { UserContext } from "@/contexts/UserContext"
 import { useAuth } from "@/hooks/auth/useAuth"
 import { useMobileMenu } from "@/hooks/ui/useMobileMenu"
@@ -16,7 +15,6 @@ export default function PlatformLayout({
 }) {
   const { user, handleLogout } = useAuth()
   const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu } = useMobileMenu()
-  const t = useTranslations()
 
   return (
     <UserContext.Provider value={user}>

@@ -20,7 +20,8 @@ export default function TaskActions({ task }: TaskActionsProps) {
   const [actionComment, setActionComment] = useState<string>("")
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [actionFile, setActionFile] = useState<File | null>(null)
-  const t = useTranslations('dashboard')
+  const commonT = useTranslations('common')
+  const t = useTranslations('taskManagement.taskDetail')
 
   const handleActionClick = async (actionId: string) => {
     setActionLoading(actionId)
@@ -31,13 +32,13 @@ export default function TaskActions({ task }: TaskActionsProps) {
         file: actionFile || undefined,
       }
       await performTaskAction(task.id, payload)
-      alert(t('taskDetail.actionPerformedSuccessfully'))
+      alert(t('actionPerformedSuccessfully'))
       setActionComment("")
       setActionFile(null)
       router.refresh() // Refresh the page to show updated data
     } catch (err: any) {
       console.error("Error performing action:", err)
-      alert(err.response?.data?.error || t('taskDetail.failedToPerformAction'))
+      alert(err.response?.data?.error || t('failedToPerformAction'))
     } finally {
       setActionLoading(null)
     }
@@ -46,7 +47,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('taskDetail.availableActions')}</CardTitle>
+        <CardTitle>{t('availableActions')}</CardTitle>
       </CardHeader>
       <CardContent>
         {task.available_actions.length > 0 ? (
@@ -66,7 +67,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
                     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                   ]
                   if (!allowedTypes.includes(file.type)) {
-                    alert("Invalid file type. Please select a valid file.")
+                    alert(commonT('invalidFile'))
                     e.target.value = ""
                     setActionFile(null)
                     return
@@ -78,7 +79,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
             />
             <textarea
               className="w-full p-2 border rounded-md mb-2"
-              placeholder={t('taskDetail.addCommentOptional')}
+              placeholder={t('addCommentOptional')}
               value={actionComment}
               onChange={(e) => setActionComment(e.target.value)}
             />
@@ -93,7 +94,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
                 {actionLoading === action.id ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {t('taskDetail.processing')}
+                    {commonT('processing')}
                   </>
                 ) : (
                   action.name
@@ -102,7 +103,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
             ))}
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('taskDetail.noActionsAvailable')}</p>
+          <p className="text-sm text-muted-foreground">{t('noActionsAvailable')}</p>
         )}
       </CardContent>
     </Card>

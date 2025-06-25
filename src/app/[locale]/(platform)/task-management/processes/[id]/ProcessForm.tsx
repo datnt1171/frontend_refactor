@@ -19,7 +19,7 @@ export function ProcessFormClient({
   users
 }: ProcessFormClientProps) {
   const router = useRouter()
-  const t = useTranslations('dashboard')
+  const t = useTranslations('taskManagement.createTask')
   
   const [formValues, setFormValues] = useState<Record<string, any>>({})
   const [showReview, setShowReview] = useState(false)
@@ -38,7 +38,7 @@ export function ProcessFormClient({
       .map(field => field.name)
     
     if (missingFields.length) {
-      alert(t('createTask.pleaseFillRequiredFields', { 
+      alert(t('pleaseFillRequiredFields', { 
         fields: missingFields.join(", ") 
       }))
       return false
@@ -72,11 +72,11 @@ export function ProcessFormClient({
       })
 
       await createTask(formData)
-      alert(t("createTask.taskCreatedSuccessfully"))
+      alert(t('taskCreatedSuccessfully'))
       router.push("/task-management/tasks/sent")
     } catch (err: any) {
       console.error("Error creating task:", err.response?.data || err.message)
-      alert(err.response?.data?.error || t("createTask.failedToCreateTask"))
+      alert(err.response?.data?.error || t('failedToCreateTask'))
     } finally {
       setIsSubmitting(false)
     }

@@ -11,7 +11,7 @@ export default async function LoginPage() {
         </div>
         <LoginFormClient
           translations={{
-            Login: t('Login'),
+            Login: t('login'),
             username: t('username'),
             password: t('password'),
             usernamePlaceholder: t('usernamePlaceholder'),

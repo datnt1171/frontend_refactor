@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "@/i18n/navigation";
-import { ArrowLeft } from "lucide-react"
+import BackButton from "@/components/ui/BackButton";
 import { useTranslations } from 'next-intl'
 
 export default function ChangePasswordPage() {
@@ -17,7 +17,7 @@ export default function ChangePasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const t = useTranslations('dashboard')
+  const t = useTranslations('user.changePassword')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ export default function ChangePasswordPage() {
     setError(null);
     try {
       await changePassword({ current_password, new_password, re_new_password });
-      setSuccess(t('changePassword.passwordChangedSuccess'));
+      setSuccess(t('passwordChangedSuccess'));
       setCurrentPassword("");
       setNewPassword("");
       setReNewPassword("");
@@ -36,7 +36,7 @@ export default function ChangePasswordPage() {
     } catch (err: any) {
       setError(
         err?.response?.data?.detail ||
-        t('changePassword.passwordChangeFailed')
+        t('passwordChangeFailed')
       );
     } finally {
       setLoading(false);
@@ -46,15 +46,12 @@ export default function ChangePasswordPage() {
   return (
     <div className="p-6 max-w-md mx-auto">
       <div className="mb-4">
-        <Button variant="outline" className="mt-4" onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {t('changePassword.back')}
-        </Button>
+        <BackButton />
       </div>
-      <h1 className="text-2xl font-bold mb-6">{t('changePassword.changePassword')}</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('changePassword')}</h1>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <Label htmlFor="current_password">{t('changePassword.currentPassword')}</Label>
+          <Label htmlFor="current_password">{t('currentPassword')}</Label>
           <Input
             id="current_password"
             type="password"
@@ -64,7 +61,7 @@ export default function ChangePasswordPage() {
           />
         </div>
         <div>
-          <Label htmlFor="new_password">{t('changePassword.newPassword')}</Label>
+          <Label htmlFor="new_password">{t('newPassword')}</Label>
           <Input
             id="new_password"
             type="password"
@@ -74,7 +71,7 @@ export default function ChangePasswordPage() {
           />
         </div>
         <div>
-          <Label htmlFor="re_new_password">{t('changePassword.confirmNewPassword')}</Label>
+          <Label htmlFor="re_new_password">{t('confirmNewPassword')}</Label>
           <Input
             id="re_new_password"
             type="password"
@@ -86,7 +83,7 @@ export default function ChangePasswordPage() {
         {error && <div className="text-red-500 text-sm">{error}</div>}
         {success && <div className="text-green-600 text-sm">{success}</div>}
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? t('changePassword.changing') : t('changePassword.changePassword')}
+          {loading ? t('changing') : t('changePassword')}
         </Button>
       </form>
     </div>

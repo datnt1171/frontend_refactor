@@ -46,7 +46,7 @@ export function UserMenu({ onLogout }: UserMenuProps) {
             className="flex items-center w-full"
           >
             <SquareUserRound className="h-4 w-4 mr-2" />
-            {t('dashboard.userMenu.profile')}
+            {t('navBar.userMenu.profile')}
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
@@ -55,7 +55,7 @@ export function UserMenu({ onLogout }: UserMenuProps) {
             className="flex items-center w-full"
           >
             <LogOut className="h-4 w-4 mr-2" />
-            {t('dashboard.userMenu.logout')}
+            {t('navBar.userMenu.logout')}
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -12,24 +12,24 @@ import {
 
 // Navigation items with translation keys
 export const navItems = [
-  { href: "/task-management/dashboard", labelKey: "dashboard.navigation.dashboard", icon: LayoutDashboard },
-  { href: "/task-management/processes", labelKey: "dashboard.navigation.formTemplates", icon: FileText },
-  { href: "/task-management/tasks/sent", labelKey: "dashboard.navigation.sentTasks", icon: Send },
-  { href: "/task-management/tasks/received", labelKey: "dashboard.navigation.receivedTasks", icon: Inbox },
-  { href: "/task-management/reports/sample-request", labelKey: "dashboard.navigation.SPR", icon: Table },
+  { href: "/task-management/dashboard", labelKey: "taskManagement.sideBar.dashboard", icon: LayoutDashboard },
+  { href: "/task-management/processes", labelKey: "taskManagement.sideBar.formTemplates", icon: FileText },
+  { href: "/task-management/tasks/sent", labelKey: "taskManagement.sideBar.sentTasks", icon: Send },
+  { href: "/task-management/tasks/received", labelKey: "taskManagement.sideBar.receivedTasks", icon: Inbox },
+  { href: "/task-management/reports/sample-request", labelKey: "taskManagement.sideBar.SPR", icon: Table },
 ]
 
 // Language options
 export const languages = [
-  { code: 'en', nameKey: 'dashboard.languages.english', flag: '🇺🇸' },
-  { code: 'vi', nameKey: 'dashboard.languages.vietnamese', flag: '🇻🇳' },
-  { code: 'zh-hant', nameKey: 'dashboard.languages.chineseTraditional', flag: '🇨🇳' }
+  { code: 'en', nameKey: 'navBar.languages.english', flag: '🇺🇸' },
+  { code: 'vi', nameKey: 'navBar.languages.vietnamese', flag: '🇻🇳' },
+  { code: 'zh-hant', nameKey: 'navBar.languages.chineseTraditional', flag: '🇨🇳' }
 ]
 
 // External apps with translation keys
 export const externalApps = [
-  { nameKey: 'dashboard.externalApps.Task', href: '/task-management', icon: ListCheck },
-  { nameKey: 'dashboard.externalApps.CRM', href: '/crm', icon: Factory },
-  { nameKey: 'dashboard.externalApps.HRM', href: '/user', icon: UserSearch },
-  { nameKey: 'dashboard.externalApps.Dashboard', href: '/dashboard', icon: BarChart3 }
+  { nameKey: 'navBar.externalApps.Task', href: '/task-management', icon: ListCheck },
+  { nameKey: 'navBar.externalApps.CRM', href: '/crm', icon: Factory },
+  { nameKey: 'navBar.externalApps.HRM', href: '/user', icon: UserSearch },
+  { nameKey: 'navBar.externalApps.Dashboard', href: '/dashboard', icon: BarChart3 }
 ]

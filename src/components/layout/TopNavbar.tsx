@@ -37,7 +37,7 @@ export function TopNavbar({
             </Button>
           </div>
           <div className="hidden md:block md:w-64 md:pr-4">
-            <h1 className="text-xl font-bold text-gray-900">{t('dashboard.title')}</h1>
+            <h1 className="text-xl font-bold text-gray-900">{t('navBar.appTitle')}</h1>
           </div>
         </div>
 

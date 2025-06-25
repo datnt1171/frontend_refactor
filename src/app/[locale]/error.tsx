@@ -10,7 +10,7 @@ export default function Error({
   error: Error;
   reset: () => void;
 }) {
-  const t = useTranslations('root');
+  const t = useTranslations('common');
 
   useEffect(() => {
     console.error(error);

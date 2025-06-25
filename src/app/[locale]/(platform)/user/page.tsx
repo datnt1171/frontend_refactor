@@ -11,7 +11,8 @@ import { Link } from "@/i18n/navigation"
 import { getTranslations } from "next-intl/server"
 
 export default async function UserListPage() {
-  const t = await getTranslations("dashboard.user")
+  const commonT = await getTranslations("common")
+  const t = await getTranslations("user")
   const response = await getUsers()
   const users = response.results
   return (
@@ -20,16 +21,16 @@ export default async function UserListPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("username")}</TableHead>
-              <TableHead>{t("firstName")}</TableHead>
-              <TableHead>{t("lastName")}</TableHead>
+              <TableHead>{t('username')}</TableHead>
+              <TableHead>{t('firstName')}</TableHead>
+              <TableHead>{t('lastName')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={3} className="text-center">
-                  {t("noUsersFound")}
+                  {commonT('noDataFound')}
                 </TableCell>
               </TableRow>
             ) : (

@@ -1,7 +1,6 @@
-
 import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -16,7 +15,10 @@ import { getReceivedTasks } from "@/lib/api/server"
 import { getTranslations } from "next-intl/server"
 
 export default async function ReceivedTasksPage() {
-  const t = await getTranslations('dashboard')
+  const commonT = await getTranslations('common')
+  const commonTaskT = await getTranslations('taskManagement.common')
+  const t = await getTranslations('taskManagement.receivedTask')
+  
   const response = await getReceivedTasks()
   const tasks: ReceivedTask[] = response.results
 
@@ -24,22 +26,19 @@ export default async function ReceivedTasksPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t('receivedTask.receivedTasks')}</h1>
-        <p className="text-muted-foreground mt-2">{t('receivedTask.receivedTasksDescription')}</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+        <p className="text-muted-foreground mt-2">{t('description')}</p>
       </div>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle>{t('receivedTask.yourAssignedTasks')}</CardTitle>
-          </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('receivedTask.id')}</TableHead>
-                  <TableHead>{t('receivedTask.from')}</TableHead>
-                  <TableHead>{t('receivedTask.formType')}</TableHead>
-                  <TableHead>{t('receivedTask.status')}</TableHead>
-                  <TableHead>{t('receivedTask.createdAt')}</TableHead>
+                  <TableHead>{commonT('id')}</TableHead>
+                  <TableHead>{t('from')}</TableHead>
+                  <TableHead>{commonTaskT('formType')}</TableHead>
+                  <TableHead>{commonTaskT('status')}</TableHead>
+                  <TableHead>{commonT('createdAt')}</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -64,12 +63,12 @@ export default async function ReceivedTasksPage() {
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
                             <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">{t('receivedTask.openMenu')}</span>
+                            <span className="sr-only">{commonT('openMenu')}</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
-                            <Link href={`/task-management/tasks/${task.id}`}>{t('receivedTask.viewDetails')}</Link>
+                            <Link href={`/task-management/tasks/${task.id}`}>{commonT('viewDetails')}</Link>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -81,8 +80,8 @@ export default async function ReceivedTasksPage() {
 
             {tasks.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <h3 className="text-lg font-medium">{t('receivedTask.noTasksFound')}</h3>
-                <p className="text-muted-foreground mt-2">{t('receivedTask.noAssignedTasks')}</p>
+                <h3 className="text-lg font-medium">{commonT('noDataFound')}</h3>
+                <p className="text-muted-foreground mt-2">{t('noAssignedTasks')}</p>
               </div>
             )}
           </CardContent>

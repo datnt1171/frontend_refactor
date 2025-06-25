@@ -1,6 +1,6 @@
 import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
@@ -11,7 +11,9 @@ import { getTranslations } from "next-intl/server"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 
 export default async function SentTasksPage() {
-  const t = await getTranslations('dashboard')
+  const commonT = await getTranslations('common')
+  const t = await getTranslations('taskManagement.sentTask')
+  
   const response = await getSentTasks()
   const tasks = response.results
 
@@ -19,29 +21,26 @@ export default async function SentTasksPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t('sentTask.sentTasks')}</h1>
-          <p className="text-muted-foreground mt-2">{t('sentTask.sentTasksDescription')}</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('Title')}</h1>
+          <p className="text-muted-foreground mt-2">{t('Description')}</p>
         </div>
         <Link href="/task-management/processes">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            {t('sentTask.createNewTask')}
+            {t('createNewTask')}
           </Button>
         </Link>
       </div>
         <Card>
-          <CardHeader className="pb-3">
-            <CardTitle>{t('sentTask.yourSentTasks')}</CardTitle>
-          </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>{t('sentTask.id')}</TableHead>
-                  <TableHead>{t('sentTask.recipient')}</TableHead>
-                  <TableHead>{t('sentTask.formType')}</TableHead>
-                  <TableHead>{t('sentTask.sentDate')}</TableHead>
-                  <TableHead>{t('sentTask.status')}</TableHead>
+                  <TableHead>{commonT('id')}</TableHead>
+                  <TableHead>{t('recipient')}</TableHead>
+                  <TableHead>{t('formType')}</TableHead>
+                  <TableHead>{t('sentDate')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -66,15 +65,14 @@ export default async function SentTasksPage() {
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon">
                             <MoreHorizontal className="h-4 w-4" />
-                            <span className="sr-only">{t('sentTask.openMenu')}</span>
+                            <span className="sr-only">{commonT('openMenu')}</span>
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>
-                            <Link href={`/task-management/tasks/${task.id}`}>{t('sentTask.viewDetails')}</Link>
+                            <Link href={`/task-management/tasks/${task.id}`}>{commonT('viewDetails')}</Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem>{t('sentTask.sendReminder')}</DropdownMenuItem>
-                          <DropdownMenuItem>{t('sentTask.duplicate')}</DropdownMenuItem>
+                          <DropdownMenuItem>{t('sendReminder')}</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -85,8 +83,8 @@ export default async function SentTasksPage() {
 
             {tasks.length === 0 && (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <h3 className="text-lg font-medium">{t('sentTask.noTasksFound')}</h3>
-                <p className="text-muted-foreground mt-2">{t('sentTask.tryAdjustingSearchOrCreateTask')}</p>
+                <h3 className="text-lg font-medium">{commonT('noDataFound')}</h3>
+                <p className="text-muted-foreground mt-2">{t('tryAdjustingSearchOrCreateTask')}</p>
               </div>
             )}
           </CardContent>

@@ -28,13 +28,14 @@ export function FormField({
   onChange, 
   disabled 
 }: FormFieldProps) {
-  const t = useTranslations('dashboard')
-
+  const t = useTranslations('taskManagement.createTask')
+  const commonT = useTranslations('common')
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        alert("Invalid file type. Please select a valid file.")
+        alert(commonT('invalidFile'))
         e.target.value = ""
         onChange(undefined)
         return
@@ -59,7 +60,7 @@ export function FormField({
           disabled={disabled}
         >
           <SelectTrigger>
-            <SelectValue placeholder={t('createTask.selectUser')} />
+            <SelectValue placeholder={t('selectUser')} />
           </SelectTrigger>
           <SelectContent>
             {users.map(user => (

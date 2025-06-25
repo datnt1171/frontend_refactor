@@ -39,7 +39,7 @@ export function ExternalAppsMenu() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="flex items-center">
-              {t('dashboard.externalApps.apps')} <ChevronDown className="ml-1 h-3 w-3" />
+              {t('navBar.externalApps.apps')} <ChevronDown className="ml-1 h-3 w-3" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>

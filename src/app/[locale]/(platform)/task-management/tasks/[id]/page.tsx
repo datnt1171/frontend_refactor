@@ -16,9 +16,10 @@ export default async function TaskDetailPage({
   const { id } = await params
   
   // Fetch data and translations on server
-  const [task, t] = await Promise.all([
+  const [task, t, commonT] = await Promise.all([
     getTask(id),
-    getTranslations('dashboard')
+    getTranslations('taskManagement.taskDetail'),
+    getTranslations('common')
   ])
 
   if (!task) {
@@ -44,7 +45,7 @@ export default async function TaskDetailPage({
         <div className="md:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t('taskDetail.taskDetails')}</CardTitle>
+              <CardTitle>{t('Title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {task.data.map((data) => (
@@ -66,10 +67,10 @@ export default async function TaskDetailPage({
                           </p>
                         ))
                       ) : (
-                        <span className="text-muted-foreground italic">{t('taskDetail.noFileUploaded')}</span>
+                        <span className="text-muted-foreground italic">{t('noFileUploaded')}</span>
                       )
                     ) : (
-                      data.value || <span className="text-muted-foreground italic">{t('taskDetail.noResponseProvided')}</span>
+                      data.value || <span className="text-muted-foreground italic">{t('noResponseProvided')}</span>
                     )}
                   </div>
                 </div>
@@ -79,7 +80,7 @@ export default async function TaskDetailPage({
 
           <Card>
             <CardHeader>
-              <CardTitle>{t('taskDetail.activityHistory')}</CardTitle>
+              <CardTitle>{t('activityHistory')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -94,7 +95,7 @@ export default async function TaskDetailPage({
                         <span className="text-muted-foreground">{log.action.description || log.action.name}</span>
                       </p>
                       {log.comment && (
-                        <p className="text-xs text-muted-foreground">{t('taskDetail.comment')}: {log.comment}</p>
+                        <p className="text-xs text-muted-foreground">{t('comment')}: {log.comment}</p>
                       )}
                       {log.file && (
                         <p className="text-xs text-blue-600 mt-1">
@@ -110,7 +111,7 @@ export default async function TaskDetailPage({
 
                 {(!task.action_logs || task.action_logs.length === 0) && (
                   <div className="text-center text-muted-foreground">
-                    <p>{t('taskDetail.noActivityRecorded')}</p>
+                    <p>{t('noActivityRecorded')}</p>
                   </div>
                 )}
               </div>
@@ -121,13 +122,13 @@ export default async function TaskDetailPage({
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t('taskDetail.taskInformation')}</CardTitle>
+              <CardTitle>{t('taskInformation')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">{t('taskDetail.createdOn')}</p>
+                  <p className="text-sm font-medium">{commonT('createdAt')}</p>
                   <p className="text-sm text-muted-foreground">{formatDateToUTC7(task.created_at)}</p>
                 </div>
               </div>
@@ -135,7 +136,7 @@ export default async function TaskDetailPage({
               <div className="flex items-center">
                 <User className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">{t('taskDetail.createdBy')}</p>
+                  <p className="text-sm font-medium">{commonT('createdBy')}</p>
                   <p className="text-sm text-muted-foreground">{task.created_by.username}</p>
                 </div>
               </div>

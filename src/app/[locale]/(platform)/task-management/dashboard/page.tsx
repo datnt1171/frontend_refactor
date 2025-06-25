@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation"
 import { FileText, Send, Inbox, Clock } from "lucide-react"
 import { getProcesses, getSentTasks, getReceivedTasks } from "@/lib/api/"
 import type { ProcessList, ReceivedTask, SentTask } from "@/types/api"
+import { useTranslations } from "next-intl"
 
 export default function Dashboard() {
 
@@ -35,12 +36,15 @@ export default function Dashboard() {
   const sentTasksCount = sentTasks.length
   const receivedTasksCount = receivedTasks.length
   const sentTasksDoneCount = sentTasks.filter(task => task.state_type === "closed").length
+  const sentTaskT = useTranslations('taskManagement.sentTask')
+  const receivedTaskT = useTranslations('taskManagement.receivedTask')
+  const t = useTranslations('taskManagement.dashboard')
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground mt-2">Welcome to your task management dashboard</p>
+        <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+        <p className="text-muted-foreground mt-2">{t('welcome')}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -48,12 +52,12 @@ export default function Dashboard() {
           <CardHeader className="flex items-center justify-between pb-4">
             <div className="flex items-center space-x-2">
               <FileText className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-sm font-medium">Form Templates</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('formTemplate')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
             <div className="text-2xl font-bold">{processCount}</div>
-            <p className="text-xs text-muted-foreground">Available templates</p>
+            <p className="text-xs text-muted-foreground">{t('availableTemplates')}</p>
           </CardContent>
         </Card>
 
@@ -61,12 +65,12 @@ export default function Dashboard() {
           <CardHeader className="flex items-center justify-between pb-4">
             <div className="flex items-center space-x-2">
               <Send className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-sm font-medium">Sent Tasks</CardTitle>
+              <CardTitle className="text-sm font-medium">{sentTaskT('title')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
             <div className="text-2xl font-bold">{sentTasksCount}</div>
-            <p className="text-xs text-muted-foreground">Tasks you have sent</p>
+            <p className="text-xs text-muted-foreground">{sentTaskT('description')}</p>
           </CardContent>
         </Card>
 
@@ -74,12 +78,12 @@ export default function Dashboard() {
           <CardHeader className="flex items-center justify-between pb-4">
             <div className="flex items-center space-x-2">
               <Inbox className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-sm font-medium">Received Tasks</CardTitle>
+              <CardTitle className="text-sm font-medium">{receivedTaskT('title')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
             <div className="text-2xl font-bold">{receivedTasksCount}</div>
-            <p className="text-xs text-muted-foreground">Tasks to complete</p>
+            <p className="text-xs text-muted-foreground">{receivedTaskT('description')}</p>
           </CardContent>
         </Card>
 
@@ -87,12 +91,12 @@ export default function Dashboard() {
           <CardHeader className="flex items-center justify-between pb-4">
             <div className="flex items-center space-x-2">
               <Clock className="h-5 w-5 text-muted-foreground" />
-              <CardTitle className="text-sm font-medium">Sent Tasks Done</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('completedTask')}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center">
             <div className="text-2xl font-bold">{sentTasksDoneCount}</div>
-            <p className="text-xs text-muted-foreground">Sent tasks completed</p>
+            <p className="text-xs text-muted-foreground">{t('completedTaskDescription')}</p>
           </CardContent>
         </Card>
       </div>

@@ -14,21 +14,23 @@ interface SPRReportTableProps {
 }
 
 export default function SPRReportTable({ data }: SPRReportTableProps) {
-  const t = useTranslations('dashboard')
+  const commonT = useTranslations('common')
+  const userT = useTranslations('user')
+  const t = useTranslations('dashboard.sprReport')
 
   // Define columns for TanStack Table
   const columns: BetterColumnDef<SPRReportRow, unknown>[] = [
     {
       accessorKey: "title",
-      header: t('sprReport.title'),
-      headerRenderer: createSortableHeader(t('sprReport.title')),
+      header: commonT('id'),
+      headerRenderer: createSortableHeader(commonT('id')),
       enableSorting: false,
       enableColumnFilter: false,
       cell: ({ row }) => (
         <Link 
           href={`/task-management/tasks/${row.original.task_id}`} 
           className="hover:underline font-medium text-black-600 hover:text-black-800"
-          title={t('sprReport.viewTask')}
+          title={commonT('viewDetails')}
         >
           {row.getValue("title")}
         </Link>
@@ -36,8 +38,8 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "customer_name",
-      header: t('sprReport.customerName'),
-      headerRenderer: createSortableHeader(t('sprReport.customerName')),
+      header: t('customerName'),
+      headerRenderer: createSortableHeader(t('customerName')),
       enableSorting: false,
       enableColumnFilter: true,
       filterFn: (row, id, value) => {
@@ -47,8 +49,8 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "finishing_code",
-      header: t('sprReport.finishingCode'),
-      headerRenderer: createSortableHeader(t('sprReport.finishingCode')),
+      header: t('finishingCode'),
+      headerRenderer: createSortableHeader(t('finishingCode')),
       enableSorting: false,
       enableColumnFilter: true,
       filterFn: (row, id, value) => {
@@ -58,8 +60,8 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "customer_color_name",
-      header: t('sprReport.customerColorName'),
-      headerRenderer: createSortableHeader(t('sprReport.customerColorName')),
+      header: t('customerColorName'),
+      headerRenderer: createSortableHeader(t('customerColorName')),
       enableSorting: false,
       enableColumnFilter: true,
       filterFn: (row, id, value) => {
@@ -69,8 +71,8 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "collection",
-      header: t('sprReport.collection'),
-      headerRenderer: createSortableHeader(t('sprReport.collection')),
+      header: t('collection'),
+      headerRenderer: createSortableHeader(t('collection')),
       enableSorting: false,
       enableColumnFilter: true,
       filterFn: (row, id, value) => {
@@ -80,8 +82,8 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "quantity",
-      header: t('sprReport.quantity'),
-      headerRenderer: createSortableHeader(t('sprReport.quantity')),
+      header: t('quantity'),
+      headerRenderer: createSortableHeader(t('quantity')),
       enableSorting: false,
       enableColumnFilter: false,
       cell: ({ row }) => (
@@ -92,23 +94,23 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "created_at",
-      header: t('sprReport.createdAt'),
-      headerRenderer: createSortableHeader(t('sprReport.createdAt')),
+      header: commonT('createdAt'),
+      headerRenderer: createSortableHeader(commonT('createdAt')),
       enableSorting: true,
       enableColumnFilter: false,
       cell: ({ row }) => formatDateToUTC7(row.getValue("created_at")),
     },
     {
       accessorKey: "deadline",
-      header: t('sprReport.deadline'),
-      headerRenderer: createSortableHeader(t('sprReport.deadline')),
+      header: t('deadline'),
+      headerRenderer: createSortableHeader(t('deadline')),
       enableSorting: true,
       enableColumnFilter: false,
     },
     {
       accessorKey: "created_by",
-      header: t('sprReport.username'),
-      headerRenderer: createSortableHeader(t('sprReport.username')),
+      header: userT('username'),
+      headerRenderer: createSortableHeader(userT('username')),
       enableSorting: false,
       enableColumnFilter: true,
       filterFn: (row, id, value) => {
@@ -118,8 +120,8 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
     },
     {
       accessorKey: "state_type",
-      header: t('sprReport.state'),
-      headerRenderer: createSortableHeader(t('sprReport.state')),
+      header: t('state'),
+      headerRenderer: createSortableHeader(t('state')),
       enableSorting: false,
       enableColumnFilter: true,
       cell: ({ row }) => {

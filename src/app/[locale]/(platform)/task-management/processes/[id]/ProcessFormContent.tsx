@@ -23,12 +23,12 @@ export function ProcessFormContent({
   onInputChange,
   onReview
 }: ProcessFormContentProps) {
-  const t = useTranslations('dashboard')
+  const t = useTranslations('taskManagement.createTask')
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('createTask.createTask')}</CardTitle>
+        <CardTitle>{t('createTask')}</CardTitle>
       </CardHeader>
       <form onSubmit={onReview}>
         <CardContent className="space-y-4">
@@ -51,7 +51,7 @@ export function ProcessFormContent({
         <CardFooter>
           <Button type="submit">
             <Eye className="mr-2 h-4 w-4" />
-            {t('createTask.review')}
+            {t('review')}
           </Button>
         </CardFooter>
       </form>
