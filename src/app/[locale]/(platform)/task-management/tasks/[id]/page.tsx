@@ -22,10 +22,6 @@ export default async function TaskDetailPage({
     getTranslations('common')
   ])
 
-  if (!task) {
-    return <div>Task not found</div>
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-2">
@@ -45,7 +41,7 @@ export default async function TaskDetailPage({
         <div className="md:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t('Title')}</CardTitle>
+              <CardTitle>{t('title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {task.data.map((data) => (

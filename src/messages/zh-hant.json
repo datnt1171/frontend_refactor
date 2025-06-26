@@ -8,7 +8,6 @@
     "invalidFile": "檔案類型無效。請選擇有效的檔案。",
     "tryAgain": "再試一次",
     "id": "ID",
-    "createdAt": "建立時間",
     "openMenu": "開啟選單",
     "viewDetails": "查看詳細",
     "noDataFound": "未找到資料",
@@ -16,7 +15,7 @@
     "processing": "處理中...",
     "yes": "是",
     "no": "否",
-    "createAt": "建立時間",
+    "createdAt": "建立時間",
     "createdBy": "建立者",
     "updatedAt": "更新時間",
     "updatedBy": "更新者"
@@ -120,8 +119,8 @@
       "failedToCreateTask": "任務建立失敗。"
     },
     "sentTask": {
-      "Title": "已寄任務",
-      "Description": "您已寄出的任務",
+      "title": "已寄任務",
+      "description": "您已寄出的任務",
       "createNewTask": "建立新任務",
       "recipient": "接收者",
       "formType": "表單類型",
@@ -138,7 +137,7 @@
       "noAssignedTasks": "目前沒有指派給您的任務。"
     },
     "taskDetail": {
-      "Title": "任務詳情",
+      "title": "任務詳情",
       "failedToLoadTaskDetails": "無法載入任務詳情",
       "actionPerformedSuccessfully": "操作成功執行！",
       "failedToPerformAction": "操作執行失敗",

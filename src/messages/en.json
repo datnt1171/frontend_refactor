@@ -8,7 +8,6 @@
     "invalidFile": "Invalid file type. Please select a valid file.",
     "tryAgain": "Try Again",
     "id": "ID",
-    "createdAt": "Created At",
     "openMenu": "Open menu",
     "viewDetails": "View Details",
     "noDataFound": "No data found",
@@ -16,7 +15,7 @@
     "processing": "Processing...",
     "yes": "Yes",
     "no": "No",
-    "createAt": "Created At",
+    "createdAt": "Created At",
     "createdBy": "Created By",
     "updatedAt": "Updated At",
     "updatedBy": "Updated By"
@@ -120,8 +119,8 @@
       "failedToCreateTask": "Failed to create task."
     },
     "sentTask": {
-      "Title": "Sent Tasks",
-      "Description": "Tasks you have sent",
+      "title": "Sent Tasks",
+      "description": "Tasks you have sent",
       "createNewTask": "Create New Task",
       "recipient": "Recipient",
       "formType": "Form type",
@@ -138,7 +137,7 @@
       "noAssignedTasks": "You don't have any tasks assigned to you."
     },
     "taskDetail": {
-      "Title": "Task Detail",
+      "title": "Task Detail",
       "failedToLoadTaskDetails": "Failed to load task details",
       "actionPerformedSuccessfully": "Action performed successfully!",
       "failedToPerformAction": "Failed to perform action",
@@ -160,7 +159,6 @@
       "title": "All sample request",
       "customerName": "Customer's Name",
       "state": "State",
-      
       "finishingCode": "Finishing Code",
       "customerColorName": "Customer's Color Name",
       "collection": "Collection",

@@ -119,8 +119,8 @@
       "failedToCreateTask": "Gửi phiếu thất bại."
     },
     "sentTask": {
-      "Title": "Công việc đã gửi",
-      "Description": "Các công việc bạn đã gửi",
+      "title": "Công việc đã gửi",
+      "description": "Các công việc bạn đã gửi",
       "createNewTask": "Tạo Công việc mới",
       "recipient": "Người nhận",
       "formType": "Loại Phiếu",
@@ -137,7 +137,7 @@
       "noAssignedTasks": "Bạn hiện không có công việc nào được giao."
     },
     "taskDetail": {
-      "Title": "Chi tiết Công việc",
+      "title": "Chi tiết Công việc",
       "failedToLoadTaskDetails": "Không thể tải chi tiết công việc",
       "actionPerformedSuccessfully": "Thao tác thực hiện thành công!",
       "failedToPerformAction": "Thao tác thất bại",
