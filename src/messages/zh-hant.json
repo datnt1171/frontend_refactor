@@ -106,6 +106,7 @@
       "pleaseFillRequiredFields": "請填寫以下必填欄位：{fields}",
       "createTask": "建立任務",
       "selectUser": "選擇使用者",
+      "searchUsers": "搜尋用戶",
       "noValueProvided": "未提供值",
       "templateNotFound": "找不到範本",
       "requestedFormTemplateNotExist": "要求的表單範本不存在。",

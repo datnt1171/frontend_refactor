@@ -106,6 +106,7 @@
       "pleaseFillRequiredFields": "Please fill in the following required fields: {fields}",
       "createTask": "Create Task",
       "selectUser": "Select a user",
+      "searchUsers": "Search for user",
       "noValueProvided": "No value provided",
       "templateNotFound": "Template not found",
       "requestedFormTemplateNotExist": "The requested form template does not exist.",

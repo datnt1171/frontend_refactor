@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Combobox } from "@/components/ui/combobox"
 import { useTranslations } from 'next-intl'
 import type { ProcessField, UserList } from "@/types/api"
 
@@ -53,23 +54,22 @@ export function FormField({
 
   switch (field.field_type) {
     case "assignee":
+      const userOptions = users.map(user => ({
+        value: user.id.toString(),
+        label: `${user.first_name} ${user.last_name} (${user.username})`,
+        searchValue: `${user.first_name} ${user.last_name} ${user.username}`
+      }))
+
       return (
-        <Select
+        <Combobox
+          options={userOptions}
           value={value || ""}
           onValueChange={onChange}
+          placeholder={t('selectUser')}
+          searchPlaceholder={t('searchUsers')}
+          emptyMessage={commonT('noDataFound')}
           disabled={disabled}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t('selectUser')} />
-          </SelectTrigger>
-          <SelectContent>
-            {users.map(user => (
-              <SelectItem key={user.id} value={user.id.toString()}>
-                {user.first_name} {user.last_name} ({user.username})
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        />
       )
 
     case "text":

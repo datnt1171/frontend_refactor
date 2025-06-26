@@ -106,6 +106,7 @@
       "pleaseFillRequiredFields": "Vui lòng điền các trường bắt buộc: {fields}",
       "createTask": "Tạo công việc",
       "selectUser": "Chọn người thực hiện",
+      "searchUsers": "Chọn người dùng",
       "noValueProvided": "Chưa cung cấp giá trị",
       "templateNotFound": "Không tìm thấy phiếu",
       "requestedFormTemplateNotExist": "Phiếu không tồn tại.",
