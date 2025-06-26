@@ -119,16 +119,17 @@ export default function SPRReportTable({ data }: SPRReportTableProps) {
       },
     },
     {
-      accessorKey: "state_type",
-      header: t('state'),
-      headerRenderer: createSortableHeader(t('state')),
+      accessorKey: "state",
+      header: t("state"),
+      headerRenderer: createSortableHeader(t("state")),
       enableSorting: false,
       enableColumnFilter: true,
       cell: ({ row }) => {
-        const status = row.getValue("state_type") as string
+        const label = row.original.state           // actual display text
+        const colorType = row.original.state_type  // for color
         return (
-          <Badge variant="outline" className={getStatusColor(status)}>
-            {status}
+          <Badge variant="outline" className={getStatusColor(colorType)}>
+            {label}
           </Badge>
         )
       },

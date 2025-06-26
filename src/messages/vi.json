@@ -164,7 +164,7 @@
       "customerColorName": "Tên màu khách hàng",
       "collection": "Bộ sưu tập",
       "quantity": "Số lượng",
-      "deadline": "Hạn chót",
+      "deadline": "Ngày KH cần",
       "failedToLoad": "Không tải được báo cáo",
       "viewTask": "Xem Công việc"
     }

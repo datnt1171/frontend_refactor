@@ -632,6 +632,7 @@ export interface components {
             created_by: string;
             /** Format: uuid */
             user_id: string;
+            state: string;
             state_type: string;
             customer_name: string;
             finishing_code: string;
