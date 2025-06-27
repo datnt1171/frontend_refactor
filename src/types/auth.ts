@@ -5,7 +5,17 @@ export interface LoginRequest {
     password: string
 }
 
-export type LoginResponse = ApiSuccessResponse | ApiErrorResponse
+export interface LoginSuccessResponse {
+  success: true;
+  requiresPasswordChange: boolean;
+}
+
+export interface LoginErrorResponse {
+  success: false;
+  error: string;
+}
+
+export type LoginResponse = LoginSuccessResponse | LoginErrorResponse
 
 export interface TokenResponse {
     access: string

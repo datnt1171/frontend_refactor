@@ -43,6 +43,10 @@ export default function ChangePasswordPage() {
     }
   };
 
+  const isMinLength = new_password.length >= 8;
+  const isNotNumeric = !/^\d+$/.test(new_password) || new_password.length === 0; // Allow empty string to avoid premature red
+  // Add more checks if you want (e.g. isNotCommon, isNotSimilar)
+
   return (
     <div className="p-6 max-w-md mx-auto">
       <div className="mb-4">
@@ -69,6 +73,17 @@ export default function ChangePasswordPage() {
             onChange={e => setNewPassword(e.target.value)}
             required
           />
+          {new_password && (
+            <div className="text-xs mt-1 space-y-1">
+              <p className={isMinLength ? 'text-green-600' : 'text-red-500'}>
+                • {t('passwordMinLength')}
+              </p>
+              <p className={isNotNumeric ? 'text-green-600' : 'text-red-500'}>
+                • {t('passwordNotNumeric')}
+              </p>
+              {/* Extend with other rules if you want */}
+            </div>
+          )}
         </div>
         <div>
           <Label htmlFor="re_new_password">{t('confirmNewPassword')}</Label>

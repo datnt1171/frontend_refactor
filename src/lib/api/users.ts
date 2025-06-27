@@ -9,7 +9,7 @@ export const getUsers = async (): Promise<PaginatedUserList> => {
 }
 
 export const changePassword = (data: SetPasswordRetype) => 
-  api.post<SetPasswordRetype>("/users/set_password", data)
+  api.patch<SetPasswordRetype>("/users/me/change-password", data)
 
 export const getUser = async (id: string): Promise<UserList> => {
   const res = await api.get<UserList>(`/users/${id}/`);

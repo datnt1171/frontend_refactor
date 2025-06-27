@@ -43,8 +43,20 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
     setIsLoading(true)
 
     try {
-      await login({ username, password })
-      router.push("/task-management/processes")
+      const response = await login({ username, password })
+      
+      // Type narrowing - check if login was successful
+      if (response.data.success) {
+        // Now TypeScript knows this is LoginSuccessResponse
+        if (response.data.requiresPasswordChange) {
+          router.push("/user/me/change-password")
+        } else {
+          router.push("/task-management/processes")
+        }
+      } else {
+        // This is LoginErrorResponse
+        setError(response.data.error)
+      }
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         if (err.response?.status === 401) {

@@ -3,7 +3,7 @@ import { cookies } from "next/headers"
 import axios from "axios"
 import type { ApiErrorResponse } from "@/types/common"
 
-export async function POST(request: Request) {
+export async function PATCH(request: Request) {
   try {
     const cookieStore = await cookies()
     const token = cookieStore.get("access_token")?.value
@@ -17,8 +17,8 @@ export async function POST(request: Request) {
 
     const body = await request.json()
 
-    const response = await axios.post(
-      `${process.env.API_URL}/auth/users/set_password/`,
+    const response = await axios.patch(
+      `${process.env.API_URL}/api/users/me/change-password/`,
       body,
       {
         headers: {

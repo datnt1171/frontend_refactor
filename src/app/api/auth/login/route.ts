@@ -1,10 +1,9 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import axios from "axios"
-import type { LoginRequest, TokenResponse } from "@/types/auth"
-import type { ApiSuccessResponse, ApiErrorResponse } from "@/types/common"
+import type { LoginRequest, TokenResponse, LoginSuccessResponse, LoginErrorResponse } from "@/types/auth"
 
-export async function POST(request: Request): Promise<NextResponse<ApiSuccessResponse | ApiErrorResponse>> {
+export async function POST(request: Request): Promise<NextResponse<LoginSuccessResponse | LoginErrorResponse>> {
   try {
     const { username, password }: LoginRequest = await request.json()
 
@@ -17,7 +16,20 @@ export async function POST(request: Request): Promise<NextResponse<ApiSuccessRes
 
     const { access, refresh } = response.data
 
-    // Set HTTP-only cookies
+    // Get user profile to check password status
+    const userResponse = await axios.get(
+      `${process.env.API_URL}/api/users/me/`,
+      { 
+        headers: { 
+          "Authorization": `Bearer ${access}`,
+          "Content-Type": "application/json" 
+        } 
+      }
+    )
+
+    const user = userResponse.data
+
+    // Set cookies
     const cookieStore = await cookies()
 
     // Access token - longer expiry (30 minutes)
@@ -38,9 +50,9 @@ export async function POST(request: Request): Promise<NextResponse<ApiSuccessRes
       path: "/",
     })
 
-    // Return user info (without sensitive data)
-    return NextResponse.json<ApiSuccessResponse>({
-      success: true
+    return NextResponse.json<LoginSuccessResponse>({
+      success: true,
+      requiresPasswordChange: !user.is_password_changed
     })
   } catch (error: unknown) {
     let errorMessage = "Authentication failed"
@@ -56,7 +68,7 @@ export async function POST(request: Request): Promise<NextResponse<ApiSuccessRes
       errorMessage = error.message
     }
 
-    return NextResponse.json<ApiErrorResponse>(
+    return NextResponse.json<LoginErrorResponse>(
       { success: false, error: errorMessage },
       { status: statusCode }
     )
