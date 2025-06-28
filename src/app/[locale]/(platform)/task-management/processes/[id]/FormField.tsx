@@ -56,8 +56,8 @@ export function FormField({
     case "assignee":
       const userOptions = users.map(user => ({
         value: user.id.toString(),
-        label: `${user.first_name} ${user.last_name} (${user.username})`,
-        searchValue: `${user.first_name} ${user.last_name} ${user.username}`
+        label: `${user.last_name} ${user.first_name} (${user.username})`,
+        searchValue: `${user.last_name} ${user.first_name} ${user.username}`
       }))
 
       return (

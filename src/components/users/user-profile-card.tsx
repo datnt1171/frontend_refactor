@@ -25,7 +25,7 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
           </div>
           <div>
             <CardTitle>
-              {user.first_name} {user.last_name}
+              {user.last_name} {user.first_name}
             </CardTitle>
             <div className="text-gray-500 text-sm">@{user.username}</div>
           </div>
@@ -55,7 +55,7 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
             <span>
               Supervisor:{" "}
               {user.supervisor
-                ? `${user.supervisor.first_name} ${user.supervisor.last_name}`
+                ? `${user.supervisor.last_name} ${user.supervisor.first_name}`
                 : "N/A"}
             </span>
           </div>

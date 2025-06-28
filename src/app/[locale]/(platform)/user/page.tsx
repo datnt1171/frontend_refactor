@@ -22,8 +22,8 @@ export default async function UserListPage() {
           <TableHeader>
             <TableRow>
               <TableHead>{t('username')}</TableHead>
-              <TableHead>{t('firstName')}</TableHead>
               <TableHead>{t('lastName')}</TableHead>
+              <TableHead>{t('firstName')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -44,8 +44,8 @@ export default async function UserListPage() {
                       {user.username}
                     </Link>
                   </TableCell>
-                  <TableCell>{user.first_name || "-"}</TableCell>
                   <TableCell>{user.last_name || "-"}</TableCell>
+                  <TableCell>{user.first_name || "-"}</TableCell>
                 </TableRow>
               ))
             )}

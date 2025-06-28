@@ -14,8 +14,8 @@ export default async function UserDetailPage({ params }: {
       <BackButton />
       <h1 className="text-xl font-bold mb-4">{t('userDetail')}</h1>
       <div className="mb-2"><span className="font-semibold">{t('username')}:</span> {user.username}</div>
-      <div className="mb-2"><span className="font-semibold">{t('firstName')}:</span> {user.first_name || "-"}</div>
       <div className="mb-2"><span className="font-semibold">{t('lastName')}:</span> {user.last_name || "-"}</div>
+      <div className="mb-2"><span className="font-semibold">{t('firstName')}:</span> {user.first_name || "-"}</div>
     </div>
   )
 }

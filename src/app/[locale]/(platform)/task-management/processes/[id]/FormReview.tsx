@@ -39,7 +39,7 @@ export function FormReview({
     
     if (field.field_type === "assignee") {
       const user = users.find(u => u.id.toString() === value)
-      return user ? `${user.first_name} ${user.last_name} (${user.username})` : value
+      return user ? `${user.last_name} ${user.first_name} (${user.username})` : value
     }
     
     if (field.field_type === "file" && value instanceof File) {
