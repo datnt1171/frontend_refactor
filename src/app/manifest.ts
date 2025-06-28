@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Viet Lien',
     short_name: 'Viet Lien',
     description: 'Task Management System',
-    start_url: '/login',
+    start_url: '/vi/login',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#000000',
