@@ -10,13 +10,11 @@ import { UserMenu } from "./UserMenu"
 interface TopNavbarProps {
   isMobileMenuOpen: boolean
   onToggleMobileMenu: () => void
-  onLogout: () => void
 }
 
 export function TopNavbar({ 
   isMobileMenuOpen, 
-  onToggleMobileMenu, 
-  onLogout 
+  onToggleMobileMenu,  
 }: TopNavbarProps) {
   const t = useTranslations()
 
@@ -45,7 +43,7 @@ export function TopNavbar({
         <div className="flex items-center space-x-3">
           <ExternalAppsMenu />
           <LanguageSelector />
-          <UserMenu onLogout={onLogout} />
+          <UserMenu />
         </div>
       </div>
     </div>

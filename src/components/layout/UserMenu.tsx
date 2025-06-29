@@ -1,6 +1,5 @@
 "use client"
 
-import { useContext } from "react"
 import { useTranslations } from 'next-intl'
 import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
@@ -11,14 +10,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { LogOut, ChevronDown, SquareUserRound } from "lucide-react"
-import { UserContext } from "@/contexts/UserContext"
+import { useAuthStore } from '@/stores/authStore'
 
-interface UserMenuProps {
-  onLogout: () => void
-}
-
-export function UserMenu({ onLogout }: UserMenuProps) {
-  const user = useContext(UserContext)
+export function UserMenu() {
+  const { user, handleLogout } = useAuthStore()
   const t = useTranslations()
 
   return (
@@ -51,7 +46,7 @@ export function UserMenu({ onLogout }: UserMenuProps) {
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <button
-            onClick={onLogout}
+            onClick={handleLogout}
             className="flex items-center w-full"
           >
             <LogOut className="h-4 w-4 mr-2" />

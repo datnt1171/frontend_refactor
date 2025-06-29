@@ -1,6 +1,6 @@
 import api from '../api/client'
+import { useAuthStore } from '@/stores/authStore'
 
-// Token refresh logic
 let isRefreshing = false
 let failedQueue: any[] = []
 
@@ -20,7 +20,7 @@ export const setupTokenRefreshInterceptor = () => {
     (response) => response,
     async (error) => {
       const originalRequest = error.config
-
+      
       if (error.response?.status === 401 && !originalRequest._retry) {
         if (
           originalRequest.url?.includes('/auth/login') ||
@@ -46,11 +46,12 @@ export const setupTokenRefreshInterceptor = () => {
           if (!refreshResponse.data.success) {
             throw new Error("Refresh failed")
           }
-
           processQueue(null)
           return api(originalRequest)
         } catch (refreshError) {
           processQueue(refreshError)
+          // Clear user from store on refresh failure
+          useAuthStore.getState().clearUser()
           if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
             window.location.href = "/login"
           }
@@ -59,7 +60,7 @@ export const setupTokenRefreshInterceptor = () => {
           isRefreshing = false
         }
       }
-
+      
       return Promise.reject(error)
     }
   )
