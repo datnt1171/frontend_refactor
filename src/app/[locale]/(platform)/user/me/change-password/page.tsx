@@ -43,7 +43,7 @@ export default function ChangePasswordPage() {
     }
   };
 
-  const isMinLength = new_password.length >= 8;
+  const isMinLength = new_password.length >= 9;
   const isNotNumeric = !/^\d+$/.test(new_password) || new_password.length === 0; // Allow empty string to avoid premature red
   // Add more checks if you want (e.g. isNotCommon, isNotSimilar)
 
