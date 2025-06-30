@@ -10,6 +10,7 @@ import { performTaskAction } from "@/lib/api"
 import { getActionColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import type { TaskDetail } from "@/types/api"
+import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 
 interface TaskActionsProps {
   task: TaskDetail
@@ -55,7 +56,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
             <Input
               type="file"
               className="mb-2"
-              accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx"
+              accept={ACCEPTED_FILE_TYPES}
               onChange={e => {
                 const file = e.target.files?.[0] || null
                 if (file) {

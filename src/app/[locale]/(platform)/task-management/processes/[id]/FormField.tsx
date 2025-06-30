@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Combobox } from "@/components/ui/combobox"
 import { useTranslations } from 'next-intl'
 import type { ProcessField, UserList } from "@/types/api"
+import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 
 interface FormFieldProps {
   field: ProcessField
@@ -139,7 +140,7 @@ export function FormField({
         <Input
           id={`field-${field.id}`}
           type="file"
-          accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx"
+          accept={ACCEPTED_FILE_TYPES}
           onChange={handleFileChange}
           required={field.required}
           disabled={disabled}

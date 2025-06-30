@@ -33,3 +33,10 @@ export const externalApps = [
   { nameKey: 'navBar.externalApps.HRM', href: '/user', icon: UserSearch },
   { nameKey: 'navBar.externalApps.Dashboard', href: '/dashboard', icon: BarChart3 }
 ]
+
+export const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', 
+                      '.pdf', '.doc', '.docx', 
+                      '.xls', '.xlsx', 
+                      '.heic', '.heif','.tiff', '.tif']
+
+export const ACCEPTED_FILE_TYPES = ALLOWED_EXTENSIONS.join(',');
