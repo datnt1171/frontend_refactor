@@ -3,7 +3,7 @@
 import axios from 'axios'
 import { useState } from "react"
 import { useRouter } from "@/i18n/navigation"
-import { Loader2 } from "lucide-react"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 import { login } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -27,6 +27,7 @@ interface LoginFormClientProps {
 export function LoginFormClient({ translations }: LoginFormClientProps) {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -94,14 +95,24 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">{translations.password}</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={translations.passwordPlaceholder}
-              disabled={isLoading}
-            />
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={translations.passwordPlaceholder}
+                disabled={isLoading}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+                tabIndex={-1}
+              >
+                {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
           {error && <p className="text-sm text-red-500" aria-live="polite">{error}</p>}
           <Button type="submit" className="w-full" disabled={isLoading}>
