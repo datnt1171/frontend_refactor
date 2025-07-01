@@ -62,11 +62,18 @@ export function ProcessFormClient({
 
       process.fields.forEach((field, index) => {
         formData.append(`fields[${index}][field_id]`, String(field.id))
-        
+
         const value = formValues[field.id]
+
         if (field.field_type === "file" && value instanceof File) {
+          console.log(`Appending file for field ${field.id}:`, {
+            name: value.name,
+            type: value.type,
+            size: value.size
+          })
           formData.append(`fields[${index}][file]`, value)
         } else {
+          console.log(`Appending value for field ${field.id}:`, value)
           formData.append(`fields[${index}][value]`, value ?? "")
         }
       })

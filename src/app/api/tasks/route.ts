@@ -30,11 +30,18 @@ export async function POST(request: Request) {
           "type" in value
         ) {
           const buffer = Buffer.from(await value.arrayBuffer())
+          console.log("BFF received file:", {
+            key,
+            name: value.name,
+            type: value.type,
+            size: buffer.length
+          })
           nodeForm.append(key, buffer, {
             filename: value.name,
-            contentType: value.type,
+            contentType: value.type || 'application/octet-stream',
           })
         } else {
+          console.log("BFF received value:", { key, value })
           nodeForm.append(key, value as string)
         }
       }
