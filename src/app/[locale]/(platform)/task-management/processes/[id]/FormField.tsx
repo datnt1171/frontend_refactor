@@ -15,13 +15,13 @@ interface FormFieldProps {
   disabled: boolean
 }
 
-const ALLOWED_FILE_TYPES = [
-  "image/jpeg", "image/png", "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-]
+// const ALLOWED_FILE_TYPES = [
+//   "image/jpeg", "image/png", "application/pdf",
+//   "application/msword",
+//   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//   "application/vnd.ms-excel",
+//   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+// ]
 
 export function FormField({ 
   field, 
@@ -36,12 +36,17 @@ export function FormField({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        alert(commonT('invalidFile'))
-        e.target.value = ""
-        onChange(undefined)
-        return
-      }
+      // if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+      //   alert(commonT('invalidFile'))
+      //   e.target.value = ""
+      //   onChange(undefined)
+      //   return
+      // }
+      console.log('File selected:', {
+      name: file.name,
+      type: file.type,
+      size: file.size
+    })
     }
     onChange(file)
   }
@@ -140,7 +145,7 @@ export function FormField({
         <Input
           id={`field-${field.id}`}
           type="file"
-          accept={ACCEPTED_FILE_TYPES}
+          // accept={ACCEPTED_FILE_TYPES}
           onChange={handleFileChange}
           required={field.required}
           disabled={disabled}
