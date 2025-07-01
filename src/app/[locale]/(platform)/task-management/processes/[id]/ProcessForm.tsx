@@ -78,12 +78,37 @@ export function ProcessFormClient({
         }
       })
 
-      await createTask(formData)
+      const response = await createTask(formData)
+      console.log("Task created successfully:", response.data)
       alert(t('taskCreatedSuccessfully'))
       router.push("/task-management/tasks/sent")
     } catch (err: any) {
-      console.error("Error creating task:", err.response?.data || err.message)
-      alert(err.response?.data?.error || t('failedToCreateTask'))
+      console.error("Error creating task:", err)
+      
+      // Enhanced error message extraction matching your route.ts error structure
+      let errorMessage = t('failedToCreateTask') // Default fallback
+      
+      if (err.response?.data) {
+        // Your route.ts returns { success: false, error: "message" }
+        if (err.response.data.error) {
+          errorMessage = err.response.data.error
+        }
+        // Fallback to other possible error structures
+        else if (typeof err.response.data === 'string') {
+          errorMessage = err.response.data
+        }
+        // Handle case where error data is the message itself
+        else if (err.response.data.message) {
+          errorMessage = err.response.data.message
+        }
+      }
+      // Handle network errors or other axios errors
+      else if (err.message) {
+        errorMessage = err.message
+      }
+      
+      console.error("Extracted error message:", errorMessage)
+      alert(errorMessage)
     } finally {
       setIsSubmitting(false)
     }

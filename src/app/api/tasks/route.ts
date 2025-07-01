@@ -46,6 +46,8 @@ export async function POST(request: Request) {
         }
       }
 
+      console.log("Sending FormData to DRF with keys:", Array.from(form.keys()))
+
       const response = await axios.post(
         `${process.env.API_URL}/api/tasks/`,
         nodeForm,
@@ -54,6 +56,7 @@ export async function POST(request: Request) {
             ...nodeForm.getHeaders(),
             Authorization: `Bearer ${token}`,
           },
+          timeout: 30000, // 30 second timeout for file uploads
         }
       )
 
@@ -72,23 +75,85 @@ export async function POST(request: Request) {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        timeout: 10000, // 10 second timeout for JSON requests
       }
     )
 
     return NextResponse.json(response.data)
   } catch (error: unknown) {
-    let errorMessage = "Authentication failed"
+    console.error("Task creation error:", error)
+    
+    let errorMessage = "Task creation failed"
     let statusCode = 500
 
-    // Handle Axios error
-    if (axios.isAxiosError(error) && error.response) {
-      errorMessage = error.response.data?.detail || error.response.data || error.message
-      statusCode = error.response.status || 500
+    // Handle Axios errors
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // Server responded with error status
+        const responseData = error.response.data
+        statusCode = error.response.status
+
+        // Handle DRF validation errors (typical structure)
+        if (typeof responseData === 'object' && responseData !== null) {
+          // Check for non_field_errors first (common in DRF)
+          if (responseData.non_field_errors && Array.isArray(responseData.non_field_errors)) {
+            errorMessage = responseData.non_field_errors[0]
+          }
+          // Check for detail field (common for single errors)
+          else if (responseData.detail) {
+            errorMessage = responseData.detail
+          }
+          // Handle field-specific validation errors
+          else {
+            // Extract the first error from any field
+            const errorEntries = Object.entries(responseData)
+            if (errorEntries.length > 0) {
+              const firstEntry = errorEntries[0]
+              if (firstEntry) {
+                const [fieldName, fieldErrors] = firstEntry
+                if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+                  errorMessage = `${fieldName}: ${fieldErrors[0]}`
+                } else if (typeof fieldErrors === 'string') {
+                  errorMessage = `${fieldName}: ${fieldErrors}`
+                }
+              }
+            }
+          }
+        }
+        // Handle string responses
+        else if (typeof responseData === 'string') {
+          errorMessage = responseData
+        }
+        // Fallback to status text
+        else {
+          errorMessage = error.response.statusText || errorMessage
+        }
+      } else if (error.request) {
+        // Network error (no response received)
+        errorMessage = "Network error - cannot reach API server"
+        statusCode = 503
+      } else {
+        // Request setup error
+        errorMessage = "Request configuration error"
+        statusCode = 500
+      }
     }
-    // Handle generic JS error
+    // Handle timeout errors specifically
+    else if (error instanceof Error && error.message.includes('timeout')) {
+      errorMessage = "Request timeout - please try again"
+      statusCode = 408
+    }
+    // Handle generic JavaScript errors
     else if (error instanceof Error) {
       errorMessage = error.message
     }
+
+    // Log error details for debugging
+    console.error("Detailed error:", {
+      message: errorMessage,
+      status: statusCode,
+      originalError: error instanceof Error ? error.message : 'Unknown error'
+    })
 
     return NextResponse.json<ApiErrorResponse>(
       { success: false, error: errorMessage },
