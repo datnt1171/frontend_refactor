@@ -56,7 +56,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
             <Input
               type="file"
               className="mb-2"
-              accept={ACCEPTED_FILE_TYPES}
+              // accept={ACCEPTED_FILE_TYPES}
               onChange={e => {
                 const file = e.target.files?.[0] || null
                 if (file) {
