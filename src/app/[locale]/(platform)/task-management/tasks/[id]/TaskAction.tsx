@@ -59,21 +59,21 @@ export default function TaskActions({ task }: TaskActionsProps) {
               // accept={ACCEPTED_FILE_TYPES}
               onChange={e => {
                 const file = e.target.files?.[0] || null
-                if (file) {
-                  const allowedTypes = [
-                    "image/jpeg", "image/png", "application/pdf",
-                    "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                    "application/vnd.ms-excel",
-                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                  ]
-                  if (!allowedTypes.includes(file.type)) {
-                    alert(commonT('invalidFile'))
-                    e.target.value = ""
-                    setActionFile(null)
-                    return
-                  }
-                }
+                // if (file) {
+                //   const allowedTypes = [
+                //     "image/jpeg", "image/png", "application/pdf",
+                //     "application/msword",
+                //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                //     "application/vnd.ms-excel",
+                //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                //   ]
+                //   if (!allowedTypes.includes(file.type)) {
+                //     alert(commonT('invalidFile'))
+                //     e.target.value = ""
+                //     setActionFile(null)
+                //     return
+                //   }
+                // }
                 setActionFile(file)
               }}
               disabled={actionLoading !== null}
