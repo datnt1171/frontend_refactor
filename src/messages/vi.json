@@ -68,7 +68,7 @@
       "passwordChangedSuccess": "Đổi mật khẩu thành công.",
       "passwordChangeFailed": "Đổi mật khẩu thất bại. Vui lòng kiểm tra lại.",
       "changing": "Đang thay đổi...",
-      "passwordMinLength": "Ít nhất 8 ký tự",
+      "passwordMinLength": "Ít nhất 9 ký tự",
       "passwordNotNumeric": "Không chỉ chứa số",
       "passwordNotSimilar": "Không quá giống với thông tin cá nhân của bạn",
       "passwordNotCommon": "Không phải mật khẩu phổ biến"

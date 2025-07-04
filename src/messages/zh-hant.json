@@ -68,7 +68,7 @@
       "passwordChangedSuccess": "密碼更改成功。",
       "passwordChangeFailed": "密碼更改失敗。請檢查輸入。",
       "changing": "更改中...",
-      "passwordMinLength": "至少 8 個字元",
+      "passwordMinLength": "至少 9 個字元",
       "passwordNotNumeric": "不能全為數字",
       "passwordNotSimilar": "不能與您的個人資訊過於相似",
       "passwordNotCommon": "不能是常見密碼"

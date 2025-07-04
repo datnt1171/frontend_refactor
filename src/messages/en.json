@@ -68,7 +68,7 @@
       "passwordChangedSuccess": "Password changed successfully.",
       "passwordChangeFailed": "Failed to change password. Please check your input.",
       "changing": "Changing...",
-      "passwordMinLength": "At least 8 characters",
+      "passwordMinLength": "At least 9 characters",
       "passwordNotNumeric": "Not entirely numeric",
       "passwordNotSimilar": "Not too similar to your personal info",
       "passwordNotCommon": "Not a common password"
