@@ -42,7 +42,7 @@ export const setupTokenRefreshInterceptor = () => {
         isRefreshing = true
 
         try {
-          const refreshResponse = await api.get("/auth/refresh")
+          const refreshResponse = await api.post("/auth/refresh")
           if (!refreshResponse.data.success) {
             throw new Error("Refresh failed")
           }

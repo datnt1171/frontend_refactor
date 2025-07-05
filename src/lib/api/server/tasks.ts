@@ -1,6 +1,6 @@
 import { api } from '@/lib/api/server/api'
 import { revalidatePath } from 'next/cache'
-import type { PaginatedSentTaskList, PaginatedReceivedTaskList, TaskDetail} from '@/types/api'
+import type { PaginatedSentTaskList, PaginatedReceivedTaskList, TaskDetail, TaskAction} from '@/types/api'
 
 export const getSentTasks = async (): Promise<PaginatedSentTaskList> => {
   const res = await api("/tasks/sent/")
@@ -40,25 +40,43 @@ export async function createTask(formData: FormData): Promise<{ success: boolean
   }
 }
 
-export async function performTaskAction(
-  id: string, 
-  formData: FormData
-): Promise<{ success: boolean; error?: string }> {
-  try {
+export const performTaskAction = async (
+  id: string,
+  actionData: TaskAction
+) => {
+  const hasFile = actionData.file instanceof File;
+
+  if (hasFile && actionData.file) {
+    const formData = new FormData();
+    formData.append("action_id", actionData.action_id);
+    if (actionData.comment) formData.append("comment", actionData.comment);
+    formData.append("file", actionData.file);
+
     const res = await api(`/tasks/${id}/actions/`, {
       method: 'POST',
       body: formData,
-    })
-    
+    });
+
     if (!res.ok) {
-      const errorData = await res.json()
-      return { success: false, error: errorData.message || 'Failed to perform action' }
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.error || `Failed to perform action: ${res.status}`);
     }
-    
-    revalidatePath(`/tasks/${id}`)
-    revalidatePath('/tasks')
-    return { success: true }
-  } catch (error) {
-    return { success: false, error: 'Network error' }
+
+    return res.json();
+  } else {
+    const res = await api(`/tasks/${id}/actions/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(actionData),
+    });
+
+    if (!res.ok) {
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.error || `Failed to perform action: ${res.status}`);
+    }
+
+    return res.json();
   }
-}
+};

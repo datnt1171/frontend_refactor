@@ -1,9 +1,10 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
-import axios from "axios"
-import type { ApiSuccessResponse, ApiErrorResponse } from "@/types/common"
+import type { ApiErrorResponse } from "@/types/common"
+import type { TokenResponse } from "@/types/auth"
+import { handleApiResponse, handleError } from "@/lib/utils/api"
 
-export async function GET() {
+export async function POST() {
   try {
     const cookieStore = await cookies()
     const refreshToken = cookieStore.get("refresh_token")?.value
@@ -15,18 +16,19 @@ export async function GET() {
       )
     }
 
-    const response = await axios.post(
-      `${process.env.API_URL}/api/token/refresh/`,
-      { refresh: refreshToken },
-      { headers: { "Content-Type": "application/json" } }
+    const response = await fetch(
+      `${process.env.API_URL}/api/token/refresh/`,{
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh: refreshToken })
+      }
     )
 
-    if (!response.data.access) {
-      throw new Error("No access token received")
-    }
+    const data: TokenResponse = await response.json();
 
     // Set new access token cookie
-    cookieStore.set("access_token", response.data.access, {
+    if (response.ok && data.access) {
+      cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -34,24 +36,16 @@ export async function GET() {
       path: "/",
     })
 
-    return NextResponse.json<ApiSuccessResponse>({ success: true })
+      cookieStore.set("refresh_token", data.refresh, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
+    })
+    }
+    return handleApiResponse(response)
   } catch (error: unknown) {
-    let errorMessage = "Authentication failed"
-    let statusCode = 500
-
-    // Handle Axios error
-    if (axios.isAxiosError(error) && error.response) {
-      errorMessage = error.response.data?.detail || error.response.data || error.message
-      statusCode = error.response.status || 500
-    }
-    // Handle generic JS error
-    else if (error instanceof Error) {
-      errorMessage = error.message
-    }
-
-    return NextResponse.json<ApiErrorResponse>(
-      { success: false, error: errorMessage },
-      { status: statusCode }
-    )
+      return handleError(error)
   }
 }
