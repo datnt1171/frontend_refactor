@@ -790,6 +790,7 @@ export interface components {
             department: components["schemas"]["Department"];
             role: components["schemas"]["Role"];
             readonly supervisor: components["schemas"]["UserList"];
+            is_password_changed: boolean;
         };
         UserList: {
             /** Format: uuid */
