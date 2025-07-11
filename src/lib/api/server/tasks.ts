@@ -1,5 +1,5 @@
+'use server'
 import { api } from '@/lib/api/server/api'
-import { revalidatePath } from 'next/cache'
 import type { PaginatedSentTaskList, PaginatedReceivedTaskList, TaskDetail, TaskAction} from '@/types/api'
 
 export const getSentTasks = async (): Promise<PaginatedSentTaskList> => {
@@ -33,7 +33,6 @@ export async function createTask(formData: FormData): Promise<{ success: boolean
     }
     
     const data: TaskDetail = await res.json()
-    revalidatePath('/tasks')
     return { success: true, data }
   } catch (error) {
     return { success: false, error: 'Network error' }

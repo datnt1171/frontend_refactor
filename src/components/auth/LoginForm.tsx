@@ -1,10 +1,9 @@
 "use client"
 
-import axios from 'axios'
 import { useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { Loader2, Eye, EyeOff } from "lucide-react"
-import { login } from "@/lib/api"
+import { login } from "@/lib/api/server"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -46,30 +45,18 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
     try {
       const response = await login({ username, password })
       
-      // Type narrowing - check if login was successful
       if (response.data.success) {
-        // Now TypeScript knows this is LoginSuccessResponse
         if (response.data.requiresPasswordChange) {
           router.push("/user/me/change-password")
         } else {
           router.push("/task-management/processes")
         }
       } else {
-        // This is LoginErrorResponse
         setError(response.data.error)
       }
     } catch (err: unknown) {
-      if (axios.isAxiosError(err)) {
-        if (err.response?.status === 401) {
-          const errorMessage =
-            err.response.data?.error || translations.authError;
-          setError(errorMessage);
-        } else {
-          console.error("Unexpected Axios error:", err);
-        }
-      } else {
-        console.error("Unexpected non-Axios error:", err);
-      }
+      console.error("Login error:", err)
+      setError(translations.authError)
     } finally {
       setIsLoading(false)
     }

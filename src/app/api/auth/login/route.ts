@@ -44,8 +44,8 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
     cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 30 * 60, // 30 minutes in seconds
+      sameSite: "lax",
+      maxAge: 1 * 60, // 30 minutes in seconds
       path: "/",
     })
 
@@ -53,7 +53,7 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
     cookieStore.set("refresh_token", data.refresh, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       path: "/",
     })
