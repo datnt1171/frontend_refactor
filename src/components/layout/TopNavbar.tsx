@@ -3,20 +3,19 @@
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
+import { useMobileMenu } from "@/hooks/ui/useMobileMenu"
 import { ExternalAppsMenu } from "./ExternalAppsMenu"
 import { LanguageSelector } from "./LanguageSelector"
 import { UserMenu } from "./UserMenu"
+import type { UserDetail } from "@/types/api"
 
 interface TopNavbarProps {
-  isMobileMenuOpen: boolean
-  onToggleMobileMenu: () => void
+  user: UserDetail | null
 }
 
-export function TopNavbar({ 
-  isMobileMenuOpen, 
-  onToggleMobileMenu,  
-}: TopNavbarProps) {
+export function TopNavbar({ user }: TopNavbarProps) {
   const t = useTranslations()
+  const { isMobileMenuOpen, toggleMobileMenu } = useMobileMenu()
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm h-16">
@@ -27,7 +26,7 @@ export function TopNavbar({
             <Button
               variant="outline"
               size="icon"
-              onClick={onToggleMobileMenu}
+              onClick={toggleMobileMenu}
               aria-label="Toggle menu"
               className="h-8 w-8"
             >
@@ -43,7 +42,7 @@ export function TopNavbar({
         <div className="flex items-center space-x-3">
           <ExternalAppsMenu />
           <LanguageSelector />
-          <UserMenu />
+          <UserMenu user={user} />
         </div>
       </div>
     </div>

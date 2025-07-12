@@ -2,7 +2,7 @@ import type { LoginRequest, LoginSuccessResponse, LoginErrorResponse } from '@/t
 
 export async function login(credentials: LoginRequest): Promise<{ data: LoginSuccessResponse | LoginErrorResponse }> {
   try {
-    const response = await fetch('/api/auth/login', {
+    const response = await fetch('/auth/login/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ export async function login(credentials: LoginRequest): Promise<{ data: LoginSuc
 
 export async function logout(): Promise<void> {
   try {
-    const response = await fetch('/api/auth/logout', {
+    const response = await fetch('/auth/logout/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,18 +34,4 @@ export async function logout(): Promise<void> {
     console.error('Logout error:', error)
     // Don't throw - we want to clear user state even if server call fails
   }
-}
-
-import type { UserDetail } from '@/types/api'
-
-export async function getCurrentUser(): Promise<UserDetail> {
-  const response = await fetch('/api/users/me', {
-    credentials: 'include'
-  })
-  
-  if (!response.ok) {
-    throw new Error('Failed to fetch user')
-  }
-  
-  return response.json()
 }

@@ -1,4 +1,3 @@
-'use server'
 import { api } from '@/lib/api/server/api'
 import type { PaginatedSentTaskList, PaginatedReceivedTaskList, TaskDetail, TaskAction} from '@/types/api'
 
