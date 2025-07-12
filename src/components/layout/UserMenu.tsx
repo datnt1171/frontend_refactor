@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { LogOut, ChevronDown, SquareUserRound } from "lucide-react"
-import { logout } from "@/lib/api/server"
+import { logout } from "@/lib/api/client/api"
 import type { UserDetail } from "@/types/api"
 
 interface UserMenuProps {

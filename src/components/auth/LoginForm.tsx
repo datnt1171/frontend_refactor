@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { Loader2, Eye, EyeOff } from "lucide-react"
-import { login } from "@/lib/api/server"
+import { login } from "@/lib/api/client/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
