@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, User, Clock } from "lucide-react"
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
-// import TaskActions from "./TaskAction"
+import TaskActions from "./TaskAction"
 import BackButton from "@/components/ui/BackButton"
 
 export default async function TaskDetailPage({ 
@@ -139,8 +139,7 @@ export default async function TaskDetailPage({
             </CardContent>
           </Card>
 
-          {/* Client component for actions */}
-          {/* <TaskActions task={task} /> */}
+          <TaskActions task={task} />
         </div>
       </div>
     </div>
