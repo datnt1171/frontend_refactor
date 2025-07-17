@@ -22,17 +22,17 @@ export function middleware(request: NextRequest) {
   if (routing.locales.includes(potentialLocale as 'en' | 'vi' | 'zh-hant')) {
     const locale = potentialLocale;
     const pathWithoutLocale = pathname.replace(new RegExp(`^/${locale}(/|$)`), '/');
-    const token = request.cookies.get('access_token')?.value;
+    const refresh_token = request.cookies.get('refresh_token')?.value;
 
     // Only apply auth logic to specific paths, not the locale root
     if (pathWithoutLocale !== '/') {
       const isPublicPath = ['/login'].includes(pathWithoutLocale);
 
-      if (!token && !isPublicPath) {
+      if (!refresh_token && !isPublicPath) {
         return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
       }
 
-      if (token && isPublicPath) {
+      if (refresh_token && isPublicPath) {
         return NextResponse.redirect(new URL(`/${locale}/task-management/processes`, request.url));
       }
     }

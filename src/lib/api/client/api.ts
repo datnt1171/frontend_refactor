@@ -16,17 +16,49 @@ type ApiResponse<T> = {
 }
 
 // Generic API helper
+const refreshTokens = async (): Promise<boolean> => {
+  try {
+    const response = await fetch('/api/auth/refresh', {
+      method: 'POST',
+      credentials: 'include',
+    })
+    
+    return response.ok
+  } catch (error) {
+    console.error('Token refresh failed:', error)
+    return false
+  }
+}
+
 const apiClient = async <T = any>(
   endpoint: string, 
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const response = await fetch(`/api${endpoint}`, {
+  // First attempt
+  console.log('first client attempt')
+  let response = await fetch(`/api${endpoint}`, {
     headers: {
       'Content-Type': 'application/json',
       ...options.headers,
     },
     ...options,
   })
+
+  // If unauthorized, try to refresh token
+  if (response.status === 401) {
+    const refreshSuccess = await refreshTokens()
+    
+    if (refreshSuccess) {
+      // Retry the original request with new tokens
+      response = await fetch(`/api${endpoint}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...options.headers,
+        },
+        ...options,
+      })
+    }
+  }
 
   const data = await response.json()
   

@@ -45,7 +45,7 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 1 * 60, // 30 minutes in seconds
+      maxAge: 30 * 60, // 30 minutes in seconds
       path: "/",
     })
 
