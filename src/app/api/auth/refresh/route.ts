@@ -34,29 +34,28 @@ export async function POST() {
 
     const data: TokenResponse = await response.json()
 
-    // Create response
-    const nextResponse = NextResponse.json({ success: true })
 
     // Set new tokens as cookies
-    nextResponse.cookies.set("access_token", data.access, {
+    if (response.ok && data.access) {
+      console.log('access and refresh')
+      cookieStore.set("access_token", data.access, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 30 * 60, // 30 minutes
+      sameSite: "lax",
+      maxAge: 1 * 60,
       path: "/",
     })
 
-    if (data.refresh) {
-      nextResponse.cookies.set("refresh_token", data.refresh, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60, // 7 days
-        path: "/",
-      })
+      cookieStore.set("refresh_token", data.refresh, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: "/",
+    })
     }
-
-    return nextResponse
+    
+    return NextResponse.json({ success: true })
   } catch (error: unknown) {
     return handleError(error)
   }

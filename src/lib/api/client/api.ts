@@ -4,7 +4,6 @@ import type {
   LoginSuccessResponse, 
   LoginErrorResponse,
   ApiSuccessResponse,
-  TaskDetail,
   TaskAction,
   SetPasswordRetype
 } from '@/types/'
@@ -38,7 +37,6 @@ const apiClient = async <T = any>(
   console.log('first client attempt')
   let response = await fetch(`/api${endpoint}`, {
     headers: {
-      'Content-Type': 'application/json',
       ...options.headers,
     },
     ...options,
@@ -52,7 +50,6 @@ const apiClient = async <T = any>(
       // Retry the original request with new tokens
       response = await fetch(`/api${endpoint}`, {
         headers: {
-          'Content-Type': 'application/json',
           ...options.headers,
         },
         ...options,
@@ -86,20 +83,18 @@ export const logout = async () => {
 }
 
 // Task functions
-export async function createTask(formData: FormData): Promise<{ success: boolean; data?: TaskDetail; error?: string }> {
+export async function createTask(formData: FormData) {
   try {
-    const response = await fetch('/api/tasks/', {
+    const response = await apiClient('/tasks/', {
       method: 'POST',
-      body: formData, // No Content-Type header for FormData
+      body: formData,
     })
     
     if (!response.ok) {
-      const errorData = await response.json()
-      return { success: false, error: errorData.message || 'Failed to create task' }
+      return { success: false, error: response.data.message || 'Failed to create task' }
     }
     
-    const data: TaskDetail = await response.json()
-    return { success: true, data }
+    return { success: true, data: response.data }
   } catch (error) {
     return { success: false, error: 'Network error' }
   }
@@ -117,17 +112,16 @@ export const performTaskAction = async (
     if (actionData.comment) formData.append("comment", actionData.comment)
     formData.append("file", actionData.file)
 
-    const response = await fetch(`/api/tasks/${id}/actions/`, {
+    const response = await apiClient(`/tasks/${id}/actions/`, {
       method: 'POST',
-      body: formData, // No Content-Type header for FormData
+      body: formData,
     })
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(error.error || `Failed to perform action: ${response.status}`)
+      throw new Error(response.data.error || `Failed to perform action: ${response.status}`)
     }
 
-    return response.json()
+    return response.data
   } else {
     const response = await apiClient(`/tasks/${id}/actions/`, {
       method: 'POST',
