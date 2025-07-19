@@ -1,10 +1,10 @@
-import { getAuthToken, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function POST(request: Request) {
   try {
     const contentType = request.headers.get("content-type") || ""
-    const token = await getAuthToken()
-    if (!token) return unauthorizedResponse()
+    const session = await getSessionCookie()
+    if (!session.access_token) return unauthorizedResponse()
 
     // Handle multipart/form-data
     if (contentType.includes("multipart/form-data")) {
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: form,
         }
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),

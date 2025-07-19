@@ -1,5 +1,4 @@
-import { headers } from "next/headers"
-import { getAuthToken, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function GET(
   _request: Request,
@@ -7,17 +6,14 @@ export async function GET(
 ) {
   const { id } = await context.params
   try {
-    const token = await getAuthToken()
-    if (!token) return unauthorizedResponse()
-
-    const headersList = await headers()
-    const acceptLanguage = headersList.get("accept-language") || "en-US,en;q=0.9"
+    const session = await getSessionCookie()
+    if (!session.access_token) return unauthorizedResponse()
     
     const response = await fetch(`${process.env.API_URL}/api/processes/${ id }/`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
-        "Accept-Language": acceptLanguage,
+        "Accept-Language": session.locale,
       },
     })
 

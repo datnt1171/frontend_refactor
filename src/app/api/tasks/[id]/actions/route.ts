@@ -1,4 +1,4 @@
-import { getAuthToken, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function POST(
   request: Request,
@@ -7,8 +7,8 @@ export async function POST(
   const { id } = await context.params
 
   try {
-    const token = await getAuthToken()
-    if (!token) return unauthorizedResponse()
+    const session = await getSessionCookie()
+    if (!session.access_token) return unauthorizedResponse()
 
     const contentType = request.headers.get("content-type") || ""
 
@@ -20,7 +20,7 @@ export async function POST(
       response = await fetch(`${process.env.API_URL}/api/tasks/${id}/action/`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: formData,
       })
@@ -31,7 +31,7 @@ export async function POST(
       response = await fetch(`${process.env.API_URL}/api/tasks/${id}/action/`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),

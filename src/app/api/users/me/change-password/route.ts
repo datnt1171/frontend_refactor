@@ -1,9 +1,9 @@
-import { getAuthToken, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function PATCH(request: Request) {
   try {
-    const token = await getAuthToken()
-    if (!token) return unauthorizedResponse()
+    const session = await getSessionCookie()
+    if (!session.access_token) return unauthorizedResponse()
 
     const body = await request.json()
 
@@ -12,7 +12,7 @@ export async function PATCH(request: Request) {
       {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
