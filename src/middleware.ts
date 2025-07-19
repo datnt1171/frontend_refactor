@@ -5,7 +5,7 @@ import { routing } from './i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Let intl middleware handle locale redirects first
@@ -23,6 +23,7 @@ export function middleware(request: NextRequest) {
     const locale = potentialLocale;
     const pathWithoutLocale = pathname.replace(new RegExp(`^/${locale}(/|$)`), '/');
     const refresh_token = request.cookies.get('refresh_token')?.value;
+    const access_token = request.cookies.get('access_token')?.value;
 
     // Only apply auth logic to specific paths, not the locale root
     if (pathWithoutLocale !== '/') {
@@ -30,6 +31,37 @@ export function middleware(request: NextRequest) {
 
       if (!refresh_token && !isPublicPath) {
         return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+      }
+
+      if (!access_token && !isPublicPath) {
+        try {
+          // Attempt to refresh the token
+          const refreshResponse = await fetch(new URL('/api/auth/refresh', request.url), {
+            method: 'POST',
+            headers: {
+              'Cookie': request.headers.get('cookie') || ''
+            }
+          });
+
+          if (refreshResponse.ok) {
+            // REDIRECT to same page to trigger new request with fresh cookies
+            const redirectResponse = NextResponse.redirect(request.url);
+            
+            // Set the new cookies from refresh response
+            const setCookieHeaders = refreshResponse.headers.getSetCookie();
+            setCookieHeaders.forEach(cookie => {
+              redirectResponse.headers.append('Set-Cookie', cookie);
+            });
+
+            return redirectResponse;
+          } else {
+            // Refresh failed, redirect to login
+            return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+          }
+        } catch (error) {
+          // Refresh request failed, redirect to login
+          return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
+        }
       }
 
       if (refresh_token && isPublicPath) {
