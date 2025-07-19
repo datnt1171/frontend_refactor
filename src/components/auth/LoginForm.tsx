@@ -43,7 +43,7 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
     setIsLoading(true)
 
     try {
-      const response = await login({ username, password })
+      const response = await login({ username: username.toUpperCase(), password })
       
       if (response.data.success) {
         if (response.data.requiresPasswordChange) {
