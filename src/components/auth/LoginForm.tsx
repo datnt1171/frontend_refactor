@@ -20,6 +20,7 @@ interface LoginFormClientProps {
     loggingIn: string;
     authError: string;
     footerText: string;
+    noAuthInput: string;
   };
 }
 
@@ -36,7 +37,7 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
     setError("")
 
     if (!username.trim() || !password.trim()) {
-      setError("Username and password are required.");
+      setError(translations.noAuthInput);
        return;
     }
 

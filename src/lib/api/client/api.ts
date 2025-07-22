@@ -68,11 +68,16 @@ const apiClient = async <T = any>(
 
 // Auth functions
 export const login = async (credentials: LoginRequest) => {
-  const response = await apiClient<LoginSuccessResponse | LoginErrorResponse>('/auth/login', {
+  const response = await fetch('/api/auth/login', {
     method: 'POST',
     body: JSON.stringify(credentials),
   })
-  return response
+  const data = await response.json()
+  return {
+    data,
+    status: response.status,
+    ok: response.ok
+  }
 }
 
 export const logout = async () => {

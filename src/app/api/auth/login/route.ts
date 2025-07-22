@@ -5,8 +5,9 @@ import type {
   LoginRequest, 
   TokenResponse, 
   LoginSuccessResponse, 
-  LoginErrorResponse
-} from "@/types/auth"
+  LoginErrorResponse,
+  ApiErrorResponse,
+} from "@/types"
 
 export async function POST(request: Request): Promise<NextResponse<LoginSuccessResponse | LoginErrorResponse>> {
   try {
@@ -21,20 +22,18 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
         body: JSON.stringify({ username, password }),
       }
     )
+    if (!response.ok) {
+      const data = await response.json()
+      return NextResponse.json<ApiErrorResponse>(
+        {
+          success: false,
+          error: data.detail
+        },
+        { status: response.status }
+      ) 
+    }
 
     const data: TokenResponse = await response.json();
-    // Get user profile to check password status
-    const userResponse = await fetch(
-      `${process.env.API_URL}/api/users/me/`,
-      { 
-        headers: { 
-          "Authorization": `Bearer ${data.access}`,
-          "Content-Type": "application/json" 
-        } 
-      }
-    )
-
-    const user: UserDetail = await userResponse.json()
 
     if (response.ok && data.access && data.refresh) {
     // Set cookies
@@ -59,6 +58,18 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
     })
     }
 
+    // Get user profile to check password status
+    const userResponse = await fetch(
+      `${process.env.API_URL}/api/users/me/`,
+      { 
+        headers: { 
+          "Authorization": `Bearer ${data.access}`,
+          "Content-Type": "application/json" 
+        } 
+      }
+    )
+
+    const user: UserDetail = await userResponse.json()
     return NextResponse.json<LoginSuccessResponse>({
       success: true,
       requiresPasswordChange: !user.is_password_changed

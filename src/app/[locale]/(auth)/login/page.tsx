@@ -19,7 +19,8 @@ export default async function LoginPage() {
             loginButton: t('loginButton'),
             loggingIn: t('loggingIn'),
             authError: t('authError'),
-            footerText: t('footerText')
+            footerText: t('footerText'),
+            noAuthInput: t('noAuthInput')
           }}
         />
       </div>

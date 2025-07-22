@@ -29,7 +29,8 @@
     "passwordPlaceholder": "Nhập mật khẩu",
     "loginButton": "Đăng nhập",
     "loggingIn": "Đang đăng nhập...",
-    "authError": "Tên đăng nhập hoặc mật khẩu không hợp lệ.",
+    "authError": "Có lỗi xảy ra khi đăng nhập, vui lòng thử lại",
+    "noAuthInput": "Vui lòng nhập tên đăng nhập và mật khẩu",
     "footerText": "© TE-1 --- Viet Lien"
   },
   "navBar": {

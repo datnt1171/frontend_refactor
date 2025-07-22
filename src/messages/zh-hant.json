@@ -29,7 +29,8 @@
     "passwordPlaceholder": "輸入密碼",
     "loginButton": "登入",
     "loggingIn": "登入中...",
-    "authError": "使用者名稱或密碼無效。",
+    "authError": "登入時出錯，請重試。",
+    "noAuthInput": "需要使用者名稱和密碼",
     "footerText": "© TE‑1 --- Viet Lien"
   },
   "navBar": {

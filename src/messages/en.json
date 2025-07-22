@@ -29,7 +29,8 @@
     "passwordPlaceholder": "Enter your password",
     "loginButton": "Log in",
     "loggingIn": "Logging in...",
-    "authError": "Invalid username or password.",
+    "authError": "Unexpected error when login, please retry later",
+    "noAuthInput": "Username and Password are required",
     "footerText": "© TE-1 --- Viet Lien"
   },
   "navBar": {
