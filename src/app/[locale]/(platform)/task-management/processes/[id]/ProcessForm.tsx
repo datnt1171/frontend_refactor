@@ -62,53 +62,29 @@ export function ProcessFormClient({
 
       process.fields.forEach((field, index) => {
         formData.append(`fields[${index}][field_id]`, String(field.id))
-
         const value = formValues[field.id]
 
         if (field.field_type === "file" && value instanceof File) {
-          console.log(`Appending file for field ${field.id}:`, {
-            name: value.name,
-            type: value.type,
-            size: value.size
-          })
           formData.append(`fields[${index}][file]`, value)
         } else {
-          console.log(`Appending value for field ${field.id}:`, value)
           formData.append(`fields[${index}][value]`, value ?? "")
         }
       })
 
       const response = await createTask(formData)
-      console.log("Task created successfully:", response.data)
-      alert(t('taskCreatedSuccessfully'))
-      router.push("/task-management/tasks/sent")
+      
+      // Check the success flag
+      if (response.success) {
+        console.log("Task created successfully:", response.data)
+        alert(t('taskCreatedSuccessfully'))
+        router.push("/task-management/tasks/sent")
+      } else {
+        // Handle the error case
+        throw new Error(response.error)
+      }
     } catch (err: any) {
       console.error("Error creating task:", err)
-      
-      // Enhanced error message extraction matching your route.ts error structure
-      let errorMessage = t('failedToCreateTask') // Default fallback
-      
-      if (err.response?.data) {
-        // Your route.ts returns { success: false, error: "message" }
-        if (err.response.data.error) {
-          errorMessage = err.response.data.error
-        }
-        // Fallback to other possible error structures
-        else if (typeof err.response.data === 'string') {
-          errorMessage = err.response.data
-        }
-        // Handle case where error data is the message itself
-        else if (err.response.data.message) {
-          errorMessage = err.response.data.message
-        }
-      }
-      // Handle network errors or other errors
-      else if (err.message) {
-        errorMessage = err.message
-      }
-      
-      console.error("Extracted error message:", errorMessage)
-      alert(errorMessage)
+      alert(err.message || t('failedToCreateTask'))
     } finally {
       setIsSubmitting(false)
     }

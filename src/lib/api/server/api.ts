@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 export const api = async (endpoint: string, options: RequestInit = {}) => {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
-  let response = await fetch(`${process.env.NEXT_INTERNAL_URL}${endpoint}`, {
+  let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
     ...options,
     headers: {
       Cookie: cookieHeader,
