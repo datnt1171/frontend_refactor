@@ -1,5 +1,3 @@
-import type { ApiSuccessResponse, ApiErrorResponse} from '@/types/common'
-
 export interface LoginRequest {
     username: string
     password: string

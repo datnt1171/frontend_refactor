@@ -9,23 +9,6 @@ export async function POST(request: Request) {
     // Handle multipart/form-data
     if (contentType.includes("multipart/form-data")) {
       const form = await request.formData()
-      
-      // Log what we're sending
-      for (const [key, value] of form.entries()) {
-        if (value instanceof File) {
-          console.log("BFF received file:", {
-            key,
-            name: value.name,
-            type: value.type,
-            size: value.size
-          })
-        } else {
-          console.log("BFF received value:", { key, value })
-        }
-      }
-
-      console.log("Sending FormData to DRF with keys:", Array.from(form.keys()))
-
       const response = await fetch(
         `${process.env.API_URL}/api/tasks/`,
         {
@@ -42,7 +25,6 @@ export async function POST(request: Request) {
 
     // Handle application/json
     const body = await request.json()
-    console.log("Task JSON body being sent to API:", body)
 
     const response = await fetch(
       `${process.env.API_URL}/api/tasks/`,
