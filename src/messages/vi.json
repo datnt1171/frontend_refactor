@@ -18,7 +18,8 @@
     "createdAt": "Ngày tạo",
     "createdBy": "Người tạo",
     "updatedAt": "Ngày cập nhật",
-    "updatedBy": "Người cập nhật"
+    "updatedBy": "Người cập nhật",
+    "goHome": "Về trang chủ"
   },
   "login": {
     "title": "Hệ Thống Quản Lý Công Việc",
