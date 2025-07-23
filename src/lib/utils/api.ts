@@ -77,7 +77,7 @@ export async function handleApiError(response: Response): Promise<NextResponse<A
     ...(validationErrors && { validationErrors })
   }
   
-  return NextResponse.json(errorResponse)
+  return NextResponse.json(errorResponse, { status: response.status })
 }
 
 export async function handleApiSuccess<T = any>(response: Response): Promise<NextResponse<ApiSuccessResponse<T>>> {

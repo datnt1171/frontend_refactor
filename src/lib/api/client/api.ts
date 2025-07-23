@@ -1,8 +1,6 @@
 // lib/api-client.ts
 import type { 
   LoginRequest, 
-  LoginSuccessResponse, 
-  LoginErrorResponse,
   ApiSuccessResponse,
   TaskAction,
   SetPasswordRetype
