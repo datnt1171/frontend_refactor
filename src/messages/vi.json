@@ -21,6 +21,10 @@
     "updatedBy": "Người cập nhật",
     "goHome": "Về trang chủ"
   },
+  "home": {
+  "title": "Trang chủ",
+  "subtitle": "Chào mừng đến với không gian làm việc của bạn"
+},
   "login": {
     "title": "Hệ Thống Quản Lý Công Việc",
     "login": "Đăng nhập",
@@ -138,7 +142,7 @@
       "tryAdjustingSearchOrCreateTask": "Thử điều chỉnh tìm kiếm hoặc tạo Công việc mới."
     },
     "receivedTask": {
-      "title": "Công việc nhận",
+      "title": "Công việc đã nhận",
       "description": "Xem và xử lý các công việc cần thực hiện",
       "from": "Từ",
       "noAssignedTasks": "Bạn hiện không có công việc nào được giao."

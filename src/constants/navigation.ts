@@ -28,10 +28,10 @@ export const languages = [
 
 // External apps with translation keys
 export const externalApps = [
-  { nameKey: 'navBar.externalApps.Task', href: '/task-management', icon: ListCheck },
-  { nameKey: 'navBar.externalApps.CRM', href: '/crm', icon: Factory },
-  { nameKey: 'navBar.externalApps.HRM', href: '/user', icon: UserSearch },
-  { nameKey: 'navBar.externalApps.Dashboard', href: '/dashboard', icon: BarChart3 }
+  { nameKey: 'navBar.externalApps.Task', href: '/task-management/dashboard', icon: ListCheck, descriptionKey: 'navBar.externalApps.Task' },
+  { nameKey: 'navBar.externalApps.CRM', href: '/crm', icon: Factory, descriptionKey: 'navBar.externalApps.CRM' },
+  { nameKey: 'navBar.externalApps.HRM', href: '/user', icon: UserSearch, descriptionKey: 'navBar.externalApps.HRM' },
+  { nameKey: 'navBar.externalApps.Dashboard', href: '/dashboard', icon: BarChart3, descriptionKey: 'navBar.externalApps.Dashboard' }
 ]
 
 export const ALLOWED_EXTENSIONS = ['.jpg', '.jpeg', '.png', 

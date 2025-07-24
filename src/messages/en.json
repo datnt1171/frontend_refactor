@@ -21,6 +21,10 @@
     "updatedBy": "Updated By",
     "goHome": "Back to home page"
   },
+  "home": {
+    "title": "Home Page",
+    "subtitle": "Welcome to Your Workspace"
+  },
   "login": {
     "title": "Task Management System",
     "login": "Login",

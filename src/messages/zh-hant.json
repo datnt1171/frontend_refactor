@@ -21,6 +21,10 @@
     "updatedBy": "更新者",
     "goHome": "返回首頁"
   },
+  "home": {
+  "title": "首頁",
+  "subtitle": "歡迎來到您的工作區"
+},
   "login": {
     "title": "任務管理系統",
     "login": "登入",
