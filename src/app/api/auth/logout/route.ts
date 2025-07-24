@@ -1,6 +1,5 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
-import type { ApiSuccessResponse } from "@/types/common"
 
 export async function POST() {
   const cookieStore = await cookies()
@@ -8,6 +7,8 @@ export async function POST() {
   // Clear auth cookies
   cookieStore.delete("access_token")
   cookieStore.delete("refresh_token")
+  cookieStore.delete("role")
+  cookieStore.delete("department")
 
-  return NextResponse.json<ApiSuccessResponse>({ success: true })
+  return NextResponse.json({ success: true })
 }

@@ -1,82 +1,114 @@
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
-import type { ApiErrorResponse } from "@/types/common"
-import type { TokenResponse } from "@/types/auth"
-import { handleError } from "@/lib/utils/api"
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import type { ApiErrorResponse } from "@/types/common";
+import type { TokenResponse } from "@/types/auth";
+import { handleError } from "@/lib/utils/api";
+
+// Cookie configuration
+const COOKIE_CONFIG = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+};
+
+const ACCESS_TOKEN_MAX_AGE = 30 * 60; // 30 minutes
+const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60; // 7 days
 
 export async function POST() {
   try {
-    const cookieStore = await cookies()
-    const refreshToken = cookieStore.get("refresh_token")?.value
+    const cookieStore = await cookies();
+    const refreshToken = cookieStore.get("refresh_token")?.value;
 
     if (!refreshToken) {
       return NextResponse.json<ApiErrorResponse>(
         { success: false, error: "No refresh token found" },
         { status: 401 }
-      )
+      );
     }
 
-    const response = await fetch(
-      `${process.env.API_URL}/api/token/refresh/`,{
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ refresh: refreshToken })
-      }
-    )
+    // Call backend refresh endpoint
+    const response = await fetch(`${process.env.API_URL}/api/token/refresh/`, {
+      method: 'POST',
+      headers: { 
+        "Content-Type": "application/json",
+        // Forward any additional headers if needed
+        ...(process.env.API_KEY && { "Authorization": `Bearer ${process.env.API_KEY}` })
+      },
+      body: JSON.stringify({ refresh: refreshToken })
+    });
 
     if (!response.ok) {
-      return NextResponse.json<ApiErrorResponse>(
-        { success: false, error: "Refresh failed" },
+      // Clear invalid refresh token
+      const errorResponse = NextResponse.json<ApiErrorResponse>(
+        { success: false, error: "Refresh token invalid or expired" },
         { status: 401 }
-      )
+      );
+      
+      // Clear all auth-related cookies
+      errorResponse.cookies.delete('refresh_token');
+      errorResponse.cookies.delete('access_token');
+      errorResponse.cookies.delete('role');
+      errorResponse.cookies.delete('department');
+      
+      return errorResponse;
     }
 
-    const data: TokenResponse = await response.json()
+    const data: TokenResponse = await response.json();
 
-    // Set new tokens as cookies
-    if (response.ok && data.access) {
-      console.log('access and refresh')
-      cookieStore.set("access_token", data.access, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 30 * 60,
-      path: "/",
-    })
+    // Validate response data
+    if (!data.access) {
+      return NextResponse.json<ApiErrorResponse>(
+        { success: false, error: "Invalid token response" },
+        { status: 500 }
+      );
+    }
 
-      cookieStore.set("refresh_token", data.refresh, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: "/",
-    })
-    const userRole = cookieStore.get("user_role")?.value
-    const userDept = cookieStore.get("user_department")?.value
+    // Create success response
+    const successResponse = NextResponse.json({ success: true });
+
+    // Set new access token
+    successResponse.cookies.set("access_token", data.access, {
+      ...COOKIE_CONFIG,
+      maxAge: ACCESS_TOKEN_MAX_AGE,
+    });
+
+    // Set new refresh token if provided
+    if (data.refresh) {
+      successResponse.cookies.set("refresh_token", data.refresh, {
+        ...COOKIE_CONFIG,
+        maxAge: REFRESH_TOKEN_MAX_AGE,
+      });
+    }
+
+    // Sync role and department cookies from stored user data
+    const userRole = cookieStore.get("role")?.value;
+    const userDept = cookieStore.get("department")?.value;
 
     if (userRole) {
-      cookieStore.set("role", userRole, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-    })
+      successResponse.cookies.set("role", userRole, {
+        ...COOKIE_CONFIG,
+        maxAge: REFRESH_TOKEN_MAX_AGE,
+      });
     }
 
     if (userDept) {
-      cookieStore.set("department", userDept, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: "/",
-    })
+      successResponse.cookies.set("department", userDept, {
+        ...COOKIE_CONFIG,
+        maxAge: REFRESH_TOKEN_MAX_AGE,
+      });
     }
 
-    }
+    return successResponse;
 
-    return NextResponse.json({ success: true })
   } catch (error: unknown) {
-    return handleError(error)
+    console.error('Token refresh error:', error);
+    
+    // Create error response and clear potentially invalid cookies
+    const errorResponse = handleError(error);
+    errorResponse.cookies.delete('refresh_token');
+    errorResponse.cookies.delete('access_token');
+    
+    return errorResponse;
   }
 }
