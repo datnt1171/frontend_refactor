@@ -56,7 +56,7 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
       path: "/",
     })
-    }
+    
 
     // Get user profile to check password status
     const userResponse = await fetch(
@@ -70,10 +70,33 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
     )
 
     const user: UserDetail = await userResponse.json()
+    cookieStore.set("role", user.role.name, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      path: "/",
+    })
+
+    cookieStore.set("department", user.department.name, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
+      path: "/",
+    })
     return NextResponse.json<LoginSuccessResponse>({
       success: true,
       requiresPasswordChange: !user.is_password_changed
     })
+    }
+    return NextResponse.json<ApiErrorResponse>(
+      {
+        success: false,
+        error: "Login Failed"
+      },
+      { status: response.status }
+    ) 
   } catch (error: unknown) {
     let errorMessage = "Authentication failed"
     let statusCode = 500

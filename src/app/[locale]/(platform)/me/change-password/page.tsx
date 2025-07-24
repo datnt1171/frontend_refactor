@@ -31,7 +31,7 @@ export default function ChangePasswordPage() {
       setNewPassword("");
       setReNewPassword("");
       setTimeout(() => {
-        router.push("/user/me");
+        router.push("/me");
       }, 1200);
     } catch (err: any) {
       setError(

@@ -1,7 +1,8 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { routing } from './i18n/routing';
+import { routing } from '@/i18n/routing';
+import { authPaths, hasPermission } from '@/config/permissions';
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -26,13 +27,26 @@ export async function middleware(request: NextRequest) {
     const access_token = request.cookies.get('access_token')?.value;
 
     // Only apply auth logic to specific paths, not the locale root
-    if (pathWithoutLocale !== '/') {
+
       const isPublicPath = ['/login'].includes(pathWithoutLocale);
 
       if (!refresh_token && !isPublicPath) {
         return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
       }
 
+      const isauthPath = authPaths.some(path => pathWithoutLocale.startsWith(path));
+
+      if (!isauthPath) {
+        const userRole = request.cookies.get('role')?.value;
+        const userDept = request.cookies.get('department')?.value;
+        if (userRole && userDept) {
+          if (!hasPermission(userRole, userDept, pathWithoutLocale)) {
+            return NextResponse.redirect(new URL(`/${locale}/unauthorized`, request.url));
+          }
+        } else {
+          return NextResponse.redirect(new URL(`/${locale}/unauthorized`, request.url));
+        }
+      }
       if (!access_token && !isPublicPath) {
         try {
           // Attempt to refresh the token
@@ -67,7 +81,6 @@ export async function middleware(request: NextRequest) {
       if (refresh_token && isPublicPath) {
         return NextResponse.redirect(new URL(`/${locale}/task-management/processes`, request.url));
       }
-    }
   }
 
   return response;

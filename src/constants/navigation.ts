@@ -16,7 +16,6 @@ export const navItems = [
   { href: "/task-management/processes", labelKey: "taskManagement.sideBar.formTemplates", icon: FileText },
   { href: "/task-management/tasks/sent", labelKey: "taskManagement.sideBar.sentTasks", icon: Send },
   { href: "/task-management/tasks/received", labelKey: "taskManagement.sideBar.receivedTasks", icon: Inbox },
-  { href: "/task-management/reports/sample-request", labelKey: "taskManagement.sideBar.SPR", icon: Table },
 ]
 
 // Language options

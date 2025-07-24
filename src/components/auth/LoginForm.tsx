@@ -48,7 +48,7 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
       
       if (response.data.success) {
         if (response.data.requiresPasswordChange) {
-          router.push("/user/me/change-password")
+          router.push("/me/change-password")
         } else {
           router.push("/task-management/processes")
         }

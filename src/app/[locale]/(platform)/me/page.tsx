@@ -14,7 +14,7 @@ export default async function UserProfilePage() {
       <div className="flex justify-between mb-4">
         <BackButton />
         <Button asChild variant="outline">
-          <Link href="/user/me/change-password">
+          <Link href="/me/change-password">
             {t('changePassword.changePassword')}
           </Link>
         </Button>

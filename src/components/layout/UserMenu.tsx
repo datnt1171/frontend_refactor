@@ -56,7 +56,7 @@ export function UserMenu({ user }: UserMenuProps) {
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
           <Link
-            href="/user/me"
+            href="/me"
             className="flex items-center w-full"
           >
             <SquareUserRound className="h-4 w-4 mr-2" />
