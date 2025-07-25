@@ -39,7 +39,6 @@
     "footerText": "© TE‑1 --- Viet Lien"
   },
   "navBar": {
-    "appTitle": "任務管理",
     "userMenu": {
       "profile": "個人資料",
       "logout": "登出"
@@ -58,6 +57,8 @@
     }
   },
   "user": {
+    "appTitle": "HRM",
+    "appDescription": "Users Information",
     "userDetail": "使用者詳細資料",
     "username": "使用者名稱",
     "firstName": "名字",
@@ -81,12 +82,14 @@
     }
   },
   "taskManagement": {
+    "appTitle":"Task Management",
+    "appDescription": "Sent and received tasks",
     "sideBar": {
+      "Task": "Task",
       "dashboard": "儀表板",
       "formTemplates": "表單範本",
       "sentTasks": "已寄任務",
-      "receivedTasks": "收到任務",
-      "SPR": "所有樣本請求"
+      "receivedTasks": "收到任務"
     },
     "common": {
       "id": "ID",
@@ -177,6 +180,46 @@
       "deadline": "截止日期",
       "failedToLoad": "載入報告失敗",
       "viewTask": "查看任務"
+    },
+    "appTitle": "儀表板",
+    "appDescription": "報表與儀表板",
+    "sideBar": {
+      "Warehouse": "倉庫",
+      "overview": "總覽",
+      "perCustomer": "客戶詳情",
+      "perProduct": "客戶產品詳情",
+      "plan": "預期交付和實際交付",
+      "compare": "比較",
+      "conclusion": "結論",
+      "ratio": "比例",
+      "agingProduct": "滯銷產品",
+      "importData": "匯入資料",
+
+      "Task": "任務",
+      "sampleRequest": "所有樣本請求"
+    },
+
+
+    "warehouse": {
+      "warehouse_t": "warehouse_t"
+    },
+
+    "task": {
+      "task_t": "task_t"
+    },
+    "crm": {
+      "appTitle": "CRM",
+      "appDescription": "Customer Relation Management"
+    },
+
+    "edms": {
+      "appTitle": "EDMS",
+      "appDescription": "File Management System"
+    },
+
+    "systemsheet": {
+      "appTitle": "Systemsheet",
+      "appDescription": "Systemsheet, Consumption and Blueprint"
     }
   }
 }

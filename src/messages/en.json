@@ -39,7 +39,6 @@
     "footerText": "© TE-1 --- Viet Lien"
   },
   "navBar": {
-    "appTitle": "Task Management",
     "userMenu": {
       "profile": "Profile",
       "logout": "Logout"
@@ -58,6 +57,8 @@
     }
   },
   "user": {
+    "appTitle": "HRM",
+    "appDescription": "Users Information",
     "userDetail": "User Detail",
     "username": "Username",
     "firstName": "First Name",
@@ -82,12 +83,14 @@
     }
   },
   "taskManagement": {
+    "appTitle":"Task Management",
+    "appDescription": "Sent and received tasks",
     "sideBar": {
+      "Task": "Task",
       "dashboard": "Dashboard",
       "formTemplates": "Form Templates",
       "sentTasks": "Sent Tasks",
-      "receivedTasks": "Received Tasks",
-      "SPR": "All Sample Request"
+      "receivedTasks": "Received Tasks"
     },
     "common": {
       "id": "ID",
@@ -178,6 +181,45 @@
       "deadline": "Deadline",
       "failedToLoad": "Failed to load report",
       "viewTask": "View Task"
+    },
+    "appTitle": "Dashboard",
+    "appDescription": "Reports and Dashboards",
+    "sideBar": {
+      "Warehouse": "Warehouse",
+      "overview": "Overview",
+      "perCustomer": "Order/Sales per Customer",
+      "perProduct": "Order/Sales per Product",
+      "plan": "Planning Vs Actual Sales",
+      "compare": "Order/Sales overtime",
+      "conclusion": "Conclusion",
+      "ratio": "Ratio",
+      "agingProduct": "Aging Product",
+      "importData": "Import Data",
+
+      "Task": "Task",
+      "sampleRequest": "All sample request"
+    },
+
+    "warehouse": {
+      "warehouse_t": "warehouse_t"
+    },
+
+    "task": {
+      "task_t": "task_t"
+    },
+    "crm": {
+      "appTitle": "CRM",
+      "appDescription": "Customer Relation Management"
+    },
+
+    "edms": {
+      "appTitle": "EDMS",
+      "appDescription": "File Management System"
+    },
+
+    "systemsheet": {
+      "appTitle": "Systemsheet",
+      "appDescription": "Systemsheet, Consumption and Blueprint"
     }
   }
 }

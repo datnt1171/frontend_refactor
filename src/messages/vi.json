@@ -39,7 +39,6 @@
     "footerText": "© TE-1 --- Viet Lien"
   },
   "navBar": {
-    "appTitle": "Quản Lý Công Việc",
     "userMenu": {
       "profile": "Hồ sơ",
       "logout": "Đăng xuất"
@@ -58,6 +57,8 @@
     }
   },
   "user": {
+    "appTitle": "HRM",
+    "appDescription": "Thông tin người dùng",
     "userDetail": "Chi tiết người dùng",
     "username": "Tên đăng nhập",
     "firstName": "Tên",
@@ -81,12 +82,14 @@
     }
   },
   "taskManagement": {
+    "appTitle":"Quản lý công việc",
+    "appDescription": "Phiếu đã gửi và nhận",
     "sideBar": {
+      "Task": "Phiếu",
       "dashboard": "Bảng tổng quan",
       "formTemplates": "Mẫu phiếu",
       "sentTasks": "Công việc đã gửi",
-      "receivedTasks": "Công việc đã nhận",
-      "SPR": "Tất cả yêu cầu mẫu"
+      "receivedTasks": "Công việc đã nhận"
     },
     "common": {
       "id": "ID",
@@ -177,6 +180,45 @@
       "deadline": "Ngày KH cần",
       "failedToLoad": "Không tải được báo cáo",
       "viewTask": "Xem Công việc"
+    },
+    "appTitle": "Báo cáo",
+    "appDescription": "Báo cáo các bộ phận",
+    "sideBar": {
+      "Warehouse": "Kho",
+      "overview": "Tổng quan",
+      "perCustomer": "Chi tiết khách hàng",
+      "perProduct": "Chi tiết SP của KH",
+      "plan": "Dự định/Thực tế GH",
+      "compare": "So sánh",
+      "conclusion": "Kết luận",
+      "ratio": "Tỉ lệ",
+      "agingProduct": "Hàng tồn kho",
+      "importData": "Nhập dữ liệu",
+
+      "Task": "Phiếu",
+      "sampleRequest": "Tất cả yêu cầu mẫu"
+    },
+
+    "warehouse": {
+      "warehouse_t": "warehouse_t"
+    },
+
+    "task": {
+      "task_t": "task_t"
+    },
+    "crm": {
+      "appTitle": "CRM",
+      "appDescription": "Customer Relation Management"
+    },
+
+    "edms": {
+      "appTitle": "EDMS",
+      "appDescription": "File Management System"
+    },
+
+    "systemsheet": {
+      "appTitle": "Systemsheet",
+      "appDescription": "Systemsheet, Consumption and Blueprint"
     }
   }
 }
