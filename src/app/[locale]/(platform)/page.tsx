@@ -33,9 +33,9 @@ export default async function PlatformHome() {
                     <CardTitle className="text-lg font-semibold">
                       {t(app.nameKey)}
                     </CardTitle>
-                    {app.descriptionKey && (
+                    {app.appDescription && (
                       <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
-                        {t(app.descriptionKey)}
+                        {t(app.appDescription)}
                       </CardDescription>
                     )}
                   </div>
