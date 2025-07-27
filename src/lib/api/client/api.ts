@@ -141,7 +141,7 @@ export const performTaskAction = async (
 
 // User functions
 export const changePassword = async (data: SetPasswordRetype) => {
-  const response = await apiClient<SetPasswordRetype>('/users/me/change-password', {
+  const response = await apiClient('/users/me/change-password', {
     method: 'PATCH',
     body: JSON.stringify(data),
   })
