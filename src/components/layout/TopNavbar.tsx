@@ -1,6 +1,5 @@
 "use client"
 
-import { useTranslations } from "next-intl"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ExternalAppsMenu } from "./ExternalAppsMenu"
@@ -13,7 +12,6 @@ interface TopNavbarProps {
 }
 
 export function TopNavbar({ user }: TopNavbarProps) {
-  const t = useTranslations()
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
