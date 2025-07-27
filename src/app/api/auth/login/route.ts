@@ -99,7 +99,7 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
     ) 
   } catch (error: unknown) {
     let errorMessage = "Authentication failed"
-    let statusCode = 500
+    const statusCode = 500
     // Handle generic JS error
     if (error instanceof Error) {
       errorMessage = error.message

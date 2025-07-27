@@ -1,13 +1,9 @@
 import { 
-  LayoutDashboard, 
-  FileText, 
-  Send, 
-  Inbox,
-  Table,
   Factory,
   BarChart3,
   ListCheck,
-  UserSearch
+  UserSearch,
+  Warehouse
 } from "lucide-react"
 
 // Language options
@@ -96,7 +92,7 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
   'dashboard': [
     {
       title: "dashboard.sideBar.Warehouse",
-      icon: BarChart3,
+      icon: Warehouse,
       items: [
         { title: "dashboard.sideBar.overview", url: "/dashboard/warehouse/overall" },
         { title: "dashboard.sideBar.perCustomer", url: "/dashboard/warehouse/customer" },
