@@ -77,33 +77,19 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
   ],
   'crm': [
     {
-      title: "CRM",
+      title: "CRM.sideBar.CRM",
       icon: Factory,
       items: [
-        { title: "Dashboard", url: "/crm/dashboard" },
-        { title: "Contacts", url: "/crm/factory" },
-        { title: "Deals", url: "/crm/deals" },
-        { title: "Companies", url: "/crm/companies" },
+        { title: "CRM.sideBar.factories", url: "/crm/factories" },
       ],
     },
-    {
-      title: "Reports",
-      icon: BarChart3,
-      items: [
-        { title: "Sales Report", url: "/crm/reports/sales" },
-        { title: "Pipeline", url: "/crm/reports/pipeline" },
-      ],
-    }
   ],
   'user': [
     {
-      title: "HRM",
+      title: "user.sideBar.HRM",
       icon: UserSearch,
       items: [
-        { title: "Dashboard", url: "/user" },
-        { title: "Employees", url: "/user/employees" },
-        { title: "Departments", url: "/user/departments" },
-        { title: "Attendance", url: "/user/attendance" },
+        { title: "user.sideBar.users", url: "/user" },
       ],
     }
   ],

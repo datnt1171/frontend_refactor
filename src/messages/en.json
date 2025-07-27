@@ -59,6 +59,10 @@
   "user": {
     "appTitle": "HRM",
     "appDescription": "Users Information",
+    "sideBar": {
+      "HRM": "HRM",
+      "users": "Users"
+    },
     "userDetail": "User Detail",
     "username": "Username",
     "firstName": "First Name",
@@ -206,20 +210,25 @@
 
     "task": {
       "task_t": "task_t"
-    },
-    "crm": {
-      "appTitle": "CRM",
-      "appDescription": "Customer Relation Management"
-    },
-
-    "edms": {
-      "appTitle": "EDMS",
-      "appDescription": "File Management System"
-    },
-
-    "systemsheet": {
-      "appTitle": "Systemsheet",
-      "appDescription": "Systemsheet, Consumption and Blueprint"
     }
+  },
+
+  "CRM": {
+    "appTitle": "CRM",
+    "appDescription": "Customer Relation Management",
+    "sideBar": {
+      "CRM": "CRM",
+      "factories": "Factories"
+    }
+  },
+
+  "edms": {
+    "appTitle": "EDMS",
+    "appDescription": "File Management System"
+  },
+
+  "systemsheet": {
+    "appTitle": "Systemsheet",
+    "appDescription": "Systemsheet, Consumption and Blueprint"
   }
 }

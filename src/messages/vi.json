@@ -59,6 +59,10 @@
   "user": {
     "appTitle": "HRM",
     "appDescription": "Thông tin người dùng",
+    "sideBar": {
+      "HRM": "Người dùng",
+      "users": "Danh sách"
+    },
     "userDetail": "Chi tiết người dùng",
     "username": "Tên đăng nhập",
     "firstName": "Tên",
@@ -205,20 +209,20 @@
 
     "task": {
       "task_t": "task_t"
-    },
-    "crm": {
-      "appTitle": "CRM",
-      "appDescription": "Customer Relation Management"
-    },
-
-    "edms": {
-      "appTitle": "EDMS",
-      "appDescription": "File Management System"
-    },
-
-    "systemsheet": {
-      "appTitle": "Systemsheet",
-      "appDescription": "Systemsheet, Consumption and Blueprint"
     }
+  },
+  "crm": {
+    "appTitle": "CRM",
+    "appDescription": "Customer Relation Management"
+  },
+
+  "edms": {
+    "appTitle": "EDMS",
+    "appDescription": "File Management System"
+  },
+
+  "systemsheet": {
+    "appTitle": "Systemsheet",
+    "appDescription": "Systemsheet, Consumption and Blueprint"
   }
 }

@@ -58,7 +58,11 @@
   },
   "user": {
     "appTitle": "HRM",
-    "appDescription": "Users Information",
+    "appDescription": "使用者資訊",
+    "sideBar": {
+      "HRM": "使用者",
+      "users": "書兄弟"
+    },
     "userDetail": "使用者詳細資料",
     "username": "使用者名稱",
     "firstName": "名字",
@@ -206,20 +210,20 @@
 
     "task": {
       "task_t": "task_t"
-    },
-    "crm": {
-      "appTitle": "CRM",
-      "appDescription": "Customer Relation Management"
-    },
-
-    "edms": {
-      "appTitle": "EDMS",
-      "appDescription": "File Management System"
-    },
-
-    "systemsheet": {
-      "appTitle": "Systemsheet",
-      "appDescription": "Systemsheet, Consumption and Blueprint"
     }
+  },
+  "crm": {
+    "appTitle": "CRM",
+    "appDescription": "Customer Relation Management"
+  },
+
+  "edms": {
+    "appTitle": "EDMS",
+    "appDescription": "File Management System"
+  },
+
+  "systemsheet": {
+    "appTitle": "Systemsheet",
+    "appDescription": "Systemsheet, Consumption and Blueprint"
   }
 }
