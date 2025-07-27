@@ -72,7 +72,7 @@ export async function middleware(request: NextRequest) {
   // Handle access token refresh
   if (!accessToken) {
     try {
-      const refreshResponse = await fetch(new URL('/api/auth/refresh', request.url), {
+      const refreshResponse = await fetch(new URL(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, request.url), {
         method: 'POST',
         headers: {
           'Cookie': request.headers.get('cookie') || '',
