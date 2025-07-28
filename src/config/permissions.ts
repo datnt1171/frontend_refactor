@@ -25,13 +25,13 @@ export const routePermissions: Record<string, RouteConfig> = {
 
  // Dashboard route
  '/dashboard': {
-   roles: ['manager', 'admin'],
+   roles: ['manager', 'admin', 'assistant'],
    allDepartments: true
  },
 
  // Task report
  '/dashboard/task-management/sample-request': {
-  roles: ['manager', 'admin'],
+  roles: ['manager', 'admin', 'assistant'],
   departments: ['TT', 'admin']
  },
 
