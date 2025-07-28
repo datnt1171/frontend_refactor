@@ -22,7 +22,7 @@ export function formatDateToUTC7(dateString: string): string {
   const day = parts.find(p => p.type === "day")?.value;
   const hour = parts.find(p => p.type === "hour")?.value;
   const minute = parts.find(p => p.type === "minute")?.value;
-  const second = parts.find(p => p.type === "second")?.value;
+  // const second = parts.find(p => p.type === "second")?.value;
 
   return `${year}-${month}-${day}, ${hour}:${minute}`;
 }

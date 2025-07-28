@@ -139,7 +139,6 @@ export default async function TaskDetailPage({
             </CardContent>
           </Card>
 
-          {/* Client component for actions */}
           <TaskActions task={task} />
         </div>
       </div>

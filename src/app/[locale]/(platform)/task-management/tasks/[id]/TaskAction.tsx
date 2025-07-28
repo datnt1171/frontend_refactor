@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Loader2 } from "lucide-react"
-import { performTaskAction } from "@/lib/api"
+import { performTaskAction } from "@/lib/api/client/api"
 import { getActionColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import type { TaskDetail } from "@/types/api"

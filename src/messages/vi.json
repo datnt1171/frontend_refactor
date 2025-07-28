@@ -18,8 +18,13 @@
     "createdAt": "Ngày tạo",
     "createdBy": "Người tạo",
     "updatedAt": "Ngày cập nhật",
-    "updatedBy": "Người cập nhật"
+    "updatedBy": "Người cập nhật",
+    "goHome": "Về trang chủ"
   },
+  "home": {
+  "title": "Trang chủ",
+  "subtitle": "Chào mừng đến với không gian làm việc của bạn"
+},
   "login": {
     "title": "Hệ Thống Quản Lý Công Việc",
     "login": "Đăng nhập",
@@ -29,11 +34,11 @@
     "passwordPlaceholder": "Nhập mật khẩu",
     "loginButton": "Đăng nhập",
     "loggingIn": "Đang đăng nhập...",
-    "authError": "Tên đăng nhập hoặc mật khẩu không hợp lệ.",
+    "authError": "Có lỗi xảy ra khi đăng nhập, vui lòng thử lại",
+    "noAuthInput": "Vui lòng nhập tên đăng nhập và mật khẩu",
     "footerText": "© TE-1 --- Viet Lien"
   },
   "navBar": {
-    "appTitle": "Quản Lý Công Việc",
     "userMenu": {
       "profile": "Hồ sơ",
       "logout": "Đăng xuất"
@@ -52,6 +57,12 @@
     }
   },
   "user": {
+    "appTitle": "HRM",
+    "appDescription": "Thông tin người dùng",
+    "sideBar": {
+      "HRM": "Người dùng",
+      "users": "Danh sách"
+    },
     "userDetail": "Chi tiết người dùng",
     "username": "Tên đăng nhập",
     "firstName": "Tên",
@@ -68,19 +79,21 @@
       "passwordChangedSuccess": "Đổi mật khẩu thành công.",
       "passwordChangeFailed": "Đổi mật khẩu thất bại. Vui lòng kiểm tra lại.",
       "changing": "Đang thay đổi...",
-      "passwordMinLength": "Ít nhất 8 ký tự",
+      "passwordMinLength": "Ít nhất 9 ký tự",
       "passwordNotNumeric": "Không chỉ chứa số",
       "passwordNotSimilar": "Không quá giống với thông tin cá nhân của bạn",
       "passwordNotCommon": "Không phải mật khẩu phổ biến"
     }
   },
   "taskManagement": {
+    "appTitle":"Quản lý công việc",
+    "appDescription": "Phiếu đã gửi và nhận",
     "sideBar": {
+      "Task": "Phiếu",
       "dashboard": "Bảng tổng quan",
       "formTemplates": "Mẫu phiếu",
       "sentTasks": "Công việc đã gửi",
-      "receivedTasks": "Công việc đã nhận",
-      "SPR": "Tất cả yêu cầu mẫu"
+      "receivedTasks": "Công việc đã nhận"
     },
     "common": {
       "id": "ID",
@@ -136,7 +149,7 @@
       "tryAdjustingSearchOrCreateTask": "Thử điều chỉnh tìm kiếm hoặc tạo Công việc mới."
     },
     "receivedTask": {
-      "title": "Công việc nhận",
+      "title": "Công việc đã nhận",
       "description": "Xem và xử lý các công việc cần thực hiện",
       "from": "Từ",
       "noAssignedTasks": "Bạn hiện không có công việc nào được giao."
@@ -171,6 +184,45 @@
       "deadline": "Ngày KH cần",
       "failedToLoad": "Không tải được báo cáo",
       "viewTask": "Xem Công việc"
+    },
+    "appTitle": "Báo cáo",
+    "appDescription": "Báo cáo các bộ phận",
+    "sideBar": {
+      "Warehouse": "Kho",
+      "overview": "Tổng quan",
+      "perCustomer": "Chi tiết khách hàng",
+      "perProduct": "Chi tiết SP của KH",
+      "plan": "Dự định/Thực tế GH",
+      "compare": "So sánh",
+      "conclusion": "Kết luận",
+      "ratio": "Tỉ lệ",
+      "agingProduct": "Hàng tồn kho",
+      "importData": "Nhập dữ liệu",
+
+      "Task": "Phiếu",
+      "sampleRequest": "Tất cả yêu cầu mẫu"
+    },
+
+    "warehouse": {
+      "warehouse_t": "warehouse_t"
+    },
+
+    "task": {
+      "task_t": "task_t"
     }
+  },
+  "crm": {
+    "appTitle": "CRM",
+    "appDescription": "Customer Relation Management"
+  },
+
+  "edms": {
+    "appTitle": "EDMS",
+    "appDescription": "File Management System"
+  },
+
+  "systemsheet": {
+    "appTitle": "Systemsheet",
+    "appDescription": "Systemsheet, Consumption and Blueprint"
   }
 }

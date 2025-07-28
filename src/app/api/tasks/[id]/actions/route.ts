@@ -1,7 +1,4 @@
-import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
-import axios from "axios"
-import type { ApiErrorResponse } from "@/types/common"
+import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function POST(
   request: Request,
@@ -10,63 +7,39 @@ export async function POST(
   const { id } = await context.params
 
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get("access_token")?.value
+    const session = await getSessionCookie()
+    if (!session.access_token) return unauthorizedResponse()
 
-    if (!token) {
-      return NextResponse.json<ApiErrorResponse>(
-        { success: false, error: "Unauthorized" },
-        { status: 401 }
-      )
-    }
-
-    let body: any
-    let headers: any = {
-      Authorization: `Bearer ${token}`,
-    }
-
-    // Detect content type
     const contentType = request.headers.get("content-type") || ""
+
+    let response: Response
 
     if (contentType.includes("multipart/form-data")) {
       const formData = await request.formData()
-      const fetchRes = await fetch(`${process.env.API_URL}/api/tasks/${id}/action/`, {
+      
+      response = await fetch(`${process.env.API_URL}/api/tasks/${id}/action/`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: formData,
       })
-      const data = await fetchRes.json()
-      return NextResponse.json(data, { status: fetchRes.status })
     } else {
       // Handle JSON
-      body = await request.json()
-      headers["Content-Type"] = "application/json"
-      const response = await axios.post(
-        `${process.env.API_URL}/api/tasks/${id}/action/`,
-        body,
-        { headers }
-      )
-      return NextResponse.json(response.data)
+      const body = await request.json()
+      
+      response = await fetch(`${process.env.API_URL}/api/tasks/${id}/action/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      })
     }
+
+    return handleApiResponse(response)
   } catch (error: unknown) {
-    let errorMessage = "Authentication failed"
-    let statusCode = 500
-
-    // Handle Axios error
-    if (axios.isAxiosError(error) && error.response) {
-      errorMessage = error.response.data?.detail || error.response.data || error.message
-      statusCode = error.response.status || 500
-    }
-    // Handle generic JS error
-    else if (error instanceof Error) {
-      errorMessage = error.message
-    }
-
-    return NextResponse.json<ApiErrorResponse>(
-      { success: false, error: errorMessage },
-      { status: statusCode }
-    )
+    return handleError(error)
   }
 }

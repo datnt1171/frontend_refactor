@@ -18,7 +18,12 @@
     "createdAt": "Created At",
     "createdBy": "Created By",
     "updatedAt": "Updated At",
-    "updatedBy": "Updated By"
+    "updatedBy": "Updated By",
+    "goHome": "Back to home page"
+  },
+  "home": {
+    "title": "Home Page",
+    "subtitle": "Welcome to Your Workspace"
   },
   "login": {
     "title": "Task Management System",
@@ -29,11 +34,11 @@
     "passwordPlaceholder": "Enter your password",
     "loginButton": "Log in",
     "loggingIn": "Logging in...",
-    "authError": "Invalid username or password.",
+    "authError": "Unexpected error when login, please retry later",
+    "noAuthInput": "Username and Password are required",
     "footerText": "© TE-1 --- Viet Lien"
   },
   "navBar": {
-    "appTitle": "Task Management",
     "userMenu": {
       "profile": "Profile",
       "logout": "Logout"
@@ -52,6 +57,12 @@
     }
   },
   "user": {
+    "appTitle": "HRM",
+    "appDescription": "Users Information",
+    "sideBar": {
+      "HRM": "HRM",
+      "users": "Users"
+    },
     "userDetail": "User Detail",
     "username": "Username",
     "firstName": "First Name",
@@ -68,7 +79,7 @@
       "passwordChangedSuccess": "Password changed successfully.",
       "passwordChangeFailed": "Failed to change password. Please check your input.",
       "changing": "Changing...",
-      "passwordMinLength": "At least 8 characters",
+      "passwordMinLength": "At least 9 characters",
       "passwordNotNumeric": "Not entirely numeric",
       "passwordNotSimilar": "Not too similar to your personal info",
       "passwordNotCommon": "Not a common password"
@@ -76,12 +87,14 @@
     }
   },
   "taskManagement": {
+    "appTitle":"Task Management",
+    "appDescription": "Sent and received tasks",
     "sideBar": {
+      "Task": "Task",
       "dashboard": "Dashboard",
       "formTemplates": "Form Templates",
       "sentTasks": "Sent Tasks",
-      "receivedTasks": "Received Tasks",
-      "SPR": "All Sample Request"
+      "receivedTasks": "Received Tasks"
     },
     "common": {
       "id": "ID",
@@ -172,6 +185,50 @@
       "deadline": "Deadline",
       "failedToLoad": "Failed to load report",
       "viewTask": "View Task"
+    },
+    "appTitle": "Dashboard",
+    "appDescription": "Reports and Dashboards",
+    "sideBar": {
+      "Warehouse": "Warehouse",
+      "overview": "Overview",
+      "perCustomer": "Order/Sales per Customer",
+      "perProduct": "Order/Sales per Product",
+      "plan": "Planning Vs Actual Sales",
+      "compare": "Order/Sales overtime",
+      "conclusion": "Conclusion",
+      "ratio": "Ratio",
+      "agingProduct": "Aging Product",
+      "importData": "Import Data",
+
+      "Task": "Task",
+      "sampleRequest": "All sample request"
+    },
+
+    "warehouse": {
+      "warehouse_t": "warehouse_t"
+    },
+
+    "task": {
+      "task_t": "task_t"
     }
+  },
+
+  "CRM": {
+    "appTitle": "CRM",
+    "appDescription": "Customer Relation Management",
+    "sideBar": {
+      "CRM": "CRM",
+      "factories": "Factories"
+    }
+  },
+
+  "edms": {
+    "appTitle": "EDMS",
+    "appDescription": "File Management System"
+  },
+
+  "systemsheet": {
+    "appTitle": "Systemsheet",
+    "appDescription": "Systemsheet, Consumption and Blueprint"
   }
 }

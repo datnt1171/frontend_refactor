@@ -1,51 +1,36 @@
 "use client"
 
-import { useTranslations } from 'next-intl'
-import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import { ExternalAppsMenu } from "./ExternalAppsMenu"
 import { LanguageSelector } from "./LanguageSelector"
 import { UserMenu } from "./UserMenu"
+import type { UserDetail } from "@/types/api"
 
 interface TopNavbarProps {
-  isMobileMenuOpen: boolean
-  onToggleMobileMenu: () => void
+  user: UserDetail | null
 }
 
-export function TopNavbar({ 
-  isMobileMenuOpen, 
-  onToggleMobileMenu,  
-}: TopNavbarProps) {
-  const t = useTranslations()
+export function TopNavbar({ user }: TopNavbarProps) {
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-sm h-16">
-      <div className="flex items-center justify-between px-4 py-3 h-full">
-        {/* Left side - Mobile menu button + Logo */}
-        <div className="flex items-center">
-          <div className="md:hidden mr-3">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={onToggleMobileMenu}
-              aria-label="Toggle menu"
-              className="h-8 w-8"
-            >
-              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-            </Button>
-          </div>
-          <div className="hidden md:block md:w-64 md:pr-4">
-            <h1 className="text-xl font-bold text-gray-900">{t('navBar.appTitle')}</h1>
-          </div>
-        </div>
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
+      {/* Sidebar trigger - only visible on mobile or when sidebar is collapsed */}
+      <SidebarTrigger className="-ml-1" />
+      <Separator orientation="vertical" className="mr-2 h-4" />
 
-        {/* Right side - External apps + Language selector + User menu */}
-        <div className="flex items-center space-x-3">
-          <ExternalAppsMenu />
-          <LanguageSelector />
-          <UserMenu />
+      {/* Spacer to push right-side content to the right */}
+      <div className="flex-1" />
+
+      {/* Right side - External apps + Language selector + User menu */}
+      <div className="flex items-center space-x-3">
+        <ExternalAppsMenu />
+        <LanguageSelector />
+        {/* Only show UserMenu in navbar if not in sidebar */}
+        <div className="md:block">
+          <UserMenu user={user} />
         </div>
       </div>
-    </div>
+    </header>
   )
 }

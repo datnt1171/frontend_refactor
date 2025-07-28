@@ -1,44 +1,31 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Link } from "@/i18n/navigation"
 import { FileText, Send, Inbox, Clock } from "lucide-react"
-import { getProcesses, getSentTasks, getReceivedTasks } from "@/lib/api/"
-import type { ProcessList, ReceivedTask, SentTask } from "@/types/api"
-import { useTranslations } from "next-intl"
+import { getProcesses, getSentTasks, getReceivedTasks } from "@/lib/api/server"
+import { getTranslations } from "next-intl/server"
 
-export default function Dashboard() {
+export default async function Dashboard() {
+  // Fetch all data server-side
+  const [processesRes, sentTasksRes, receivedTasksRes] = await Promise.all([
+    getProcesses(),
+    getSentTasks(),
+    getReceivedTasks(),
+  ])
 
-  // Separate states for each data type
-  const [processes, setProcesses] = useState<ProcessList[]>([])
-  const [sentTasks, setSentTasks] = useState<SentTask[]>([])
-  const [receivedTasks, setReceivedTasks] = useState<ReceivedTask[]>([])
+  const processes = processesRes.results
+  const sentTasks = sentTasksRes.results
+  const receivedTasks = receivedTasksRes.results
 
-  useEffect(() => {
-    async function fetchDashboardData() {
-        const [processesRes, sentTasksRes, receivedTasksRes] = await Promise.all([
-          getProcesses(),
-          getSentTasks(),
-          getReceivedTasks(),
-        ]);
-        setProcesses(processesRes.results)
-        setSentTasks(sentTasksRes)
-        setReceivedTasks(receivedTasksRes)
-    }
-
-    fetchDashboardData()
-  }, [])
-
-  // Compute dashboard counts from state
+  // Compute dashboard counts
   const processCount = processes.length
   const sentTasksCount = sentTasks.length
   const receivedTasksCount = receivedTasks.length
   const sentTasksDoneCount = sentTasks.filter(task => task.state_type === "closed").length
-  const sentTaskT = useTranslations('taskManagement.sentTask')
-  const receivedTaskT = useTranslations('taskManagement.receivedTask')
-  const t = useTranslations('taskManagement.dashboard')
+
+  const sentTaskT = await getTranslations('taskManagement.sentTask')
+  const receivedTaskT = await getTranslations('taskManagement.receivedTask')
+  const t = await getTranslations('taskManagement.dashboard')
 
   return (
     <div className="space-y-6">
@@ -164,4 +151,3 @@ export default function Dashboard() {
     </div>
   )
 }
-

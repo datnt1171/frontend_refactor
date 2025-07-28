@@ -1,17 +1,15 @@
+// lib/api/server/api.ts
 import { cookies } from 'next/headers'
-
 export const api = async (endpoint: string, options: RequestInit = {}) => {
   const cookieStore = await cookies()
   const cookieHeader = cookieStore.toString()
-  const language = cookieStore.get('NEXT_LOCALE')?.value || 'en'
-  
-  return fetch(`${process.env.NEXT_INTERNAL_URL}${endpoint}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`, {
     ...options,
     headers: {
       Cookie: cookieHeader,
-      'Accept-Language': language,
       ...options.headers,
     },
     credentials: 'include',
   })
+  return response
 }

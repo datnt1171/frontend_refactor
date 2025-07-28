@@ -10,11 +10,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { LogOut, ChevronDown, SquareUserRound } from "lucide-react"
-import { useAuthStore } from '@/stores/authStore'
+import { logout } from "@/lib/api/client/api"
+import type { UserDetail } from "@/types/api"
 
-export function UserMenu() {
-  const { user, handleLogout } = useAuthStore()
+interface UserMenuProps {
+  user: UserDetail | null
+}
+
+export function UserMenu({ user }: UserMenuProps) {
   const t = useTranslations()
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+    } catch (error) {
+      console.error('Error logging out:', error)
+      // Still redirect on error
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
+    }
+  }
 
   return (
     <DropdownMenu>
@@ -37,7 +56,7 @@ export function UserMenu() {
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
           <Link
-            href="/user/me"
+            href="/me"
             className="flex items-center w-full"
           >
             <SquareUserRound className="h-4 w-4 mr-2" />

@@ -1,43 +1,33 @@
-"use client"
-
 import type React from "react"
-import { useEffect } from "react"
-import { useAuthStore } from "@/stores/authStore"
-import { useMobileMenu } from "@/hooks/ui/useMobileMenu"
+import { getCurrentUser } from "@/lib/api/server"
 import { TopNavbar } from "@/components/layout/TopNavbar"
-import { Sidebar } from "@/components/layout/Sidebar"
-import { MobileMenu } from "@/components/layout/MobileMenu"
+import { AppSidebar } from "@/components/layout/Sidebar"
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 
-export default function PlatformLayout({
+export default async function PlatformLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { fetchUser } = useAuthStore()
-  const { isMobileMenuOpen, toggleMobileMenu, closeMobileMenu } = useMobileMenu()
-
-  useEffect(() => {
-    fetchUser()
-  }, [fetchUser])
+  let user = null
+  try {
+    user = await getCurrentUser()
+  } catch (error) {
+    console.error("Error fetching user:", error)
+    // Handle error appropriately
+  }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <TopNavbar 
-        isMobileMenuOpen={isMobileMenuOpen}
-        onToggleMobileMenu={toggleMobileMenu}
-      />
-
-      <Sidebar />
-
-      <MobileMenu 
-        isOpen={isMobileMenuOpen}
-        onClose={closeMobileMenu}
-      />
-
-      {/* Main content */}
-      <div className="md:pl-64 flex flex-col flex-1 overflow-x-auto" style={{ paddingTop: '64px' }}>
-        <main className="flex-1 p-4 md:p-6">{children}</main>
-      </div>
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        {/* TopNavbar is inside SidebarInset */}
+        <TopNavbar user={user} />
+        {/* Main content */}
+        <div className="flex flex-1 flex-col">
+          <main className="flex-1 p-4 md:p-6">{children}</main>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }
