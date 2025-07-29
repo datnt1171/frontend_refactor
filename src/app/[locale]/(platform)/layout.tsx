@@ -20,12 +20,12 @@ export default async function PlatformLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        {/* TopNavbar is inside SidebarInset */}
+      <SidebarInset className="flex flex-col min-w-0">
         <TopNavbar user={user} />
-        {/* Main content */}
-        <div className="flex flex-1 flex-col">
-          <main className="flex-1 p-4 md:p-6">{children}</main>
+        <div className="flex flex-1 flex-col min-w-0">
+          <main className="flex-1 p-4 md:p-6 min-w-0 overflow-hidden">
+            {children}
+          </main>
         </div>
       </SidebarInset>
     </SidebarProvider>
