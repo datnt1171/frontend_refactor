@@ -73,10 +73,11 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
   ],
   'crm': [
     {
-      title: "CRM.sideBar.CRM",
+      title: "crm.sideBar.crm",
       icon: Factory,
       items: [
-        { title: "CRM.sideBar.factories", url: "/crm/factories" },
+        { title: "crm.sideBar.factories", url: "/crm/factories" },
+        { title: "crm.sideBar.retailers", url: "/crm/retailers" }
       ],
     },
   ],
