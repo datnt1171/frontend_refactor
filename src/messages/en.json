@@ -19,7 +19,11 @@
     "createdBy": "Created By",
     "updatedAt": "Updated At",
     "updatedBy": "Updated By",
-    "goHome": "Back to home page"
+    "goHome": "Back to home page",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "delete": "Delete"
   },
   "home": {
     "title": "Home Page",
@@ -213,12 +217,22 @@
     }
   },
 
-  "CRM": {
+  "crm": {
     "appTitle": "CRM",
-    "appDescription": "Customer Relation Management",
+    "appDescription": "Customer Relationship Management",
     "sideBar": {
-      "CRM": "CRM",
-      "factories": "Factories"
+      "crm": "CRM",
+      "factories": "Factories",
+      "retailers": "Retailers"
+    },
+    "factories" : {
+      "factories": "Factories",
+      "addFactory": "Add factory",
+      "factoryId": "Factory ID",
+      "factoryName": "Factory Name",
+      "status": "Status",
+      "onsite": "Onsite"
+
     }
   },
 

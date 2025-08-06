@@ -19,7 +19,11 @@
     "createdBy": "Người tạo",
     "updatedAt": "Ngày cập nhật",
     "updatedBy": "Người cập nhật",
-    "goHome": "Về trang chủ"
+    "goHome": "Về trang chủ",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Sửa",
+    "delete": "Xóa"
   },
   "home": {
   "title": "Trang chủ",
@@ -213,7 +217,21 @@
   },
   "crm": {
     "appTitle": "CRM",
-    "appDescription": "Customer Relation Management"
+    "appDescription": "Customer Relationship Management",
+    "sideBar": {
+      "crm": "CRM",
+      "factories": "Nhà máy",
+      "retailers": "KH đặt hàng"
+    },
+    "factories" : {
+      "factories": "Nhà máy",
+      "addFactory": "Thêm nhà máy",
+      "factoryId": "Mã KH",
+      "factoryName": "Tên KH",
+      "status": "Trạng thái",
+      "onsite": "Kỹ thuật ngoài"
+
+    }
   },
 
   "edms": {
