@@ -8,8 +8,10 @@ export async function GET(request: Request) {
     // Extract query parameters from the request
     const { searchParams } = new URL(request.url)
     const queryString = searchParams.toString()
+    const externalUrl = `${process.env.DW_API_URL}/api/crm/factories${queryString ? `?${queryString}` : ''}`
+    console.log('Fetching factories from:', externalUrl)
     
-    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${queryString ? `?${queryString}` : ''}`, {
+    const response = await fetch(externalUrl, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
@@ -30,12 +32,11 @@ export async function POST(request: Request) {
     
     const body = await request.json()
     
-    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories/`, {
+    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
-        "Accept-Language": session.locale,
       },
       body: JSON.stringify(body),
     })
