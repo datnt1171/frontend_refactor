@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "@/i18n/navigation";
-import BackButton from "@/components/ui/BackButton";
 import { useTranslations } from 'next-intl'
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { Link } from "@/i18n/navigation";
 
 export default function ChangePasswordPage() {
   const [current_password, setCurrentPassword] = useState("");
@@ -56,12 +56,15 @@ export default function ChangePasswordPage() {
 
   const isMinLength = new_password.length >= 9;
   const isNotNumeric = !/^\d+$/.test(new_password) || new_password.length === 0; // Allow empty string to avoid premature red
-  // Add more checks if you want (e.g. isNotCommon, isNotSimilar)
 
   return (
     <div className="p-6 max-w-md mx-auto">
       <div className="mb-4">
-        <BackButton />
+        <Link href="/me">
+          <Button variant="ghost" size="icon">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
       </div>
       <h1 className="text-2xl font-bold mb-6">{t('changePassword')}</h1>
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -112,7 +115,6 @@ export default function ChangePasswordPage() {
               <p className={isNotNumeric ? 'text-green-600' : 'text-red-500'}>
                 • {t('passwordNotNumeric')}
               </p>
-              {/* Extend with other rules if you want */}
             </div>
           )}
         </div>
