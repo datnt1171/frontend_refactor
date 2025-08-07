@@ -9,8 +9,6 @@ import { MoreHorizontal } from "lucide-react"
 
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
-
-import type { ReceivedTask } from "@/types/api"
 import { getReceivedTasks } from "@/lib/api/server"
 import { getTranslations } from "next-intl/server"
 
@@ -20,7 +18,7 @@ export default async function ReceivedTasksPage() {
   const t = await getTranslations('taskManagement.receivedTask')
   
   const response = await getReceivedTasks()
-  const tasks: ReceivedTask[] = response.results
+  const tasks = response.results
 
 
   return (
