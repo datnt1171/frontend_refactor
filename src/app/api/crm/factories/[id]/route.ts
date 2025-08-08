@@ -1,7 +1,7 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -10,7 +10,7 @@ export async function GET(
     
     const { id } = await params
     
-    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${id}/`, {
+    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${id}`, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export async function PATCH(
     const { id } = await params
     const body = await request.json()
     
-    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${id}/`, {
+    const response = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${id}`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
