@@ -70,7 +70,7 @@ export async function handleApiError(response: Response): Promise<NextResponse<A
     // JSON parsing failed, use status text
     errorMessage = response.statusText || `HTTP ${response.status}`
   }
-  
+  console.error("ERROR: ",errorMessage)
   const errorResponse: ApiErrorResponse = {
     success: false,
     error: errorMessage,
