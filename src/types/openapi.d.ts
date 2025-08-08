@@ -488,7 +488,7 @@ export interface components {
          *     * `assignee` - Assignee
          * @enum {string}
          */
-        FieldTypeEnum: "text" | "number" | "date" | "select" | "file" | "json" | "assignee";
+        FieldTypeEnum: "text" | "number" | "date" | "select" | "file" | "json" | "assignee" | "factory" | "retailer";
         PaginatedProcessListList: {
             /** @example 123 */
             count: number;

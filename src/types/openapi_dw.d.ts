@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/crm/factories/": {
+    "/api/crm/factories": {
         parameters: {
             query?: never;
             header?: never;
@@ -12,16 +12,20 @@ export interface paths {
             cookie?: never;
         };
         /** Get Factories */
-        get: operations["get_factories_api_crm_factories__get"];
+        get: operations["get_factories_api_crm_factories_get"];
         put?: never;
-        post?: never;
+        /**
+         * Create Factory
+         * @description Create a new factory
+         */
+        post: operations["create_factory_api_crm_factories_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/crm/factories/{factory_id}/": {
+    "/api/crm/factories/{factory_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -32,7 +36,49 @@ export interface paths {
          * Get Factory By Id
          * @description Get a specific factory by factory_code
          */
-        get: operations["get_factory_by_id_api_crm_factories__factory_id___get"];
+        get: operations["get_factory_by_id_api_crm_factories__factory_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Factory
+         * @description Update a factory's is_active and/or has_onsite status
+         *     Only is_active and has_onsite fields can be modified
+         */
+        patch: operations["update_factory_api_crm_factories__factory_id__patch"];
+        trace?: never;
+    };
+    "/api/crm/retailers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Retailers */
+        get: operations["get_retailers_api_crm_retailers_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/crm/retailers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Retailer By Id
+         * @description Get a specific retailer by id
+         */
+        get: operations["get_retailer_by_id_api_crm_retailers__id__get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -165,6 +211,19 @@ export interface components {
              */
             has_onsite: boolean;
         };
+        /** FactoryUpdate */
+        FactoryUpdate: {
+            /**
+             * Is Active
+             * @description Active status
+             */
+            is_active?: boolean | null;
+            /**
+             * Has Onsite
+             * @description Has onsite facilities
+             */
+            has_onsite?: boolean | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -194,6 +253,64 @@ export interface components {
              */
             results: components["schemas"]["Factory"][];
         };
+        /** PaginatedResponse[Retailer] */
+        PaginatedRetailerList: {
+            /**
+             * Count
+             * @description Total number of items
+             * @example 123
+             */
+            count: number;
+            /**
+             * Next
+             * @example http://api.example.org/factories/?offset=50&limit=50
+             */
+            next?: string | null;
+            /**
+             * Previous
+             * @example http://api.example.org/factories/?offset=0&limit=50
+             */
+            previous?: string | null;
+            /**
+             * Results
+             * @description Array of items
+             */
+            results: components["schemas"]["Retailer"][];
+        };
+        /**
+         * Retailer
+         * @description Retailer item for list view
+         */
+        Retailer: {
+            /**
+             * Id
+             * Format: uuid
+             * @description Retailer UUID
+             */
+            id: string;
+            /**
+             * Name
+             * @description Retailer name
+             */
+            name: string;
+        };
+        /**
+         * RetailerDetail
+         * @description Detailed retailer view - for single retailer endpoint
+         */
+        RetailerDetail: {
+            /**
+             * Id
+             * Format: uuid
+             * @description Retailer UUID
+             */
+            id: string;
+            /**
+             * Name
+             * @description Retailer name
+             */
+            name: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -212,11 +329,12 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    get_factories_api_crm_factories__get: {
+    get_factories_api_crm_factories_get: {
         parameters: {
             query?: {
                 is_active?: boolean;
                 has_onsite?: boolean;
+                search?: string;
                 offset?: number;
                 limit?: number;
             };
@@ -246,7 +364,40 @@ export interface operations {
             };
         };
     };
-    get_factory_by_id_api_crm_factories__factory_id___get: {
+    create_factory_api_crm_factories_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Factory"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Factory"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_factory_by_id_api_crm_factories__factory_id__get: {
         parameters: {
             query?: never;
             header?: never;
@@ -264,6 +415,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FactoryDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_factory_api_crm_factories__factory_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                factory_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FactoryUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Factory"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_retailers_api_crm_retailers_get: {
+        parameters: {
+            query?: {
+                search?: string;
+                offset?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponse_Retailer_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_retailer_by_id_api_crm_retailers__id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailerDetail"];
                 };
             };
             /** @description Validation Error */
