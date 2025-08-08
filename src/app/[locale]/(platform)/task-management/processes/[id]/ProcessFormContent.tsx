@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Eye } from "lucide-react"
 import { useTranslations } from 'next-intl'
-import type { ProcessDetail, UserList } from "@/types/api"
+import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
 import { FormField } from "./FormField"
 
 interface ProcessFormContentProps {
   process: ProcessDetail
   users: UserList[]
+  factories: Factory[]
+  retailers: Retailer[]
   formValues: Record<string, any>
   onInputChange: (fieldId: string, value: any) => void
   onReview: (e: React.FormEvent) => void
@@ -19,6 +21,8 @@ interface ProcessFormContentProps {
 export function ProcessFormContent({
   process,
   users,
+  factories,
+  retailers,
   formValues,
   onInputChange,
   onReview
@@ -41,6 +45,8 @@ export function ProcessFormContent({
               <FormField
                 field={field}
                 users={users}
+                factories={factories}
+                retailers={retailers}
                 value={formValues[field.id]}
                 onChange={(value) => onInputChange(field.id, value)}
                 disabled={false}
