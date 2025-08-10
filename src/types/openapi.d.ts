@@ -84,6 +84,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/{task_id}/data/{field_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_data_retrieve"];
+        put: operations["api_tasks_data_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["api_tasks_data_partial_update"];
+        trace?: never;
+    };
     "/api/tasks/received/": {
         parameters: {
             query?: never;
@@ -217,7 +233,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/auth/jwt/create/": {
+    "/api/users/me/change-password/": {
         parameters: {
             query?: never;
             header?: never;
@@ -225,226 +241,12 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
-        /** @description Takes a set of user credentials and returns an access and refresh JSON web
-         *     token pair to prove the authentication of those credentials. */
-        post: operations["auth_jwt_create_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/jwt/refresh/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Takes a refresh type JSON web token and returns an access type JSON web
-         *     token if the refresh token is valid. */
-        post: operations["auth_jwt_refresh_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/jwt/verify/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Takes a token and indicates if it is valid.  This view provides no
-         *     information about a token's fitness for a particular use. */
-        post: operations["auth_jwt_verify_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["auth_users_list"];
-        put?: never;
-        post: operations["auth_users_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/{id}/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["auth_users_retrieve"];
-        put: operations["auth_users_update"];
+        put: operations["api_users_me_change_password_update"];
         post?: never;
-        delete: operations["auth_users_destroy"];
-        options?: never;
-        head?: never;
-        patch: operations["auth_users_partial_update"];
-        trace?: never;
-    };
-    "/auth/users/activation/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_activation_create"];
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/me/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["auth_users_me_retrieve"];
-        put: operations["auth_users_me_update"];
-        post?: never;
-        delete: operations["auth_users_me_destroy"];
-        options?: never;
-        head?: never;
-        patch: operations["auth_users_me_partial_update"];
-        trace?: never;
-    };
-    "/auth/users/resend_activation/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_resend_activation_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/reset_password/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_reset_password_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/reset_password_confirm/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_reset_password_confirm_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/reset_username/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_reset_username_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/reset_username_confirm/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_reset_username_confirm_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/set_password/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_set_password_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/auth/users/set_username/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["auth_users_set_username_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
+        patch: operations["api_users_me_change_password_partial_update"];
         trace?: never;
     };
 }
@@ -469,9 +271,14 @@ export interface components {
          * @enum {string}
          */
         ActionTypeEnum: "approve" | "adjust" | "confirm" | "complete" | "close" | "reject" | "cancel";
-        Activation: {
-            uid: string;
-            token: string;
+        ChangePassword: {
+            current_password: string;
+            new_password: string;
+            re_new_password: string;
+        };
+        CustomTokenObtainPair: {
+            username: string;
+            password: string;
         };
         Department: {
             /** Format: uuid */
@@ -486,6 +293,8 @@ export interface components {
          *     * `file` - File
          *     * `json` - Table
          *     * `assignee` - Assignee
+         *     * `factory` - Factory
+         *     * `retailer` - Retailer
          * @enum {string}
          */
         FieldTypeEnum: "text" | "number" | "date" | "select" | "file" | "json" | "assignee" | "factory" | "retailer";
@@ -534,21 +343,6 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["SentTask"][];
         };
-        PaginatedUserList: {
-            /** @example 123 */
-            count: number;
-            /**
-             * Format: uri
-             * @example http://api.example.org/accounts/?offset=400&limit=100
-             */
-            next?: string | null;
-            /**
-             * Format: uri
-             * @example http://api.example.org/accounts/?offset=200&limit=100
-             */
-            previous?: string | null;
-            results: components["schemas"]["UserList"][];
-        };
         PaginatedUserListList: {
             /** @example 123 */
             count: number;
@@ -564,22 +358,17 @@ export interface components {
             previous?: string | null;
             results: components["schemas"]["UserList"][];
         };
-        PasswordResetConfirmRetype: {
-            uid: string;
-            token: string;
-            new_password: string;
-            re_new_password: string;
+        PatchedChangePassword: {
+            current_password?: string;
+            new_password?: string;
+            re_new_password?: string;
         };
-        PatchedUser: {
-            /**
-             * Email address
-             * Format: email
-             */
-            email?: string;
-            /** Format: uuid */
-            readonly id?: string;
-            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
-            readonly username?: string;
+        PatchedTaskData: {
+            readonly field?: components["schemas"]["ProcessField"];
+            value?: string | null;
+            readonly files?: components["schemas"]["TaskFileData"][];
+            /** Format: uri */
+            file?: string;
         };
         ProcessDetail: {
             /** Format: uuid */
@@ -615,7 +404,7 @@ export interface components {
             /** Format: date-time */
             readonly created_at: string;
             created_by: string;
-            /** @description Return the name of the first action the current user is allowed to perform on this task. */
+            /** @description Single query optimization for current user's permissions. */
             readonly action: string | null;
         };
         Role: {
@@ -641,10 +430,6 @@ export interface components {
             quantity: string;
             deadline: string;
         };
-        SendEmailReset: {
-            /** Format: email */
-            email: string;
-        };
         SentTask: {
             /** Format: uuid */
             readonly id: string;
@@ -654,21 +439,8 @@ export interface components {
             state_type: string;
             /** Format: date-time */
             readonly created_at: string;
-            /** @description Try to identify a user who is allowed to act on the task from the start state. */
+            /** @description Single query optimization - get all permissions for this task at once. */
             readonly recipient: string | null;
-        };
-        SetPasswordRetype: {
-            new_password: string;
-            re_new_password: string;
-            current_password: string;
-        };
-        SetUsername: {
-            current_password: string;
-            /**
-             * Username
-             * @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-             */
-            new_username: string;
         };
         State: {
             /** Format: uuid */
@@ -713,7 +485,9 @@ export interface components {
         TaskData: {
             readonly field: components["schemas"]["ProcessField"];
             value?: string | null;
-            files: components["schemas"]["TaskFileData"][];
+            readonly files: components["schemas"]["TaskFileData"][];
+            /** Format: uri */
+            file?: string;
         };
         TaskDataInput: {
             /** Format: uuid */
@@ -739,41 +513,9 @@ export interface components {
             original_filename?: string;
             readonly uploaded_file: string;
         };
-        TokenObtainPair: {
-            username: string;
-            password: string;
-            readonly access: string;
-            readonly refresh: string;
-        };
         TokenRefresh: {
             readonly access: string;
             refresh: string;
-        };
-        TokenVerify: {
-            token: string;
-        };
-        User: {
-            /**
-             * Email address
-             * Format: email
-             */
-            email?: string;
-            /** Format: uuid */
-            readonly id: string;
-            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
-            readonly username: string;
-        };
-        UserCreate: {
-            /**
-             * Email address
-             * Format: email
-             */
-            email?: string;
-            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
-            username: string;
-            /** Format: uuid */
-            readonly id: string;
-            password: string;
         };
         UserDetail: {
             /** Format: uuid */
@@ -790,7 +532,7 @@ export interface components {
             department: components["schemas"]["Department"];
             role: components["schemas"]["Role"];
             readonly supervisor: components["schemas"]["UserList"];
-            is_password_changed: boolean;
+            is_password_changed?: boolean;
         };
         UserList: {
             /** Format: uuid */
@@ -799,13 +541,6 @@ export interface components {
             username: string;
             first_name?: string;
             last_name?: string;
-        };
-        UsernameResetConfirm: {
-            /**
-             * Username
-             * @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
-             */
-            new_username: string;
         };
     };
     responses: never;
@@ -934,6 +669,84 @@ export interface operations {
             };
         };
     };
+    api_tasks_data_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                field_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskData"];
+                };
+            };
+        };
+    };
+    api_tasks_data_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                field_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["TaskData"];
+                "application/x-www-form-urlencoded": components["schemas"]["TaskData"];
+                "application/json": components["schemas"]["TaskData"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskData"];
+                };
+            };
+        };
+    };
+    api_tasks_data_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                field_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": components["schemas"]["PatchedTaskData"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedTaskData"];
+                "application/json": components["schemas"]["PatchedTaskData"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskData"];
+                };
+            };
+        };
+    };
     api_tasks_received_list: {
         parameters: {
             query?: {
@@ -1010,9 +823,9 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TokenObtainPair"];
-                "application/x-www-form-urlencoded": components["schemas"]["TokenObtainPair"];
-                "multipart/form-data": components["schemas"]["TokenObtainPair"];
+                "application/json": components["schemas"]["CustomTokenObtainPair"];
+                "application/x-www-form-urlencoded": components["schemas"]["CustomTokenObtainPair"];
+                "multipart/form-data": components["schemas"]["CustomTokenObtainPair"];
             };
         };
         responses: {
@@ -1021,7 +834,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TokenObtainPair"];
+                    "application/json": components["schemas"]["CustomTokenObtainPair"];
                 };
             };
         };
@@ -1115,7 +928,7 @@ export interface operations {
             };
         };
     };
-    auth_jwt_create_create: {
+    api_users_me_change_password_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -1124,9 +937,9 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["TokenObtainPair"];
-                "application/x-www-form-urlencoded": components["schemas"]["TokenObtainPair"];
-                "multipart/form-data": components["schemas"]["TokenObtainPair"];
+                "application/json": components["schemas"]["ChangePassword"];
+                "application/x-www-form-urlencoded": components["schemas"]["ChangePassword"];
+                "multipart/form-data": components["schemas"]["ChangePassword"];
             };
         };
         responses: {
@@ -1135,254 +948,12 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TokenObtainPair"];
+                    "application/json": components["schemas"]["ChangePassword"];
                 };
             };
         };
     };
-    auth_jwt_refresh_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TokenRefresh"];
-                "application/x-www-form-urlencoded": components["schemas"]["TokenRefresh"];
-                "multipart/form-data": components["schemas"]["TokenRefresh"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenRefresh"];
-                };
-            };
-        };
-    };
-    auth_jwt_verify_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["TokenVerify"];
-                "application/x-www-form-urlencoded": components["schemas"]["TokenVerify"];
-                "multipart/form-data": components["schemas"]["TokenVerify"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["TokenVerify"];
-                };
-            };
-        };
-    };
-    auth_users_list: {
-        parameters: {
-            query?: {
-                /** @description Number of results to return per page. */
-                limit?: number;
-                /** @description The initial index from which to return the results. */
-                offset?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginatedUserList"];
-                };
-            };
-        };
-    };
-    auth_users_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UserCreate"];
-                "application/x-www-form-urlencoded": components["schemas"]["UserCreate"];
-                "multipart/form-data": components["schemas"]["UserCreate"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UserCreate"];
-                };
-            };
-        };
-    };
-    auth_users_retrieve: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description A UUID string identifying this user. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-        };
-    };
-    auth_users_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description A UUID string identifying this user. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["User"];
-                "application/x-www-form-urlencoded": components["schemas"]["User"];
-                "multipart/form-data": components["schemas"]["User"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-        };
-    };
-    auth_users_destroy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description A UUID string identifying this user. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No response body */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    auth_users_partial_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description A UUID string identifying this user. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["PatchedUser"];
-                "application/x-www-form-urlencoded": components["schemas"]["PatchedUser"];
-                "multipart/form-data": components["schemas"]["PatchedUser"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-        };
-    };
-    auth_users_activation_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Activation"];
-                "application/x-www-form-urlencoded": components["schemas"]["Activation"];
-                "multipart/form-data": components["schemas"]["Activation"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Activation"];
-                };
-            };
-        };
-    };
-    auth_users_me_retrieve: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-        };
-    };
-    auth_users_me_update: {
+    api_users_me_change_password_partial_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -1391,9 +962,9 @@ export interface operations {
         };
         requestBody?: {
             content: {
-                "application/json": components["schemas"]["User"];
-                "application/x-www-form-urlencoded": components["schemas"]["User"];
-                "multipart/form-data": components["schemas"]["User"];
+                "application/json": components["schemas"]["PatchedChangePassword"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedChangePassword"];
+                "multipart/form-data": components["schemas"]["PatchedChangePassword"];
             };
         };
         responses: {
@@ -1402,225 +973,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-        };
-    };
-    auth_users_me_destroy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description No response body */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    auth_users_me_partial_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": components["schemas"]["PatchedUser"];
-                "application/x-www-form-urlencoded": components["schemas"]["PatchedUser"];
-                "multipart/form-data": components["schemas"]["PatchedUser"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["User"];
-                };
-            };
-        };
-    };
-    auth_users_resend_activation_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SendEmailReset"];
-                "application/x-www-form-urlencoded": components["schemas"]["SendEmailReset"];
-                "multipart/form-data": components["schemas"]["SendEmailReset"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SendEmailReset"];
-                };
-            };
-        };
-    };
-    auth_users_reset_password_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SendEmailReset"];
-                "application/x-www-form-urlencoded": components["schemas"]["SendEmailReset"];
-                "multipart/form-data": components["schemas"]["SendEmailReset"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SendEmailReset"];
-                };
-            };
-        };
-    };
-    auth_users_reset_password_confirm_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PasswordResetConfirmRetype"];
-                "application/x-www-form-urlencoded": components["schemas"]["PasswordResetConfirmRetype"];
-                "multipart/form-data": components["schemas"]["PasswordResetConfirmRetype"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PasswordResetConfirmRetype"];
-                };
-            };
-        };
-    };
-    auth_users_reset_username_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SendEmailReset"];
-                "application/x-www-form-urlencoded": components["schemas"]["SendEmailReset"];
-                "multipart/form-data": components["schemas"]["SendEmailReset"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SendEmailReset"];
-                };
-            };
-        };
-    };
-    auth_users_reset_username_confirm_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UsernameResetConfirm"];
-                "application/x-www-form-urlencoded": components["schemas"]["UsernameResetConfirm"];
-                "multipart/form-data": components["schemas"]["UsernameResetConfirm"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsernameResetConfirm"];
-                };
-            };
-        };
-    };
-    auth_users_set_password_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetPasswordRetype"];
-                "application/x-www-form-urlencoded": components["schemas"]["SetPasswordRetype"];
-                "multipart/form-data": components["schemas"]["SetPasswordRetype"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SetPasswordRetype"];
-                };
-            };
-        };
-    };
-    auth_users_set_username_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SetUsername"];
-                "application/x-www-form-urlencoded": components["schemas"]["SetUsername"];
-                "multipart/form-data": components["schemas"]["SetUsername"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SetUsername"];
+                    "application/json": components["schemas"]["ChangePassword"];
                 };
             };
         };
