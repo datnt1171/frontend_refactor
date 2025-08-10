@@ -147,3 +147,23 @@ export const changePassword = async (data: SetPasswordRetype) => {
   })
   return response
 }
+
+export const updateTaskData = async (
+  taskId: string, 
+  fieldId: string, 
+  data: FormData | Record<string, any>
+) => {
+  const isFormData = data instanceof FormData
+  
+  const response = await apiClient(`/tasks/${taskId}/data/${fieldId}`, {
+    method: 'PATCH',
+    body: isFormData ? data : JSON.stringify(data),
+    headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to update task data: ${response.status}`)
+  }
+
+  return response.data
+}

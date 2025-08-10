@@ -23,7 +23,8 @@
     "active": "Active",
     "inactive": "Inactive",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "save": "Save"
   },
   "home": {
     "title": "Home Page",
@@ -174,7 +175,9 @@
       "availableActions": "Available Actions",
       "addCommentOptional": "Add a comment (optional)...",
       "noActionsAvailable": "No actions available for this task.",
-      "noFileUploaded": "No file uploaded"
+      "noFileUploaded": "No file uploaded",
+      "EditFailed": "Failed to edit",
+      "EditSuccessfully": "Edit successfully!"
     }
   },
   "dashboard": {

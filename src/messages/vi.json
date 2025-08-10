@@ -23,7 +23,8 @@
     "active": "Active",
     "inactive": "Inactive",
     "edit": "Sửa",
-    "delete": "Xóa"
+    "delete": "Xóa",
+    "save": "Lưu"
   },
   "home": {
   "title": "Trang chủ",
@@ -173,7 +174,9 @@
       "availableActions": "Các thao tác khả dụng",
       "addCommentOptional": "Thêm bình luận (không bắt buộc)...",
       "noActionsAvailable": "Không có thao tác khả dụng cho công việc này.",
-      "noFileUploaded": "Chưa tải tệp nào lên"
+      "noFileUploaded": "Chưa tải tệp nào lên",
+      "EditFailed": "Có lỗi xảy ra khi chỉnh sửa dữ liệu",
+      "EditSuccessfully": "Chỉnh sửa thành công"
     }
   },
   "dashboard": {
