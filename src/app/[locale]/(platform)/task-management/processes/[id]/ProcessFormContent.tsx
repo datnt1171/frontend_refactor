@@ -42,6 +42,9 @@ export function ProcessFormContent({
                 {field.name}
                 {field.required && <span className="text-red-500 ml-1">*</span>}
               </Label>
+              {field.description && (
+                <p className="text-sm text-muted-foreground">{field.description}</p>
+              )}
               <FormField
                 field={field}
                 users={users}

@@ -382,6 +382,7 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             name: string;
+            description: string;
             field_type?: components["schemas"]["FieldTypeEnum"];
             order: number;
             required?: boolean;
