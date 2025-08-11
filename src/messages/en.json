@@ -24,7 +24,11 @@
     "inactive": "Inactive",
     "edit": "Edit",
     "delete": "Delete",
-    "save": "Save"
+    "save": "Save",
+    "selectFactory": "Select factory",
+    "searchFactory": "Search for factory",
+    "selectRetailer": "Select Retailer",
+    "searchRetailer": "Search for retailer"
   },
   "home": {
     "title": "Home Page",

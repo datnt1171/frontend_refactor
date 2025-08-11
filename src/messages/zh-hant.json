@@ -24,7 +24,11 @@
     "inactive": "Inactive",
     "edit": "編輯",
     "delete": "刪除",
-    "save": "節省"
+    "save": "節省",
+    "selectFactory": "選擇工廠",
+    "searchFactory": "搜尋工廠",
+    "selectRetailer": "選擇零售商",
+    "searchRetailer": "搜尋零售商"
   },
   "home": {
   "title": "首頁",

@@ -94,8 +94,8 @@ export function FormField({
           options={factoryOptions}
           value={value || ""}
           onValueChange={onChange}
-          placeholder={t('selectUser')} // change this
-          searchPlaceholder={t('searchUsers')} // change this
+          placeholder={commonT('selectFactory')}
+          searchPlaceholder={commonT('searchFactory')}
           emptyMessage={commonT('noDataFound')}
           disabled={disabled}
         />
@@ -113,8 +113,8 @@ export function FormField({
           options={retailerOptions}
           value={value || ""}
           onValueChange={onChange}
-          placeholder={t('selectUser')} // change this
-          searchPlaceholder={t('searchUsers')} // change this
+          placeholder={commonT('selectRetailer')}
+          searchPlaceholder={commonT('searchRetailer')}
           emptyMessage={commonT('noDataFound')}
           disabled={disabled}
         />

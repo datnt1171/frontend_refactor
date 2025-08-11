@@ -24,7 +24,11 @@
     "inactive": "Inactive",
     "edit": "Sửa",
     "delete": "Xóa",
-    "save": "Lưu"
+    "save": "Lưu",
+    "selectFactory": "Chọn nhà máy",
+    "searchFactory": "Tìm nhà máy",
+    "selectRetailer": "Chọn KH đặt hàng",
+    "searchRetailer": "Tìm KH đặt hàng"
   },
   "home": {
   "title": "Trang chủ",
