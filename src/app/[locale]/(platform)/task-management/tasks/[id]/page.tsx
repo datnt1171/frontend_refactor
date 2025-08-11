@@ -83,15 +83,15 @@ export default async function TaskDetailPage({
                           </p> */}
                   <div className="p-3 bg-muted rounded-md space-y-1">
                   {data.field.field_type === "file" ? (
-                    data.files && data.files.length > 0 ? (
+                    data.files && data.files[0] ? (
                       <p>
                         <a 
-                          href={data.files[data.files.length - 1]?.uploaded_file}
+                          href={data.files[0].uploaded_file}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-600 underline"
                         >
-                          {data.files[data.files.length - 1]?.original_filename}
+                          {data.files[0].original_filename}
                         </a>
                       </p>
                     ) : (
