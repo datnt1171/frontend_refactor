@@ -369,6 +369,7 @@ export interface components {
             readonly files?: components["schemas"]["TaskFileData"][];
             /** Format: uri */
             file?: string;
+            readonly history?: components["schemas"]["TaskDataHistory"][];
         };
         ProcessDetail: {
             /** Format: uuid */
@@ -489,6 +490,13 @@ export interface components {
             readonly files: components["schemas"]["TaskFileData"][];
             /** Format: uri */
             file?: string;
+            readonly history: components["schemas"]["TaskDataHistory"][];
+        };
+        TaskDataHistory: {
+            value?: string | null;
+            readonly updated_by: string;
+            /** Format: date-time */
+            updated_at: string;
         };
         TaskDataInput: {
             /** Format: uuid */
@@ -513,6 +521,8 @@ export interface components {
         TaskFileData: {
             original_filename?: string;
             readonly uploaded_file: string;
+            /** Format: date-time */
+            readonly uploaded_at: string;
         };
         TokenRefresh: {
             readonly access: string;
