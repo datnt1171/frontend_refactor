@@ -1,12 +1,14 @@
-import { getTask } from "@/lib/api/server"
+import { getTask, getCurrentUser } from "@/lib/api/server"
 import { getTranslations } from "next-intl/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, User, Clock } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Calendar, User, Clock, Edit } from "lucide-react"
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import TaskActions from "./TaskAction"
 import BackButton from "@/components/ui/BackButton"
+import { Link } from "@/i18n/navigation"
 
 export default async function TaskDetailPage({ 
   params 
@@ -15,12 +17,15 @@ export default async function TaskDetailPage({
 }) {
   const { id } = await params
   
-  // Fetch data and translations on server
-  const [task, t, commonT] = await Promise.all([
+
+  const [task, t, commonT, currentUser] = await Promise.all([
     getTask(id),
     getTranslations('taskManagement.taskDetail'),
-    getTranslations('common')
+    getTranslations('common'),
+    getCurrentUser()
   ])
+
+  const canEdit = currentUser.id === task.created_by.id
 
   return (
     <div className="space-y-6">
@@ -46,13 +51,28 @@ export default async function TaskDetailPage({
             <CardContent className="space-y-6">
               {task.data.map((data) => (
                 <div key={data.field.id as string} className="space-y-2">
-                  <label className="text-sm font-medium">{data.field.name as string}</label>
-                  <div className="p-3 bg-muted rounded-md space-y-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-sm font-medium">{data.field.name as string}</label>
+                    {canEdit && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        asChild
+                        className="h-8 px-2"
+                      >
+                        <Link href={`/task-management/tasks/${id}/data/${data.field.id}`}>
+                          <Edit className="h-3 w-3 mr-1" />
+                          {commonT('edit')}
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                  {/* <div className="p-3 bg-muted rounded-md space-y-1">
                     {data.field.field_type === "file" ? (
                       data.files && data.files.length > 0 ? (
                         data.files.map((file, index) => (
                           <p key={index}>
-                            <a
+
                               href={file.uploaded_file}
                               target="_blank"
                               rel="noopener noreferrer"
@@ -60,9 +80,21 @@ export default async function TaskDetailPage({
                             >
                               {file.original_filename}
                             </a>
-                          </p>
-                        ))
-                      ) : (
+                          </p> */}
+                  <div className="p-3 bg-muted rounded-md space-y-1">
+                  {data.field.field_type === "file" ? (
+                    data.files && data.files[0] ? (
+                      <p>
+                        <a 
+                          href={data.files[0].uploaded_file}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 underline"
+                        >
+                          {data.files[0].original_filename}
+                        </a>
+                      </p>
+                    ) : (
                         <span className="text-muted-foreground italic">{t('noFileUploaded')}</span>
                       )
                     ) : (

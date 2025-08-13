@@ -4,12 +4,14 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Combobox } from "@/components/ui/combobox"
 import { useTranslations } from 'next-intl'
-import type { ProcessField, UserList } from "@/types/api"
+import type { ProcessField, UserList, Factory, Retailer } from "@/types"
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 
 interface FormFieldProps {
   field: ProcessField
   users: UserList[]
+  factories: Factory[]
+  retailers: Retailer[]
   value: any
   onChange: (value: any) => void
   disabled: boolean
@@ -26,6 +28,8 @@ interface FormFieldProps {
 export function FormField({ 
   field, 
   users, 
+  factories,
+  retailers,
   value, 
   onChange, 
   disabled 
@@ -77,6 +81,45 @@ export function FormField({
           disabled={disabled}
         />
       )
+    
+    case "factory":
+      const factoryOptions = factories.map(factory => ({
+        value: factory.factory_code.toString(),
+        label: `${factory.factory_name} (${factory.factory_code})`,
+        searchValue: `${factory.factory_name} ${factory.factory_code}`
+      }))
+
+      return (
+        <Combobox
+          options={factoryOptions}
+          value={value || ""}
+          onValueChange={onChange}
+          placeholder={commonT('selectFactory')}
+          searchPlaceholder={commonT('searchFactory')}
+          emptyMessage={commonT('noDataFound')}
+          disabled={disabled}
+        />
+      )
+
+    case "retailer":
+      const retailerOptions = retailers.map(retailer => ({
+        value: retailer.id.toString(),
+        label: `${retailer.name}`,
+        searchValue: `${retailer.name}`
+      }))
+
+      return (
+        <Combobox
+          options={retailerOptions}
+          value={value || ""}
+          onValueChange={onChange}
+          placeholder={commonT('selectRetailer')}
+          searchPlaceholder={commonT('searchRetailer')}
+          emptyMessage={commonT('noDataFound')}
+          disabled={disabled}
+        />
+      )
+
 
     case "text":
       return (

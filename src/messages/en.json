@@ -19,7 +19,16 @@
     "createdBy": "Created By",
     "updatedAt": "Updated At",
     "updatedBy": "Updated By",
-    "goHome": "Back to home page"
+    "goHome": "Back to home page",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "selectFactory": "Select factory",
+    "searchFactory": "Search for factory",
+    "selectRetailer": "Select Retailer",
+    "searchRetailer": "Search for retailer"
   },
   "home": {
     "title": "Home Page",
@@ -170,7 +179,9 @@
       "availableActions": "Available Actions",
       "addCommentOptional": "Add a comment (optional)...",
       "noActionsAvailable": "No actions available for this task.",
-      "noFileUploaded": "No file uploaded"
+      "noFileUploaded": "No file uploaded",
+      "EditFailed": "Failed to edit",
+      "EditSuccessfully": "Edit successfully!"
     }
   },
   "dashboard": {
@@ -213,12 +224,22 @@
     }
   },
 
-  "CRM": {
+  "crm": {
     "appTitle": "CRM",
-    "appDescription": "Customer Relation Management",
+    "appDescription": "Customer Relationship Management",
     "sideBar": {
-      "CRM": "CRM",
-      "factories": "Factories"
+      "crm": "CRM",
+      "factories": "Factories",
+      "retailers": "Retailers"
+    },
+    "factories" : {
+      "factories": "Factories",
+      "addFactory": "Add factory",
+      "factoryId": "Factory ID",
+      "factoryName": "Factory Name",
+      "status": "Status",
+      "onsite": "Onsite"
+
     }
   },
 

@@ -19,7 +19,16 @@
     "createdBy": "Người tạo",
     "updatedAt": "Ngày cập nhật",
     "updatedBy": "Người cập nhật",
-    "goHome": "Về trang chủ"
+    "goHome": "Về trang chủ",
+    "active": "Active",
+    "inactive": "Inactive",
+    "edit": "Sửa",
+    "delete": "Xóa",
+    "save": "Lưu",
+    "selectFactory": "Chọn nhà máy",
+    "searchFactory": "Tìm nhà máy",
+    "selectRetailer": "Chọn KH đặt hàng",
+    "searchRetailer": "Tìm KH đặt hàng"
   },
   "home": {
   "title": "Trang chủ",
@@ -169,7 +178,9 @@
       "availableActions": "Các thao tác khả dụng",
       "addCommentOptional": "Thêm bình luận (không bắt buộc)...",
       "noActionsAvailable": "Không có thao tác khả dụng cho công việc này.",
-      "noFileUploaded": "Chưa tải tệp nào lên"
+      "noFileUploaded": "Chưa tải tệp nào lên",
+      "EditFailed": "Có lỗi xảy ra khi chỉnh sửa dữ liệu",
+      "EditSuccessfully": "Chỉnh sửa thành công"
     }
   },
   "dashboard": {
@@ -213,7 +224,21 @@
   },
   "crm": {
     "appTitle": "CRM",
-    "appDescription": "Customer Relation Management"
+    "appDescription": "Customer Relationship Management",
+    "sideBar": {
+      "crm": "CRM",
+      "factories": "Nhà máy",
+      "retailers": "KH đặt hàng"
+    },
+    "factories" : {
+      "factories": "Nhà máy",
+      "addFactory": "Thêm nhà máy",
+      "factoryId": "Mã KH",
+      "factoryName": "Tên KH",
+      "status": "Trạng thái",
+      "onsite": "Kỹ thuật ngoài"
+
+    }
   },
 
   "edms": {

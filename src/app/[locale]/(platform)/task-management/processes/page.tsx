@@ -4,12 +4,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText } from "lucide-react"
 import { getProcesses } from "@/lib/api/server"
-import type { ProcessList } from "@/types/api"
 
 export default async function FormsPage() {
   const t = await getTranslations('taskManagement.process')
   const response = await getProcesses()
-  const processes: ProcessList[] = response.results
+  const processes = response.results
 
   return (
     <div className="space-y-6">

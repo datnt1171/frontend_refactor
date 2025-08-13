@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { ArrowLeft, Send, Loader2 } from "lucide-react"
 import { useTranslations } from 'next-intl'
-import type { ProcessDetail, UserList, ProcessField } from "@/types/api"
+import type { ProcessDetail, UserList, ProcessField, Factory, Retailer } from "@/types"
 
 interface FormReviewProps {
   process: ProcessDetail
   users: UserList[]
+  factories: Factory[]
+  retailers: Retailer[]
   formValues: Record<string, any>
   isSubmitting: boolean
   onBack: () => void
@@ -19,6 +21,8 @@ interface FormReviewProps {
 export function FormReview({
   process,
   users,
+  factories,
+  retailers,
   formValues,
   isSubmitting,
   onBack,
@@ -40,6 +44,16 @@ export function FormReview({
     if (field.field_type === "assignee") {
       const user = users.find(u => u.id.toString() === value)
       return user ? `${user.last_name} ${user.first_name} (${user.username})` : value
+    }
+
+    if (field.field_type === "factory") {
+      const factory = factories.find(u => u.factory_code.toString() === value)
+      return factory ? `${factory.factory_name} (${factory.factory_code})` : value
+    }
+
+    if (field.field_type === "retailer") {
+      const retailer = retailers.find(u => u.id.toString() === value)
+      return retailer ? `${retailer.name}` : value
     }
     
     if (field.field_type === "file" && value instanceof File) {

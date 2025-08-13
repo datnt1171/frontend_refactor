@@ -1,5 +1,10 @@
 import { api } from '@/lib/api/server/api'
-import type { PaginatedSentTaskList, PaginatedReceivedTaskList, TaskDetail} from '@/types/api'
+import type { 
+  PaginatedSentTaskList, 
+  PaginatedReceivedTaskList, 
+  TaskDetail, 
+  TaskData
+} from '@/types'
 
 export const getSentTasks = async (): Promise<PaginatedSentTaskList> => {
   const res = await api("/tasks/sent/")
@@ -16,5 +21,11 @@ export const getReceivedTasks = async (): Promise<PaginatedReceivedTaskList> => 
 export const getTask = async (id: string): Promise<TaskDetail> => {
   const res = await api(`/tasks/${id}/`)
   if (!res.ok) throw new Error(`Failed to fetch task details: ${res.status}`)
+  return res.json()
+}
+
+export const getTaskData = async (taskId: string, fieldId: string): Promise<TaskData> => {
+  const res = await api(`/tasks/${taskId}/data/${fieldId}`)
+  if (!res.ok) throw new Error(`Failed to fetch task data: ${res.status}`)
   return res.json()
 }

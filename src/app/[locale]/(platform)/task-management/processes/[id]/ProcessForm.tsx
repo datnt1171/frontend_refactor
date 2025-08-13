@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl'
 import { createTask } from "@/lib/api/client/api"
-import type { ProcessDetail, UserList } from "@/types/api"
+import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
 import { ProcessFormHeader } from "./ProcessFormHeader"
 import { ProcessFormContent } from "./ProcessFormContent"
 import { FormReview } from "./FormReview"
@@ -12,11 +12,15 @@ import { FormReview } from "./FormReview"
 interface ProcessFormClientProps {
   process: ProcessDetail
   users: UserList[]
+  factories: Factory[]
+  retailers: Retailer[]
 }
 
 export function ProcessFormClient({ 
   process, 
-  users
+  users,
+  factories,
+  retailers
 }: ProcessFormClientProps) {
   const router = useRouter()
   const t = useTranslations('taskManagement.createTask')
@@ -75,7 +79,6 @@ export function ProcessFormClient({
       
       // Check the success flag
       if (response.success) {
-        console.log("Task created successfully:", response.data)
         alert(t('taskCreatedSuccessfully'))
         router.push("/task-management/tasks/sent")
       } else {
@@ -98,6 +101,8 @@ export function ProcessFormClient({
         <FormReview
           process={process}
           users={users}
+          factories={factories}
+          retailers={retailers}
           formValues={formValues}
           isSubmitting={isSubmitting}
           onBack={() => setShowReview(false)}
@@ -107,6 +112,8 @@ export function ProcessFormClient({
         <ProcessFormContent
           process={process}
           users={users}
+          factories={factories}
+          retailers={retailers}
           formValues={formValues}
           onInputChange={handleInputChange}
           onReview={handleReview}

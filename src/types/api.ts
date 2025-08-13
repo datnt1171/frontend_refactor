@@ -1,7 +1,7 @@
 import type { components } from "@/types/openapi";
 
 // Auth
-export type SetPasswordRetype = components['schemas']['SetPasswordRetype']
+export type SetPasswordRetype = components['schemas']['ChangePassword']
 
 // User
 export type Department = components['schemas']['Department']
@@ -39,4 +39,4 @@ export type SPRReportRow = components['schemas']['SPRReportRow']
 export type PaginatedProcessListList = components['schemas']['PaginatedProcessListList']
 export type PaginatedReceivedTaskList = components['schemas']['PaginatedReceivedTaskList']
 export type PaginatedSentTaskList = components['schemas']['PaginatedSentTaskList']
-export type PaginatedUserList = components['schemas']['PaginatedUserList']
+export type PaginatedUserList = components['schemas']['PaginatedUserListList']
