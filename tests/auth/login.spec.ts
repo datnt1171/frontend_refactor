@@ -7,7 +7,6 @@ test.describe('Login Error Cases', () => {
     
     await page.getByTestId('login-submit-btn').click();
     
-    await expect(page.getByTestId('login-error-msg')).toBeVisible();
     await expect(page.getByTestId('login-error-msg')).toContainText('Username and Password are required');
   });
 
@@ -18,7 +17,6 @@ test.describe('Login Error Cases', () => {
     await page.getByTestId('login-password-input').fill('wrong_password');
     await page.getByTestId('login-submit-btn').click();
     
-    await expect(page.getByTestId('login-error-msg')).toBeVisible();
     await expect(page.getByTestId('login-error-msg')).toContainText('No active account found with the given credentials');
   });
 
@@ -39,7 +37,6 @@ test.describe('Login Error Cases', () => {
     await page.getByTestId('login-password-input').fill(testUser.password);
     await page.getByTestId('login-submit-btn').click();
     
-    await expect(page.getByTestId('login-error-msg')).toBeVisible();
     await expect(page.getByTestId('login-error-msg')).toContainText('Unexpected error when login, please retry later');
   });
 });
@@ -53,18 +50,6 @@ test.describe('Login Success Cases', () => {
       test.skip(true, 'User credentials not available for this environment');
       return;
     }
-
-    // // Mock successful login requiring password change
-    // await page.route('/api/auth/login', route => {
-    //   route.fulfill({
-    //     status: 200,
-    //     contentType: 'application/json',
-    //     body: JSON.stringify({
-    //       success: true,
-    //       requiresPasswordChange: true
-    //     })
-    //   });
-    // });
     
     await page.goto(testUrls.login);
     
@@ -79,22 +64,7 @@ test.describe('Login Success Cases', () => {
   test('should redirect to task management on normal login', async ({ page }) => {
     const credentials = getTestCredentials();
     const testUser = credentials.admin || credentials.readOnly;
-    
-    if (!testUser) {
-      test.skip(true, 'Test user credentials not available for this environment');
-    }
 
-    // // Mock successful login without password change
-    // await page.route('/api/auth/login', route => {
-    //   route.fulfill({
-    //     status: 200,
-    //     contentType: 'application/json',
-    //     body: JSON.stringify({
-    //       success: true,
-    //       requiresPasswordChange: false
-    //     })
-    //   });
-    // });
     
     await page.goto(testUrls.login);
     

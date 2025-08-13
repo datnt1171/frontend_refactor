@@ -44,7 +44,8 @@ test.describe('Production Smoke Tests', () => {
     const readOnlyUser = credentials.readOnly;
     
     if (!readOnlyUser) {
-      test.skip('Read-only credentials not configured for production');
+      test.skip(true, 'Read-only credentials not configured for production');
+      return;
     }
 
     await page.goto(testUrls.login);

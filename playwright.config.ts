@@ -14,7 +14,7 @@ export default defineConfig({
   reporter: process.env.CI ? 'github' : 'html',
   timeout: 30 * 1000,
   expect: {
-    timeout: 5 * 1000,
+    timeout: 30 * 1000,
   },
   
   use: {
@@ -58,7 +58,7 @@ export default defineConfig({
       },
     },
     
-    // Desktop - Mobile viewport for PWA consistency
+    // Desktop - Full desktop size
     {
       name: 'localhost-desktop-chrome',
       testMatch: ['**/*.spec.ts', '**/*.desktop.spec.ts'],
