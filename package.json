@@ -8,7 +8,21 @@
     "start": "next start",
     "lint": "next lint",
     "generate:types": "openapi-typescript http://localhost:8000/api/schema/ --output src/types/openapi.d.ts",
-    "generate:types_dw": "openapi-typescript http://localhost:8001/openapi.json --output src/types/openapi_dw.d.ts"
+    "generate:types_dw": "openapi-typescript http://localhost:8001/openapi.json --output src/types/openapi_dw.d.ts",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "test:localhost": "playwright test --project=localhost-mobile-chrome --project=localhost-desktop-chrome",
+    "test:localhost:mobile": "playwright test --project=localhost-mobile-chrome --project=localhost-mobile-safari",
+    "test:localhost:desktop": "playwright test --project=localhost-desktop-chrome --project=localhost-desktop-firefox",
+    "test:localhost:all": "playwright test --project=localhost-*",
+    "test:staging": "playwright test --project=staging-mobile-chrome --project=staging-desktop-chrome",
+    "test:staging:mobile": "playwright test --project=staging-mobile-chrome --project=staging-mobile-safari", 
+    "test:staging:all": "playwright test --project=staging-*",
+    "test:smoke": "playwright test --project=prod-smoke",
+    "test:mobile": "playwright test --project=*mobile*",
+    "test:desktop": "playwright test --project=*desktop*"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -27,7 +41,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.1",
     "echarts": "^6.0.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.513.0",
@@ -36,12 +50,11 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.0",
-    "use-debounce": "^10.0.5",
-    "vaul": "^1.1.2",
-    "zustand": "^5.0.6"
+    "use-debounce": "^10.0.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.54.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
