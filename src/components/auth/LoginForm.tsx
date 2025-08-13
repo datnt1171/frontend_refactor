@@ -71,9 +71,10 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">{translations.username}</Label>
+            <Label htmlFor="login-username-input">{translations.username}</Label>
             <Input
-              id="username"
+              id="login-username-input"
+              data-testid="login-username-input"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -82,10 +83,11 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">{translations.password}</Label>
+            <Label htmlFor="login-password-input">{translations.password}</Label>
             <div className="relative">
               <Input
-                id="password"
+                id="login-password-input"
+                data-testid="login-password-input"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -94,6 +96,7 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
               />
               <button
                 type="button"
+                data-testid="login-showpwd-btn"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
                 tabIndex={-1}
@@ -102,8 +105,20 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
               </button>
             </div>
           </div>
-          {error && <p className="text-sm text-red-500" aria-live="polite">{error}</p>}
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          {error && 
+            <p 
+              data-testid="login-error-msg"
+              className="text-sm text-red-500" 
+              aria-live="polite"
+            >
+            {error}
+            </p>}
+          <Button
+            data-testid="login-submit-btn"
+            type="submit" 
+            className="w-full" 
+            disabled={isLoading}
+          >
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
