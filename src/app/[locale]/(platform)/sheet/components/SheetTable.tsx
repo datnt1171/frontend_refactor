@@ -1,14 +1,22 @@
 'use client'
 import React, { useState } from 'react';
-import { Plus, Trash2, FileText } from 'lucide-react';
+import { Plus, Trash, Trash2, FileText, MoreHorizontal, ArrowDownFromLine, ArrowUpToLine } from 'lucide-react';
 import { Material, ProductionRecord } from '@/types';
 import { stepTemplates, chemicalTemplates } from '@/data/sheet';
 import { SheetHeader } from './SheetHeader';
 import { Button } from '@/components/ui/button';
 import { generatePDF } from '@/lib/pdf-generator';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Combobox } from "@/components/ui/combobox"
 
 // Generate unique ID
-const generateId = () => Math.random().toString(36).substr(2, 9);
+let idCounter = 0;
+const generateId = () => (++idCounter).toString();
 
 // Main Component
 const ProductionCRUDTable = () => {
@@ -35,35 +43,53 @@ const ProductionCRUDTable = () => {
     }));
   };
 
+  // Reusable emply record
+  const makeEmptyRecord = (): ProductionRecord => ({
+    id: generateId(),
+    booth: null,
+    stepId: '',
+    chemicalId: '',
+    stepname: '',
+    viscosity_en: '',
+    viscosity_vn: '',
+    spec_en: '',
+    spec_vn: '',
+    holdTime: '',
+    chemicalCode: '',
+    consumption: '',
+    materials: [
+      {
+        materialCode: '',
+        materialName: '',
+        ratio: '',
+        qty: '',
+        unit: '',
+        checkResult: '',
+        correctAction: '',
+        te1Signature: '',
+        customerSignature: '',
+      },
+    ],
+  });
   // Add new record
   const addRecord = () => {
-    const newRecord: ProductionRecord = {
-      id: generateId(),
-      stepId: '',
-      chemicalId: '',
-      stepname: '',
-      viscosity_en: '',
-      viscosity_vn: '',
-      spec_en: '',
-      spec_vn: '',
-      holdTime: '',
-      chemicalCode: '',
-      consumption: '',
-      materials: [
-        {
-          materialCode: '',
-          materialName: '',
-          ratio: '',
-          qty: '',
-          unit: '',
-          checkResult: '',
-          correctAction: '',
-          te1Signature: '',
-          customerSignature: ''
-        }
-      ]
-    };
-    setRecords(prev => [...prev, newRecord]);
+    setRecords(prev => [...prev, makeEmptyRecord()]);
+  };
+
+  const addRecordAt = (index: number) => {
+    setRecords(prev => [
+      ...prev.slice(0, index),
+      makeEmptyRecord(),
+      ...prev.slice(index),
+    ]);
+  };
+
+  const addRecordAfter = (index: number) => {
+    setRecords(prev => [
+      ...prev.slice(0, index + 1),
+      makeEmptyRecord(),
+      ...prev.slice(index + 1),
+    ]);
   };
 
   // Delete record
@@ -130,6 +156,16 @@ const ProductionCRUDTable = () => {
     ));
   };
 
+  const stepOptions = stepTemplates.map(step => ({
+    value: step.id,
+    label: step.stepname,
+  }));
+
+  const chemicalOptions = chemicalTemplates.map(chemical => ({
+    value: chemical.id,
+    label: chemical.chemicalCode,
+  }));
+
   return (
     <div>
       <div className="flex gap-2 mb-4">
@@ -151,33 +187,49 @@ const ProductionCRUDTable = () => {
       <div>
         <table className="w-full border-collapse border border-gray-300 text-xs">
           <SheetHeader />
-          <tbody>
-            {records.map((record) => (
+          <tbody className="text-left">
+            {records.map((record, recordIndex) => (
               <React.Fragment key={record.id}>
                 {record.materials.map((material, materialIndex) => (
-                  <tr key={`${record.id}-${materialIndex}`} className={materialIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    {/* ID - only show on first material row */}
+                  <tr
+                    key={`${record.id}-${materialIndex}`}
+                    className={materialIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+                  >
+                    {/* Step Number (auto-renumbered) - only show on first material row */}
                     {materialIndex === 0 && (
-                      <td className="border border-gray-300 p-2" rowSpan={record.materials.length} style={{ width: '2.39%', minWidth: '2.39%', maxWidth: '2.39%' }}>
-                        {record.id.slice(-4)}
+                      <td
+                        className="border border-gray-300 p-1"
+                        rowSpan={record.materials.length}
+                        style={{ width: '2.39%', minWidth: '2.39%', maxWidth: '2.39%' }}
+                      >
+                        Step {recordIndex + 1} Booth
+                        <input
+                          type="number"
+                          value={record.booth ?? ''}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            updateRecord(record.id, {
+                              booth: val === '' ? null : Number(val),
+                            });
+                          }}
+                          className="w-full p-1 border border-gray-300 rounded"
+                          placeholder="Booth"
+                        />
                       </td>
                     )}
 
                     {/* Step Name Dropdown - only show on first material row */}
                     {materialIndex === 0 && (
                       <td className="border border-gray-300 p-1" rowSpan={record.materials.length} style={{ width: '4.14%', minWidth: '4.14%', maxWidth: '4.14%' }}>
-                        <select
+                        <Combobox
+                          options={stepOptions}
                           value={record.stepId}
-                          onChange={(e) => handleStepChange(record.id, e.target.value)}
-                          className="w-full p-1 border border-gray-300 rounded"
-                        >
-                          <option value="">Select Step</option>
-                          {stepTemplates.map(step => (
-                            <option key={step.id} value={step.id}>
-                              {step.stepname}
-                            </option>
-                          ))}
-                        </select>
+                          onValueChange={(val) => handleStepChange(record.id, val)}
+                          placeholder="Select Step"
+                          searchPlaceholder="Search steps..."
+                          emptyMessage="No step found."
+                          className="text-xs"
+                        />
                       </td>
                     )}
 
@@ -205,18 +257,15 @@ const ProductionCRUDTable = () => {
                     {/* Chemical Code Dropdown - only show on first material row */}
                     {materialIndex === 0 && (
                       <td className="border border-gray-300 p-1" rowSpan={record.materials.length} style={{ width: '5.61%', minWidth: '5.61%', maxWidth: '5.61%' }}>
-                        <select
+                        <Combobox
+                          options={chemicalOptions}
                           value={record.chemicalId}
-                          onChange={(e) => handleChemicalChange(record.id, e.target.value)}
-                          className="w-full p-1 border border-gray-300 rounded"
-                        >
-                          <option value="">Select Chemical</option>
-                          {chemicalTemplates.map(chemical => (
-                            <option key={chemical.id} value={chemical.id}>
-                              {chemical.chemicalCode}
-                            </option>
-                          ))}
-                        </select>
+                          onValueChange={(val) => handleChemicalChange(record.id, val)}
+                          placeholder="Select Chemical"
+                          searchPlaceholder="Search chemicals..."
+                          emptyMessage="No chemical found."
+                          className="text-xs"
+                        />
                       </td>
                     )}
 
@@ -312,40 +361,40 @@ const ProductionCRUDTable = () => {
 
                     {/* Actions - only show on first material row */}
                     {materialIndex === 0 && (
-                      <td className="border border-gray-300 p-1" rowSpan={record.materials.length} style={{ width: '2%', minWidth: '2%', maxWidth: '2%' }}>
-                        <div className="flex flex-col gap-1">
-                          <Button
-                            onClick={() => addMaterial(record.id)}
-                            size="sm"
-                            variant="outline"
-                            className="h-6 px-2"
-                            title="Add Material"
-                          >
-                            <Plus size={10} />
-                          </Button>
-                          <Button
+                    <td
+                      className="border border-gray-300 p-1"
+                      rowSpan={record.materials.length}
+                      style={{ width: "2%", minWidth: "2%", maxWidth: "2%" }}
+                    >
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="flex items-center justify-center w-full h-full p-1 text-gray-500 hover:text-black">
+                            <MoreHorizontal size={16} />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => addMaterial(record.id)}>
+                            <Plus /> Add Material
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => addRecordAt(recordIndex)}>
+                            <ArrowUpToLine /> Insert Before
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => addRecordAfter(recordIndex)}>
+                            <ArrowDownFromLine /> Insert After
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => removeMaterial(record.id, materialIndex)}>
+                            <Trash /> Delete Material
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
                             onClick={() => deleteRecord(record.id)}
-                            size="sm"
-                            variant="destructive"
-                            className="h-6 px-2"
-                            title="Delete Record"
+                            className="text-red-600"
                           >
-                            <Trash2 size={10} />
-                          </Button>
-                          {record.materials.length > 1 && (
-                            <Button
-                              onClick={() => removeMaterial(record.id, materialIndex)}
-                              size="sm"
-                              variant="secondary"
-                              className="h-6 px-2"
-                              title="Remove Material"
-                            >
-                              -
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                    )}
+                            <Trash2 /> Delete Record
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  )}
                   </tr>
                 ))}
               </React.Fragment>

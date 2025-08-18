@@ -157,7 +157,7 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
       htmlContent += `
         <tr>
           ${isFirstMaterial ? `
-            <td class="merged-cell col-step" rowspan="${materialCount}">${stepIndex + 1}</td>
+            <td class="merged-cell col-step" rowspan="${materialCount}">Step ${stepIndex + 1} Booth ${stepData.booth}</td>
             <td class="merged-cell col-stepname" rowspan="${materialCount}">${stepData.stepname || ''}</td>
             <td class="merged-cell col-viscosity" rowspan="${materialCount}">${stepData.viscosity_en || ''}</td>
             <td class="merged-cell col-viscosity" rowspan="${materialCount}">${stepData.viscosity_vn || ''}</td>

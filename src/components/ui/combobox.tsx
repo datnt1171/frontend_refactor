@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -56,7 +56,6 @@ export function Combobox({
           disabled={disabled}
         >
           {selectedOption ? selectedOption.label : placeholder}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
