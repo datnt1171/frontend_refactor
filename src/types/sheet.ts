@@ -29,6 +29,7 @@ export interface ChemicalTemplate {
 
 export interface ProductionRecord {
   id: string;
+  booth: number | null;
   stepId: string;
   chemicalId: string;
   stepname: string;
