@@ -14,7 +14,7 @@ export const getTestCredentials = () => {
     };
   }
   
-  if (baseURL.includes('staging')) {
+  if (baseURL.includes('test')) {
     return {
       admin: {
         username: process.env.STAGING_ADMIN_USERNAME || 'staging_admin',
