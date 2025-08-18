@@ -1,10 +1,11 @@
 'use client'
 import React, { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, FileText } from 'lucide-react';
 import { Material, ProductionRecord } from '@/types';
 import { stepTemplates, chemicalTemplates } from '@/data/sheet';
 import { SheetHeader } from './SheetHeader';
 import { Button } from '@/components/ui/button';
+import { generatePDF } from '@/lib/pdf-generator';
 
 // Generate unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
@@ -131,15 +132,24 @@ const ProductionCRUDTable = () => {
 
   return (
     <div>
-      <div>
+      <div className="flex gap-2 mb-4">
         <Button onClick={addRecord} className="flex items-center gap-2">
           <Plus size={16} />
           Add Record
         </Button>
+        <Button 
+          onClick={() => generatePDF(records)} 
+          variant="outline" 
+          className="flex items-center gap-2"
+          disabled={records.length === 0}
+        >
+          <FileText size={16} />
+          Generate PDF
+        </Button>
       </div>
 
       <div>
-        <table className="w-full border-collapse border border-gray-300 text-xs" style={{ tableLayout: 'fixed' }}>
+        <table className="w-full border-collapse border border-gray-300 text-xs">
           <SheetHeader />
           <tbody>
             {records.map((record) => (

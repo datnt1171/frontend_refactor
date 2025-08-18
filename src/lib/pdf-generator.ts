@@ -20,8 +20,7 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
         
         table {
           width: 100%;
-          border-collapse: collapse;
-          table-layout: fixed; /* This is crucial - forces fixed layout */
+          border-collapse: collapse
         }
 
         th, td {
@@ -79,7 +78,7 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
         <tr>
         <!-- Header Row 1: Product Title -->
           <tr>
-              <th colspan="19">
+              <th colspan="18">
                   RH-OAK-51-1 ( BARON )
               <th/>
           </tr>
@@ -118,7 +117,7 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
                   5. Strictly follow the process, always refer to the PCP<br>
                   6. Viscosity reading using NK2 cup standard.
               </td>
-              <td colspan="5" style="text-align: center; vertical-align: middle;">
+              <td colspan="4" style="text-align: center; vertical-align: middle;">
                   <strong>DAILY CHECK LIST</strong><br>
                   (Kiểm tra hằng ngày)<br>
                   Date: _______________
@@ -143,7 +142,6 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
             <td class="col-action">Correct Action</td>
             <td class="col-signature">TE-1's Name & Signature</td>
             <td class="col-signature">Customer Signature</td>
-            <td style="width: 2%;">Actions</td>
           </tr>
         </tr>
         <tbody>
@@ -178,7 +176,6 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
           <td class="col-action">${material.correctAction || ''}</td>
           <td class="col-signature">${material.te1Signature || ''}</td>
           <td class="col-signature">${material.customerSignature || ''}</td>
-          <td style="width: 2%;"></td>
         </tr>
       `;
     });
