@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface WorkerConfig {
   x: number;
@@ -15,9 +15,11 @@ const FurnitureCoatingBlueprint: React.FC = () => {
   const [stepInputs, setStepInputs] = useState<StepInputs>({});
   const [svgContent, setSvgContent] = useState<string>('');
   const [workerConfig, setWorkerConfig] = useState<Record<string, WorkerConfig>>({});
-  const [availableSvgs] = useState<string[]>(['blueprint1.svg','blueprint2.svg']); // Add more SVG files here
+  const [availableSvgs] = useState<string[]>(['blueprint1.svg','blueprint2.svg','TBD2.svg','CT5.svg','CT6.svg','CT56.svg','TBD3.svg']);
   const [selectedSvg, setSelectedSvg] = useState<string>('blueprint2.svg');
   const [hideUnselected, setHideUnselected] = useState<boolean>(false);
+  const [svgDimensions, setSvgDimensions] = useState<{width: number, height: number}>({width: 0, height: 0});
+  const svgContainerRef = useRef<HTMLDivElement>(null);
 
   const stepOptions: string[] = [
     'Sanding',
@@ -32,13 +34,36 @@ const FurnitureCoatingBlueprint: React.FC = () => {
     'Final Inspection'
   ];
 
+  // Extract SVG dimensions from viewBox or width/height attributes
+  const extractSvgDimensions = (svgText: string): {width: number, height: number} => {
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+    const svgElement = svgDoc.querySelector('svg');
+    
+    if (svgElement) {
+      // Try viewBox first
+      const viewBox = svgElement.getAttribute('viewBox');
+      if (viewBox) {
+        const [, , width, height] = viewBox.split(' ').map(Number);
+        return { width: width ?? 800, height: height ?? 600 };
+      }
+      
+      // Fall back to width/height attributes
+      const width = parseFloat(svgElement.getAttribute('width') || '800');
+      const height = parseFloat(svgElement.getAttribute('height') || '600');
+      return { width, height };
+    }
+    
+    return { width: 800, height: 600 };
+  };
+
   // Parse transform string to extract rotation
   const parseTransform = (transform: string): number => {
     if (!transform) return 0;
     
     const rotateMatch = transform.match(/rotate\(([^)]+)\)/);
     if (rotateMatch) {
-    const params = rotateMatch[1]?.split(',').map(p => parseFloat(p.trim())) || [];
+      const params = rotateMatch[1]?.split(',').map(p => parseFloat(p.trim())) || [];
       return params[0] || 0;
     }
     return 0;
@@ -51,41 +76,22 @@ const FurnitureCoatingBlueprint: React.FC = () => {
     
     const extractedWorkers: Record<string, WorkerConfig> = {};
     const extractedIds: string[] = [];
-
-    console.log('Full SVG content:', svgText);
     
-    // Find all elements with data-cell-id attribute containing "worker-" 
-    // (this is how draw.io stores the IDs)
-    const allElements = svgDoc.querySelectorAll('[data-cell-id^="worker-"]');
-    console.log('Found elements with data-cell-id:', allElements);
-    
-    // Also try to find by regular id attribute
-    const regularIdElements = svgDoc.querySelectorAll('[id^="worker-"]');
-    console.log('Found elements with regular id:', regularIdElements);
-    
-    // Combine both approaches
+    const allElements = svgDoc.querySelectorAll('[data-cell-id^="spot-"]');
+    const regularIdElements = svgDoc.querySelectorAll('[id^="spot-"]');
     const elementsToProcess = [...Array.from(allElements), ...Array.from(regularIdElements)];
-    console.log('Total elements to process:', elementsToProcess);
-    
+
     elementsToProcess.forEach((element) => {
-      // Get worker ID from either data-cell-id or id attribute
       const workerId = element.getAttribute('data-cell-id') || element.id;
-      console.log('Processing worker:', workerId);
-      
-      // Look for the actual shape element (rect, circle, etc.) within this worker element
       let shapeElement = element.querySelector('rect, circle, ellipse, polygon, path');
       
-      // If the element itself is a shape, use it
       if (!shapeElement && (element.tagName === 'rect' || element.tagName === 'circle' || element.tagName === 'ellipse')) {
         shapeElement = element;
       }
       
-      console.log('Shape element found:', shapeElement);
-      
       if (shapeElement) {
         let x = 0, y = 0, width = 0, height = 0;
         
-        // Get dimensions based on element type
         if (shapeElement.tagName === 'rect') {
           x = parseFloat(shapeElement.getAttribute('x') || '0');
           y = parseFloat(shapeElement.getAttribute('y') || '0');
@@ -101,20 +107,13 @@ const FurnitureCoatingBlueprint: React.FC = () => {
           height = r * 2;
         }
         
-        console.log(`Worker ${workerId} - x:${x}, y:${y}, w:${width}, h:${height}`);
-        
-        // Calculate center position
         const centerX = x + width / 2;
         const centerY = y + height / 2;
         
-        // Extract rotation from transform attribute (check both the element and its parent)
         const elementTransform = shapeElement.getAttribute('transform') || '';
         const parentTransform = element.getAttribute('transform') || '';
         const combinedTransform = elementTransform + ' ' + parentTransform;
-        
         const rotation = parseTransform(combinedTransform);
-        
-        console.log(`Worker ${workerId} final position - centerX:${centerX}, centerY:${centerY}, rotation:${rotation}`);
         
         extractedWorkers[workerId] = {
           x: centerX,
@@ -125,15 +124,11 @@ const FurnitureCoatingBlueprint: React.FC = () => {
       }
     });
 
-    // Sort IDs to ensure consistent ordering
     extractedIds.sort((a, b) => {
-      const aNum = parseInt(a.replace('worker-', ''));
-      const bNum = parseInt(b.replace('worker-', ''));
+      const aNum = parseInt(a.replace('spot-', ''));
+      const bNum = parseInt(b.replace('spot-', ''));
       return aNum - bNum;
     });
-
-    console.log('Final worker config:', extractedWorkers);
-    console.log('Final worker IDs:', extractedIds);
 
     return { config: extractedWorkers, ids: extractedIds };
   };
@@ -145,11 +140,13 @@ const FurnitureCoatingBlueprint: React.FC = () => {
       const svgText = await response.text();
       setSvgContent(svgText);
       
-      // Extract worker configurations dynamically by ID
+      // Extract dimensions
+      const dimensions = extractSvgDimensions(svgText);
+      setSvgDimensions(dimensions);
+      
       const { config, ids } = extractWorkerConfig(svgText);
       setWorkerConfig(config);
       
-      // Initialize step inputs for all workers
       const initialInputs: StepInputs = {};
       ids.forEach(workerId => {
         initialInputs[workerId] = '';
@@ -161,40 +158,55 @@ const FurnitureCoatingBlueprint: React.FC = () => {
     }
   };
 
-  // Load initial SVG
   useEffect(() => {
     loadSvg(selectedSvg);
   }, [selectedSvg]);
 
-  // Update SVG with text inputs and handle visibility
+  // Update SVG with responsive viewBox and text inputs
   const updateSvgWithText = (): string => {
     if (!svgContent) return '';
 
     let updatedSvg = svgContent;
     
-    // Remove existing text elements that were added by this component
-    updatedSvg = updatedSvg.replace(/<text[^>]*data-worker-label="true"[^>]*>.*?<\/text>/g, '');
+    // Ensure SVG is responsive by setting viewBox and removing fixed dimensions
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(updatedSvg, 'image/svg+xml');
+    const svgElement = svgDoc.querySelector('svg');
     
-    // Handle hiding unselected workers by modifying their style
+    if (svgElement) {
+      // Set responsive attributes
+      svgElement.setAttribute('width', '100%');
+      svgElement.setAttribute('height', '100%');
+      svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      
+      // Ensure viewBox exists
+      if (!svgElement.getAttribute('viewBox')) {
+        svgElement.setAttribute('viewBox', `0 0 ${svgDimensions.width} ${svgDimensions.height}`);
+      }
+      
+      updatedSvg = new XMLSerializer().serializeToString(svgDoc);
+    }
+    
+    // Remove existing text elements
+    updatedSvg = updatedSvg.replace(/<text[^>]*data-spot-label="true"[^>]*>.*?<\/text>/g, '');
+    
+    // Handle hiding unselected workers
     if (hideUnselected) {
       Object.keys(workerConfig).forEach((workerId) => {
         const hasText = stepInputs[workerId] && stepInputs[workerId].trim() !== '';
         
         if (!hasText) {
-          // Find and hide the worker group by adding style="display:none" or opacity="0"
           const workerGroupRegex = new RegExp(`(<g[^>]*data-cell-id="${workerId}"[^>]*)(>)`, 'g');
           updatedSvg = updatedSvg.replace(workerGroupRegex, '$1 style="opacity:0.2"$2');
         }
       });
     }
     
-    // Add text elements for each worker with input
+    // Add text elements
     Object.entries(stepInputs).forEach(([workerId, stepName]) => {
       if (stepName.trim() && workerConfig[workerId]) {
         const config = workerConfig[workerId];
-        const textElement = `<text x="${config.x}" y="${config.y + 4}" fill="black" font-size="10" font-weight="bold" text-anchor="middle" transform="rotate(${config.rotation},${config.x},${config.y})" data-worker-label="true">${stepName}</text>`;
-        
-        // Insert before closing </svg> tag
+        const textElement = `<text x="${config.x}" y="${config.y + 4}" fill="black" font-size="12" font-weight="bold" text-anchor="middle" transform="rotate(${config.rotation},${config.x},${config.y})" data-spot-label="true">${stepName}</text>`;
         updatedSvg = updatedSvg.replace('</svg>', `${textElement}</svg>`);
       }
     });
@@ -222,10 +234,9 @@ const FurnitureCoatingBlueprint: React.FC = () => {
   };
 
   const handlePrint = (): void => {
-    // Create a new window with only the blueprint content
     const printWindow = window.open('', '_blank');
     if (printWindow) {
-      const svgToFrint = updateSvgWithText();
+      const svgToPrint = updateSvgWithText();
       
       printWindow.document.write(`
         <!DOCTYPE html>
@@ -235,7 +246,6 @@ const FurnitureCoatingBlueprint: React.FC = () => {
           <style>
             body {
               margin: 0;
-              padding: 20px;
               font-family: Arial, sans-serif;
             }
             .blueprint-container {
@@ -249,6 +259,8 @@ const FurnitureCoatingBlueprint: React.FC = () => {
             .blueprint-svg {
               border: 1px solid #ccc;
               background: #f9f9f9;
+              width: 100%;
+              max-width: 100%;
             }
             @media print {
               body { margin: 0; }
@@ -259,7 +271,7 @@ const FurnitureCoatingBlueprint: React.FC = () => {
         <body>
           <div class="blueprint-container">
             <div class="blueprint-title">Furniture Coating Blueprint - ${selectedSvg}</div>
-            <div class="blueprint-svg">${svgToFrint}</div>
+            <div class="blueprint-svg">${svgToPrint}</div>
           </div>
         </body>
         </html>
@@ -268,7 +280,6 @@ const FurnitureCoatingBlueprint: React.FC = () => {
       printWindow.document.close();
       printWindow.focus();
       
-      // Small delay to ensure content is loaded before printing
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
@@ -280,19 +291,23 @@ const FurnitureCoatingBlueprint: React.FC = () => {
     setSelectedSvg(newSvg);
   };
 
+  // Determine if SVG is landscape or portrait
+  const isLandscape = svgDimensions.width > svgDimensions.height;
+  const aspectRatio = svgDimensions.width / svgDimensions.height;
+
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Furniture Coating Blueprint System</h1>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Input Table */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="w-full h-full flex flex-col lg:flex-row gap-4 p-4">
+      {/* Control Panel - Smaller and collapsible */}
+      <div className="lg:w-80 w-full flex-shrink-0">
+        <div className="bg-white rounded-lg shadow-lg p-4 h-fit">
+          <h1 className="text-lg font-bold mb-4 text-center">Blueprint Control</h1>
+          
           <div className="mb-4">
-            <label className="block font-medium mb-2">Select Blueprint:</label>
+            <label className="block font-medium mb-2 text-sm">Blueprint:</label>
             <select
               value={selectedSvg}
               onChange={(e) => handleSvgChange(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               {availableSvgs.map(svg => (
                 <option key={svg} value={svg}>{svg}</option>
@@ -300,21 +315,21 @@ const FurnitureCoatingBlueprint: React.FC = () => {
             </select>
           </div>
 
-          <h2 className="text-xl font-semibold mb-4">Step Assignment</h2>
-          <div className="space-y-4">
+          <h2 className="text-md font-semibold mb-3">Step Assignment</h2>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
             {Object.keys(stepInputs).sort((a, b) => {
-              const aNum = parseInt(a.replace('worker-', ''));
-              const bNum = parseInt(b.replace('worker-', ''));
+              const aNum = parseInt(a.replace('spot-', ''));
+              const bNum = parseInt(b.replace('spot-', ''));
               return aNum - bNum;
             }).map((workerId) => (
-              <div key={workerId} className="flex items-center space-x-4">
-                <label className="w-20 font-medium capitalize">
-                  {workerId.replace('-', ' ')}:
+              <div key={workerId} className="flex items-center space-x-2">
+                <label className="w-16 text-xs font-medium">
+                  {workerId.replace('spot-', 'S')}:
                 </label>
                 <select
                   value={stepInputs[workerId]}
                   onChange={(e) => handleInputChange(workerId, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 p-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 >
                   <option value="">Select Step</option>
                   {stepOptions.map(step => (
@@ -325,57 +340,66 @@ const FurnitureCoatingBlueprint: React.FC = () => {
             ))}
           </div>
           
-          <div className="flex gap-2 mt-4">
-            <button
-              onClick={clearAll}
-              className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-            >
-              Clear All
-            </button>
+          <div className="flex flex-col gap-2 mt-4">
+            <div className="flex gap-2">
+              <button
+                onClick={clearAll}
+                className="flex-1 px-3 py-2 text-xs bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
+              >
+                Clear All
+              </button>
+              
+              <button
+                onClick={handlePrint}
+                className="flex-1 px-3 py-2 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+              >
+                Print
+              </button>
+            </div>
             
             <button
               onClick={toggleHideUnselected}
-              className={`px-4 py-2 rounded transition-colors ${
+              className={`w-full px-3 py-2 text-xs rounded transition-colors ${
                 hideUnselected 
                   ? 'bg-orange-500 hover:bg-orange-600 text-white' 
                   : 'bg-blue-500 hover:bg-blue-600 text-white'
               }`}
             >
-              {hideUnselected ? 'Show All Workers' : 'Hide Unassigned Workers'}
+              {hideUnselected ? 'Show All' : 'Hide Unassigned'}
             </button>
           </div>
-
-          {/* Debug info */}
-          <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
-            <strong>Workers found:</strong> {Object.keys(workerConfig).length}
-            <br />
-            <strong>Worker IDs:</strong> {Object.keys(workerConfig).sort().join(', ')}
-            <br />
-            <strong>Worker positions:</strong>
-            <ul className="mt-2">
-              {Object.entries(workerConfig).map(([id, config]) => (
-                <li key={id}>
-                  {id}: x={config.x.toFixed(1)}, y={config.y.toFixed(1)}, rot={config.rotation}°
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
+      </div>
 
-        {/* Blueprint Display */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Blueprint Preview</h2>
-          <div 
-            className="border border-gray-300 rounded p-4 bg-gray-50 max-h-96 overflow-auto"
-            dangerouslySetInnerHTML={{ __html: updateSvgWithText() }}
-          />
+      {/* Blueprint Display - Takes remaining space */}
+      <div className="flex-1 min-w-0">
+        <div className="bg-white rounded-lg shadow-lg p-4 h-full flex flex-col">
+          <div className="flex items-center justify-between mb-4 flex-shrink-0">
+            <h2 className="text-xl font-semibold">Blueprint Preview</h2>
+            <div className="text-sm text-gray-500">
+              {svgDimensions.width} × {svgDimensions.height} 
+              ({isLandscape ? 'Landscape' : 'Portrait'})
+            </div>
+          </div>
           
-          <button
-            onClick={handlePrint}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-          >
-            Print/Export PDF
-          </button>
+          <div className="flex-1 flex items-center justify-center p-2">
+            <div 
+              ref={svgContainerRef}
+              className="border border-gray-300 rounded bg-gray-50 shadow-sm"
+              style={{
+                width: isLandscape ? 'auto' : '100%',
+                height: isLandscape ? '100%' : 'auto',
+                maxWidth: '100%',
+                maxHeight: '100%',
+                aspectRatio: aspectRatio > 0 ? `${svgDimensions.width}/${svgDimensions.height}` : '1'
+              }}
+            >
+              <div 
+                className="w-full h-full p-2"
+                dangerouslySetInnerHTML={{ __html: updateSvgWithText() }}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
