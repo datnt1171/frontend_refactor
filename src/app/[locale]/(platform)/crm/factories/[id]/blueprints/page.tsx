@@ -5,14 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { FileText, Plus } from 'lucide-react'
 
-interface BlueprintsPageProps {
-  searchParams: {
-    factory?: string
-  }
-}
-
-export default async function BlueprintsPage({ searchParams }: BlueprintsPageProps) {
-  const blueprints = await getBlueprints(searchParams.factory)
+export default async function BlueprintsPage({ 
+  params 
+}: { 
+  params: Promise<{ factory_id: string }> 
+}) {
+  const { factory_id } = await params
+  const blueprints = await getBlueprints(factory_id)
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes'
