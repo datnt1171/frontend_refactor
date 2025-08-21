@@ -25,8 +25,8 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
           <Button>
             {t('common.edit')}
           </Button>
-          <Button variant="destructive">
-            {t('common.delete')}
+          <Button>
+            Blueprint
           </Button>
         </div>
       </div>
@@ -61,26 +61,6 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
                 </Badge>
               </div>
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Action</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button variant="outline" className="w-full justify-start">
-              View A
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              View B
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              View C
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              View D
-            </Button>
           </CardContent>
         </Card>
       </div>
