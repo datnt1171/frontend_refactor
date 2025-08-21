@@ -39,8 +39,7 @@ export async function PATCH(
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
-        "Content-Type": "application/json",
-        "Accept-Language": session.locale,
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(body),
     })

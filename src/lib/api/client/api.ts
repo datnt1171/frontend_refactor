@@ -3,7 +3,10 @@ import type {
   LoginRequest, 
   ApiSuccessResponse,
   TaskAction,
-  SetPasswordRetype
+  SetPasswordRetype,
+  FactoryUpdate,
+  BlueprintCreate,
+  BlueprintUpdate,
 } from '@/types/'
 
 type ApiResponse<T> = {
@@ -166,4 +169,79 @@ export const updateTaskData = async (
   }
 
   return response.data
+}
+
+// Factory
+export const updateFactory = async (
+  id: string, 
+  data: FactoryUpdate
+) => {
+  const response = await apiClient(`/crm/factories/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  })
+  return response
+}
+
+
+export async function createBlueprint(blueprintData: BlueprintCreate) {
+  try {
+    const formData = new FormData()
+    formData.append('factory', blueprintData.factory)
+    formData.append('name', blueprintData.name)
+    formData.append('type', blueprintData.type)
+    if (blueprintData.description) {
+      formData.append('description', blueprintData.description)
+    }
+    formData.append('file', blueprintData.file)
+
+    const response = await apiClient('/crm/blueprints/', {
+      method: 'POST',
+      body: formData,
+    })
+    
+    if (!response.ok) {
+      return { success: false, error: response.data.message || 'Failed to create blueprint' }
+    }
+    
+    return { success: true, data: response.data }
+  } catch (error) {
+    return { success: false, error: 'Network error' }
+  }
+}
+
+export async function updateBlueprint(id: string, blueprintData: BlueprintUpdate) {
+  try {
+    const response = await apiClient(`/crm/blueprints/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(blueprintData),
+    })
+    
+    if (!response.ok) {
+      return { success: false, error: response.data.message || 'Failed to update blueprint' }
+    }
+    
+    return { success: true, data: response.data }
+  } catch (error) {
+    return { success: false, error: 'Network error' }
+  }
+}
+
+export async function deleteBlueprint(id: string) {
+  try {
+    const response = await apiClient(`/crm/blueprints/${id}`, {
+      method: 'DELETE',
+    })
+    
+    if (!response.ok) {
+      return { success: false, error: response.data.message || 'Failed to delete blueprint' }
+    }
+    
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: 'Network error' }
+  }
 }
