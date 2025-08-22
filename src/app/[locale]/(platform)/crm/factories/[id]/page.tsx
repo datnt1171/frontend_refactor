@@ -2,7 +2,7 @@ import { getFactory } from '@/lib/api/server/factories'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getTranslations } from "next-intl/server"
 import BackButton from "@/components/ui/BackButton"
-import { FactoryEditForm } from './factory-edit-form'
+import { FactoryEditForm } from './FactoryEditForm'
 import { Button } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
 
@@ -17,7 +17,8 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center mb-6">
+        <BackButton />
         <div>
           <h1 className="text-2xl font-bold">{factory.factory_name}</h1>
           <p className="text-muted-foreground">{t('crm.factories.factoryId')}: {factory.factory_code}</p>
@@ -44,7 +45,9 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
                 edit: t('common.edit'),
                 save: t('common.save'),
                 cancel: t('common.cancel'),
-                processing: t('common.processing')
+                processing: t('common.processing'),
+                failedToLoadTaskDetails: t('taskManagement.taskDetail.failedToPerformAction'),
+                actionPerformedSuccessfully: t('taskManagement.taskDetail.actionPerformedSuccessfully'),
               }}
             />
           </CardContent>
@@ -68,10 +71,6 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
             </Button>
           </CardContent>
         </Card>
-      </div>
-
-      <div className="mt-6">
-        <BackButton />
       </div>
     </div>
   )
