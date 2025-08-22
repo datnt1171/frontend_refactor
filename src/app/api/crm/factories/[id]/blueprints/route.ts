@@ -1,21 +1,19 @@
 // src/app/api/crm/factories/[id]/blueprints/route.ts
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params
+
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
-    
-    const { id: factoryId } = params
-    const { searchParams } = new URL(request.url)
-    
-    // Add factory filter to query params
-    const factoryParam = `factory=${factoryId}`
-    const existingParams = searchParams.toString()
-    const queryString = existingParams ? `${factoryParam}&${existingParams}` : factoryParam
+
+    const queryString = `factory=${id}`
     
     const externalUrl = `${process.env.DW_API_URL}/api/crm/blueprints?${queryString}`
-    console.log('Fetching factory blueprints from:', externalUrl)
     
     const response = await fetch(externalUrl, {
       headers: {
@@ -31,18 +29,21 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(
+  request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const { id } = await context.params
+
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
-    
-    const { id: factoryId } = params
     
     // Get the form data from the request
     const formData = await request.formData()
     
     // Ensure factory matches the route parameter
-    formData.set('factory', factoryId)
+    formData.set('factory', id)
     
     const response = await fetch(`${process.env.DW_API_URL}/api/crm/blueprints`, {
       method: 'POST',
