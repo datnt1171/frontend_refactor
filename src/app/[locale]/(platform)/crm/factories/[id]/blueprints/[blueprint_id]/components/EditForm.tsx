@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -52,7 +52,6 @@ export default function BlueprintEditButton({
         //   description: "Blueprint updated successfully!",
         // })
         setOpen(false)
-        router.refresh() // Refresh the server component data
       } else {
         // toast({
         //   title: "Error",
@@ -68,6 +67,8 @@ export default function BlueprintEditButton({
     //   })
     } finally {
       setIsLoading(false)
+      setOpen(false)
+      router.push(`/crm/factories/${factoryId}/blueprints/${blueprintId}`)
     }
   }
 

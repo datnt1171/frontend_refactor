@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Trash2, Loader2 } from 'lucide-react'
@@ -37,7 +37,6 @@ export default function BlueprintDeleteButton({
         // })
         setOpen(false)
         // Navigate back to blueprints list after successful deletion
-        router.push(`/crm/factories/${factoryId}/blueprints`)
       } else {
         // toast({
         //   title: "Error",
@@ -53,6 +52,7 @@ export default function BlueprintDeleteButton({
     //   })
     } finally {
       setIsLoading(false)
+      router.push(`/crm/factories/${factoryId}/blueprints/`)
     }
   }
 
