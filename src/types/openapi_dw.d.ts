@@ -285,7 +285,7 @@ export interface components {
             /** Name */
             name: string;
             /** Type */
-            type: string;
+            type: components["schemas"]["ProductionLineType"];
             /** Description */
             description?: string | null;
             /**

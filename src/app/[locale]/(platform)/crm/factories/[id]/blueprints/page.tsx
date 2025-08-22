@@ -1,17 +1,18 @@
 import { getBlueprints } from '@/lib/api/server/blueprints'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { FileText, Plus } from 'lucide-react'
+import { FileText } from 'lucide-react'
+import BlueprintCreateButton from './components/AddBluePrintForm'
 
 export default async function BlueprintsPage({ 
   params 
 }: { 
-  params: Promise<{ factory_id: string }> 
+  params: Promise<{ id: string }> 
 }) {
-  const { factory_id } = await params
-  const blueprints = await getBlueprints(factory_id)
+  const { id } = await params
+  const blueprints = await getBlueprints(id)
 
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return '0 Bytes'
@@ -34,15 +35,10 @@ export default async function BlueprintsPage({
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Blueprints</h1>
-          <p className="text-muted-foreground">Manage production line blueprints</p>
+          <h1 className="text-3xl font-bold">{id}'s Blueprints</h1>
         </div>
-        <Button asChild>
-          <Link href="/crm/blueprints/create">
-            <Plus className="mr-2 h-4 w-4" />
-            New Blueprint
-          </Link>
-        </Button>
+        
+        <BlueprintCreateButton factoryId={id} />
       </div>
 
       {blueprints.length === 0 ? (
@@ -50,13 +46,6 @@ export default async function BlueprintsPage({
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No blueprints found</h3>
-            <p className="text-muted-foreground mb-4">Get started by creating your first blueprint</p>
-            <Button asChild>
-              <Link href="/crm/blueprints/create">
-                <Plus className="mr-2 h-4 w-4" />
-                Create Blueprint
-              </Link>
-            </Button>
           </CardContent>
         </Card>
       ) : (
@@ -98,15 +87,10 @@ export default async function BlueprintsPage({
                     </span>
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button asChild variant="outline" size="sm" className="flex-1">
-                    <Link href={`/crm/blueprints/${blueprint.id}`}>
+                <div className="flex">
+                  <Button asChild size="sm" className="flex-1">
+                    <Link href={`/crm/factories/${id}/blueprints/${blueprint.id}`}>
                       View
-                    </Link>
-                  </Button>
-                  <Button asChild variant="outline" size="sm" className="flex-1">
-                    <Link href={`/crm/blueprints/${blueprint.id}/edit`}>
-                      Edit
                     </Link>
                   </Button>
                 </div>

@@ -1,4 +1,3 @@
-// lib/api-client.ts
 import type { 
   LoginRequest, 
   ApiSuccessResponse,
@@ -180,12 +179,15 @@ export const updateFactory = async (
     method: 'PATCH',
     body: JSON.stringify(data),
   })
-  return response
+  if (!response.ok) {
+    throw new Error(`Failed to update factory data: ${response.status}`)
+  }
+
+  return response.data
 }
 
 
-export async function createBlueprint(blueprintData: BlueprintCreate) {
-  try {
+export async function createBlueprint(id: string, blueprintData: BlueprintCreate) {
     const formData = new FormData()
     formData.append('factory', blueprintData.factory)
     formData.append('name', blueprintData.name)
@@ -195,28 +197,21 @@ export async function createBlueprint(blueprintData: BlueprintCreate) {
     }
     formData.append('file', blueprintData.file)
 
-    const response = await apiClient('/crm/blueprints/', {
+    const response = await apiClient(`/crm/factories/${id}/blueprints`, {
       method: 'POST',
       body: formData,
     })
     
     if (!response.ok) {
-      return { success: false, error: response.data.message || 'Failed to create blueprint' }
+      throw new Error(`Failed to update factory data: ${response.status}`)
     }
-    
-    return { success: true, data: response.data }
-  } catch (error) {
-    return { success: false, error: 'Network error' }
-  }
+
+    return response.data
 }
 
-export async function updateBlueprint(id: string, blueprintData: BlueprintUpdate) {
-  try {
-    const response = await apiClient(`/crm/blueprints/${id}`, {
+export async function updateBlueprint(id: string, blueprint_id: string, blueprintData: BlueprintUpdate) {
+    const response = await apiClient(`/crm/factories/${id}/blueprints/${blueprint_id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(blueprintData),
     })
     
@@ -224,24 +219,21 @@ export async function updateBlueprint(id: string, blueprintData: BlueprintUpdate
       return { success: false, error: response.data.message || 'Failed to update blueprint' }
     }
     
-    return { success: true, data: response.data }
-  } catch (error) {
-    return { success: false, error: 'Network error' }
-  }
+    if (!response.ok) {
+      throw new Error(`Failed to update factory data: ${response.status}`)
+    }
+
+    return response.data
 }
 
-export async function deleteBlueprint(id: string) {
-  try {
-    const response = await apiClient(`/crm/blueprints/${id}`, {
+export async function deleteBlueprint(id: string, blueprint_id: string) {
+    const response = await apiClient(`/crm/factories/${id}/blueprints/${blueprint_id}`, {
       method: 'DELETE',
     })
     
     if (!response.ok) {
-      return { success: false, error: response.data.message || 'Failed to delete blueprint' }
+      throw new Error(`Failed to update factory data: ${response.status}`)
     }
-    
-    return { success: true }
-  } catch (error) {
-    return { success: false, error: 'Network error' }
-  }
+
+    return response.data
 }
