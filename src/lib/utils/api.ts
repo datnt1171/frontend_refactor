@@ -81,6 +81,11 @@ export async function handleApiError(response: Response): Promise<NextResponse<A
 }
 
 export async function handleApiSuccess<T = any>(response: Response): Promise<NextResponse<ApiSuccessResponse<T>>> {
+  // Handle 204 No Content - no JSON body expected
+  if (response.status === 204) {
+    return new NextResponse(null, { status: 204 })
+  }
+  
   try {
     const data = await response.json()
     return NextResponse.json(data)
