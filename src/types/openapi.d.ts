@@ -36,6 +36,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sheets/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_list"];
+        put?: never;
+        post: operations["api_sheets_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sheets/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_retrieve"];
+        put: operations["api_sheets_update"];
+        post?: never;
+        delete: operations["api_sheets_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_sheets_partial_update"];
+        trace?: never;
+    };
     "/api/tasks/": {
         parameters: {
             query?: never;
@@ -298,6 +330,34 @@ export interface components {
          * @enum {string}
          */
         FieldTypeEnum: "text" | "number" | "date" | "select" | "file" | "json" | "assignee" | "factory" | "retailer";
+        FinishingSheet: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            task: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+            finishing_code: string;
+        };
+        PaginatedFinishingSheetList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?offset=400&limit=100
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?offset=200&limit=100
+             */
+            previous?: string | null;
+            results: components["schemas"]["FinishingSheet"][];
+        };
         PaginatedProcessListList: {
             /** @example 123 */
             count: number;
@@ -362,6 +422,19 @@ export interface components {
             current_password?: string;
             new_password?: string;
             re_new_password?: string;
+        };
+        PatchedFinishingSheet: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            task?: string;
+            /** Format: date-time */
+            readonly created_at?: string;
+            /** Format: uuid */
+            readonly created_by?: string;
+            /** Format: date-time */
+            readonly updated_at?: string;
+            finishing_code?: string;
         };
         PatchedTaskData: {
             readonly field?: components["schemas"]["ProcessField"];
@@ -603,6 +676,160 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProcessDetail"];
+                };
+            };
+        };
+    };
+    api_sheets_list: {
+        parameters: {
+            query?: {
+                created_by?: string;
+                /** @description Number of results to return per page. */
+                limit?: number;
+                /** @description The initial index from which to return the results. */
+                offset?: number;
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A search term. */
+                search?: string;
+                task?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedFinishingSheetList"];
+                };
+            };
+        };
+    };
+    api_sheets_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishingSheet"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinishingSheet"];
+                "multipart/form-data": components["schemas"]["FinishingSheet"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishingSheet"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinishingSheet"];
+                "multipart/form-data": components["schemas"]["FinishingSheet"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_sheets_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedFinishingSheet"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedFinishingSheet"];
+                "multipart/form-data": components["schemas"]["PatchedFinishingSheet"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
                 };
             };
         };

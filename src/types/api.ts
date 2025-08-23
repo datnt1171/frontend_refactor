@@ -35,6 +35,28 @@ export type TaskDetail = components['schemas']['TaskDetail']
 
 export type SPRReportRow = components['schemas']['SPRReportRow']
 
+// Finishing sheet
+export type FinishingSheet = components['schemas']['FinishingSheet']
+export type PaginatedFinishingSheetList = components['schemas']['PaginatedFinishingSheetList']
+export interface GetFinishingSheetsParams {
+  created_by?: string;
+  search?: string;
+  ordering?: 'created_at' | '-created_at' | 'updated_at' | '-updated_at' | 'id' | '-id';
+  start_date?: string;
+  end_date?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export type FinishingSheetCreate = {
+  finishing_code: string;
+}
+
+export type FinishingSheetUpdate = Partial<{
+  finishing_code: string;
+}>
+
+
 // Pagination
 export type PaginatedProcessListList = components['schemas']['PaginatedProcessListList']
 export type PaginatedReceivedTaskList = components['schemas']['PaginatedReceivedTaskList']
