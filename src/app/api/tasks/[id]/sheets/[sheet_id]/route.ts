@@ -9,7 +9,7 @@ export async function GET(
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const response = await fetch(`${process.env.API_URL}/api/sheets/${sheet_id}/`, {
+    const response = await fetch(`${process.env.API_URL}/api/sheets/finishing-sheets/${sheet_id}/`, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
@@ -34,7 +34,7 @@ export async function PUT(
     
     const body = await request.json()
     
-    const response = await fetch(`${process.env.API_URL}/api/sheets/${sheet_id}/`, {
+    const response = await fetch(`${process.env.API_URL}/api/sheets/finishing-sheets/${sheet_id}/`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
@@ -60,7 +60,7 @@ export async function PATCH(
     
     const body = await request.json()
     
-    const response = await fetch(`${process.env.API_URL}/api/sheets/${sheet_id}/`, {
+    const response = await fetch(`${process.env.API_URL}/api/sheets/finishing-sheets/${sheet_id}/`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
@@ -84,7 +84,7 @@ export async function DELETE(
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const response = await fetch(`${process.env.API_URL}/api/sheets/${sheet_id}/`, {
+    const response = await fetch(`${process.env.API_URL}/api/sheets/finishing-sheets/${sheet_id}/`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${session.access_token}`,

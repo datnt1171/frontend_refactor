@@ -1,11 +1,16 @@
 import React from 'react';
+import type { FinishingSheet } from '@/types';
 
-export const SheetHeader: React.FC = () => (
+interface SheetHeaderProps {
+  data: FinishingSheet;
+}
+
+export const SheetHeader: React.FC<SheetHeaderProps> = ({ data }) => (
   <thead className="bg-gray-100">
     {/* Product Title Row */}
     <tr>
       <td colSpan={18} className="border border-gray-300 px-2 py-2 text-center font-bold text-lg">
-        RH-OAK-51-1 ( BARON )
+        {data.finishing_code}
       </td>
     </tr>
     
@@ -13,19 +18,19 @@ export const SheetHeader: React.FC = () => (
     <tr className="text-left text-xs">
       <td colSpan={3} className="border border-gray-300 px-1 py-1">
         <div>
-          <strong>Name:</strong> RH-BARON BROWN FINISHED ON EU OAK 0.6mm<br/>
-          <strong>Sheen:</strong> 0+5-0<br/>
-          <strong>DFT:</strong><br/>
-          <strong>Chemical:</strong> PU/NC<br/>
-          <strong>Substrate:</strong> OAK VENEER , OAK WOOD<br/>
-          <strong>Grain Filling:</strong> OPEN GRAIN<br/>
-          <strong>Developed/Duplicated by:</strong> MR LƯU
+          <strong>Name:</strong> {data.name}<br/>
+          <strong>Sheen:</strong> {data.sheen}<br/>
+          <strong>DFT:</strong> {data.dft}<br/>
+          <strong>Chemical:</strong> {data.type_of_paint}<br/>
+          <strong>Substrate:</strong> {data.type_of_substrate}<br/>
+          <strong>Grain Filling:</strong> {data.finishing_surface_grain}<br/>
+          <strong>Developed/Duplicated by:</strong> {data.sampler}
         </div>
       </td>
       <td colSpan={1} className="border border-gray-300 px-1 py-1">
-        <strong>Chemical waste:</strong> 0%<br/>
+        <strong>Chemical waste:</strong> {data.chemical_waste}<br/>
         <br/>
-        <strong>Conveyor speed:</strong> 1.5 METER PER 1 MINUTE
+        <strong>Conveyor speed:</strong> {data.conveyor_speed}
       </td>
       <td colSpan={3} className="border border-gray-300 px-1 py-1">
         1. Wood substrate before finishing process should be below 10% MC<br/>
@@ -33,12 +38,12 @@ export const SheetHeader: React.FC = () => (
         3. White wood surface must be free from grease, oil or other contamination. Please reject white wood with any defects.
       </td>
       <td colSpan={2} className="border border-gray-300 px-1 py-1">
-        <strong>With panel test:</strong> <span className="inline-block w-4 h-4 border border-gray-400 mr-1"></span><br/>
+        <strong>With panel test:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${data.with_panel_test ? 'bg-black' : ''}`}></span><br/>
         (Có mẫu test chuyền)<br/>
-        <strong>No panel test:</strong> <span className="inline-block w-4 h-4 border border-gray-400 mr-1"></span><br/>
+        <strong>No panel test:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${!data.with_panel_test ? 'bg-black' : ''}`}></span><br/>
         (Không có mẫu test chuyền)<br/>
-        <strong>Testing:</strong> <span className="inline-block w-4 h-4 border border-gray-400 mr-1"></span><br/>
-        <strong>Chemical Yellowing:</strong> <span className="inline-block w-4 h-4 border border-gray-400 mr-1"></span>
+        <strong>Testing:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${data.testing ? 'bg-black' : ''}`}></span><br/>
+        <strong>Chemical Yellowing:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${data.chemical_yellowing ? 'bg-black' : ''}`}></span>
       </td>
       <td colSpan={5} className="border border-gray-300 px-1 py-1">
         4. Always ask TE-1 for advice in case of changing process mixing ratio, application amount, drying time, application method, must get approval form... If there is any changing.<br/>

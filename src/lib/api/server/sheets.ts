@@ -1,5 +1,11 @@
 import { api } from '@/lib/api/server/api'
-import type {FinishingSheet, PaginatedFinishingSheetList, GetFinishingSheetsParams} from '@/types'
+import type {
+  FinishingSheet, 
+  PaginatedFinishingSheetList, 
+  GetFinishingSheetsParams, 
+  StepTemplate,
+  FormularTemplate
+} from '@/types'
 
 export async function getFinishingSheets(
   taskId: string,
@@ -39,4 +45,17 @@ export async function getFinishingSheet(
   }
   
   return await response.json()
+}
+
+
+export const getStepTemplates = async (): Promise<StepTemplate[]> => {
+  const res = await api("/sheets/step-templates")
+  if (!res.ok) throw new Error(`Failed to fetch Step template: ${res.status}`)
+  return res.json()
+}
+
+export const getFormularTemplates = async (): Promise<FormularTemplate[]> => {
+  const res = await api("/sheets/formular-templates")
+  if (!res.ok) throw new Error(`Failed to fetch Formular template: ${res.status}`)
+  return res.json()
 }
