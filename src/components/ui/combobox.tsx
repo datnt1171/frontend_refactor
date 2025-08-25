@@ -58,7 +58,7 @@ export function Combobox({
           {selectedOption ? selectedOption.label : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
+      <PopoverContent className="w-full p-0" align="start" side="bottom" avoidCollisions={false}>
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandEmpty>{emptyMessage}</CommandEmpty>
