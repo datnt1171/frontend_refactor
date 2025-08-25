@@ -15,7 +15,7 @@ export async function GET(
     const query = new URLSearchParams(searchParams)
     query.set("task", id)
 
-    const url = `${process.env.API_URL}/api/sheets/?${query.toString()}`
+    const url = `${process.env.API_URL}/api/sheets/finishing-sheets/?${query.toString()}`
     
     const response = await fetch(url, {
       headers: {
@@ -48,7 +48,7 @@ export async function POST(
       task: id,
     }
 
-    const response = await fetch(`${process.env.API_URL}/api/sheets/`, {
+    const response = await fetch(`${process.env.API_URL}/api/sheets/finishing-sheets/`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session.access_token}`,

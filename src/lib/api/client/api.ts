@@ -6,8 +6,7 @@ import type {
   FactoryUpdate,
   BlueprintCreate,
   BlueprintUpdate,
-  FinishingSheetCreate,
-  FinishingSheetUpdate
+  FinishingSheetWrite
 } from '@/types/'
 
 type ApiResponse<T> = {
@@ -239,7 +238,7 @@ export async function deleteBlueprint(id: string, blueprint_id: string) {
 
 export const createFinishingSheet = async (
   taskId: string, 
-  data: FinishingSheetCreate
+  data: FinishingSheetWrite
 ) => {
   const response = await apiClient(`/tasks/${taskId}/sheets`, {
     method: 'POST',
@@ -257,28 +256,10 @@ export const createFinishingSheet = async (
 export const updateFinishingSheet = async (
   taskId: string, 
   sheetId: string, 
-  data: FinishingSheetUpdate
+  data: FinishingSheetWrite
 ) => {
   const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
     method: 'PUT',
-    body: JSON.stringify(data),
-  })
-
-  if (!response.ok) {
-      throw new Error(`Failed to update factory data: ${response.status}`)
-    }
-
-    return response.data
-}
-
-// Partially update a finishing sheet
-export const patchFinishingSheet = async (
-  taskId: string, 
-  sheetId: string, 
-  data: FinishingSheetUpdate
-) => {
-  const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
-    method: 'PATCH',
     body: JSON.stringify(data),
   })
 
@@ -296,7 +277,7 @@ const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
     })
     
     if (!response.ok) {
-      throw new Error(`Failed to update factory data: ${response.status}`)
+      throw new Error(`Failed to delete Finishing sheet: ${response.status}`)
     }
 
     return response.data

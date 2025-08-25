@@ -2,8 +2,7 @@ import { getFinishingSheets } from '@/lib/api/server'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { FileText } from 'lucide-react'
+import { FileText, Plus } from 'lucide-react'
 
 export default async function BlueprintsPage({ 
   params 
@@ -15,10 +14,17 @@ export default async function BlueprintsPage({
   const sheets = response.results
   return (
     <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Sheets</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Systemsheet</h1>
+          <p className="text-muted-foreground mt-2">Systemsheet</p>
         </div>
+        <Link href={`/task-management/tasks/${id}/sheets/create`}>
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
+            Create New Sheet
+          </Button>
+        </Link>
       </div>
 
       {sheets.length === 0 ? (
@@ -53,7 +59,7 @@ export default async function BlueprintsPage({
                 </div>
                 <div className="flex">
                   <Button asChild size="sm" className="flex-1">
-                    <Link href={`/task-management/task/${id}/sheets/${sheet.id}`}>
+                    <Link href={`/task-management/tasks/${id}/sheets/${sheet.id}`}>
                       View
                     </Link>
                   </Button>

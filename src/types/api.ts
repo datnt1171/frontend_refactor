@@ -1,4 +1,5 @@
 import type { components } from "@/types/openapi";
+import { WritableFields } from "./common";
 
 // Auth
 export type SetPasswordRetype = components['schemas']['ChangePassword']
@@ -37,7 +38,10 @@ export type SPRReportRow = components['schemas']['SPRReportRow']
 
 // Finishing sheet
 export type FinishingSheet = components['schemas']['FinishingSheet']
+export type SheetRow = components['schemas']['SheetRow'] 
+export type RowProduct = components['schemas']['RowProduct']
 export type PaginatedFinishingSheetList = components['schemas']['PaginatedFinishingSheetList']
+
 export interface GetFinishingSheetsParams {
   created_by?: string;
   search?: string;
@@ -48,13 +52,19 @@ export interface GetFinishingSheetsParams {
   offset?: number;
 }
 
-export type FinishingSheetCreate = {
-  finishing_code: string;
+export type RowProductWrite = WritableFields<components['schemas']['RowProduct']>
+
+export type SheetRowWrite = WritableFields<components['schemas']['SheetRow']> & {
+  products: RowProductWrite[];
 }
 
-export type FinishingSheetUpdate = Partial<{
-  finishing_code: string;
-}>
+export type FinishingSheetWrite = WritableFields<components['schemas']['FinishingSheet']> & {
+  rows: SheetRowWrite[];
+}
+
+// Sheet templates
+export type StepTemplate = components['schemas']['StepTemplate']
+export type FormularTemplate = components['schemas']['FormularTemplate']
 
 
 // Pagination

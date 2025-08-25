@@ -1,6 +1,6 @@
-import { ProductionRecord } from '@/types';
+import { SheetRow } from '@/types';
 
-export const generatePDF = (tableData: ProductionRecord[]) => {
+export const generatePDF = (tableData: SheetRow[]) => {
   let htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -148,7 +148,7 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
   `;
 
   tableData.forEach((stepData, stepIndex) => {
-    const materials = stepData.materials;
+    const materials = stepData.products;
     const materialCount = materials.length;
     
     materials.forEach((material, materialIndex) => {
@@ -157,25 +157,25 @@ export const generatePDF = (tableData: ProductionRecord[]) => {
       htmlContent += `
         <tr>
           ${isFirstMaterial ? `
-            <td class="merged-cell col-step" rowspan="${materialCount}">Step ${stepIndex + 1} Booth ${stepData.booth}</td>
-            <td class="merged-cell col-stepname" rowspan="${materialCount}">${stepData.stepname || ''}</td>
+            <td class="merged-cell col-step" rowspan="${materialCount}">Step ${stepIndex + 1} Booth ${stepData.spot}</td>
+            <td class="merged-cell col-stepname" rowspan="${materialCount}">${stepData.stepname_en || ''}</td>
             <td class="merged-cell col-viscosity" rowspan="${materialCount}">${stepData.viscosity_en || ''}</td>
-            <td class="merged-cell col-viscosity" rowspan="${materialCount}">${stepData.viscosity_vn || ''}</td>
+            <td class="merged-cell col-viscosity" rowspan="${materialCount}">${stepData.viscosity_vi || ''}</td>
             <td class="merged-cell col-spec" rowspan="${materialCount}">${stepData.spec_en || ''}</td>
-            <td class="merged-cell col-spec" rowspan="${materialCount}">${stepData.spec_vn || ''}</td>
-            <td class="merged-cell col-hold" rowspan="${materialCount}">${stepData.holdTime || ''}</td>
-            <td class="merged-cell col-chemical" rowspan="${materialCount}">${stepData.chemicalCode || ''}</td>
+            <td class="merged-cell col-spec" rowspan="${materialCount}">${stepData.spec_vi || ''}</td>
+            <td class="merged-cell col-hold" rowspan="${materialCount}">${stepData.hold_time || ''}</td>
+            <td class="merged-cell col-chemical" rowspan="${materialCount}">${stepData.chemical_code || ''}</td>
             <td class="merged-cell col-consumption" rowspan="${materialCount}">${stepData.consumption || ''}</td>
           ` : ''}
-          <td class="col-material-code">${material.materialCode || ''}</td>
-          <td class="col-material-name">${material.materialName || ''}</td>
+          <td class="col-material-code">${material.product_code || ''}</td>
+          <td class="col-material-name">${material.product_name || ''}</td>
           <td class="col-ratio">${material.ratio || ''}</td>
           <td class="col-qty">${material.qty || ''}</td>
           <td class="col-unit">${material.unit || ''}</td>
-          <td class="col-check">${material.checkResult || ''}</td>
-          <td class="col-action">${material.correctAction || ''}</td>
-          <td class="col-signature">${material.te1Signature || ''}</td>
-          <td class="col-signature">${material.customerSignature || ''}</td>
+          <td class="col-check">${material.check_result || ''}</td>
+          <td class="col-action">${material.correct_action || ''}</td>
+          <td class="col-signature">${material.te1_signature || ''}</td>
+          <td class="col-signature">${material.customer_signature || ''}</td>
         </tr>
       `;
     });
