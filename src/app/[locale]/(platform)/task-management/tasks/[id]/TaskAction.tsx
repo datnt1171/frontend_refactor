@@ -11,6 +11,7 @@ import { getActionColor } from "@/lib/utils/format"
 import { useTranslations } from 'next-intl'
 import type { TaskDetail } from "@/types/api"
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
+import { compressImage } from "@/lib/utils/imageCompression"
 
 interface TaskActionsProps {
   task: TaskDetail
@@ -21,8 +22,37 @@ export default function TaskActions({ task }: TaskActionsProps) {
   const [actionComment, setActionComment] = useState<string>("")
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [actionFile, setActionFile] = useState<File | null>(null)
+  const [fileProcessing, setFileProcessing] = useState(false)
   const commonT = useTranslations('common')
   const t = useTranslations('taskManagement.taskDetail')
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null
+    
+    if (!file) {
+      setActionFile(null)
+      return
+    }
+
+    setFileProcessing(true)
+    
+    try {
+      // Compress image if it's an image file
+      const processedFile = await compressImage(file, {
+        maxWidth: 1920,
+        maxHeight: 1080,
+        quality: 0.8,
+        maxSizeKB: 500
+      })
+      setActionFile(processedFile)
+    } catch (error) {
+      console.error('File processing failed:', error)
+      // Fall back to original file if compression fails
+      setActionFile(file)
+    } finally {
+      setFileProcessing(false)
+    }
+  }
 
   const handleActionClick = async (actionId: string) => {
     setActionLoading(actionId)
@@ -36,6 +66,10 @@ export default function TaskActions({ task }: TaskActionsProps) {
       alert(t('actionPerformedSuccessfully'))
       setActionComment("")
       setActionFile(null)
+      // Reset file input
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement
+      if (fileInput) fileInput.value = ""
+      
       router.refresh() // Refresh the page to show updated data
     } catch (err: any) {
       console.error("Error performing action:", err)
@@ -45,6 +79,8 @@ export default function TaskActions({ task }: TaskActionsProps) {
     }
   }
 
+  const isDisabled = actionLoading !== null || fileProcessing
+
   return (
     <Card>
       <CardHeader>
@@ -53,36 +89,20 @@ export default function TaskActions({ task }: TaskActionsProps) {
       <CardContent>
         {task.available_actions.length > 0 ? (
           <>
-            <Input
-              type="file"
-              className="mb-2"
-              // accept={ACCEPTED_FILE_TYPES}
-              onChange={e => {
-                const file = e.target.files?.[0] || null
-                // if (file) {
-                //   const allowedTypes = [
-                //     "image/jpeg", "image/png", "application/pdf",
-                //     "application/msword",
-                //     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                //     "application/vnd.ms-excel",
-                //     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                //   ]
-                //   if (!allowedTypes.includes(file.type)) {
-                //     alert(commonT('invalidFile'))
-                //     e.target.value = ""
-                //     setActionFile(null)
-                //     return
-                //   }
-                // }
-                setActionFile(file)
-              }}
-              disabled={actionLoading !== null}
-            />
+            <div className="relative mb-2">
+              <Input
+                type="file"
+                // accept={ACCEPTED_FILE_TYPES}
+                onChange={handleFileChange}
+                disabled={isDisabled}
+              />
+            </div>
             <textarea
               className="w-full p-2 border rounded-md mb-2"
               placeholder={t('addCommentOptional')}
               value={actionComment}
               onChange={(e) => setActionComment(e.target.value)}
+              disabled={isDisabled}
             />
             {task.available_actions.map((action) => (
               <Button
@@ -90,7 +110,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
                 className={`w-full justify-center font-bold mb-2 ${getActionColor(action.action_type)}`}
                 variant="outline"
                 onClick={() => handleActionClick(action.id)}
-                disabled={actionLoading !== null}
+                disabled={isDisabled}
               >
                 {actionLoading === action.id ? (
                   <>

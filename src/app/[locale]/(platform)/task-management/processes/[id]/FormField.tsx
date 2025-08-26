@@ -6,6 +6,7 @@ import { Combobox } from "@/components/ui/combobox"
 import { useTranslations } from 'next-intl'
 import type { ProcessField, UserList, Factory, Retailer } from "@/types"
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
+import { compressImage } from "@/lib/utils/imageCompression"
 
 interface FormFieldProps {
   field: ProcessField
@@ -37,22 +38,26 @@ export function FormField({
   const t = useTranslations('taskManagement.createTask')
   const commonT = useTranslations('common')
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      // if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-      //   alert(commonT('invalidFile'))
-      //   e.target.value = ""
-      //   onChange(undefined)
-      //   return
-      // }
-      console.log('File selected:', {
-      name: file.name,
-      type: file.type,
-      size: file.size
-    })
+      
+      try {
+        // Compress image if it's an image file
+        const compressedFile = await compressImage(file, {
+          maxWidth: 2560,
+          maxHeight: 1440,
+          quality: 0.9,
+          maxSizeKB: 1024
+        })
+        
+        onChange(compressedFile)
+      } catch (error) {
+        console.error('Compression failed:', error)
+        // Fall back to original file if compression fails
+        onChange(file)
+      }
     }
-    onChange(file)
   }
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
