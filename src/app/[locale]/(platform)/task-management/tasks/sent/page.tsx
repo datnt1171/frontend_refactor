@@ -37,10 +37,10 @@ export default async function SentTasksPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{commonT('id')}</TableHead>
+                  <TableHead>{t('status')}</TableHead>
                   <TableHead>{t('recipient')}</TableHead>
                   <TableHead>{t('formType')}</TableHead>
                   <TableHead>{t('sentDate')}</TableHead>
-                  <TableHead>{t('status')}</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
               </TableHeader>
@@ -52,14 +52,14 @@ export default async function SentTasksPage() {
                         {task.title}
                       </Link>
                     </TableCell>
-                    <TableCell>{task.recipient}</TableCell>
-                    <TableCell>{task.process}</TableCell>
-                    <TableCell>{ formatDateToUTC7(task.created_at) }</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={getStatusColor(task.state_type)}>
                         {task.state}
                       </Badge>
                     </TableCell>
+                    <TableCell>{task.recipient}</TableCell>
+                    <TableCell>{task.process}</TableCell>
+                    <TableCell>{ formatDateToUTC7(task.created_at) }</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

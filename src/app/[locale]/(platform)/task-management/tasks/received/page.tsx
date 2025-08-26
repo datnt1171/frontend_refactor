@@ -33,9 +33,9 @@ export default async function ReceivedTasksPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>{commonT('id')}</TableHead>
+                  <TableHead>{commonTaskT('status')}</TableHead>
                   <TableHead>{t('from')}</TableHead>
                   <TableHead>{commonTaskT('formType')}</TableHead>
-                  <TableHead>{commonTaskT('status')}</TableHead>
                   <TableHead>{commonT('createdAt')}</TableHead>
                   <TableHead className="w-[50px]"></TableHead>
                 </TableRow>
@@ -48,13 +48,13 @@ export default async function ReceivedTasksPage() {
                         {task.title}
                       </Link>
                     </TableCell>
-                    <TableCell>{task.created_by}</TableCell>
-                    <TableCell>{task.process}</TableCell>
                     <TableCell>
                       <Badge variant="outline" className={getStatusColor(task.state_type)}>
                         {task.state}
                       </Badge>
                     </TableCell>
+                    <TableCell>{task.created_by}</TableCell>
+                    <TableCell>{task.process}</TableCell>
                     <TableCell>{formatDateToUTC7(task.created_at)}</TableCell>
                     <TableCell>
                       <DropdownMenu>
