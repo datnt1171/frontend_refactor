@@ -6,7 +6,8 @@ import type {
   FactoryUpdate,
   BlueprintCreate,
   BlueprintUpdate,
-  FinishingSheetWrite
+  FinishingSheetWrite,
+  FinishingSheet
 } from '@/types/'
 
 type ApiResponse<T> = {
@@ -253,11 +254,12 @@ export const createFinishingSheet = async (
 }
 
 // Update a finishing sheet
-export const updateFinishingSheet = async (
+export const updateFinishingSheet1 = async (
   taskId: string, 
   sheetId: string, 
-  data: FinishingSheetWrite
+  data: FinishingSheet
 ) => {
+  console.log(data)
   const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
     method: 'PUT',
     body: JSON.stringify(data),

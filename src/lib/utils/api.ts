@@ -34,49 +34,69 @@ function isDetailError(error: any): error is DetailError {
 }
 
 // Format validation errors into a readable message
-function formatValidationErrors(errors: ValidationError): string {
+function formatValidationErrors(errors: any, parentKey = ""): string {
   const messages: string[] = []
-  
-  for (const [field, fieldErrors] of Object.entries(errors)) {
-    const fieldName = field === 'non_field_errors' ? '' : `${field}: `
-    messages.push(`${fieldName}${fieldErrors.join(', ')}`)
+
+  if (Array.isArray(errors)) {
+    errors.forEach((item, index) => {
+      const key = parentKey ? `${parentKey}[${index}]` : `[${index}]`
+      messages.push(formatValidationErrors(item, key))
+    })
+  } else if (typeof errors === "object" && errors !== null) {
+    for (const [field, value] of Object.entries(errors)) {
+      const key = parentKey ? `${parentKey}.${field}` : field
+      messages.push(formatValidationErrors(value, key))
+    }
+  } else {
+    // primitive (usually string message)
+    const fieldName = parentKey ? `${parentKey}: ` : ""
+    messages.push(`${fieldName}${String(errors)}`)
   }
-  
-  return messages.join('; ')
+
+  return messages.join("\n")
 }
 
 export async function handleApiError(response: Response): Promise<NextResponse<ApiErrorResponse>> {
   let errorMessage = "Request failed"
   let validationErrors: ValidationError | undefined
-  
+  let rawBody: string | null = null
+
   try {
-    const errorData: DjangoErrorResponse = await response.json()
-    
+    // read the raw response text
+    rawBody = await response.clone().text()
+
+    // try parsing JSON
+    const errorData: DjangoErrorResponse = JSON.parse(rawBody)
+
     if (isValidationError(errorData)) {
-      // Case 2: 400 validation errors
       validationErrors = errorData
       errorMessage = formatValidationErrors(errorData)
     } else if (isDetailError(errorData)) {
-      // Case 3: Other errors with detail
       errorMessage = errorData.detail
-    } else if (typeof errorData === 'string') {
-      // Edge case: plain string response
+    } else if (typeof errorData === "string") {
       errorMessage = errorData
     } else {
-      // Fallback for unexpected structures
-      errorMessage = JSON.stringify(errorData)
+      errorMessage = JSON.stringify(errorData, null, 2)
     }
-  } catch {
-    // JSON parsing failed, use status text
+  } catch (err) {
+    // JSON parsing failed, fallback to status
     errorMessage = response.statusText || `HTTP ${response.status}`
   }
-  console.error("ERROR: ",errorMessage)
+
+  // improved structured logging
+  console.error("API ERROR:", {
+    status: response.status,
+    url: response.url,
+    rawBody,
+    parsedError: errorMessage
+  })
+
   const errorResponse: ApiErrorResponse = {
     success: false,
     error: errorMessage,
     ...(validationErrors && { validationErrors })
   }
-  
+
   return NextResponse.json(errorResponse, { status: response.status })
 }
 

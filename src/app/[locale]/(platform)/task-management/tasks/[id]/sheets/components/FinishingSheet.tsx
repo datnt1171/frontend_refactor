@@ -1,21 +1,14 @@
 'use client'
 import React, { useState } from 'react';
-import { Plus, Trash2, FileText, MoreHorizontal, ArrowDownFromLine, ArrowUpToLine } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { generatePDF } from '@/lib/pdf-generator';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Combobox } from "@/components/ui/combobox"
-import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet, SheetRowWrite } from '@/types';
+import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet } from '@/types';
+import { updateFinishingSheet1 } from '@/lib/api/client/api';
 
 interface CombinedSheetTableProps {
   data: FinishingSheet;
   stepTemplates: StepTemplate[];
   formularTemplates: FormularTemplate[];
+  taskId: string;
 }
 
 // Generate unique ID for new records
@@ -26,17 +19,113 @@ const generateId = () => `temp-${(++idCounter).toString()}`;
 const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({ 
   data,
   stepTemplates, 
-  formularTemplates
+  formularTemplates,
+  taskId
 }) => {
-  const [records, setRecords] = useState<SheetRow[]>(data.rows || []);
+  const [finishingSheet, setFinishingSheet] = useState<FinishingSheet>(data);
 
-  // Generic update function for records
-  const updateRecord = (id: string, updates: Partial<SheetRow>) => {
-    setRecords(prev => prev.map(record => 
-      record.id === id ? { ...record, ...updates } : record
-    ));
+  // Generic update function for the entire finishing sheet
+  const updateFinishingSheet = (updates: Partial<FinishingSheet>) => {
+    setFinishingSheet(prev => ({ ...prev, ...updates }));
   };
 
+  // Generic update function for records (rows)
+  const updateRecord = (id: string, updates: Partial<SheetRow>) => {
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: prev.rows.map(record => 
+        record.id === id ? { ...record, ...updates } : record
+      )
+    }));
+  };
+
+  // Update specific product within a row
+  const updateProduct = (rowId: string, productId: string, updates: Partial<RowProduct>) => {
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: prev.rows.map(row => 
+        row.id === rowId 
+          ? {
+              ...row,
+              products: row.products.map(product => 
+                product.id === productId ? { ...product, ...updates } : product
+              )
+            }
+          : row
+      )
+    }));
+  };
+
+  // Add new row
+  const addRow = () => {
+    const newRow: SheetRow = {
+      id: generateId(),
+      step_template: null,
+      formular_template: null,
+      step_num: finishingSheet.rows.length + 1,
+      spot: null,
+      stepname_en: '',
+      stepname_vi: '',
+      stepname_zh_hant: '',
+      viscosity_en: '',
+      viscosity_vi: '',
+      viscosity_zh_hant: '',
+      spec_en: '',
+      spec_vi: '',
+      spec_zh_hant: '',
+      hold_time: '',
+      chemical_code: '',
+      consumption: '',
+      created_at: new Date().toISOString(),
+      created_by: '',
+      updated_at: new Date().toISOString(),
+      updated_by: '',
+      products: [makeEmptyProduct()],
+    };
+
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: [...prev.rows, newRow]
+    }));
+  };
+
+  // Remove row
+  const removeRow = (rowId: string) => {
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: prev.rows.filter(row => row.id !== rowId)
+    }));
+  };
+
+  // Add product to a specific row
+  const addProduct = (rowId: string) => {
+    const newProduct = makeEmptyProduct();
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: prev.rows.map(row => 
+        row.id === rowId 
+          ? { ...row, products: [...row.products, newProduct] }
+          : row
+      )
+    }));
+  };
+
+  // Remove product from a specific row
+  const removeProduct = (rowId: string, productId: string) => {
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: prev.rows.map(row => 
+        row.id === rowId 
+          ? { 
+              ...row, 
+              products: row.products.length > 1 
+                ? row.products.filter(product => product.id !== productId)
+                : [makeEmptyProduct()] // Always keep at least one product
+            }
+          : row
+      )
+    }));
+  };
 
   // Create empty product
   const makeEmptyProduct = (): RowProduct => ({
@@ -56,83 +145,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     updated_by: '',
     updated_at: new Date().toISOString(),
   });
-
-  // Create empty record
-  const makeEmptyRecord = (): SheetRow => ({
-    id: generateId(),
-    step_template: null,
-    formular_template: null,
-    step_num: 0,
-    spot: null,
-    stepname_en: '',
-    stepname_vi: '',
-    stepname_zh_hant: '',
-    viscosity_en: '',
-    viscosity_vi: '',
-    viscosity_zh_hant: '',
-    spec_en: '',
-    spec_vi: '',
-    spec_zh_hant: '',
-    hold_time: '',
-    chemical_code: '',
-    consumption: '',
-    created_at: new Date().toISOString(),
-    created_by: '',
-    updated_at: new Date().toISOString(),
-    updated_by: '',
-    products: [makeEmptyProduct()],
-  });
-
-  // Add new record
-  const addRecord = () => {
-    const newRecord = makeEmptyRecord();
-    newRecord.step_num = records.length + 1;
-    setRecords(prev => [...prev, newRecord]);
-  };
-
-  const addRecordAt = (index: number) => {
-    const newRecord = makeEmptyRecord();
-    setRecords(prev => {
-      const newRecords = [
-        ...prev.slice(0, index),
-        newRecord,
-        ...prev.slice(index),
-      ];
-      // Renumber all records
-      return newRecords.map((record, idx) => ({
-        ...record,
-        step_num: idx + 1
-      }));
-    });
-  };
-
-  const addRecordAfter = (index: number) => {
-    const newRecord = makeEmptyRecord();
-    setRecords(prev => {
-      const newRecords = [
-        ...prev.slice(0, index + 1),
-        newRecord,
-        ...prev.slice(index + 1),
-      ];
-      // Renumber all records
-      return newRecords.map((record, idx) => ({
-        ...record,
-        step_num: idx + 1
-      }));
-    });
-  };
-
-  // Delete record
-  const deleteRecord = (id: string) => {
-    setRecords(prev => {
-      const filtered = prev.filter(record => record.id !== id);
-      // Renumber remaining records
-      return filtered.map((record, idx) => ({
-        ...record,
-        step_num: idx + 1
-      }));
-    });
-  };
 
   // Handle step template dropdown change
   const handleStepChange = (recordId: string, stepTemplateId: string) => {
@@ -156,7 +168,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   const handleFormularChange = (recordId: string, formularTemplateId: string) => {
     const formular = formularTemplates.find(f => f.id === formularTemplateId);
     if (!formular) return;
-
 
     const products: RowProduct[] = formular.products.map((product, idx) => ({
       id: generateId(),
@@ -197,22 +208,38 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     label: formular.code,
   }));
 
+  // Save function
+  const handleSave = async () => {
+    console.log('finishingSheet:',finishingSheet)
+    try {
+      
+      await updateFinishingSheet1(taskId, finishingSheet.id, finishingSheet);
+      alert('Finishing sheet saved successfully');
+      // You might want to add a success toast notification here
+    } catch (error) {
+      alert("error");
+      // You might want to add an error toast notification here
+    }
+  };
+
   return (
     <div>
-      <div className="flex gap-2 mb-4">
-        <Button onClick={addRecord} className="flex items-center gap-2">
-          <Plus size={16} />
-          Add Record
-        </Button>
-        <Button 
-          onClick={() => generatePDF(records)} 
-          variant="outline" 
-          className="flex items-center gap-2"
-          disabled={records.length === 0}
+      {/* Save Button */}
+      <div className="mb-4 flex justify-between items-center">
+        <div>
+          <button 
+            onClick={addRow}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
+          >
+            Add Row
+          </button>
+        </div>
+        <button 
+          onClick={handleSave}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
         >
-          <FileText size={16} />
-          Generate PDF
-        </Button>
+          Save Changes
+        </button>
       </div>
 
       <div className="overflow-x-auto">
@@ -221,48 +248,135 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
           <thead className="bg-gray-100">
             {/* Product Title Row */}
             <tr>
-              <td colSpan={18} className="border border-gray-300 px-2 py-2 text-center font-bold text-lg">
-                {data.finishing_code}
+              <td colSpan={19} className="border border-gray-300 px-2 py-2 text-center font-bold text-lg">
+                <input
+                  type="text"
+                  value={finishingSheet.finishing_code}
+                  onChange={(e) => updateFinishingSheet({ finishing_code: e.target.value })}
+                  className="w-full text-center font-bold text-lg border-none bg-transparent"
+                  placeholder="Finishing Code"
+                />
               </td>
             </tr>
             
-            {/* Product Details Row */}
+            {/* Product Details Row - Made editable */}
             <tr className="text-left">
-              <td colSpan={3} className="border border-gray-300 p-1">
+              <td colSpan={3}>
                 <div>
-                  <strong>Name:</strong> {data.name}<br/>
-                  <strong>Sheen:</strong> {data.sheen}<br/>
-                  <strong>DFT:</strong> {data.dft}<br/>
-                  <strong>Chemical:</strong> {data.type_of_paint}<br/>
-                  <strong>Substrate:</strong> {data.type_of_substrate}<br/>
-                  <strong>Grain Filling:</strong> {data.finishing_surface_grain}<br/>
-                  <strong>Developed/Duplicated by:</strong> {data.sampler}
+                  <strong>Name:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.name}
+                    onChange={(e) => updateFinishingSheet({ name: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
+                  <br/>
+                  <strong>Sheen:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.sheen}
+                    onChange={(e) => updateFinishingSheet({ sheen: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
+                  <br/>
+                  <strong>DFT:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.dft}
+                    onChange={(e) => updateFinishingSheet({ dft: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
+                  <br/>
+                  <strong>Chemical:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.type_of_paint}
+                    onChange={(e) => updateFinishingSheet({ type_of_paint: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
+                  <br/>
+                  <strong>Substrate:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.type_of_substrate}
+                    onChange={(e) => updateFinishingSheet({ type_of_substrate: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
+                  <br/>
+                  <strong>Grain Filling:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.finishing_surface_grain}
+                    onChange={(e) => updateFinishingSheet({ finishing_surface_grain: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
+                  <br/>
+                  <strong>Developed/Duplicated by:</strong> 
+                  <input
+                    type="text"
+                    value={finishingSheet.sampler}
+                    onChange={(e) => updateFinishingSheet({ sampler: e.target.value })}
+                    className="ml-1 border border-gray-300 rounded px-1"
+                  />
                 </div>
               </td>
-              <td colSpan={1} className="border border-gray-300 p-1">
-                <strong>Chemical waste:</strong> {data.chemical_waste}<br/>
+              <td colSpan={1}>
+                <strong>Chemical waste:</strong> 
+                <input
+                  type="text"
+                  value={finishingSheet.chemical_waste}
+                  onChange={(e) => updateFinishingSheet({ chemical_waste: e.target.value })}
+                  className="ml-1 border border-gray-300 rounded px-1 w-full"
+                />
+                <br/><br/>
+                <strong>Conveyor speed:</strong> 
+                <input
+                  type="text"
+                  value={finishingSheet.conveyor_speed}
+                  onChange={(e) => updateFinishingSheet({ conveyor_speed: e.target.value })}
+                  className="ml-1 border border-gray-300 rounded px-1 w-full"
+                />
+              </td>
+              <td colSpan={3}>
+              </td>
+              <td colSpan={2}>
+                <strong>With panel test:</strong> 
+                <input
+                  type="checkbox"
+                  checked={finishingSheet.with_panel_test}
+                  onChange={(e) => updateFinishingSheet({ with_panel_test: e.target.checked })}
+                  className="ml-1"
+                />
                 <br/>
-                <strong>Conveyor speed:</strong> {data.conveyor_speed}
-              </td>
-              <td colSpan={3} className="border border-gray-300 p-1">
-                1. Wood substrate before finishing process should be below 10% MC<br/>
-                2. Last sanding on white wood should be grit #240<br/>
-                3. White wood surface must be free from grease, oil or other contamination. Please reject white wood with any defects.
-              </td>
-              <td colSpan={2} className="border border-gray-300 p-1">
-                <strong>With panel test:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${data.with_panel_test ? 'bg-black' : ''}`}></span><br/>
                 (Có mẫu test chuyền)<br/>
-                <strong>No panel test:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${!data.with_panel_test ? 'bg-black' : ''}`}></span><br/>
+                <strong>No panel test:</strong> 
+                <input
+                  type="checkbox"
+                  checked={!finishingSheet.with_panel_test}
+                  onChange={(e) => updateFinishingSheet({ with_panel_test: !e.target.checked })}
+                  className="ml-1"
+                />
+                <br/>
                 (Không có mẫu test chuyền)<br/>
-                <strong>Testing:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${data.testing ? 'bg-black' : ''}`}></span><br/>
-                <strong>Chemical Yellowing:</strong> <span className={`inline-block w-4 h-4 border border-gray-400 mr-1 ${data.chemical_yellowing ? 'bg-black' : ''}`}></span>
+                <strong>Testing:</strong> 
+                <input
+                  type="checkbox"
+                  checked={finishingSheet.testing}
+                  onChange={(e) => updateFinishingSheet({ testing: e.target.checked })}
+                  className="ml-1"
+                />
+                <br/>
+                <strong>Chemical Yellowing:</strong> 
+                <input
+                  type="checkbox"
+                  checked={finishingSheet.chemical_yellowing}
+                  onChange={(e) => updateFinishingSheet({ chemical_yellowing: e.target.checked })}
+                  className="ml-1"
+                />
               </td>
-              <td colSpan={5} className="border border-gray-300 p-1">
-                4. Always ask TE-1 for advice in case of changing process mixing ratio, application amount, drying time, application method, must get approval form... If there is any changing.<br/>
-                5. Strictly follow the process, always refer to the PCP<br/>
-                6. Viscosity reading using NK2 cup standard.
+              <td colSpan={5}>
               </td>
-              <td colSpan={4} className="border border-gray-300 p-1 text-center">
+              <td colSpan={4}>
                 <div className="font-bold">DAILY CHECK LIST</div>
                 <div>(Kiểm tra hằng ngày)</div>
                 <div>Date: _______________</div>
@@ -271,31 +385,31 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
 
             {/* Column Headers Row */}
             <tr className="font-bold text-center">
-              <td className="border border-gray-300 p-1" style={{ width: '2.39%' }}>Step</td>
-              <td className="border border-gray-300 p-1" style={{ width: '4.14%' }}>Step Name</td>
-              <td className="border border-gray-300 p-1" style={{ width: '7.37%' }}>Viscosity & Wet Mill Thickness (EN)</td>
-              <td className="border border-gray-300 p-1" style={{ width: '7.37%' }}>Viscosity & Wet Mill Thickness (VN)</td>
-              <td className="border border-gray-300 p-1" style={{ width: '7.37%' }}>SPEC EN</td>
-              <td className="border border-gray-300 p-1" style={{ width: '7.37%' }}>SPEC VN</td>
-              <td className="border border-gray-300 p-1" style={{ width: '3.02%' }}>Hold Time (min)</td>
-              <td className="border border-gray-300 p-1" style={{ width: '5.61%' }}>Chemical Mixing Code</td>
-              <td className="border border-gray-300 p-1" style={{ width: '5.61%' }}>Consumption (per m2)</td>
-              <td className="border border-gray-300 p-1" style={{ width: '6.74%' }}>Material Code</td>
-              <td className="border border-gray-300 p-1" style={{ width: '7.51%' }}>Material Name</td>
-              <td className="border border-gray-300 p-1" style={{ width: '3.51%' }}>Ratio</td>
-              <td className="border border-gray-300 p-1" style={{ width: '3.51%' }}>Qty (per m2)</td>
-              <td className="border border-gray-300 p-1" style={{ width: '3.51%' }}>Unit</td>
-              <td className="border border-gray-300 p-1" style={{ width: '8%' }}>Check Result</td>
-              <td className="border border-gray-300 p-1" style={{ width: '8%' }}>Correct Action</td>
-              <td className="border border-gray-300 p-1" style={{ width: '4.49%' }}>TE-1's Name & Signature</td>
-              <td className="border border-gray-300 p-1" style={{ width: '4.49%' }}>Customer Signature</td>
-              <td className="border border-gray-300 p-1" style={{ width: '2%' }}>Actions</td>
+              <td style={{ width: '2.39%' }}>Step</td>
+              <td style={{ width: '4.14%' }}>Step Name</td>
+              <td style={{ width: '7.37%' }}>Viscosity & Wet Mill Thickness (EN)</td>
+              <td style={{ width: '7.37%' }}>Viscosity & Wet Mill Thickness (VN)</td>
+              <td style={{ width: '7.37%' }}>SPEC EN</td>
+              <td style={{ width: '7.37%' }}>SPEC VN</td>
+              <td style={{ width: '3.02%' }}>Hold Time (min)</td>
+              <td style={{ width: '5.61%' }}>Chemical Mixing Code</td>
+              <td style={{ width: '5.61%' }}>Consumption (per m2)</td>
+              <td style={{ width: '6.74%' }}>Material Code</td>
+              <td style={{ width: '7.51%' }}>Material Name</td>
+              <td style={{ width: '3.51%' }}>Ratio</td>
+              <td style={{ width: '3.51%' }}>Qty (per m2)</td>
+              <td style={{ width: '3.51%' }}>Unit</td>
+              <td style={{ width: '8%' }}>Check Result</td>
+              <td style={{ width: '8%' }}>Correct Action</td>
+              <td style={{ width: '4.49%' }}>TE-1's Name & Signature</td>
+              <td style={{ width: '4.49%' }}>Customer Signature</td>
+              <td style={{ width: '3%' }}>Actions</td>
             </tr>
           </thead>
 
           {/* Body Section */}
           <tbody className="text-left">
-            {records.map((record, recordIndex) => (
+            {finishingSheet.rows.map((record, recordIndex) => (
               <React.Fragment key={record.id}>
                 {record.products.map((product, productIndex) => (
                   <tr
@@ -328,7 +442,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Step Name Dropdown - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1" 
+                        className="border border-gray-300 p-1"
                         rowSpan={record.products.length} 
                         style={{ width: '4.14%', minWidth: '4.14%', maxWidth: '4.14%' }}
                       >
@@ -348,14 +462,14 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {productIndex === 0 && (
                       <>
                         <td 
-                          className="border border-gray-300 p-1" 
+                          className="border border-gray-300 p-1"
                           rowSpan={record.products.length} 
                           style={{ width: '7.37%', minWidth: '7.37%', maxWidth: '7.37%' }}
                         >
                           {record.viscosity_en}
                         </td>
                         <td 
-                          className="border border-gray-300 p-1" 
+                          className="border border-gray-300 p-1"
                           rowSpan={record.products.length} 
                           style={{ width: '7.37%', minWidth: '7.37%', maxWidth: '7.37%' }}
                         >
@@ -387,7 +501,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Hold Time - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1" 
+                        className="border border-gray-300 p-1"
                         rowSpan={record.products.length} 
                         style={{ width: '3.02%', minWidth: '3.02%', maxWidth: '3.02%' }}
                       >
@@ -398,7 +512,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Chemical Mixing Code Dropdown - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1" 
+                        className="border border-gray-300 p-1"
                         rowSpan={record.products.length} 
                         style={{ width: '5.61%', minWidth: '5.61%', maxWidth: '5.61%' }}
                       >
@@ -417,7 +531,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Consumption - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1" 
+                        className="border border-gray-300 p-1"
                         rowSpan={record.products.length} 
                         style={{ width: '5.61%', minWidth: '5.61%', maxWidth: '5.61%' }}
                       >
@@ -425,66 +539,123 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                       </td>
                     )}
 
-                    {/* Product Data - show for each product */}
-                    <td className="border border-gray-300 p-1 text-center" style={{ width: '6.74%', minWidth: '6.74%', maxWidth: '6.74%' }}>
-                      {product.product_code}
+                    {/* Product Data - show for each product, now editable */}
+                    <td className="border border-gray-300 p-1" style={{ width: '6.74%', minWidth: '6.74%', maxWidth: '6.74%' }}>
+                      <input
+                        type="text"
+                        value={product.product_code}
+                        onChange={(e) => updateProduct(record.id, product.id, { product_code: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Product Code"
+                      />
                     </td>
                     <td className="border border-gray-300 p-1" style={{ width: '7.51%', minWidth: '7.51%', maxWidth: '7.51%' }}>
-                      {product.product_name}
+                      <input
+                        type="text"
+                        value={product.product_name}
+                        onChange={(e) => updateProduct(record.id, product.id, { product_name: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Product Name"
+                      />
                     </td>
-                    <td className="border border-gray-300 p-1 text-center" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
-                      {product.ratio}
+                    <td className="border border-gray-300 p-1" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
+                      <input
+                        type="text"
+                        value={product.ratio}
+                        onChange={(e) => updateProduct(record.id, product.id, { ratio: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Ratio"
+                      />
                     </td>
-                    <td className="border border-gray-300 p-1 text-center" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
-                      {product.qty}
+                    <td className="border border-gray-300 p-1" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
+                      <input
+                        type="text"
+                        value={product.qty}
+                        onChange={(e) => updateProduct(record.id, product.id, { qty: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Qty"
+                      />
                     </td>
-                    <td className="border border-gray-300 p-1 text-center" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
-                      {product.unit}
+                    <td className="border border-gray-300 p-1" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
+                      <input
+                        type="text"
+                        value={product.unit}
+                        onChange={(e) => updateProduct(record.id, product.id, { unit: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Unit"
+                      />
                     </td>
                     <td className="border border-gray-300 p-1" style={{ width: '8%', minWidth: '8%', maxWidth: '8%' }}>
-                      {product.check_result}
+                      <input
+                        type="text"
+                        value={product.check_result}
+                        onChange={(e) => updateProduct(record.id, product.id, { check_result: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Check Result"
+                      />
                     </td>
                     <td className="border border-gray-300 p-1" style={{ width: '8%', minWidth: '8%', maxWidth: '8%' }}>
-                      {product.correct_action}
+                      <input
+                        type="text"
+                        value={product.correct_action}
+                        onChange={(e) => updateProduct(record.id, product.id, { correct_action: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Correct Action"
+                      />
                     </td>
-                    <td className="border border-gray-300 p-1 text-center" style={{ width: '4.49%', minWidth: '4.49%', maxWidth: '4.49%' }}>
-                      {product.te1_signature}
+                    <td className="border border-gray-300 p-1" style={{ width: '4.49%', minWidth: '4.49%', maxWidth: '4.49%' }}>
+                      <input
+                        type="text"
+                        value={product.te1_signature}
+                        onChange={(e) => updateProduct(record.id, product.id, { te1_signature: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="TE-1 Signature"
+                      />
                     </td>
-                    <td className="border border-gray-300 p-1 text-center" style={{ width: '4.49%', minWidth: '4.49%', maxWidth: '4.49%' }}>
-                      {product.customer_signature}
+                    <td className="border border-gray-300 p-1" style={{ width: '4.49%', minWidth: '4.49%', maxWidth: '4.49%' }}>
+                      <input
+                        type="text"
+                        value={product.customer_signature}
+                        onChange={(e) => updateProduct(record.id, product.id, { customer_signature: e.target.value })}
+                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        placeholder="Customer Signature"
+                      />
                     </td>
 
-
-                    {/* Actions - only show on first product row */}
-                    {productIndex === 0 && (
-                      <td
-                        className="border border-gray-300 p-1"
-                        rowSpan={record.products.length}
-                        style={{ width: "2%", minWidth: "2%", maxWidth: "2%" }}
-                      >
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <button className="flex items-center justify-center w-full h-full p-1 text-gray-500 hover:text-black">
-                              <MoreHorizontal size={16} />
-                            </button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => addRecordAt(recordIndex)}>
-                              <ArrowUpToLine size={14} /> Insert Before
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => addRecordAfter(recordIndex)}>
-                              <ArrowDownFromLine size={14} /> Insert After
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => deleteRecord(record.id)}
-                              className="text-red-600"
+                    {/* Actions Column */}
+                    <td className="border border-gray-300 p-1" style={{ width: '3%', minWidth: '3%', maxWidth: '3%' }}>
+                      <div className="flex flex-col gap-1">
+                        {/* Row actions - only show on first product */}
+                        {productIndex === 0 && (
+                          <>
+                            <button
+                              onClick={() => addProduct(record.id)}
+                              className="text-xs bg-blue-500 text-white px-1 py-0.5 rounded"
+                              title="Add Product"
                             >
-                              <Trash2 size={14} /> Delete Record
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </td>
-                    )}
+                              +P
+                            </button>
+                            <button
+                              onClick={() => removeRow(record.id)}
+                              className="text-xs bg-red-500 text-white px-1 py-0.5 rounded"
+                              title="Remove Row"
+                            >
+                              -R
+                            </button>
+                          </>
+                        )}
+                        {/* Product actions - show for each product if more than 1 */}
+                        {record.products.length > 1 && (
+                          <button
+                            onClick={() => removeProduct(record.id, product.id)}
+                            className="text-xs bg-red-400 text-white px-1 py-0.5 rounded"
+                            title="Remove Product"
+                          >
+                            -P
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </React.Fragment>

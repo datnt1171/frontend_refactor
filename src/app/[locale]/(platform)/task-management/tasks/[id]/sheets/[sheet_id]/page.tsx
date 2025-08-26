@@ -23,6 +23,7 @@ export default async function SheetDetailPage({
                 data={finishingSheet}
                 stepTemplates={stepTemplates}
                 formularTemplates={formularTemplates}
+                taskId={id}
                 />
         </div>
       </div>

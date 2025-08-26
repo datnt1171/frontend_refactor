@@ -1,4 +1,5 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import type { FinishingSheet } from '@/types';
 
 export async function GET(
   _request: Request,
@@ -23,6 +24,27 @@ export async function GET(
   }
 }
 
+const removeReadOnlyFields = (obj: any): any => {
+  if (obj === null || obj === undefined) return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => removeReadOnlyFields(item));
+  }
+  
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      // Skip read-only fields
+      if (!['id', 'created_by', 'created_at', 'updated_by', 'updated_at'].includes(key)) {
+        cleaned[key] = removeReadOnlyFields(value);
+      }
+    }
+    return cleaned;
+  }
+  
+  return obj;
+};
+
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string, sheet_id: string }> }
@@ -32,15 +54,18 @@ export async function PUT(
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const body = await request.json()
+    const body: FinishingSheet = await request.json()
     
+    // Remove all read-only fields from the body and nested objects
+    const cleanedBody = removeReadOnlyFields(body)
+
     const response = await fetch(`${process.env.API_URL}/api/sheets/finishing-sheets/${sheet_id}/`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(cleanedBody),
     })
 
     return handleApiResponse(response)
