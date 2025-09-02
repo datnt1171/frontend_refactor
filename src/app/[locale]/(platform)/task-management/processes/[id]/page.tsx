@@ -26,7 +26,10 @@ export default async function FormPage({ params }: PageProps) {
 
   // Check if need to fetch retailer or not
   const needsRetailers = process.fields.some(field => field.field_type === "retailer")
-  const retailers = needsRetailers ? (await getRetailers()).results : []
+  const retailers = needsRetailers 
+  ? (await getRetailers({ limit: 999999 })).results 
+  : []
+
 
   return (
     <ProcessFormClient 

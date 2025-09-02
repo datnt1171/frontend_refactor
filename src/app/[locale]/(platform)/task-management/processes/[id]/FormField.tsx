@@ -45,10 +45,10 @@ export function FormField({
       try {
         // Compress image if it's an image file
         const compressedFile = await compressImage(file, {
-          maxWidth: 2560,
-          maxHeight: 1440,
-          quality: 0.9,
-          maxSizeKB: 1024
+          maxWidth: 1280,
+          maxHeight: 720,
+          quality: 0.7,
+          maxSizeKB: 200
         })
         
         onChange(compressedFile)

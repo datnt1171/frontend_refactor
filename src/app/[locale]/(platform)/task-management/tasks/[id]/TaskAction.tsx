@@ -39,10 +39,10 @@ export default function TaskActions({ task }: TaskActionsProps) {
     try {
       // Compress image if it's an image file
       const processedFile = await compressImage(file, {
-        maxWidth: 1920,
-        maxHeight: 1080,
-        quality: 0.8,
-        maxSizeKB: 500
+        maxWidth: 1280,
+        maxHeight: 720,
+        quality: 0.7,
+        maxSizeKB: 200
       })
       setActionFile(processedFile)
     } catch (error) {
