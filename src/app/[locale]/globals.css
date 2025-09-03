@@ -120,3 +120,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.bordered-table-300-p-1 td {
+  @apply border border-gray-300 p-1;
+}

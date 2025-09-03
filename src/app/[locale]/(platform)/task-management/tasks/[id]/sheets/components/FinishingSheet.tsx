@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Combobox } from "@/components/ui/combobox"
 import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet } from '@/types';
 import { updateFinishingSheet1 } from '@/lib/api/client/api';
+import { Button } from '@/components/ui/button';
 
 interface CombinedSheetTableProps {
   data: FinishingSheet;
@@ -97,36 +98,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     }));
   };
 
-  // Add product to a specific row
-  const addProduct = (rowId: string) => {
-    const newProduct = makeEmptyProduct();
-    setFinishingSheet(prev => ({
-      ...prev,
-      rows: prev.rows.map(row => 
-        row.id === rowId 
-          ? { ...row, products: [...row.products, newProduct] }
-          : row
-      )
-    }));
-  };
-
-  // Remove product from a specific row
-  const removeProduct = (rowId: string, productId: string) => {
-    setFinishingSheet(prev => ({
-      ...prev,
-      rows: prev.rows.map(row => 
-        row.id === rowId 
-          ? { 
-              ...row, 
-              products: row.products.length > 1 
-                ? row.products.filter(product => product.id !== productId)
-                : [makeEmptyProduct()] // Always keep at least one product
-            }
-          : row
-      )
-    }));
-  };
-
   // Create empty product
   const makeEmptyProduct = (): RowProduct => ({
     id: generateId(),
@@ -200,7 +171,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   // Create options for dropdowns
   const stepOptions = stepTemplates.map(step => ({
     value: step.id,
-    label: `${step.short_name || step.name} - ${step.name}`,
+    label: step.short_name,
   }));
 
   const formularOptions = formularTemplates.map(formular => ({
@@ -215,52 +186,43 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
       
       await updateFinishingSheet1(taskId, finishingSheet.id, finishingSheet);
       alert('Finishing sheet saved successfully');
-      // You might want to add a success toast notification here
     } catch (error) {
       alert("error");
-      // You might want to add an error toast notification here
     }
   };
 
   return (
     <div>
-      {/* Save Button */}
       <div className="mb-4 flex justify-between items-center">
         <div>
-          <button 
-            onClick={addRow}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mr-2"
-          >
+          <Button onClick={addRow}>
             Add Row
-          </button>
+          </Button>
         </div>
-        <button 
-          onClick={handleSave}
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-        >
-          Save Changes
-        </button>
+        <Button onClick={handleSave}>
+            Save
+        </Button>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-300 text-xs">
+        <table className="w-full border-collapse bordered-table-300-p-1 text-left text-xs">
           {/* Header Section */}
           <thead className="bg-gray-100">
             {/* Product Title Row */}
             <tr>
-              <td colSpan={19} className="border border-gray-300 px-2 py-2 text-center font-bold text-lg">
+              <td colSpan={19}>
                 <input
                   type="text"
                   value={finishingSheet.finishing_code}
                   onChange={(e) => updateFinishingSheet({ finishing_code: e.target.value })}
-                  className="w-full text-center font-bold text-lg border-none bg-transparent"
+                  className="p-2 w-full text-center font-bold text-lg border-none bg-transparent"
                   placeholder="Finishing Code"
                 />
               </td>
             </tr>
             
             {/* Product Details Row - Made editable */}
-            <tr className="text-left">
+            <tr>
               <td colSpan={3}>
                 <div>
                   <strong>Name:</strong> 
@@ -268,7 +230,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.name}
                     onChange={(e) => updateFinishingSheet({ name: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                   <br/>
                   <strong>Sheen:</strong> 
@@ -276,7 +238,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.sheen}
                     onChange={(e) => updateFinishingSheet({ sheen: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                   <br/>
                   <strong>DFT:</strong> 
@@ -284,7 +246,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.dft}
                     onChange={(e) => updateFinishingSheet({ dft: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                   <br/>
                   <strong>Chemical:</strong> 
@@ -292,7 +254,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.type_of_paint}
                     onChange={(e) => updateFinishingSheet({ type_of_paint: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                   <br/>
                   <strong>Substrate:</strong> 
@@ -300,7 +262,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.type_of_substrate}
                     onChange={(e) => updateFinishingSheet({ type_of_substrate: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                   <br/>
                   <strong>Grain Filling:</strong> 
@@ -308,7 +270,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.finishing_surface_grain}
                     onChange={(e) => updateFinishingSheet({ finishing_surface_grain: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                   <br/>
                   <strong>Developed/Duplicated by:</strong> 
@@ -316,7 +278,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     type="text"
                     value={finishingSheet.sampler}
                     onChange={(e) => updateFinishingSheet({ sampler: e.target.value })}
-                    className="ml-1 border border-gray-300 rounded px-1"
+                    className="ml-1 px-1"
                   />
                 </div>
               </td>
@@ -326,7 +288,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                   type="text"
                   value={finishingSheet.chemical_waste}
                   onChange={(e) => updateFinishingSheet({ chemical_waste: e.target.value })}
-                  className="ml-1 border border-gray-300 rounded px-1 w-full"
+                  className="ml-1 px-1 w-full"
                 />
                 <br/><br/>
                 <strong>Conveyor speed:</strong> 
@@ -334,7 +296,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                   type="text"
                   value={finishingSheet.conveyor_speed}
                   onChange={(e) => updateFinishingSheet({ conveyor_speed: e.target.value })}
-                  className="ml-1 border border-gray-300 rounded px-1 w-full"
+                  className="ml-1 px-1 w-full"
                 />
               </td>
               <td colSpan={3}>
@@ -376,7 +338,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
               </td>
               <td colSpan={5}>
               </td>
-              <td colSpan={4}>
+              <td colSpan={4} className="text-center">
                 <div className="font-bold">DAILY CHECK LIST</div>
                 <div>(Kiểm tra hằng ngày)</div>
                 <div>Date: _______________</div>
@@ -408,7 +370,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
           </thead>
 
           {/* Body Section */}
-          <tbody className="text-left">
+          <tbody>
             {finishingSheet.rows.map((record, recordIndex) => (
               <React.Fragment key={record.id}>
                 {record.products.map((product, productIndex) => (
@@ -419,11 +381,11 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Step Number - only show on first product row */}
                     {productIndex === 0 && (
                       <td
-                        className="border border-gray-300 p-1"
+                        
                         rowSpan={record.products.length}
-                        style={{ width: '2.39%', minWidth: '2.39%', maxWidth: '2.39%' }}
                       >
                         <div>Step {record.step_num}</div>
+                        Booth
                         <input
                           type="text"
                           value={record.spot || ''}
@@ -433,7 +395,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                               spot: val === '' ? null : val,
                             });
                           }}
-                          className="w-full p-1 mt-1 border border-gray-300 rounded"
+                          className="w-full mt-1"
                           placeholder="Spot"
                         />
                       </td>
@@ -442,9 +404,8 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Step Name Dropdown - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1"
+                        
                         rowSpan={record.products.length} 
-                        style={{ width: '4.14%', minWidth: '4.14%', maxWidth: '4.14%' }}
                       >
                         <Combobox
                           options={stepOptions}
@@ -462,16 +423,14 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {productIndex === 0 && (
                       <>
                         <td 
-                          className="border border-gray-300 p-1"
+                          
                           rowSpan={record.products.length} 
-                          style={{ width: '7.37%', minWidth: '7.37%', maxWidth: '7.37%' }}
                         >
                           {record.viscosity_en}
                         </td>
                         <td 
-                          className="border border-gray-300 p-1"
+                          
                           rowSpan={record.products.length} 
-                          style={{ width: '7.37%', minWidth: '7.37%', maxWidth: '7.37%' }}
                         >
                           {record.viscosity_vi}
                         </td>
@@ -482,16 +441,12 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {productIndex === 0 && (
                       <>
                         <td 
-                          className="border border-gray-300 p-1 break-words" 
                           rowSpan={record.products.length} 
-                          style={{ width: '7.37%', minWidth: '7.37%', maxWidth: '7.37%' }}
                         >
                           <div>{record.spec_en}</div>
                         </td>
                         <td 
-                          className="border border-gray-300 p-1 break-words" 
                           rowSpan={record.products.length} 
-                          style={{ width: '7.37%', minWidth: '7.37%', maxWidth: '7.37%' }}
                         >
                           <div>{record.spec_vi}</div>
                         </td>
@@ -501,9 +456,8 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Hold Time - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1"
+                        
                         rowSpan={record.products.length} 
-                        style={{ width: '3.02%', minWidth: '3.02%', maxWidth: '3.02%' }}
                       >
                         {record.hold_time}
                       </td>
@@ -512,9 +466,8 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Chemical Mixing Code Dropdown - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1"
+                        
                         rowSpan={record.products.length} 
-                        style={{ width: '5.61%', minWidth: '5.61%', maxWidth: '5.61%' }}
                       >
                         <Combobox
                           options={formularOptions}
@@ -531,128 +484,73 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Consumption - only show on first product row */}
                     {productIndex === 0 && (
                       <td 
-                        className="border border-gray-300 p-1"
+                        
                         rowSpan={record.products.length} 
-                        style={{ width: '5.61%', minWidth: '5.61%', maxWidth: '5.61%' }}
                       >
                         {record.consumption}
                       </td>
                     )}
 
-                    {/* Product Data - show for each product, now editable */}
-                    <td className="border border-gray-300 p-1" style={{ width: '6.74%', minWidth: '6.74%', maxWidth: '6.74%' }}>
-                      <input
-                        type="text"
-                        value={product.product_code}
-                        onChange={(e) => updateProduct(record.id, product.id, { product_code: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
-                        placeholder="Product Code"
-                      />
+                    {/* Product Data - show for each product*/}
+                    <td >
+                      {product.product_code}
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '7.51%', minWidth: '7.51%', maxWidth: '7.51%' }}>
-                      <input
-                        type="text"
-                        value={product.product_name}
-                        onChange={(e) => updateProduct(record.id, product.id, { product_name: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
-                        placeholder="Product Name"
-                      />
+                    <td >
+                      {product.product_name}
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
-                      <input
-                        type="text"
-                        value={product.ratio}
-                        onChange={(e) => updateProduct(record.id, product.id, { ratio: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
-                        placeholder="Ratio"
-                      />
+                    <td >
+                      {product.ratio}
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
-                      <input
-                        type="text"
-                        value={product.qty}
-                        onChange={(e) => updateProduct(record.id, product.id, { qty: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
-                        placeholder="Qty"
-                      />
+                    <td >
+                      {product.qty}
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '3.51%', minWidth: '3.51%', maxWidth: '3.51%' }}>
-                      <input
-                        type="text"
-                        value={product.unit}
-                        onChange={(e) => updateProduct(record.id, product.id, { unit: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
-                        placeholder="Unit"
-                      />
+                    <td >
+                      {product.unit}
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '8%', minWidth: '8%', maxWidth: '8%' }}>
+                    <td >
                       <input
                         type="text"
                         value={product.check_result}
                         onChange={(e) => updateProduct(record.id, product.id, { check_result: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        className="w-full"
                         placeholder="Check Result"
                       />
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '8%', minWidth: '8%', maxWidth: '8%' }}>
+                    <td >
                       <input
                         type="text"
                         value={product.correct_action}
                         onChange={(e) => updateProduct(record.id, product.id, { correct_action: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        className="w-full"
                         placeholder="Correct Action"
                       />
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '4.49%', minWidth: '4.49%', maxWidth: '4.49%' }}>
+                    <td >
                       <input
                         type="text"
                         value={product.te1_signature}
                         onChange={(e) => updateProduct(record.id, product.id, { te1_signature: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        className="w-full"
                         placeholder="TE-1 Signature"
                       />
                     </td>
-                    <td className="border border-gray-300 p-1" style={{ width: '4.49%', minWidth: '4.49%', maxWidth: '4.49%' }}>
+                    <td >
                       <input
                         type="text"
                         value={product.customer_signature}
                         onChange={(e) => updateProduct(record.id, product.id, { customer_signature: e.target.value })}
-                        className="w-full p-1 border border-gray-300 rounded text-xs"
+                        className="w-full"
                         placeholder="Customer Signature"
                       />
                     </td>
 
                     {/* Actions Column */}
-                    <td className="border border-gray-300 p-1" style={{ width: '3%', minWidth: '3%', maxWidth: '3%' }}>
+                    <td >
                       <div className="flex flex-col gap-1">
                         {/* Row actions - only show on first product */}
                         {productIndex === 0 && (
                           <>
-                            <button
-                              onClick={() => addProduct(record.id)}
-                              className="text-xs bg-blue-500 text-white px-1 py-0.5 rounded"
-                              title="Add Product"
-                            >
-                              +P
-                            </button>
-                            <button
-                              onClick={() => removeRow(record.id)}
-                              className="text-xs bg-red-500 text-white px-1 py-0.5 rounded"
-                              title="Remove Row"
-                            >
-                              -R
-                            </button>
                           </>
-                        )}
-                        {/* Product actions - show for each product if more than 1 */}
-                        {record.products.length > 1 && (
-                          <button
-                            onClick={() => removeProduct(record.id, product.id)}
-                            className="text-xs bg-red-400 text-white px-1 py-0.5 rounded"
-                            title="Remove Product"
-                          >
-                            -P
-                          </button>
                         )}
                       </div>
                     </td>
