@@ -57,6 +57,17 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     }));
   };
 
+  const calculateProductQuantities = (consumption: string, products: RowProduct[]): RowProduct[] => {
+    const consumptionValue = parseFloat(consumption) || 0;
+    const totalRatio = products.reduce((sum, product) => sum + (parseFloat(product.ratio) || 0), 0);
+    
+    return products.map(product => {
+      const ratio = parseFloat(product.ratio) || 0;
+      const qty = totalRatio > 0 ? ((consumptionValue * ratio) / totalRatio).toFixed(3) : '0';
+      return { ...product, qty };
+    });
+  };
+
   // Add new row
   const addRow = () => {
     const newRow: SheetRow = {
@@ -122,17 +133,27 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     const step = stepTemplates.find(s => s.id === stepTemplateId);
     if (!step) return;
 
-    updateRecord(recordId, {
-      step_template: step.id,
-      stepname_en: step.name_en,
-      stepname_vi: step.name_vi,
-      stepname_zh_hant: step.name_zh_hant,
-      spec_en: step.spec_en || '',
-      spec_vi: step.spec_vi || '',
-      spec_zh_hant: step.spec_zh_hant || '',
-      hold_time: step.hold_time?.toString() || '',
-      consumption: step.consumption,
-    });
+    setFinishingSheet(prev => ({
+      ...prev,
+      rows: prev.rows.map(record => 
+        record.id === recordId 
+          ? {
+              ...record,
+              step_template: step.id,
+              stepname_en: step.name_en,
+              stepname_vi: step.name_vi,
+              stepname_zh_hant: step.name_zh_hant,
+              spec_en: step.spec_en || '',
+              spec_vi: step.spec_vi || '',
+              spec_zh_hant: step.spec_zh_hant || '',
+              hold_time: step.hold_time?.toString() || '',
+              consumption: step.consumption,
+              // Recalculate quantities with new consumption
+              products: calculateProductQuantities(step.consumption, record.products)
+            }
+          : record
+      )
+    }));
   };
 
   // Handle formular template dropdown change
@@ -140,13 +161,17 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     const formular = formularTemplates.find(f => f.id === formularTemplateId);
     if (!formular) return;
 
+    // Get current row to access its consumption value
+    const currentRow = finishingSheet.rows.find(row => row.id === recordId);
+    const currentConsumption = currentRow?.consumption || '0';
+
     const products: RowProduct[] = formular.products.map((product, idx) => ({
       id: generateId(),
       order: idx + 1,
       product_code: product.code,
       product_name: product.name,
-      ratio: product.ratio?.toString() || '',
-      qty: '', // This might need to be calculated based on consumption
+      ratio: product.ratio?.toString() || '0',
+      qty: '0', // Will be calculated below
       unit: product.unit || '',
       check_result: '',
       correct_action: '',
@@ -158,13 +183,16 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
       updated_at: new Date().toISOString(),
     }));
 
+    // Calculate quantities for the new products
+    const productsWithQty = calculateProductQuantities(currentConsumption, products);
+
     updateRecord(recordId, {
       formular_template: formular.id,
       chemical_code: formular.code,
       viscosity_en: formular.viscosity?.toString() || '',
       viscosity_vi: formular.viscosity?.toString() || '',
       viscosity_zh_hant: formular.viscosity?.toString() || '',
-      products: products.length > 0 ? products : [makeEmptyProduct()],
+      products: productsWithQty.length > 0 ? productsWithQty : [makeEmptyProduct()],
     });
   };
 
