@@ -1,9 +1,13 @@
-// lib/api-client.ts
 import type { 
   LoginRequest, 
   ApiSuccessResponse,
   TaskAction,
-  SetPasswordRetype
+  SetPasswordRetype,
+  FactoryUpdate,
+  BlueprintCreate,
+  BlueprintUpdate,
+  FinishingSheetWrite,
+  FinishingSheet
 } from '@/types/'
 
 type ApiResponse<T> = {
@@ -166,4 +170,117 @@ export const updateTaskData = async (
   }
 
   return response.data
+}
+
+// Factory
+export const updateFactory = async (
+  id: string, 
+  data: FactoryUpdate
+) => {
+  const response = await apiClient(`/crm/factories/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  })
+  if (!response.ok) {
+    throw new Error(`Failed to update factory data: ${response.status}`)
+  }
+
+  return response.data
+}
+
+
+export async function createBlueprint(id: string, blueprintData: BlueprintCreate) {
+    const formData = new FormData()
+    formData.append('factory', blueprintData.factory)
+    formData.append('name', blueprintData.name)
+    formData.append('type', blueprintData.type)
+    if (blueprintData.description) {
+      formData.append('description', blueprintData.description)
+    }
+    formData.append('file', blueprintData.file)
+
+    const response = await apiClient(`/crm/factories/${id}/blueprints`, {
+      method: 'POST',
+      body: formData,
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to update factory data: ${response.status}`)
+    }
+
+    return response.data
+}
+
+export async function updateBlueprint(id: string, blueprint_id: string, blueprintData: BlueprintUpdate) {
+    const response = await apiClient(`/crm/factories/${id}/blueprints/${blueprint_id}`, {
+      method: 'PUT',
+      body: JSON.stringify(blueprintData),
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to update factory data: ${response.status}`)
+    }
+
+    return response.data
+}
+
+export async function deleteBlueprint(id: string, blueprint_id: string) {
+    const response = await apiClient(`/crm/factories/${id}/blueprints/${blueprint_id}`, {
+      method: 'DELETE',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to update factory data: ${response.status}`)
+    }
+
+    return response.data
+}
+
+
+export const createFinishingSheet = async (
+  taskId: string, 
+  data: FinishingSheetWrite
+) => {
+  const response = await apiClient(`/tasks/${taskId}/sheets`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+      throw new Error(`Failed to update factory data: ${response.status}`)
+    }
+
+    return response.data
+}
+
+// Update a finishing sheet
+export const updateFinishingSheet1 = async (
+  taskId: string, 
+  sheetId: string, 
+  data: FinishingSheet
+) => {
+  console.log(data)
+  const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+      throw new Error(`Failed to update factory data: ${response.status}`)
+    }
+
+    return response.data
+}
+
+// Delete a finishing sheet
+export const deleteFinishingSheet = async (taskId: string, sheetId: string) => {
+const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
+      method: 'DELETE',
+    })
+    
+    if (!response.ok) {
+      throw new Error(`Failed to delete Finishing sheet: ${response.status}`)
+    }
+
+    return response.data
 }

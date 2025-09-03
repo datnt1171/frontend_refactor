@@ -36,6 +36,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sheets/finishing-sheets/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_finishing_sheets_list"];
+        put?: never;
+        post: operations["api_sheets_finishing_sheets_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sheets/finishing-sheets/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_finishing_sheets_retrieve"];
+        put: operations["api_sheets_finishing_sheets_update"];
+        post?: never;
+        delete: operations["api_sheets_finishing_sheets_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_sheets_finishing_sheets_partial_update"];
+        trace?: never;
+    };
+    "/api/sheets/formular-templates/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_formular_templates_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sheets/step-templates/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_step_templates_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/": {
         parameters: {
             query?: never;
@@ -298,6 +362,57 @@ export interface components {
          * @enum {string}
          */
         FieldTypeEnum: "text" | "number" | "date" | "select" | "file" | "json" | "assignee" | "factory" | "retailer";
+        FinishingSheet: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            task: string;
+            finishing_code: string;
+            name: string;
+            sheen: string;
+            dft: string;
+            type_of_paint: string;
+            type_of_substrate: string;
+            finishing_surface_grain: string;
+            sampler: string;
+            chemical_waste: string;
+            conveyor_speed: string;
+            with_panel_test: boolean;
+            testing: boolean;
+            chemical_yellowing: boolean;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+            /** Format: uuid */
+            readonly updated_by: string;
+            rows: components["schemas"]["SheetRow"][];
+        };
+        FormularTemplate: {
+            /** Format: uuid */
+            readonly id: string;
+            code: string;
+            viscosity: number;
+            wft?: number | null;
+            products: components["schemas"]["ProductTemplate"][];
+        };
+        PaginatedFinishingSheetList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?offset=400&limit=100
+             */
+            next?: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?offset=200&limit=100
+             */
+            previous?: string | null;
+            results: components["schemas"]["FinishingSheet"][];
+        };
         PaginatedProcessListList: {
             /** @example 123 */
             count: number;
@@ -363,6 +478,34 @@ export interface components {
             new_password?: string;
             re_new_password?: string;
         };
+        PatchedFinishingSheet: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            task?: string;
+            finishing_code?: string;
+            name?: string;
+            sheen?: string;
+            dft?: string;
+            type_of_paint?: string;
+            type_of_substrate?: string;
+            finishing_surface_grain?: string;
+            sampler?: string;
+            chemical_waste?: string;
+            conveyor_speed?: string;
+            with_panel_test?: boolean;
+            testing?: boolean;
+            chemical_yellowing?: boolean;
+            /** Format: date-time */
+            readonly created_at?: string;
+            /** Format: uuid */
+            readonly created_by?: string;
+            /** Format: date-time */
+            readonly updated_at?: string;
+            /** Format: uuid */
+            readonly updated_by?: string;
+            rows?: components["schemas"]["SheetRow"][];
+        };
         PatchedTaskData: {
             readonly field?: components["schemas"]["ProcessField"];
             value?: string | null;
@@ -396,6 +539,15 @@ export interface components {
             description?: string | null;
             version: string;
         };
+        ProductTemplate: {
+            /** Format: uuid */
+            readonly id: string;
+            code: string;
+            name: string;
+            /** Format: decimal */
+            ratio: string;
+            unit?: string;
+        };
         ReceivedTask: {
             /** Format: uuid */
             readonly id: string;
@@ -413,6 +565,28 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             name: string;
+        };
+        RowProduct: {
+            /** Format: uuid */
+            readonly id: string;
+            order?: number;
+            product_code: string;
+            product_name: string;
+            ratio: string;
+            qty: string;
+            unit: string;
+            check_result: string;
+            correct_action: string;
+            te1_signature: string;
+            customer_signature: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly updated_by: string;
+            /** Format: date-time */
+            readonly updated_at: string;
         };
         SPRReportRow: {
             /** Format: uuid */
@@ -444,6 +618,37 @@ export interface components {
             /** @description Single query optimization - get all permissions for this task at once. */
             readonly recipient: string | null;
         };
+        SheetRow: {
+            /** Format: uuid */
+            readonly id: string;
+            step_template?: string | null;
+            /** Format: uuid */
+            formular_template?: string | null;
+            step_num: number;
+            /** Format: decimal */
+            spot?: string | null;
+            stepname_en: string;
+            stepname_vi: string;
+            stepname_zh_hant: string;
+            viscosity_en: string;
+            viscosity_vi: string;
+            viscosity_zh_hant: string;
+            spec_en: string;
+            spec_vi: string;
+            spec_zh_hant: string;
+            hold_time: string;
+            chemical_code: string;
+            consumption: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+            /** Format: uuid */
+            readonly updated_by: string;
+            products: components["schemas"]["RowProduct"][];
+        };
         State: {
             /** Format: uuid */
             readonly id: string;
@@ -462,6 +667,27 @@ export interface components {
          * @enum {string}
          */
         StateTypeEnum: "pending_approve" | "analyze" | "working" | "pending_review" | "start" | "denied" | "canceled" | "closed";
+        /** @description Always return all the translation regardless Accept-Language
+         *     because finising sheet is a snapshot so it wont benefit from FK */
+        StepTemplate: {
+            /** Format: uuid */
+            readonly id: string;
+            name: string;
+            short_name: string;
+            spec?: string;
+            hold_time: number;
+            /** Format: decimal */
+            consumption: string;
+            readonly name_en: string;
+            readonly name_vi: string;
+            readonly name_zh_hant: string;
+            readonly short_name_en: string;
+            readonly short_name_vi: string;
+            readonly short_name_zh_hant: string;
+            readonly spec_en: string;
+            readonly spec_vi: string;
+            readonly spec_zh_hant: string;
+        };
         TaskAction: {
             /** Format: uuid */
             action_id: string;
@@ -603,6 +829,198 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProcessDetail"];
+                };
+            };
+        };
+    };
+    api_sheets_finishing_sheets_list: {
+        parameters: {
+            query?: {
+                created_by?: string;
+                /** @description Number of results to return per page. */
+                limit?: number;
+                /** @description The initial index from which to return the results. */
+                offset?: number;
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A search term. */
+                search?: string;
+                task?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedFinishingSheetList"];
+                };
+            };
+        };
+    };
+    api_sheets_finishing_sheets_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishingSheet"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinishingSheet"];
+                "multipart/form-data": components["schemas"]["FinishingSheet"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_finishing_sheets_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_finishing_sheets_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FinishingSheet"];
+                "application/x-www-form-urlencoded": components["schemas"]["FinishingSheet"];
+                "multipart/form-data": components["schemas"]["FinishingSheet"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_finishing_sheets_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_sheets_finishing_sheets_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this finishing sheet. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedFinishingSheet"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedFinishingSheet"];
+                "multipart/form-data": components["schemas"]["PatchedFinishingSheet"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinishingSheet"];
+                };
+            };
+        };
+    };
+    api_sheets_formular_templates_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormularTemplate"][];
+                };
+            };
+        };
+    };
+    api_sheets_step_templates_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StepTemplate"][];
                 };
             };
         };

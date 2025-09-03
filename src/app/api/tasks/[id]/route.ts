@@ -4,9 +4,9 @@ import { NextResponse } from "next/server"
 
 export async function GET(
   _request: Request,
-  context: { params: Promise<{ id: string }> }  
+  { params }: { params: Promise<{ id: string }> }  
 ) {
-  const { id } = await context.params
+  const { id } = await params
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()

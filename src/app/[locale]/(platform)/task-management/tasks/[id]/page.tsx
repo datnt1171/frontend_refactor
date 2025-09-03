@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, User, Clock, Edit } from "lucide-react"
+import { Calendar, User, Clock, Edit, FileSpreadsheet } from "lucide-react"
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import TaskActions from "./TaskAction"
@@ -168,6 +168,12 @@ export default async function TaskDetailPage({
                   <p className="text-sm text-muted-foreground">{task.created_by.username}</p>
                 </div>
               </div>
+              <Button asChild>
+                <Link href={`/task-management/tasks/${id}/sheets`}>
+                  <FileSpreadsheet className="h-4 w-4 mr-2" />
+                  View Sheets
+                </Link>
+              </Button>
             </CardContent>
           </Card>
 
