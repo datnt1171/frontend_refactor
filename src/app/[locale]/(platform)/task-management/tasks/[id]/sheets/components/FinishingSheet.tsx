@@ -4,6 +4,14 @@ import { Combobox } from "@/components/ui/combobox"
 import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet } from '@/types';
 import { updateFinishingSheet1 } from '@/lib/api/client/api';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
+import { MoreVertical, Plus, Trash2 } from "lucide-react";
 
 interface CombinedSheetTableProps {
   data: FinishingSheet;
@@ -68,6 +76,14 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     });
   };
 
+  // Helper function to recalculate step numbers after row operations
+  const recalculateStepNumbers = (rows: SheetRow[]): SheetRow[] => {
+    return rows.map((row, index) => ({
+      ...row,
+      step_num: index + 1
+    }));
+  };
+
   // Add new row
   const addRow = () => {
     const newRow: SheetRow = {
@@ -103,11 +119,110 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
 
   // Remove row
   const removeRow = (rowId: string) => {
-    setFinishingSheet(prev => ({
-      ...prev,
-      rows: prev.rows.filter(row => row.id !== rowId)
-    }));
+    setFinishingSheet(prev => {
+      const filteredRows = prev.rows.filter(row => row.id !== rowId);
+      // Recalculate step numbers after removal
+      const updatedRows = recalculateStepNumbers(filteredRows);
+      
+      return {
+        ...prev,
+        rows: updatedRows
+      };
+    });
   };
+
+  const addRowBefore = (targetRowId: string) => {
+  const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
+  if (targetIndex === -1) return;
+
+  const newRow: SheetRow = {
+    id: generateId(),
+    step_template: null,
+    formular_template: null,
+    step_num: targetIndex + 1, // Will be recalculated
+    spot: null,
+    stepname_en: '',
+    stepname_vi: '',
+    stepname_zh_hant: '',
+    viscosity_en: '',
+    viscosity_vi: '',
+    viscosity_zh_hant: '',
+    spec_en: '',
+    spec_vi: '',
+    spec_zh_hant: '',
+    hold_time: '',
+    chemical_code: '',
+    consumption: '',
+    created_at: new Date().toISOString(),
+    created_by: '',
+    updated_at: new Date().toISOString(),
+    updated_by: '',
+    products: [makeEmptyProduct()],
+  };
+
+  setFinishingSheet(prev => {
+    const newRows = [
+      ...prev.rows.slice(0, targetIndex),
+      newRow,
+      ...prev.rows.slice(targetIndex)
+    ];
+    
+    // Recalculate step numbers after insertion
+    const updatedRows = recalculateStepNumbers(newRows);
+    
+    return {
+      ...prev,
+      rows: updatedRows
+    };
+  });
+};
+
+// Add row after specified row
+const addRowAfter = (targetRowId: string) => {
+  const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
+  if (targetIndex === -1) return;
+
+  const newRow: SheetRow = {
+    id: generateId(),
+    step_template: null,
+    formular_template: null,
+    step_num: targetIndex + 2, // Will be recalculated
+    spot: null,
+    stepname_en: '',
+    stepname_vi: '',
+    stepname_zh_hant: '',
+    viscosity_en: '',
+    viscosity_vi: '',
+    viscosity_zh_hant: '',
+    spec_en: '',
+    spec_vi: '',
+    spec_zh_hant: '',
+    hold_time: '',
+    chemical_code: '',
+    consumption: '',
+    created_at: new Date().toISOString(),
+    created_by: '',
+    updated_at: new Date().toISOString(),
+    updated_by: '',
+    products: [makeEmptyProduct()],
+  };
+
+  setFinishingSheet(prev => {
+    const newRows = [
+      ...prev.rows.slice(0, targetIndex + 1),
+      newRow,
+      ...prev.rows.slice(targetIndex + 1)
+    ];
+    
+    // Recalculate step numbers after insertion
+    const updatedRows = recalculateStepNumbers(newRows);
+    
+    return {
+      ...prev,
+      rows: updatedRows
+    };
+  });
+};
 
   // Create empty product
   const makeEmptyProduct = (): RowProduct => ({
@@ -573,15 +688,41 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     </td>
 
                     {/* Actions Column */}
-                    <td >
+                    {productIndex === 0 && (
+                    <td rowSpan={record.products.length} >
                       <div className="flex flex-col gap-1">
                         {/* Row actions - only show on first product */}
                         {productIndex === 0 && (
-                          <>
-                          </>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">Open menu</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => addRowBefore(record.id)}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Row Before
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => addRowAfter(record.id)}>
+                                <Plus className="mr-2 h-4 w-4" />
+                                Add Row After
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                onClick={() => removeRow(record.id)}
+                                disabled={finishingSheet.rows.length <= 1}
+                                className="text-red-600 focus:text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Remove Row
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         )}
                       </div>
                     </td>
+                    )}
                   </tr>
                 ))}
               </React.Fragment>
