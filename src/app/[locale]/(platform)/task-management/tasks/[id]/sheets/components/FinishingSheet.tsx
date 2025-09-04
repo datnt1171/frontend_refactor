@@ -10,8 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-import { MoreVertical, Plus, Trash2 } from "lucide-react";
+import { generatePDF } from '@/lib/pdf-generator';
+import { MoreVertical, Plus, Trash2, FileText } from "lucide-react";
 
 interface CombinedSheetTableProps {
   data: FinishingSheet;
@@ -342,9 +342,19 @@ const addRowAfter = (targetRowId: string) => {
             Add Row
           </Button>
         </div>
-        <Button onClick={handleSave}>
+        <div className="flex gap-2">
+          <Button onClick={handleSave}>
             Save
-        </Button>
+          </Button>
+          <Button
+            onClick={() => generatePDF(finishingSheet)}
+            variant="outline"
+            disabled={data.rows.length === 0}
+          >
+            <FileText size={16} />
+            Generate PDF
+          </Button>
+        </div>
       </div>
 
       <div className="overflow-x-auto">

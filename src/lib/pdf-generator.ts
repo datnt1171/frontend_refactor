@@ -1,6 +1,6 @@
-import { SheetRow } from '@/types';
+import { FinishingSheet } from '@/types';
 
-export const generatePDF = (tableData: SheetRow[]) => {
+export const generatePDF = (finishingSheet: FinishingSheet) => {
   let htmlContent = `
     <!DOCTYPE html>
     <html>
@@ -79,25 +79,25 @@ export const generatePDF = (tableData: SheetRow[]) => {
         <!-- Header Row 1: Product Title -->
           <tr>
               <th colspan="18">
-                  RH-OAK-51-1 ( BARON )
+                  ${finishingSheet.finishing_code}
               <th/>
           </tr>
           
           <!-- Header Row 3: Content -->
           <tr>
               <td colspan="3">
-                  <strong>Name:</strong> RH-BARON BROWN FINISHED ON EU OAK 0.6mm<br>
-                  <strong>Sheen:</strong> 0+5-0<br>
-                  <strong>DFT:</strong><br>
-                  <strong>Chemical:</strong> PU/NC<br>
-                  <strong>Substrate:</strong> OAK VENEER , OAK WOOD<br>
-                  <strong>Grain Filling:</strong> OPEN GRAIN<br>
-                  <strong>Developed/Duplicated by:</strong> MR LƯU
+                  <strong>Name:</strong> ${finishingSheet.name}<br>
+                  <strong>Sheen:</strong> ${finishingSheet.sheen}<br>
+                  <strong>DFT:</strong> ${finishingSheet.dft}<br>
+                  <strong>Chemical:</strong> ${finishingSheet.type_of_paint}<br>
+                  <strong>Substrate:</strong> ${finishingSheet.type_of_substrate}<br>
+                  <strong>Grain Filling:</strong> ${finishingSheet.finishing_surface_grain}<br>
+                  <strong>Developed/Duplicated by:</strong> ${finishingSheet.sampler}
               </td>
               <td colspan="1">
-                  <strong>Chemical waste:</strong> 0%<br>
+                  <strong>Chemical waste:</strong> ${finishingSheet.chemical_waste}<br>
                   <br>
-                  <strong>Conveyor speed:</strong> 1.5 METER PER 1 MINUTE
+                  <strong>Conveyor speed:</strong> ${finishingSheet.conveyor_speed}
               </td>
               <td colspan="3">
                   1. Wood substrate before finishing process should be below 10% MC<br>
@@ -105,12 +105,19 @@ export const generatePDF = (tableData: SheetRow[]) => {
                   3. White wood surface must be free from grease, oil or other contamination. Please reject white wood with any defects.
               </td>
               <td colspan="2">
-                  <strong>With panel test:</strong> <span class="checkbox"></span><br>
-                  (Có mẫu test chuyền)<br>
-                  <strong>No panel test:</strong> <span class="checkbox"></span><br>
-                  (Không có mẫu test chuyền)<br>
-                  <strong>Testing:</strong> <span class="checkbox"></span><br>
-                  <strong>Chemical Yellowing:</strong> <span class="checkbox"></span>
+                <strong>With panel test:</strong>
+                <span class="checkbox">${finishingSheet.with_panel_test ? "✔" : ""}</span><br />
+                (Có mẫu test chuyền)<br />
+
+                <strong>No panel test:</strong>
+                <span class="checkbox">${!finishingSheet.with_panel_test ? "✔" : ""}</span><br />
+                (Không có mẫu test chuyền)<br />
+
+                <strong>Testing:</strong>
+                <span class="checkbox">${finishingSheet.testing ? "✔" : ""}</span><br />
+
+                <strong>Chemical Yellowing:</strong>
+                <span class="checkbox">${finishingSheet.chemical_yellowing ? "✔" : ""}</span>
               </td>
               <td colspan="5">
                   4. Always ask TE-1 for advice in case of changing process mixing ratio, application amount, drying time, application method, must get approval form... If there is any changing.<br>
@@ -147,7 +154,7 @@ export const generatePDF = (tableData: SheetRow[]) => {
         <tbody>
   `;
 
-  tableData.forEach((stepData, stepIndex) => {
+  finishingSheet.rows.forEach((stepData, stepIndex) => {
     const materials = stepData.products;
     const materialCount = materials.length;
     
