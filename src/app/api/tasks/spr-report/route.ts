@@ -17,7 +17,7 @@ export async function GET() {
 
     const SPReport: SPRReportRow[] = await response.json()
 
-    const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories`, {
+    const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories?limit=999999`, {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
