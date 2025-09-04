@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Plus, Upload, X, FileText, Loader2 } from 'lucide-react'
 import { createBlueprint } from '@/lib/api/client/api'
+import type { ProductionLineType } from '@/types'
+import { useTranslations } from 'next-intl'
 
 interface BlueprintCreateButtonProps {
   factoryId: string
@@ -19,7 +21,8 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  
+  const t = useTranslations()
+
   const router = useRouter()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,13 +30,13 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
     if (file) {
       // Validate file type
       if (file.type !== 'image/svg+xml') {
-        
+        alert(t('common.invalidFile'))
         return
       }
       
-      // Validate file size (10MB limit)
+      // Validate file size (100MB limit)
       if (file.size > 100 * 1024 * 1024) {
-        
+        alert(t('common.invalidFile'))
         return
       }
       
@@ -68,24 +71,19 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
     const blueprintData = {
       factory: factoryId,
       name: formData.get('name') as string,
-      type: formData.get('type') as "PALLET" | "HANGING" | "ROLLER",
+      type: formData.get('type') as ProductionLineType,
       description: formData.get('description') as string || null,
       file: selectedFile
     }
 
     try {
-      const result = await createBlueprint(factoryId, blueprintData)
-      console.log(result)
-      if (result) {
-        
-        setOpen(false)
-        resetForm()
-        router.push(`/crm/factories/${factoryId}/blueprints/`)
-      } else {
-        
-      }
+      await createBlueprint(factoryId, blueprintData)
+      setOpen(false)
+      resetForm()
+      router.push(`/crm/factories/${factoryId}/blueprints/`)
+      alert(t('common.actionPerformedSuccessfully'))
     } catch (error) {
-      
+      alert(t('common.failedToPerformAction'))
     } finally {
       setIsLoading(false)
     }
@@ -96,18 +94,18 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
-          New Blueprint
+          {t('blueprint.add')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Create New Blueprint</DialogTitle>
+          <DialogTitle>{t('blueprint.add')}</DialogTitle>
         </DialogHeader>
         
         <form id="blueprint-form" onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Factory (Read-only) */}
           <div className="space-y-2">
-            <Label htmlFor="factory">Factory</Label>
+            <Label htmlFor="factory">{t('crm.factories.factoryId')}</Label>
             <Input 
               id="factory" 
               value={factoryId} 
@@ -118,11 +116,10 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
 
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="name">Name <span className="text-red-500">*</span></Label>
+            <Label htmlFor="name">{t('blueprint.name')} <span className="text-red-500">*</span></Label>
             <Input 
               id="name" 
               name="name"
-              placeholder="Enter blueprint name"
               required
               disabled={isLoading}
             />
@@ -136,20 +133,19 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
                 <SelectValue placeholder="Select blueprint type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PALLET">Pallet</SelectItem>
-                <SelectItem value="HANGING">Hanging</SelectItem>
-                <SelectItem value="ROLLER">Roller</SelectItem>
+                <SelectItem value="PALLET">{t('blueprint.pallet')}</SelectItem>
+                <SelectItem value="HANGING">{t('blueprint.hanging')}</SelectItem>
+                <SelectItem value="ROLLER">{t('blueprint.roller')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t('common.description')}</Label>
             <Textarea 
               id="description"
               name="description"
-              placeholder="Optional description"
               rows={3}
               disabled={isLoading}
             />
@@ -213,16 +209,16 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Creating...
+                  {t('common.processing')}
                 </>
               ) : (
-                'Create Blueprint'
+                t('common.save')
               )}
             </Button>
           </div>

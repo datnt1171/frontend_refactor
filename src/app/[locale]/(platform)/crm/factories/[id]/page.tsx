@@ -54,11 +54,11 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Action</CardTitle>
+            <CardTitle>{t('viewDetails')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button variant="outline" className="w-full justify-start" asChild>
-              <Link href={`/crm/factories/${id}/blueprints`}>Blueprint</Link>
+              <Link href={`/crm/factories/${id}/blueprints`}>{t('blueprint.blueprint')}</Link>
             </Button>
             <Button variant="outline" className="w-full justify-start" asChild>
               {/* <Link href="/view-b">View B</Link> */}

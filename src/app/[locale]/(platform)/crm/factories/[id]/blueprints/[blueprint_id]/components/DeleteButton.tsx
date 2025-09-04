@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Trash2, Loader2 } from 'lucide-react'
 import { deleteBlueprint } from '@/lib/api/client/api'
-// import { useToast } from '@/hooks/use-toast'
+import { useTranslations } from 'next-intl'
 
 interface BlueprintDeleteButtonProps {
   factoryId: string
@@ -21,35 +21,18 @@ export default function BlueprintDeleteButton({
 }: BlueprintDeleteButtonProps) {
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-//   const { toast } = useToast()
   const router = useRouter()
+  const commonT = useTranslations('common')
 
   const handleDelete = async () => {
     setIsLoading(true)
 
     try {
-      const result = await deleteBlueprint(factoryId, blueprintId)
-      
-      if (result.success) {
-        // toast({
-        //   title: "Success",
-        //   description: "Blueprint deleted successfully!",
-        // })
-        setOpen(false)
-        // Navigate back to blueprints list after successful deletion
-      } else {
-        // toast({
-        //   title: "Error",
-        //   description: result.error || "Failed to delete blueprint",
-        //   variant: "destructive"
-        // })
-      }
+      await deleteBlueprint(factoryId, blueprintId)
+      alert(commonT('actionPerformedSuccessfully'))
+      setOpen(false)
     } catch (error) {
-    //   toast({
-    //     title: "Error",
-    //     description: "An unexpected error occurred",
-    //     variant: "destructive"
-    //   })
+      alert(commonT('failedToPerformAction'))
     } finally {
       setIsLoading(false)
       router.push(`/crm/factories/${factoryId}/blueprints/`)
@@ -66,14 +49,14 @@ export default function BlueprintDeleteButton({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>{commonT('deleteAlertTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the blueprint{' '}
-            <span className="font-semibold">"{blueprintName}"</span> and remove all associated data.
+            {commonT('deleteAlertDescription', { name: '' })}
+            <span className="font-semibold">{blueprintName}</span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{commonT('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
@@ -82,10 +65,10 @@ export default function BlueprintDeleteButton({
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Deleting...
+                {commonT('processing')}
               </>
             ) : (
-              'Delete Blueprint'
+              commonT('delete')
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -15,3 +15,4 @@ export type PaginatedRetailerList = components['schemas']['PaginatedRetailerList
 export type Blueprint = components['schemas']['Blueprint']
 export type BlueprintCreate = components['schemas']['BlueprintCreate']
 export type BlueprintUpdate = components['schemas']['BlueprintUpdate']
+export type ProductionLineType = components['schemas']['ProductionLineType']

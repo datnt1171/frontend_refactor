@@ -39,3 +39,20 @@ export const getActionColor = (actionType: string) => {
       return "bg-gray-100 text-gray-800";
   }
 };
+
+export const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'PALLET': return 'bg-blue-100 text-blue-800'
+      case 'HANGING': return 'bg-green-100 text-green-800'
+      case 'ROLLER': return 'bg-purple-100 text-purple-800'
+      default: return 'bg-gray-100 text-gray-800'
+    }
+  }
+
+export const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes'
+    const k = 1024
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  }

@@ -5,6 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { FileText } from 'lucide-react'
 import BlueprintCreateButton from './components/AddBluePrintForm'
+import { getTypeColor, formatFileSize } from '@/lib/utils/format'
+import { getTranslations } from 'next-intl/server'
+import { formatDateToUTC7 } from '@/lib/utils/date'
 
 export default async function BlueprintsPage({ 
   params 
@@ -13,29 +16,13 @@ export default async function BlueprintsPage({
 }) {
   const { id } = await params
   const blueprints = await getBlueprints(id)
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'PALLET': return 'bg-blue-100 text-blue-800'
-      case 'HANGING': return 'bg-green-100 text-green-800'
-      case 'ROLLER': return 'bg-purple-100 text-purple-800'
-      default: return 'bg-gray-100 text-gray-800'
-    }
-  }
+  const t = await getTranslations()
 
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">{id}'s Blueprints</h1>
+          <h1 className="text-3xl font-bold">{id} {t('blueprint.blueprint')}</h1>
         </div>
         
         <BlueprintCreateButton factoryId={id} />
@@ -45,7 +32,7 @@ export default async function BlueprintsPage({
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No blueprints found</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('common.noDataFound')}</h3>
           </CardContent>
         </Card>
       ) : (
@@ -69,28 +56,28 @@ export default async function BlueprintsPage({
               <CardContent>
                 <div className="space-y-2 text-sm text-muted-foreground mb-4">
                   <div className="flex justify-between">
-                    <span>Factory:</span>
+                    <span>{t('crm.factories.factoryId')}:</span>
                     <span className="font-medium">{blueprint.factory}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>File:</span>
+                    <span>{t('common.file')}:</span>
                     <span className="font-medium">{blueprint.filename}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Size:</span>
+                    <span>{t('common.fileSize')}:</span>
                     <span className="font-medium">{formatFileSize(blueprint.file_size)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Created:</span>
+                    <span>{t('common.createdAt')}:</span>
                     <span className="font-medium">
-                      {new Date(blueprint.created_at).toLocaleDateString()}
+                      {formatDateToUTC7(blueprint.created_at)}
                     </span>
                   </div>
                 </div>
                 <div className="flex">
                   <Button asChild size="sm" className="flex-1">
                     <Link href={`/crm/factories/${id}/blueprints/${blueprint.id}`}>
-                      View
+                      {t('common.viewDetails')}
                     </Link>
                   </Button>
                 </div>

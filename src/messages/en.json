@@ -26,10 +26,19 @@
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
+    "description": "Description",
     "selectFactory": "Select factory",
     "searchFactory": "Search for factory",
     "selectRetailer": "Select Retailer",
-    "searchRetailer": "Search for retailer"
+    "searchRetailer": "Search for retailer",
+    "actionPerformedSuccessfully": "Action performed successfully!",
+    "failedToPerformAction": "Failed to perform action",
+    "deleteAlertTitle": "Are you absolutely sure?",
+    "deleteAlertDescription": "This action cannot be undone. This will permanently delete the file \"{name}\" and remove all associated data.",
+    "file": "File",
+    "fileSize": "File Size",
+    "preview": "Preview",
+    "download": "Download"
   },
   "home": {
     "title": "Home Page",
@@ -252,5 +261,15 @@
   "systemsheet": {
     "appTitle": "Systemsheet",
     "appDescription": "Systemsheet, Consumption and Blueprint"
+  },
+
+  "blueprint": {
+    "blueprint": "Blueprint",
+    "name": "Blueprint Name",
+    "type": "Blueprint Type",
+    "pallet": "Pallet",
+    "hanging": "Hanging",
+    "roller": "Roller",
+    "add": "Add Blueprint"
   }
 }
