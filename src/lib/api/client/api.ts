@@ -58,7 +58,15 @@ const apiClient = async <T = any>(
     }
   }
 
-  const data = await response.json()
+  let data = null
+  const contentType = response.headers.get('content-type')
+  
+  if (contentType && contentType.includes('application/json')) {
+    const text = await response.text()
+    if (text.trim()) {
+      data = JSON.parse(text)
+    }
+  }
   
   return {
     data,
