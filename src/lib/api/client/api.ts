@@ -253,7 +253,7 @@ export const createFinishingSheet = async (
 }
 
 // Update a finishing sheet
-export const updateFinishingSheet1 = async (
+export const putFinishingSheet = async (
   taskId: string, 
   sheetId: string, 
   data: FinishingSheet

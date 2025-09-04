@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Combobox } from "@/components/ui/combobox"
 import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet } from '@/types';
-import { updateFinishingSheet1 } from '@/lib/api/client/api';
+import { putFinishingSheet, createFinishingSheet } from '@/lib/api/client/api';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -12,27 +12,61 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { generatePDF } from '@/lib/pdf-generator';
 import { MoreVertical, Plus, Trash2, FileText } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 interface CombinedSheetTableProps {
-  data: FinishingSheet;
+  data?: FinishingSheet; // Optional for create mode
   stepTemplates: StepTemplate[];
   formularTemplates: FormularTemplate[];
   taskId: string;
+  mode?: 'create' | 'edit'; // New prop to determine mode
+  onSaveSuccess?: (sheet: FinishingSheet) => void; // Callback for successful save
 }
 
 // Generate unique ID for new records
 let idCounter = 0;
 const generateId = () => `temp-${(++idCounter).toString()}`;
 
+// Function to create empty finishing sheet
+const createEmptyFinishingSheet = (taskId: string): FinishingSheet => ({
+  id: generateId(),
+  task: taskId,
+  finishing_code: '',
+  name: '',
+  sheen: '',
+  dft: '',
+  type_of_paint: '',
+  type_of_substrate: '',
+  finishing_surface_grain: '',
+  sampler: '',
+  chemical_waste: '',
+  conveyor_speed: '',
+  with_panel_test: false,
+  testing: false,
+  chemical_yellowing: false,
+  created_at: new Date().toISOString(),
+  created_by: '',
+  updated_at: new Date().toISOString(),
+  updated_by: '',
+  rows: []
+});
+
 // Main Component
 const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({ 
   data,
   stepTemplates, 
   formularTemplates,
-  taskId
+  taskId,
+  mode = 'edit', // Default to edit mode for backward compatibility
+  onSaveSuccess
 }) => {
-  const [finishingSheet, setFinishingSheet] = useState<FinishingSheet>(data);
+  // Initialize with provided data or empty sheet for create mode
+  const [finishingSheet, setFinishingSheet] = useState<FinishingSheet>(
+    data || createEmptyFinishingSheet(taskId)
+  );
 
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
   // Generic update function for the entire finishing sheet
   const updateFinishingSheet = (updates: Partial<FinishingSheet>) => {
     setFinishingSheet(prev => ({ ...prev, ...updates }));
@@ -84,6 +118,25 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     }));
   };
 
+  // Create empty product
+  const makeEmptyProduct = (): RowProduct => ({
+    id: generateId(),
+    order: 1,
+    product_code: '',
+    product_name: '',
+    ratio: '',
+    qty: '',
+    unit: '',
+    check_result: '',
+    correct_action: '',
+    te1_signature: '',
+    customer_signature: '',
+    created_by: '',
+    created_at: new Date().toISOString(),
+    updated_by: '',
+    updated_at: new Date().toISOString(),
+  });
+
   // Add new row
   const addRow = () => {
     const newRow: SheetRow = {
@@ -132,116 +185,97 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   };
 
   const addRowBefore = (targetRowId: string) => {
-  const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
-  if (targetIndex === -1) return;
+    const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
+    if (targetIndex === -1) return;
 
-  const newRow: SheetRow = {
-    id: generateId(),
-    step_template: null,
-    formular_template: null,
-    step_num: targetIndex + 1, // Will be recalculated
-    spot: null,
-    stepname_en: '',
-    stepname_vi: '',
-    stepname_zh_hant: '',
-    viscosity_en: '',
-    viscosity_vi: '',
-    viscosity_zh_hant: '',
-    spec_en: '',
-    spec_vi: '',
-    spec_zh_hant: '',
-    hold_time: '',
-    chemical_code: '',
-    consumption: '',
-    created_at: new Date().toISOString(),
-    created_by: '',
-    updated_at: new Date().toISOString(),
-    updated_by: '',
-    products: [makeEmptyProduct()],
+    const newRow: SheetRow = {
+      id: generateId(),
+      step_template: null,
+      formular_template: null,
+      step_num: targetIndex + 1, // Will be recalculated
+      spot: null,
+      stepname_en: '',
+      stepname_vi: '',
+      stepname_zh_hant: '',
+      viscosity_en: '',
+      viscosity_vi: '',
+      viscosity_zh_hant: '',
+      spec_en: '',
+      spec_vi: '',
+      spec_zh_hant: '',
+      hold_time: '',
+      chemical_code: '',
+      consumption: '',
+      created_at: new Date().toISOString(),
+      created_by: '',
+      updated_at: new Date().toISOString(),
+      updated_by: '',
+      products: [makeEmptyProduct()],
+    };
+
+    setFinishingSheet(prev => {
+      const newRows = [
+        ...prev.rows.slice(0, targetIndex),
+        newRow,
+        ...prev.rows.slice(targetIndex)
+      ];
+      
+      // Recalculate step numbers after insertion
+      const updatedRows = recalculateStepNumbers(newRows);
+      
+      return {
+        ...prev,
+        rows: updatedRows
+      };
+    });
   };
 
-  setFinishingSheet(prev => {
-    const newRows = [
-      ...prev.rows.slice(0, targetIndex),
-      newRow,
-      ...prev.rows.slice(targetIndex)
-    ];
-    
-    // Recalculate step numbers after insertion
-    const updatedRows = recalculateStepNumbers(newRows);
-    
-    return {
-      ...prev,
-      rows: updatedRows
+  // Add row after specified row
+  const addRowAfter = (targetRowId: string) => {
+    const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
+    if (targetIndex === -1) return;
+
+    const newRow: SheetRow = {
+      id: generateId(),
+      step_template: null,
+      formular_template: null,
+      step_num: targetIndex + 2, // Will be recalculated
+      spot: null,
+      stepname_en: '',
+      stepname_vi: '',
+      stepname_zh_hant: '',
+      viscosity_en: '',
+      viscosity_vi: '',
+      viscosity_zh_hant: '',
+      spec_en: '',
+      spec_vi: '',
+      spec_zh_hant: '',
+      hold_time: '',
+      chemical_code: '',
+      consumption: '',
+      created_at: new Date().toISOString(),
+      created_by: '',
+      updated_at: new Date().toISOString(),
+      updated_by: '',
+      products: [makeEmptyProduct()],
     };
-  });
-};
 
-// Add row after specified row
-const addRowAfter = (targetRowId: string) => {
-  const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
-  if (targetIndex === -1) return;
-
-  const newRow: SheetRow = {
-    id: generateId(),
-    step_template: null,
-    formular_template: null,
-    step_num: targetIndex + 2, // Will be recalculated
-    spot: null,
-    stepname_en: '',
-    stepname_vi: '',
-    stepname_zh_hant: '',
-    viscosity_en: '',
-    viscosity_vi: '',
-    viscosity_zh_hant: '',
-    spec_en: '',
-    spec_vi: '',
-    spec_zh_hant: '',
-    hold_time: '',
-    chemical_code: '',
-    consumption: '',
-    created_at: new Date().toISOString(),
-    created_by: '',
-    updated_at: new Date().toISOString(),
-    updated_by: '',
-    products: [makeEmptyProduct()],
+    setFinishingSheet(prev => {
+      const newRows = [
+        ...prev.rows.slice(0, targetIndex + 1),
+        newRow,
+        ...prev.rows.slice(targetIndex + 1)
+      ];
+      
+      // Recalculate step numbers after insertion
+      const updatedRows = recalculateStepNumbers(newRows);
+      
+      return {
+        ...prev,
+        rows: updatedRows
+      };
+    });
   };
-
-  setFinishingSheet(prev => {
-    const newRows = [
-      ...prev.rows.slice(0, targetIndex + 1),
-      newRow,
-      ...prev.rows.slice(targetIndex + 1)
-    ];
-    
-    // Recalculate step numbers after insertion
-    const updatedRows = recalculateStepNumbers(newRows);
-    
-    return {
-      ...prev,
-      rows: updatedRows
-    };
-  });
-};
-
-  // Create empty product
-  const makeEmptyProduct = (): RowProduct => ({
-    id: generateId(),
-    order: 1,
-    product_code: '',
-    product_name: '',
-    ratio: '',
-    qty: '',
-    unit: '',
-    check_result: '',
-    correct_action: '',
-    te1_signature: '',
-    customer_signature: '',
-    created_by: '',
-    created_at: new Date().toISOString(),
-    updated_by: '',
-    updated_at: new Date().toISOString(),
-  });
 
   // Handle step template dropdown change
   const handleStepChange = (recordId: string, stepTemplateId: string) => {
@@ -322,15 +356,34 @@ const addRowAfter = (targetRowId: string) => {
     label: formular.code,
   }));
 
-  // Save function
+  // Save function - handles both create and update
   const handleSave = async () => {
-    console.log('finishingSheet:',finishingSheet)
+    setIsSaving(true);
+    
     try {
+      let savedSheet: FinishingSheet;
       
-      await updateFinishingSheet1(taskId, finishingSheet.id, finishingSheet);
-      alert('Finishing sheet saved successfully');
+      if (mode === 'create') {
+        // Create new finishing sheet
+        savedSheet = await createFinishingSheet(taskId, finishingSheet);
+        alert('Finishing sheet created successfully');
+      } else {
+        // Update existing finishing sheet
+        savedSheet = await putFinishingSheet(taskId, finishingSheet.id, finishingSheet);
+        alert('Finishing sheet saved successfully');
+      }
+      
+      // Call success callback if provided
+      onSaveSuccess?.(savedSheet);
+      
     } catch (error) {
-      alert("error");
+      alert(`Error ${mode === 'create' ? 'creating' : 'saving'} finishing sheet`);
+    } finally {
+      if (mode === 'create') {
+        router.back();
+      } else {
+        setIsSaving(false);
+      }
     }
   };
 
@@ -343,13 +396,16 @@ const addRowAfter = (targetRowId: string) => {
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleSave}>
-            Save
+          <Button 
+            onClick={handleSave}
+            disabled={isSaving}
+          >
+            {isSaving ? 'Saving...' : (mode === 'create' ? 'Create' : 'Save')}
           </Button>
           <Button
             onClick={() => generatePDF(finishingSheet)}
             variant="outline"
-            disabled={data.rows.length === 0}
+            disabled={finishingSheet.rows.length === 0}
           >
             <FileText size={16} />
             Generate PDF
@@ -524,7 +580,14 @@ const addRowAfter = (targetRowId: string) => {
 
           {/* Body Section */}
           <tbody>
-            {finishingSheet.rows.map((record, recordIndex) => (
+            {finishingSheet.rows.length === 0 ? (
+              <tr>
+                <td colSpan={19} className="text-center py-8 text-gray-500">
+                  No rows added yet. Click "Add Row" to get started.
+                </td>
+              </tr>
+            ) : (
+            finishingSheet.rows.map((record) => (
               <React.Fragment key={record.id}>
                 {record.products.map((product, productIndex) => (
                   <tr
@@ -533,10 +596,7 @@ const addRowAfter = (targetRowId: string) => {
                   >
                     {/* Step Number - only show on first product row */}
                     {productIndex === 0 && (
-                      <td
-                        
-                        rowSpan={record.products.length}
-                      >
+                      <td rowSpan={record.products.length}>
                         <div>Step {record.step_num}</div>
                         Booth
                         <input
@@ -556,10 +616,7 @@ const addRowAfter = (targetRowId: string) => {
 
                     {/* Step Name Dropdown - only show on first product row */}
                     {productIndex === 0 && (
-                      <td 
-                        
-                        rowSpan={record.products.length} 
-                      >
+                      <td rowSpan={record.products.length}>
                         <Combobox
                           options={stepOptions}
                           value={record.step_template || ''}
@@ -575,16 +632,10 @@ const addRowAfter = (targetRowId: string) => {
                     {/* Viscosity & Wet Mill Thickness - only show on first product row */}
                     {productIndex === 0 && (
                       <>
-                        <td 
-                          
-                          rowSpan={record.products.length} 
-                        >
+                        <td rowSpan={record.products.length}>
                           {record.viscosity_en}
                         </td>
-                        <td 
-                          
-                          rowSpan={record.products.length} 
-                        >
+                        <td rowSpan={record.products.length}>
                           {record.viscosity_vi}
                         </td>
                       </>
@@ -593,14 +644,10 @@ const addRowAfter = (targetRowId: string) => {
                     {/* SPEC - only show on first product row */}
                     {productIndex === 0 && (
                       <>
-                        <td 
-                          rowSpan={record.products.length} 
-                        >
+                        <td rowSpan={record.products.length}>
                           <div>{record.spec_en}</div>
                         </td>
-                        <td 
-                          rowSpan={record.products.length} 
-                        >
+                        <td rowSpan={record.products.length}>
                           <div>{record.spec_vi}</div>
                         </td>
                       </>
@@ -608,20 +655,14 @@ const addRowAfter = (targetRowId: string) => {
 
                     {/* Hold Time - only show on first product row */}
                     {productIndex === 0 && (
-                      <td 
-                        
-                        rowSpan={record.products.length} 
-                      >
+                      <td rowSpan={record.products.length}>
                         {record.hold_time}
                       </td>
                     )}
 
                     {/* Chemical Mixing Code Dropdown - only show on first product row */}
                     {productIndex === 0 && (
-                      <td 
-                        
-                        rowSpan={record.products.length} 
-                      >
+                      <td rowSpan={record.products.length}>
                         <Combobox
                           options={formularOptions}
                           value={record.formular_template || ''}
@@ -636,31 +677,18 @@ const addRowAfter = (targetRowId: string) => {
 
                     {/* Consumption - only show on first product row */}
                     {productIndex === 0 && (
-                      <td 
-                        
-                        rowSpan={record.products.length} 
-                      >
+                      <td rowSpan={record.products.length}>
                         {record.consumption}
                       </td>
                     )}
 
                     {/* Product Data - show for each product*/}
-                    <td >
-                      {product.product_code}
-                    </td>
-                    <td >
-                      {product.product_name}
-                    </td>
-                    <td >
-                      {product.ratio}
-                    </td>
-                    <td >
-                      {product.qty}
-                    </td>
-                    <td >
-                      {product.unit}
-                    </td>
-                    <td >
+                    <td>{product.product_code}</td>
+                    <td>{product.product_name}</td>
+                    <td>{product.ratio}</td>
+                    <td>{product.qty}</td>
+                    <td>{product.unit}</td>
+                    <td>
                       <input
                         type="text"
                         value={product.check_result}
@@ -669,7 +697,7 @@ const addRowAfter = (targetRowId: string) => {
                         placeholder="Check Result"
                       />
                     </td>
-                    <td >
+                    <td>
                       <input
                         type="text"
                         value={product.correct_action}
@@ -678,7 +706,7 @@ const addRowAfter = (targetRowId: string) => {
                         placeholder="Correct Action"
                       />
                     </td>
-                    <td >
+                    <td>
                       <input
                         type="text"
                         value={product.te1_signature}
@@ -687,7 +715,7 @@ const addRowAfter = (targetRowId: string) => {
                         placeholder="TE-1 Signature"
                       />
                     </td>
-                    <td >
+                    <td>
                       <input
                         type="text"
                         value={product.customer_signature}
@@ -699,10 +727,8 @@ const addRowAfter = (targetRowId: string) => {
 
                     {/* Actions Column */}
                     {productIndex === 0 && (
-                    <td rowSpan={record.products.length} >
-                      <div className="flex flex-col gap-1">
-                        {/* Row actions - only show on first product */}
-                        {productIndex === 0 && (
+                      <td rowSpan={record.products.length}>
+                        <div className="flex flex-col gap-1">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -729,14 +755,14 @@ const addRowAfter = (targetRowId: string) => {
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                        )}
-                      </div>
-                    </td>
+                        </div>
+                      </td>
                     )}
                   </tr>
                 ))}
               </React.Fragment>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>
