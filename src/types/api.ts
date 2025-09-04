@@ -52,16 +52,6 @@ export interface GetFinishingSheetsParams {
   offset?: number;
 }
 
-export type RowProductWrite = WritableFields<components['schemas']['RowProduct']>
-
-export type SheetRowWrite = WritableFields<components['schemas']['SheetRow']> & {
-  products: RowProductWrite[];
-}
-
-export type FinishingSheetWrite = WritableFields<components['schemas']['FinishingSheet']> & {
-  rows: SheetRowWrite[];
-}
-
 // Sheet templates
 export type StepTemplate = components['schemas']['StepTemplate']
 export type FormularTemplate = components['schemas']['FormularTemplate']

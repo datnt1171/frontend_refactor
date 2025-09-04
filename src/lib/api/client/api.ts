@@ -6,7 +6,6 @@ import type {
   FactoryUpdate,
   BlueprintCreate,
   BlueprintUpdate,
-  FinishingSheetWrite,
   FinishingSheet
 } from '@/types/'
 
@@ -239,7 +238,7 @@ export async function deleteBlueprint(id: string, blueprint_id: string) {
 
 export const createFinishingSheet = async (
   taskId: string, 
-  data: FinishingSheetWrite
+  data: FinishingSheet
 ) => {
   const response = await apiClient(`/tasks/${taskId}/sheets`, {
     method: 'POST',
