@@ -26,10 +26,19 @@
     "delete": "Xóa",
     "save": "Lưu",
     "cancel": "Hủy",
+    "description": "Mô tả",
     "selectFactory": "Chọn nhà máy",
     "searchFactory": "Tìm nhà máy",
     "selectRetailer": "Chọn KH đặt hàng",
-    "searchRetailer": "Tìm KH đặt hàng"
+    "searchRetailer": "Tìm KH đặt hàng",
+    "actionPerformedSuccessfully": "Thao tác đã thực hiện thành công!",
+    "failedToPerformAction": "Thao tác thất bại",
+    "deleteAlertTitle": "Bạn có chắc chắn không?",
+    "deleteAlertDescription": "Hành động này không thể hoàn tác. Thao tác này sẽ xóa vĩnh viễn tệp \"{name}\" và loại bỏ tất cả dữ liệu liên quan.",
+    "file": "Tệp",
+    "fileSize": "Kích thước tệp",
+    "preview": "Xem trước",
+    "download": "Tải xuống"
   },
   "home": {
   "title": "Trang chủ",
@@ -250,5 +259,15 @@
   "systemsheet": {
     "appTitle": "Systemsheet",
     "appDescription": "Systemsheet, Consumption and Blueprint"
+  },
+
+  "blueprint": {
+    "blueprint": "Bản vẽ",
+    "name": "Tên bản vẽ",
+    "type": "Loại bản vẽ",
+    "pallet": "Chuyền pallet",
+    "hanging": "Chuyền treo",
+    "roller": "Chuyền băng tải",
+    "add": "Thêm bản vẽ"
   }
 }

@@ -54,7 +54,7 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>{t('viewDetails')}</CardTitle>
+            <CardTitle>{t('common.viewDetails')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <Button variant="outline" className="w-full justify-start" asChild>

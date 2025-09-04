@@ -31,7 +31,7 @@ export default function BlueprintEditButton({
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const t = useTranslations('taskManagement.createTask')
+  const t = useTranslations('blueprint')
   const commonT = useTranslations('common')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

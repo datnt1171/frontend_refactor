@@ -26,10 +26,19 @@
     "delete": "刪除",
     "save": "節省",
     "cancel": "取消",
+    "description": "描述",
     "selectFactory": "選擇工廠",
     "searchFactory": "搜尋工廠",
     "selectRetailer": "選擇零售商",
-    "searchRetailer": "搜尋零售商"
+    "searchRetailer": "搜尋零售商",
+    "actionPerformedSuccessfully": "Thao tác đã thực hiện thành công!",
+    "failedToPerformAction": "Thao tác thất bại",
+    "deleteAlertTitle": "Bạn có chắc chắn không?",
+    "deleteAlertDescription": "Hành động này không thể hoàn tác. Thao tác này sẽ xóa vĩnh viễn tệp \"{name}\" và loại bỏ tất cả dữ liệu liên quan.",
+    "file": "Tệp",
+    "fileSize": "Kích thước tệp",
+    "preview": "Xem trước",
+    "download": "Tải xuống"
   },
   "home": {
   "title": "首頁",
@@ -251,5 +260,15 @@
   "systemsheet": {
     "appTitle": "Systemsheet",
     "appDescription": "Systemsheet, Consumption and Blueprint"
+  },
+
+  "blueprint": {
+    "blueprint": "藍圖",
+    "name": "藍圖名稱",
+    "type": "藍圖類型",
+    "pallet": "棧板線",
+    "hanging": "懸掛線",
+    "roller": "滾輪線",
+    "add": "新增藍圖"
   }
 }

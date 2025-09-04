@@ -127,7 +127,7 @@ export default function BlueprintCreateButton({ factoryId }: BlueprintCreateButt
 
           {/* Type */}
           <div className="space-y-2">
-            <Label htmlFor="type">Type <span className="text-red-500">*</span></Label>
+            <Label htmlFor="type">{t('blueprint.type')} <span className="text-red-500">*</span></Label>
             <Select name="type" required disabled={isLoading}>
               <SelectTrigger>
                 <SelectValue placeholder="Select blueprint type" />

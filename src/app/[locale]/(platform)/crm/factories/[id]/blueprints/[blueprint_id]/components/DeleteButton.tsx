@@ -44,15 +44,14 @@ export default function BlueprintDeleteButton({
       <AlertDialogTrigger asChild>
         <Button variant="outline">
           <Trash2 className="h-4 w-4 mr-2" />
-          Delete
+          {commonT('delete')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{commonT('deleteAlertTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {commonT('deleteAlertDescription', { name: '' })}
-            <span className="font-semibold">{blueprintName}</span>
+            {commonT('deleteAlertDescription', { name: blueprintName })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

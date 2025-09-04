@@ -26,13 +26,9 @@ export default function DeleteFinishingButton({
     setIsLoading(true)
 
     try {
-      const result = await deleteFinishingSheet(taskId, sheetId)
-      
-      if (result.success) {
-        setOpen(false)
-      } else {
-      }
+      await deleteFinishingSheet(taskId, sheetId)
     } catch (error) {
+      alert('Delete failed')
     } finally {
       setIsLoading(false)
       router.back()
