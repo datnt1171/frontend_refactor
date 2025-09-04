@@ -60,7 +60,8 @@ export interface paths {
         /** Get Retailers */
         get: operations["get_retailers_api_crm_retailers_get"];
         put?: never;
-        post?: never;
+        /** Create Retailer */
+        post: operations["create_retailer_api_crm_retailers_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -81,10 +82,15 @@ export interface paths {
         get: operations["get_retailer_by_id_api_crm_retailers__id__get"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete Retailer
+         * @description Delete a retailer
+         */
+        delete: operations["delete_retailer_api_crm_retailers__id__delete"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** Update Retailer */
+        patch: operations["update_retailer_api_crm_retailers__id__patch"];
         trace?: never;
     };
     "/api/crm/blueprints": {
@@ -215,6 +221,7 @@ export interface components {
         Blueprint: {
             /**
              * Id
+             * Format: uuid
              * @description Blueprint UUID
              */
             id: string;
@@ -240,6 +247,11 @@ export interface components {
              * @description File storage path
              */
             file_path: string;
+            /**
+             * File Url
+             * @description Dynamic public url
+             */
+            file_url: string;
             /**
              * Filename
              * @description Original filename
@@ -435,6 +447,17 @@ export interface components {
             name: string;
         };
         /**
+         * RetailerCreate
+         * @description Schema for creating a new retailer
+         */
+        RetailerCreate: {
+            /**
+             * Name
+             * @description Retailer name
+             */
+            name: string;
+        };
+        /**
          * RetailerDetail
          * @description Detailed retailer view - for single retailer endpoint
          */
@@ -445,6 +468,17 @@ export interface components {
              * @description Retailer UUID
              */
             id: string;
+            /**
+             * Name
+             * @description Retailer name
+             */
+            name: string;
+        };
+        /**
+         * RetailerUpdate
+         * @description Schema for updating a retailer
+         */
+        RetailerUpdate: {
             /**
              * Name
              * @description Retailer name
@@ -636,6 +670,39 @@ export interface operations {
             };
         };
     };
+    create_retailer_api_crm_retailers_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RetailerCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailerDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_retailer_by_id_api_crm_retailers__id__get: {
         parameters: {
             query?: never;
@@ -646,6 +713,70 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetailerDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_retailer_api_crm_retailers__id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_retailer_api_crm_retailers__id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RetailerUpdate"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
