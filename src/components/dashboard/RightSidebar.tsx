@@ -2,14 +2,18 @@
 
 import type * as React from "react"
 import { PanelRightClose, PanelRightOpen } from "lucide-react"
-import { DashboardFilters } from "@/components/dashboard/DefaultFilters"
+import { ConfigurableFilters } from "@/components/dashboard/ConfigurableFilters"
 import { Sidebar, SidebarContent, SidebarHeader, SidebarRail } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { useRightSidebar } from "@/contexts/FilterContext"
 import { useIsMobile } from "@/hooks/use-mobile"
+import type { PageFilterConfig } from "@/types"
 
+interface SidebarRightProps extends React.ComponentProps<typeof Sidebar> {
+  filterConfig?: PageFilterConfig;
+}
 
-export function SidebarRight({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function SidebarRight({ filterConfig, ...props }: SidebarRightProps) {
   const { isOpen, toggle } = useRightSidebar()
   const isMobile = useIsMobile()
 
@@ -47,7 +51,13 @@ export function SidebarRight({ ...props }: React.ComponentProps<typeof Sidebar>)
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <DashboardFilters />
+        {filterConfig ? (
+          <ConfigurableFilters config={filterConfig} />
+        ) : (
+          <div className="p-4 text-center text-gray-500 text-sm">
+            No filters configured for this page
+          </div>
+        )}
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
