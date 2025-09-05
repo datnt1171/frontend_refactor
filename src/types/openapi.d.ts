@@ -377,9 +377,9 @@ export interface components {
             sampler: string;
             chemical_waste: string;
             conveyor_speed: string;
-            with_panel_test: boolean;
-            testing: boolean;
-            chemical_yellowing: boolean;
+            with_panel_test?: boolean;
+            testing?: boolean;
+            chemical_yellowing?: boolean;
             /** Format: date-time */
             readonly created_at: string;
             /** Format: uuid */
@@ -403,12 +403,12 @@ export interface components {
             count: number;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=400&limit=100
+             * @example http://api.example.org/accounts/?page=4
              */
             next?: string | null;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=200&limit=100
+             * @example http://api.example.org/accounts/?page=2
              */
             previous?: string | null;
             results: components["schemas"]["FinishingSheet"][];
@@ -418,12 +418,12 @@ export interface components {
             count: number;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=400&limit=100
+             * @example http://api.example.org/accounts/?page=4
              */
             next?: string | null;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=200&limit=100
+             * @example http://api.example.org/accounts/?page=2
              */
             previous?: string | null;
             results: components["schemas"]["ProcessList"][];
@@ -433,12 +433,12 @@ export interface components {
             count: number;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=400&limit=100
+             * @example http://api.example.org/accounts/?page=4
              */
             next?: string | null;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=200&limit=100
+             * @example http://api.example.org/accounts/?page=2
              */
             previous?: string | null;
             results: components["schemas"]["ReceivedTask"][];
@@ -448,12 +448,12 @@ export interface components {
             count: number;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=400&limit=100
+             * @example http://api.example.org/accounts/?page=4
              */
             next?: string | null;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=200&limit=100
+             * @example http://api.example.org/accounts/?page=2
              */
             previous?: string | null;
             results: components["schemas"]["SentTask"][];
@@ -463,12 +463,12 @@ export interface components {
             count: number;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=400&limit=100
+             * @example http://api.example.org/accounts/?page=4
              */
             next?: string | null;
             /**
              * Format: uri
-             * @example http://api.example.org/accounts/?offset=200&limit=100
+             * @example http://api.example.org/accounts/?page=2
              */
             previous?: string | null;
             results: components["schemas"]["UserList"][];
@@ -526,7 +526,7 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             name: string;
-            description: string;
+            description?: string;
             field_type?: components["schemas"]["FieldTypeEnum"];
             order: number;
             required?: boolean;
@@ -575,10 +575,10 @@ export interface components {
             ratio: string;
             qty: string;
             unit: string;
-            check_result: string;
-            correct_action: string;
-            te1_signature: string;
-            customer_signature: string;
+            check_result?: string;
+            correct_action?: string;
+            te1_signature?: string;
+            customer_signature?: string;
             /** Format: uuid */
             readonly created_by: string;
             /** Format: date-time */
@@ -621,6 +621,7 @@ export interface components {
         SheetRow: {
             /** Format: uuid */
             readonly id: string;
+            /** Format: uuid */
             step_template?: string | null;
             /** Format: uuid */
             formular_template?: string | null;
@@ -791,10 +792,8 @@ export interface operations {
     api_processes_list: {
         parameters: {
             query?: {
-                /** @description Number of results to return per page. */
-                limit?: number;
-                /** @description The initial index from which to return the results. */
-                offset?: number;
+                /** @description A page number within the paginated result set. */
+                page?: number;
             };
             header?: never;
             path?: never;
@@ -837,12 +836,10 @@ export interface operations {
         parameters: {
             query?: {
                 created_by?: string;
-                /** @description Number of results to return per page. */
-                limit?: number;
-                /** @description The initial index from which to return the results. */
-                offset?: number;
                 /** @description Which field to use when ordering the results. */
                 ordering?: string;
+                /** @description A page number within the paginated result set. */
+                page?: number;
                 /** @description A search term. */
                 search?: string;
                 task?: string;
@@ -1179,10 +1176,8 @@ export interface operations {
     api_tasks_received_list: {
         parameters: {
             query?: {
-                /** @description Number of results to return per page. */
-                limit?: number;
-                /** @description The initial index from which to return the results. */
-                offset?: number;
+                /** @description A page number within the paginated result set. */
+                page?: number;
             };
             header?: never;
             path?: never;
@@ -1203,10 +1198,8 @@ export interface operations {
     api_tasks_sent_list: {
         parameters: {
             query?: {
-                /** @description Number of results to return per page. */
-                limit?: number;
-                /** @description The initial index from which to return the results. */
-                offset?: number;
+                /** @description A page number within the paginated result set. */
+                page?: number;
             };
             header?: never;
             path?: never;
@@ -1296,10 +1289,10 @@ export interface operations {
     api_users_list: {
         parameters: {
             query?: {
+                /** @description A page number within the paginated result set. */
+                page?: number;
                 /** @description Number of results to return per page. */
-                limit?: number;
-                /** @description The initial index from which to return the results. */
-                offset?: number;
+                page_size?: number;
             };
             header?: never;
             path?: never;
