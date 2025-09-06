@@ -7,8 +7,21 @@ export const getCurrentUser = async (): Promise<UserDetail> => {
   return res.json()
 }
 
-export const getUsers = async (): Promise<PaginatedUserList> => {
-  const res = await api("/users/")
+export const getUsers = async (searchParams?: Record<string, string>): Promise<PaginatedUserList> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/users/?${queryString}` : '/users/'
+  
+  const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch users: ${res.status}`)
   return res.json()
 }

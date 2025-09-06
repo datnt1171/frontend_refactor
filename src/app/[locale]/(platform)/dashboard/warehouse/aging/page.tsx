@@ -1,3 +1,5 @@
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
@@ -25,18 +27,18 @@ const warehouseAgingFilterConfig: PageFilterConfig = {
       searchable: true,
       placeholder: 'Select months...',
       options: [
-        { value: 'jan', label: 'January' },
-        { value: 'feb', label: 'February' },
-        { value: 'mar', label: 'March' },
-        { value: 'apr', label: 'April' },
-        { value: 'may', label: 'May' },
-        { value: 'jun', label: 'June' },
-        { value: 'jul', label: 'July' },
-        { value: 'aug', label: 'August' },
-        { value: 'sep', label: 'September' },
-        { value: 'oct', label: 'October' },
-        { value: 'nov', label: 'November' },
-        { value: 'dec', label: 'December' },
+        { value: '1', label: 'January' },
+        { value: '2', label: 'February' },
+        { value: '3', label: 'March' },
+        { value: '4', label: 'April' },
+        { value: '5', label: 'May' },
+        { value: '6', label: 'June' },
+        { value: '7', label: 'July' },
+        { value: '8', label: 'August' },
+        { value: '9', label: 'September' },
+        { value: '10', label: 'October' },
+        { value: '11', label: 'November' },
+        { value: '12', label: 'December' },
       ]
     },
     {
@@ -87,14 +89,22 @@ const warehouseAgingFilterConfig: PageFilterConfig = {
 
 export default function WarehouseAgingPage() {
   return (
-    <RightSidebarProvider>
-      <div className="flex flex-1 min-w-0">
-        <div className="flex-1 min-w-0 p-6">
-          <h1 className="text-2xl font-bold mb-6">Warehouse Aging Report</h1>
-          {/* Your page content */}
+    <SidebarProvider>
+      <RightSidebarProvider>
+        <div className="flex flex-1 min-w-0">
+          <div className="flex items-center gap-2 lg:hidden p-4">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="h-4" />
+          </div>
+          
+          <div className="flex-1 min-w-0 p-6">
+            <h1 className="text-2xl font-bold mb-6">Warehouse Aging Report</h1>
+            {/* Your page content */}
+          </div>
+          
+          <SidebarRight filterConfig={warehouseAgingFilterConfig} />
         </div>
-        <SidebarRight filterConfig={warehouseAgingFilterConfig} />
-      </div>
-    </RightSidebarProvider>
+      </RightSidebarProvider>
+    </SidebarProvider>
   )
 }

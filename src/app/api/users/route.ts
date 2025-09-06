@@ -1,11 +1,19 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import { NextRequest } from "next/server"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const response = await fetch(`${process.env.API_URL}/api/users/`, {
+    const searchParams = request.nextUrl.searchParams
+    const queryString = searchParams.toString()
+    
+    const apiUrl = queryString 
+      ? `${process.env.API_URL}/api/users/?${queryString}`
+      : `${process.env.API_URL}/api/users/`
+    
+    const response = await fetch(apiUrl, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",

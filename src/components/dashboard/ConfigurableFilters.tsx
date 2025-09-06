@@ -12,9 +12,10 @@ import type { PageFilterConfig, FilterConfig } from '@/types';
 
 interface ConfigurableFiltersProps {
   config: PageFilterConfig;
+  onFiltersChange?: (filters: Record<string, any>) => void;
 }
 
-export function ConfigurableFilters({ config }: ConfigurableFiltersProps) {
+export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFiltersProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -96,7 +97,10 @@ export function ConfigurableFilters({ config }: ConfigurableFiltersProps) {
   };
 
   const applyFilters = () => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
+    
+    // Remove page parameter when applying filters (reset to page 1)
+    params.delete('page');
     
     Object.entries(filters).forEach(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
@@ -106,10 +110,13 @@ export function ConfigurableFilters({ config }: ConfigurableFiltersProps) {
         params.set(`${key}_to`, value.to);
       } else if (value && typeof value === 'string') {
         params.set(key, value);
+      } else {
+        params.delete(key);
       }
     });
     
     router.replace(`${pathname}?${params.toString()}`);
+    onFiltersChange?.(filters);
   };
 
   // Auto-apply filters if showApplyButton is false

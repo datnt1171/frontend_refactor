@@ -31,3 +31,19 @@ export interface PageFilterConfig {
   showApplyButton?: boolean;
   showResetButton?: boolean;
 }
+
+export interface PaginatedResponse<T = any> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+export interface PaginationState {
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  pageSize: number;
+  hasNext: boolean;
+  hasPrevious: boolean;
+}
