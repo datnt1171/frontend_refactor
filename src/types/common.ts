@@ -24,5 +24,3 @@ export interface ApiSuccessResponse<T = any> {
 }
 
 export type ApiResponse<T = any> = ApiSuccessResponse<T> | ApiErrorResponse
-
-export type WritableFields<T> = Omit<T, 'id' | 'created_at' | 'created_by' | 'updated_at' | 'updated_by'>

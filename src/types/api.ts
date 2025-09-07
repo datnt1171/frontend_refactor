@@ -1,5 +1,4 @@
 import type { components } from "@/types/openapi";
-import { WritableFields } from "./common";
 
 // Auth
 export type SetPasswordRetype = components['schemas']['ChangePassword']
@@ -7,14 +6,14 @@ export type SetPasswordRetype = components['schemas']['ChangePassword']
 // User
 export type Department = components['schemas']['Department']
 export type Role = components['schemas']['Role']
-export type UserList = components['schemas']['UserList']
+export type UserList = components['schemas']['User']
 export type UserDetail = components['schemas']['UserDetail']
 
 // Process
 export type ProcessField = components['schemas']['ProcessField']
 export type FieldTypeEnum = components['schemas']['FieldTypeEnum']
 export type ProcessDetail = components['schemas']['ProcessDetail']
-export type ProcessList = components['schemas']['ProcessList']
+export type ProcessList = components['schemas']['Process']
 export type Action = components['schemas']['Action']
 export type ActionTypeEnum = components['schemas']['ActionTypeEnum']
 
@@ -58,7 +57,7 @@ export type FormularTemplate = components['schemas']['FormularTemplate']
 
 
 // Pagination
-export type PaginatedProcessListList = components['schemas']['PaginatedProcessListList']
+export type PaginatedProcessListList = components['schemas']['PaginatedProcessList']
 export type PaginatedReceivedTaskList = components['schemas']['PaginatedReceivedTaskList']
 export type PaginatedSentTaskList = components['schemas']['PaginatedSentTaskList']
-export type PaginatedUserList = components['schemas']['PaginatedUserListList']
+export type PaginatedUserList = components['schemas']['PaginatedUserDetailList']
