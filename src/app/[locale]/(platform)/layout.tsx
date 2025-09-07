@@ -23,7 +23,7 @@ export default async function PlatformLayout({
       <SidebarInset className="flex flex-col min-w-0">
         <TopNavbar user={user} />
         <div className="flex flex-1 flex-col min-w-0">
-          <main className="flex-1 p-4 md:p-6 min-w-0 overflow-hidden">
+          <main className="flex-1 p-4 md:p-6 min-w-0">
             {children}
           </main>
         </div>

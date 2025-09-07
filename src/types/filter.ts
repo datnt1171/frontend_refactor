@@ -6,7 +6,6 @@ export type FilterType =
   | 'sort' 
   | 'date-range' 
   | 'search'
-  | 'pagination';
 
 export interface FilterOption {
   value: string;
@@ -39,11 +38,6 @@ export interface PaginatedResponse<T = any> {
   results: T[];
 }
 
-export interface PaginationState {
-  currentPage: number;
-  totalPages: number;
+export interface PaginationProps {
   totalCount: number;
-  pageSize: number;
-  hasNext: boolean;
-  hasPrevious: boolean;
 }

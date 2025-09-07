@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Search, Calendar, ChevronDown, X, Filter, RotateCcw } from 'lucide-react';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from "@/i18n/navigation"
+import { useSearchParams } from "next/navigation"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -100,7 +101,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     const params = new URLSearchParams(searchParams);
     
     // Remove page parameter when applying filters (reset to page 1)
-    params.delete('page');
+    params.set('page', '1')
     
     Object.entries(filters).forEach(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
@@ -122,7 +123,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   // Auto-apply filters if showApplyButton is false
   useEffect(() => {
     if (!config.showApplyButton) {
-      const timeoutId = setTimeout(applyFilters, 300); // Debounce
+      const timeoutId = setTimeout(applyFilters, 500); // Debounce
       return () => clearTimeout(timeoutId);
     }
   }, [filters, config.showApplyButton]);
