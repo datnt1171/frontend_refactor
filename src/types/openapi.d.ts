@@ -377,9 +377,9 @@ export interface components {
             sampler: string;
             chemical_waste: string;
             conveyor_speed: string;
-            with_panel_test?: boolean;
-            testing?: boolean;
-            chemical_yellowing?: boolean;
+            with_panel_test: boolean;
+            testing: boolean;
+            chemical_yellowing: boolean;
             /** Format: date-time */
             readonly created_at: string;
             /** Format: uuid */
@@ -405,28 +405,28 @@ export interface components {
              * Format: uri
              * @example http://api.example.org/accounts/?page=4
              */
-            next?: string | null;
+            next: string | null;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=2
              */
-            previous?: string | null;
+            previous: string | null;
             results: components["schemas"]["FinishingSheet"][];
         };
-        PaginatedProcessListList: {
+        PaginatedProcessList: {
             /** @example 123 */
             count: number;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=4
              */
-            next?: string | null;
+            next: string | null;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=2
              */
-            previous?: string | null;
-            results: components["schemas"]["ProcessList"][];
+            previous: string | null;
+            results: components["schemas"]["Process"][];
         };
         PaginatedReceivedTaskList: {
             /** @example 123 */
@@ -435,12 +435,12 @@ export interface components {
              * Format: uri
              * @example http://api.example.org/accounts/?page=4
              */
-            next?: string | null;
+            next: string | null;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=2
              */
-            previous?: string | null;
+            previous: string | null;
             results: components["schemas"]["ReceivedTask"][];
         };
         PaginatedSentTaskList: {
@@ -450,28 +450,28 @@ export interface components {
              * Format: uri
              * @example http://api.example.org/accounts/?page=4
              */
-            next?: string | null;
+            next: string | null;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=2
              */
-            previous?: string | null;
+            previous: string | null;
             results: components["schemas"]["SentTask"][];
         };
-        PaginatedUserListList: {
+        PaginatedUserDetailList: {
             /** @example 123 */
             count: number;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=4
              */
-            next?: string | null;
+            next: string | null;
             /**
              * Format: uri
              * @example http://api.example.org/accounts/?page=2
              */
-            previous?: string | null;
-            results: components["schemas"]["UserList"][];
+            previous: string | null;
+            results: components["schemas"]["UserDetail"][];
         };
         PatchedChangePassword: {
             current_password?: string;
@@ -514,6 +514,13 @@ export interface components {
             file?: string;
             readonly history?: components["schemas"]["TaskDataHistory"][];
         };
+        Process: {
+            /** Format: uuid */
+            readonly id: string;
+            name: string;
+            description?: string | null;
+            version: string;
+        };
         ProcessDetail: {
             /** Format: uuid */
             readonly id: string;
@@ -527,17 +534,10 @@ export interface components {
             readonly id: string;
             name: string;
             description?: string;
-            field_type?: components["schemas"]["FieldTypeEnum"];
+            field_type: components["schemas"]["FieldTypeEnum"];
             order: number;
-            required?: boolean;
+            required: boolean;
             options?: unknown;
-        };
-        ProcessList: {
-            /** Format: uuid */
-            readonly id: string;
-            name: string;
-            description?: string | null;
-            version: string;
         };
         ProductTemplate: {
             /** Format: uuid */
@@ -569,7 +569,7 @@ export interface components {
         RowProduct: {
             /** Format: uuid */
             readonly id: string;
-            order?: number;
+            order: number;
             product_code: string;
             product_name: string;
             ratio: string;
@@ -699,7 +699,7 @@ export interface components {
         TaskActionLog: {
             /** Format: uuid */
             readonly id: string;
-            user: components["schemas"]["UserList"];
+            user: components["schemas"]["User"];
             action: components["schemas"]["Action"];
             /** Format: date-time */
             readonly created_at: string;
@@ -736,9 +736,9 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             readonly title: string;
-            process: components["schemas"]["ProcessList"];
+            process: components["schemas"]["Process"];
             state: components["schemas"]["State"];
-            created_by: components["schemas"]["UserList"];
+            created_by: components["schemas"]["User"];
             /** Format: date-time */
             readonly created_at: string;
             data: components["schemas"]["TaskData"][];
@@ -755,6 +755,14 @@ export interface components {
             readonly access: string;
             refresh: string;
         };
+        User: {
+            /** Format: uuid */
+            readonly id: string;
+            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+            username: string;
+            first_name?: string;
+            last_name?: string;
+        };
         UserDetail: {
             /** Format: uuid */
             readonly id: string;
@@ -769,16 +777,8 @@ export interface components {
             email?: string;
             department: components["schemas"]["Department"];
             role: components["schemas"]["Role"];
-            readonly supervisor: components["schemas"]["UserList"];
-            is_password_changed?: boolean;
-        };
-        UserList: {
-            /** Format: uuid */
-            readonly id: string;
-            /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
-            username: string;
-            first_name?: string;
-            last_name?: string;
+            readonly supervisor: components["schemas"]["User"];
+            is_password_changed: boolean;
         };
     };
     responses: never;
@@ -792,8 +792,12 @@ export interface operations {
     api_processes_list: {
         parameters: {
             query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description A search term. */
+                search?: string;
             };
             header?: never;
             path?: never;
@@ -806,7 +810,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginatedProcessListList"];
+                    "application/json": components["schemas"]["PaginatedProcessList"];
                 };
             };
         };
@@ -986,7 +990,12 @@ export interface operations {
     };
     api_sheets_formular_templates_list: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A search term. */
+                search?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1005,7 +1014,12 @@ export interface operations {
     };
     api_sheets_step_templates_list: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A search term. */
+                search?: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -1176,8 +1190,12 @@ export interface operations {
     api_tasks_received_list: {
         parameters: {
             query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description A search term. */
+                search?: string;
             };
             header?: never;
             path?: never;
@@ -1198,8 +1216,12 @@ export interface operations {
     api_tasks_sent_list: {
         parameters: {
             query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description A search term. */
+                search?: string;
             };
             header?: never;
             path?: never;
@@ -1289,10 +1311,20 @@ export interface operations {
     api_users_list: {
         parameters: {
             query?: {
+                department__name?: string;
+                /** @description Multiple values may be separated by commas. */
+                department__name__in?: string[];
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
                 /** @description Number of results to return per page. */
                 page_size?: number;
+                role__name?: string;
+                /** @description Multiple values may be separated by commas. */
+                role__name__in?: string[];
+                /** @description A search term. */
+                search?: string;
             };
             header?: never;
             path?: never;
@@ -1305,7 +1337,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["PaginatedUserListList"];
+                    "application/json": components["schemas"]["PaginatedUserDetailList"];
                 };
             };
         };
@@ -1326,7 +1358,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UserList"];
+                    "application/json": components["schemas"]["User"];
                 };
             };
         };
