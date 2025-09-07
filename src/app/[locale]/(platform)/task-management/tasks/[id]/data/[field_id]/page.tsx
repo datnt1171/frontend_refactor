@@ -4,7 +4,6 @@ import {
   getRetailers, 
   getTaskData } from '@/lib/api/server'
 import { TaskDataEditor } from './FieldEdit'
-import { notFound } from 'next/navigation'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Clock } from 'lucide-react'
 import { formatDateToUTC7 } from "@/lib/utils/date"
@@ -14,14 +13,12 @@ interface PageProps {
   params: Promise<{
     id: string
     field_id: string
-    locale: string
   }>
 }
 
 export default async function TaskDataPage({ params }: PageProps) {
   const { id: taskId, field_id: fieldId } = await params
 
-  try {
     const taskData = await getTaskData(taskId, fieldId)
     const t = await getTranslations('taskManagement.taskDetail')
     const field = taskData.field
@@ -169,8 +166,4 @@ export default async function TaskDataPage({ params }: PageProps) {
         </Card>
       </div>
     )
-  } catch (error) {
-    console.error('Error loading task data:', error)
-    return notFound()
-  }
 }

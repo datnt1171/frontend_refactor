@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { generatePDF } from '@/lib/pdf-generator';
 import { MoreVertical, Plus, Trash2, FileText } from "lucide-react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 
 interface CombinedSheetTableProps {
   data?: FinishingSheet; // Optional for create mode
