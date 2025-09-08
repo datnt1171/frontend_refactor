@@ -1,5 +1,5 @@
 export type FilterType = 
-  | 'checkbox' 
+  | 'multiselect'
   | 'combobox' 
   | 'day-range' 
   | 'select' 
@@ -10,6 +10,12 @@ export type FilterType =
 export interface FilterOption {
   value: string;
   label: string;
+  searchValue?: string;
+}
+
+export interface FilterSortFields {
+  value: string;
+  label: string;
 }
 
 export interface FilterConfig {
@@ -18,7 +24,7 @@ export interface FilterConfig {
   label: string;
   placeholder?: string;
   options?: FilterOption[];
-  multiple?: boolean;
+  sortFields?: FilterSortFields[];
   searchable?: boolean;
   min?: number;
   max?: number;

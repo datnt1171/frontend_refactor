@@ -1,14 +1,17 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Search, Calendar, ChevronDown, X, Filter, RotateCcw } from 'lucide-react';
+import { Search, Calendar, Filter, RotateCcw } from 'lucide-react';
 import { usePathname, useRouter } from "@/i18n/navigation"
 import { useSearchParams } from "next/navigation"
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { Combobox } from '@/components/ui/combobox';
+import { SortSelect } from '../ui/SortFilter';
 import type { PageFilterConfig, FilterConfig } from '@/types';
 
 interface ConfigurableFiltersProps {
@@ -29,7 +32,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       const urlValue = searchParams.get(filter.id);
       
       if (urlValue) {
-        if (filter.type === 'checkbox' || filter.type === 'combobox') {
+        if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
           initialState[filter.id] = urlValue.split(',');
         } else {
           initialState[filter.id] = urlValue;
@@ -38,7 +41,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         initialState[filter.id] = config.defaultValues[filter.id];
       } else {
         // Set default empty values based on filter type
-        if (filter.type === 'checkbox' || filter.type === 'combobox') {
+        if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
           initialState[filter.id] = [];
         } else if (filter.type === 'day-range' || filter.type === 'date-range') {
           initialState[filter.id] = { from: '', to: '' };
@@ -51,19 +54,43 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     return initialState;
   });
 
-  const [dropdownStates, setDropdownStates] = useState<Record<string, boolean>>({});
+  // Track if component has mounted to handle initial URL sync
+  const [hasMounted, setHasMounted] = useState(false);
+
+  // Sync default values to URL on initial load if no URL params exist
+  useEffect(() => {
+    if (!hasMounted) {
+      setHasMounted(true);
+      
+      // Check if there are any existing URL params for our filters
+      const hasUrlParams = config.filters.some(filter => 
+        searchParams.has(filter.id) || 
+        searchParams.has(`${filter.id}_from`) || 
+        searchParams.has(`${filter.id}_to`)
+      );
+      
+      // If no URL params exist but we have default values, sync them to URL
+      if (!hasUrlParams && config.defaultValues && Object.keys(config.defaultValues).length > 0) {
+        const params = new URLSearchParams(searchParams);
+        
+        Object.entries(config.defaultValues).forEach(([key, value]) => {
+          if (Array.isArray(value) && value.length > 0) {
+            params.set(key, value.join(','));
+          } else if (typeof value === 'object' && value !== null && (value.from || value.to)) {
+            if (value.from) params.set(`${key}_from`, value.from);
+            if (value.to) params.set(`${key}_to`, value.to);
+          } else if (value && typeof value === 'string') {
+            params.set(key, value);
+          }
+        });
+        
+        router.replace(`${pathname}?${params.toString()}`);
+      }
+    }
+  }, [hasMounted, searchParams, pathname, router, config.defaultValues, config.filters]);
 
   const handleFilterChange = (filterId: string, value: any) => {
     setFilters(prev => ({ ...prev, [filterId]: value }));
-  };
-
-  const handleCheckboxChange = (filterId: string, optionValue: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterId]: prev[filterId].includes(optionValue)
-        ? prev[filterId].filter((item: string) => item !== optionValue)
-        : [...prev[filterId], optionValue]
-    }));
   };
 
   const handleRangeChange = (filterId: string, field: 'from' | 'to', value: string) => {
@@ -73,14 +100,10 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     }));
   };
 
-  const toggleDropdown = (filterId: string) => {
-    setDropdownStates(prev => ({ ...prev, [filterId]: !prev[filterId] }));
-  };
-
   const resetFilters = () => {
     const resetState: Record<string, any> = {};
     config.filters.forEach(filter => {
-      if (filter.type === 'checkbox' || filter.type === 'combobox') {
+      if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
         resetState[filter.id] = [];
       } else if (filter.type === 'day-range' || filter.type === 'date-range') {
         resetState[filter.id] = { from: '', to: '' };
@@ -89,12 +112,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       }
     });
     setFilters(resetState);
-    setDropdownStates({});
-    
-    if (!config.showApplyButton) {
-      // Immediately update URL if no apply button
-      router.replace(pathname);
-    }
+    router.replace(pathname);
   };
 
   const applyFilters = () => {
@@ -106,13 +124,20 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     Object.entries(filters).forEach(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
         params.set(key, value.join(','));
-      } else if (typeof value === 'object' && value.from && value.to) {
-        params.set(`${key}_from`, value.from);
-        params.set(`${key}_to`, value.to);
+      } else if (typeof value === 'object' && value !== null && (value.from || value.to)) {
+        // Handle range filters
+        if (value.from) params.set(`${key}_from`, value.from);
+        else params.delete(`${key}_from`);
+        if (value.to) params.set(`${key}_to`, value.to);
+        else params.delete(`${key}_to`);
+        params.delete(key); // Remove the main key for range filters
       } else if (value && typeof value === 'string') {
         params.set(key, value);
       } else {
+        // Remove empty values and their related params
         params.delete(key);
+        params.delete(`${key}_from`);
+        params.delete(`${key}_to`);
       }
     });
     
@@ -122,11 +147,11 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
 
   // Auto-apply filters if showApplyButton is false
   useEffect(() => {
-    if (!config.showApplyButton) {
+    if (!config.showApplyButton && hasMounted) {
       const timeoutId = setTimeout(applyFilters, 500); // Debounce
       return () => clearTimeout(timeoutId);
     }
-  }, [filters, config.showApplyButton]);
+  }, [filters, config.showApplyButton, hasMounted]);
 
   const hasActiveFilters = Object.values(filters).some(value => {
     if (Array.isArray(value)) return value.length > 0;
@@ -134,44 +159,36 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     return value !== '';
   });
 
+  const renderSelectedBadges = (filterId: string, selectedValues: string[], options: any[]) => {
+    if (!selectedValues || selectedValues.length === 0) return null;
+    
+    return (
+      <div className="flex flex-wrap gap-1 mt-2">
+        {selectedValues.map((value: string) => {
+          const option = options?.find(opt => opt.value === value);
+          return (
+            <Badge key={value} variant="secondary" className="text-xs">
+              {option?.label || value}
+            </Badge>
+          );
+        })}
+      </div>
+    );
+  };
+
   const renderFilter = (filter: FilterConfig) => {
     switch (filter.type) {
-      case 'checkbox':
+      case 'multiselect':
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
-            <div className="space-y-2">
-              {filter.options?.map(option => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`${filter.id}-${option.value}`}
-                    checked={filters[filter.id]?.includes(option.value)}
-                    onCheckedChange={() => handleCheckboxChange(filter.id, option.value)}
-                  />
-                  <Label 
-                    htmlFor={`${filter.id}-${option.value}`} 
-                    className="text-sm font-normal cursor-pointer"
-                  >
-                    {option.label}
-                  </Label>
-                </div>
-              ))}
-            </div>
-            {filters[filter.id]?.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {filters[filter.id].map((value: string) => {
-                  const option = filter.options?.find(opt => opt.value === value);
-                  return (
-                    <span key={value} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded flex items-center gap-1">
-                      {option?.label}
-                      <button onClick={() => handleCheckboxChange(filter.id, value)}>
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  );
-                })}
-              </div>
-            )}
+            <MultiSelect
+              options={filter.options || []}
+              onValueChange={(values) => handleFilterChange(filter.id, values)}
+              defaultValue={filters[filter.id] || []}
+              placeholder={filter.placeholder || `Select ${filter.label.toLowerCase()}...`}
+            />
+            {renderSelectedBadges(filter.id, filters[filter.id], filter.options || [])}
           </div>
         );
 
@@ -179,59 +196,33 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
-            <div className="relative">
-              <Button
-                variant="outline"
-                onClick={() => toggleDropdown(filter.id)}
-                className="w-full justify-between"
-              >
-                {filters[filter.id]?.length > 0 
-                  ? `${filters[filter.id].length} selected`
-                  : filter.placeholder || `Select ${filter.label.toLowerCase()}...`
-                }
-                <ChevronDown className="w-4 h-4" />
-              </Button>
-              
-              {dropdownStates[filter.id] && (
-                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
-                  {filter.searchable && (
-                    <div className="p-2 border-b">
-                      <div className="relative">
-                        <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                        <Input
-                          placeholder={`Search ${filter.label.toLowerCase()}...`}
-                          className="pl-9"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  {filter.options?.map(option => (
-                    <div key={option.value} className="flex items-center px-3 py-2 hover:bg-gray-50 cursor-pointer">
-                      <Checkbox
-                        checked={filters[filter.id]?.includes(option.value)}
-                        onCheckedChange={() => handleCheckboxChange(filter.id, option.value)}
-                      />
-                      <Label className="ml-2 text-sm cursor-pointer">{option.label}</Label>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-            {filters[filter.id]?.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {filters[filter.id].map((value: string) => {
-                  const option = filter.options?.find(opt => opt.value === value);
-                  return (
-                    <span key={value} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded flex items-center gap-1">
-                      {option?.label}
-                      <button onClick={() => handleCheckboxChange(filter.id, value)}>
-                        <X className="w-3 h-3" />
-                      </button>
-                    </span>
-                  );
-                })}
-              </div>
-            )}
+            <Combobox
+              options={filter.options?.map(opt => ({
+                value: opt.value,
+                label: opt.label,
+                searchValue: opt.searchValue || opt.label
+              })) || []}
+              value={filters[filter.id]}
+              onValueChange={(value) => handleFilterChange(filter.id, value)}
+              placeholder={filter.placeholder || `Select ${filter.label.toLowerCase()}...`}
+              searchPlaceholder={`Search ${filter.label.toLowerCase()}...`}
+              emptyMessage={`No ${filter.label.toLowerCase()} found.`}
+            />
+          </div>
+        );
+
+      case 'sort':
+        return (
+          <div key={filter.id} className="space-y-3">
+            <Label className="text-sm font-medium">{filter.label}</Label>
+            <SortSelect
+              fields={filter.sortFields || []}
+              value={filters[filter.id] || []}
+              onValueChange={(values) => handleFilterChange(filter.id, values)}
+              placeholder={filter.placeholder || "Select sort options..."}
+              searchPlaceholder={`Search ${filter.label.toLowerCase()}...`}
+              emptyMessage={`No ${filter.label.toLowerCase()} found.`}
+            />
           </div>
         );
 
@@ -271,7 +262,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 onChange={(e) => handleRangeChange(filter.id, 'from', e.target.value)}
                 className="w-20"
               />
-              <span className="text-gray-500 text-sm">to</span>
+              <span className="text-muted-foreground text-sm">to</span>
               <Input
                 type="number"
                 min={filter.min || 1}
@@ -291,21 +282,23 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
             <Label className="text-sm font-medium">{filter.label}</Label>
             <div className="space-y-2">
               <div className="relative">
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="date"
                   value={filters[filter.id]?.from || ''}
                   onChange={(e) => handleRangeChange(filter.id, 'from', e.target.value)}
                   className="pl-9"
+                  placeholder="From date"
                 />
               </div>
               <div className="relative">
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="date"
                   value={filters[filter.id]?.to || ''}
                   onChange={(e) => handleRangeChange(filter.id, 'to', e.target.value)}
                   className="pl-9"
+                  placeholder="To date"
                 />
               </div>
             </div>
@@ -317,7 +310,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder={filter.placeholder || 'Search...'}
@@ -334,16 +327,24 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     }
   };
 
+  const getActiveFilterCount = () => {
+    return Object.values(filters).filter(value => {
+      if (Array.isArray(value)) return value.length > 0;
+      if (typeof value === 'object') return value.from || value.to;
+      return value !== '';
+    }).length;
+  };
+
   return (
     <div className="space-y-6 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-600" />
+          <Filter className="w-4 h-4 text-muted-foreground" />
           <h3 className="font-medium">Filters</h3>
           {hasActiveFilters && (
-            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-              Active
-            </span>
+            <Badge variant="secondary" className="text-xs">
+              {getActiveFilterCount()} active
+            </Badge>
           )}
         </div>
         {config.showResetButton !== false && (
@@ -351,8 +352,8 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
             variant="ghost"
             size="sm"
             onClick={resetFilters}
-            disabled={!hasActiveFilters}
             className="text-xs"
+            disabled={!hasActiveFilters}
           >
             <RotateCcw className="w-3 h-3 mr-1" />
             Reset
