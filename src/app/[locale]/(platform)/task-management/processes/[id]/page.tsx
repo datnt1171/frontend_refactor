@@ -12,7 +12,13 @@ export default async function FormPage({ params }: PageProps) {
 
   // Check if need to fetch user or not
   const needsUsers = process.fields.some(field => field.field_type === "assignee")
-  const users = needsUsers ? (await getUsers()).results : []
+
+  // Get Techicians only
+  const users = needsUsers ? (await getUsers({
+    'department__name__in': 'KTC,KTW,KVN',
+    'page_size': '999999',
+    'page': '1'
+  })).results : []
 
   // Check if need to fetch factory or not
   const needsFactories = process.fields.some(field => field.field_type === "factory")

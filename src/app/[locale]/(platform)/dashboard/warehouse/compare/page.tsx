@@ -9,7 +9,7 @@ const CompareFilterConfig: PageFilterConfig = {
   filters: [
     {
       id: 'status',
-      type: 'checkbox',
+      type: 'multiselect',
       label: 'Order Status',
       options: [
         { value: 'pending', label: 'Pending' },

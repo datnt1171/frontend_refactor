@@ -11,26 +11,24 @@ import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
 import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import { redirect } from "@/i18n/navigation"
 import type { PageFilterConfig } from "@/types"
 
 
-const warehouseAgingFilterConfig: PageFilterConfig = {
+const UserFilterConfig: PageFilterConfig = {
   showApplyButton: false,
   showResetButton: true,
   filters: [
     {
       id: 'ordering',
-      type: 'select',
-      label: 'Years',
-      options: [
-        { value: 'username', label: 'Username (A-Z)' },
-        { value: '-username', label: 'Username (Z-A)' },
-        { value: 'first_name', label: 'Name (A-Z)' },
-        { value: '-first_name', label: 'Name (Z-A)' },
+      type: 'sort',
+      label: 'Sort Options',
+      placeholder: 'Select sort order...',
+      sortFields: [
+        { value: 'username', label: 'Username' },
+        { value: 'first_name', label: 'First name' }
       ]
     },
     {
@@ -39,10 +37,7 @@ const warehouseAgingFilterConfig: PageFilterConfig = {
       label: 'Search User',
       placeholder: 'Search by username, name'
     }
-  ],
-  defaultValues: {
-    ordering: 'username'
-  }
+  ]
 }
 
 interface UserPageProps {
@@ -82,10 +77,9 @@ export default async function UserListPage({ searchParams }: UserPageProps) {
       <SidebarProvider>
         <div className="flex flex-1 min-w-0">
           <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background border-b px-2">
+            <div className="sticky top-14 z-10 bg-background px-2">
               <div className="flex items-center gap-2 lg:hidden">
                 <SidebarTrigger />
-                <Separator orientation="vertical" className="h-4" />
                 <span className="text-sm font-medium">Filter</span>
               </div>
               
@@ -129,7 +123,7 @@ export default async function UserListPage({ searchParams }: UserPageProps) {
               />
             </div>
           </div>
-          <SidebarRight filterConfig={warehouseAgingFilterConfig} />
+          <SidebarRight filterConfig={UserFilterConfig} />
         </div>
       </SidebarProvider>
     </RightSidebarProvider>
