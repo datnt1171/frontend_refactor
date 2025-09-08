@@ -6,12 +6,10 @@ export async function GET(request: NextRequest) {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const searchParams = request.nextUrl.searchParams
-    const queryString = searchParams.toString()
-    
-    const apiUrl = queryString 
-      ? `${process.env.API_URL}/api/users/?${queryString}`
-      : `${process.env.API_URL}/api/users/`
+    const apiUrl = new URL(`${process.env.API_URL}/api/users/`)
+    request.nextUrl.searchParams.forEach((value, key) => {
+      apiUrl.searchParams.set(key, value)
+    })
     
     const response = await fetch(apiUrl, {
       headers: {

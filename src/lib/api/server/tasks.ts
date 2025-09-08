@@ -6,14 +6,40 @@ import type {
   TaskData
 } from '@/types'
 
-export const getSentTasks = async (): Promise<PaginatedSentTaskList> => {
-  const res = await api("/tasks/sent/")
+export const getSentTasks = async (searchParams?: Record<string, string>): Promise<PaginatedSentTaskList> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/sent?${queryString}` : '/tasks/sent'
+  
+  const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch sent tasks: ${res.status}`)
   return res.json()
 }
 
-export const getReceivedTasks = async (): Promise<PaginatedReceivedTaskList> => {
-  const res = await api("/tasks/received/")
+export const getReceivedTasks = async (searchParams?: Record<string, string>): Promise<PaginatedReceivedTaskList> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/received?${queryString}` : '/tasks/received'
+  
+  const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch received tasks: ${res.status}`)
   return res.json()
 }
