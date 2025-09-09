@@ -8,8 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Clock } from "lucide-react"
-
+import { formatDuration } from "@/lib/utils/date"
 
 const formatDateTime = (dateTime: string) => {
   return new Date(dateTime).toLocaleString()
@@ -51,7 +50,7 @@ export default async function TaskActionDetailPage() {
                     <TableCell>{action.action_created_by}</TableCell>
                     <TableCell>{formatDateTime(action.action_created_at)}</TableCell>
                     <TableCell>
-                      {action.duration}
+                      {formatDuration(action.duration)}
                     </TableCell>
                     <TableCell>
                       <div className="max-w-xs truncate" title={action.comment}>
