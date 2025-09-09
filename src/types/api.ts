@@ -35,6 +35,8 @@ export type TaskActionLog = components['schemas']['TaskActionLog']
 export type TaskDetail = components['schemas']['TaskDetail']
 
 export type SPRReportRow = components['schemas']['SPRReportRow']
+export type TaskDataDetail = components['schemas']['TaskDataDetail']
+export type TaskActionDetail = components['schemas']['TaskActionDetail']
 
 // Finishing sheet
 export type FinishingSheet = components['schemas']['FinishingSheet']
