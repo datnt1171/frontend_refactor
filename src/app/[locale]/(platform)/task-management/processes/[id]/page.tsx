@@ -24,17 +24,23 @@ export default async function FormPage({ params }: PageProps) {
   const needsFactories = process.fields.some(field => field.field_type === "factory")
   const factories = needsFactories ? (await getFactories(
     {
-      is_active: true, 
-      has_onsite: true,
-      limit: 100
+      'is_active': 'true', 
+      'has_onsite': 'true',
+      'page_size': '999999',
+      'page': '1'
     }
   )).results : []
 
   // Check if need to fetch retailer or not
   const needsRetailers = process.fields.some(field => field.field_type === "retailer")
   const retailers = needsRetailers 
-  ? (await getRetailers({ limit: 999999 })).results 
-  : []
+  ? (await getRetailers(
+    { 
+      'page_size': '999999',
+      'page': '1' 
+    }
+    
+  )).results : []
 
 
   return (

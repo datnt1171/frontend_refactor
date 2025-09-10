@@ -32,11 +32,15 @@ export default async function TaskDataPage({ params }: PageProps) {
     const [users, factories, retailers] = await Promise.all([
       needsUsers ? getUsers().then(res => res.results) : Promise.resolve([]),
       needsFactories ? getFactories({
-        is_active: true,
-        has_onsite: true,
-        limit: 100
+        'is_active': 'true', 
+        'has_onsite': 'true',
+        'page_size': '999999',
+        'page': '1'
       }).then(res => res.results) : Promise.resolve([]),
-      needsRetailers ? getRetailers().then(res => res.results) : Promise.resolve([])
+      needsRetailers ? getRetailers({
+        'page_size': '999999',
+        'page': '1'
+      }).then(res => res.results) : Promise.resolve([])
     ])
 
     // Map values based on field type
