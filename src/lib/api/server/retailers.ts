@@ -1,28 +1,22 @@
 import { api } from '@/lib/api/server/api'
 import type { PaginatedRetailerList, RetailerDetail } from '@/types'
 
-export const getRetailers = async (params?: {
-  offset?: number
-  limit?: number
-}): Promise<PaginatedRetailerList> => {
-  const searchParams = new URLSearchParams()
+export const getRetailers = async (searchParams?: Record<string, string>): Promise<PaginatedRetailerList> => {
+  const queryParams = new URLSearchParams()
   
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        searchParams.append(key, value.toString())
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
       }
     })
   }
   
-  const queryString = searchParams.toString()
-  const endpoint = `/crm/retailers${queryString ? `?${queryString}` : ''}`
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/crm/retailers?${queryString}` : '/crm/retailers'
   
   const res = await api(endpoint)
-  if (!res.ok) {
-    throw new Error(`Failed to fetch retailers: ${res.status} ${res.statusText}`)
-  }
-  
+  if (!res.ok) throw new Error(`Failed to fetch retailers: ${res.status}`)
   return res.json()
 }
 

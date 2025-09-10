@@ -1,21 +1,20 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import { NextRequest } from "next/server"
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    // Extract query parameters from the request
-    const { searchParams } = new URL(request.url)
-    const queryString = searchParams.toString()
-    const externalUrl = `${process.env.DW_API_URL}/api/crm/factories${queryString ? `?${queryString}` : ''}`
-    console.log('Fetching factories from:', externalUrl)
+    const apiUrl = new URL(`${process.env.DW_API_URL}/api/crm/factories`)
+    request.nextUrl.searchParams.forEach((value, key) => {
+      apiUrl.searchParams.set(key, value)
+    })
     
-    const response = await fetch(externalUrl, {
+    const response = await fetch(apiUrl, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
-        "Content-Type": "application/json",
-        "Accept-Language": session.locale,
+        "Content-Type": "application/json"
       },
     })
 
