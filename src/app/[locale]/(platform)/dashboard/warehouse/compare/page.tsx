@@ -5,7 +5,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
 const CompareFilterConfig: PageFilterConfig = {
-  showApplyButton: false, // Auto-apply filters
   filters: [
     {
       id: 'status',

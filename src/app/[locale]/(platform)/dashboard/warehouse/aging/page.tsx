@@ -5,7 +5,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
 const warehouseAgingFilterConfig: PageFilterConfig = {
-  showApplyButton: true,
   showResetButton: true,
   filters: [
     {

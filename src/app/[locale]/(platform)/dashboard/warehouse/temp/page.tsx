@@ -4,7 +4,7 @@ import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
-export const exampleFilterConfig: PageFilterConfig = {
+const exampleFilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
     status: 'active',
@@ -115,7 +115,7 @@ export const exampleFilterConfig: PageFilterConfig = {
 };
 
 // Blog/Article specific configuration
-export const blogFilterConfig: PageFilterConfig = {
+const blogFilterConfig: PageFilterConfig = {
   filters: [
     {
       id: 'search',
@@ -165,7 +165,7 @@ export const blogFilterConfig: PageFilterConfig = {
 };
 
 // E-commerce Product filtering
-export const productFilterConfig: PageFilterConfig = {
+const productFilterConfig: PageFilterConfig = {
   defaultValues: {
     availability: ['in-stock']
   },
@@ -240,7 +240,7 @@ export const productFilterConfig: PageFilterConfig = {
 };
 
 // User Management filtering
-export const userFilterConfig: PageFilterConfig = {
+const userFilterConfig: PageFilterConfig = {
   filters: [
     {
       id: 'search',
@@ -293,7 +293,7 @@ export const userFilterConfig: PageFilterConfig = {
 };
 
 // Event/Calendar filtering
-export const eventFilterConfig: PageFilterConfig = {
+const eventFilterConfig: PageFilterConfig = {
   defaultValues: {
     status: 'upcoming'
   },

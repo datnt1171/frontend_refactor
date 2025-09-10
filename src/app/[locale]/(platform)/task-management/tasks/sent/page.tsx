@@ -16,7 +16,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
 const SentTaskFilterConfig: PageFilterConfig = {
-  showApplyButton: true,
   showResetButton: true,
   filters: [
     {

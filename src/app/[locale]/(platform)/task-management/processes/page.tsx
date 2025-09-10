@@ -12,7 +12,6 @@ import type { PageFilterConfig } from "@/types"
 
 
 const ProcessFilterConfig: PageFilterConfig = {
-  showApplyButton: true,
   showResetButton: true,
   filters: [
     {
