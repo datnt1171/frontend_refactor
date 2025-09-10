@@ -5,7 +5,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
 export const exampleFilterConfig: PageFilterConfig = {
-  showApplyButton: true,
   showResetButton: true,
   defaultValues: {
     status: 'active',
@@ -117,7 +116,6 @@ export const exampleFilterConfig: PageFilterConfig = {
 
 // Blog/Article specific configuration
 export const blogFilterConfig: PageFilterConfig = {
-  showApplyButton: false, // Auto-apply filters
   filters: [
     {
       id: 'search',
@@ -168,7 +166,6 @@ export const blogFilterConfig: PageFilterConfig = {
 
 // E-commerce Product filtering
 export const productFilterConfig: PageFilterConfig = {
-  showApplyButton: true,
   defaultValues: {
     availability: ['in-stock']
   },
@@ -244,7 +241,6 @@ export const productFilterConfig: PageFilterConfig = {
 
 // User Management filtering
 export const userFilterConfig: PageFilterConfig = {
-  showApplyButton: false,
   filters: [
     {
       id: 'search',
@@ -298,7 +294,6 @@ export const userFilterConfig: PageFilterConfig = {
 
 // Event/Calendar filtering
 export const eventFilterConfig: PageFilterConfig = {
-  showApplyButton: true,
   defaultValues: {
     status: 'upcoming'
   },

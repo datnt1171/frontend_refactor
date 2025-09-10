@@ -54,40 +54,29 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     return initialState;
   });
 
-  // Track if component has mounted to handle initial URL sync
-  const [hasMounted, setHasMounted] = useState(false);
-
-  // Sync default values to URL on initial load if no URL params exist
+  // Apply default values to URL on mount if they don't exist
   useEffect(() => {
-    if (!hasMounted) {
-      setHasMounted(true);
+    if (config.defaultValues) {
+      const params = new URLSearchParams(searchParams);
+      let hasChanges = false;
       
-      // Check if there are any existing URL params for our filters
-      const hasUrlParams = config.filters.some(filter => 
-        searchParams.has(filter.id) || 
-        searchParams.has(`${filter.id}_from`) || 
-        searchParams.has(`${filter.id}_to`)
-      );
-      
-      // If no URL params exist but we have default values, sync them to URL
-      if (!hasUrlParams && config.defaultValues && Object.keys(config.defaultValues).length > 0) {
-        const params = new URLSearchParams(searchParams);
-        
-        Object.entries(config.defaultValues).forEach(([key, value]) => {
+      Object.entries(config.defaultValues).forEach(([key, value]) => {
+        if (!searchParams.has(key)) {
           if (Array.isArray(value) && value.length > 0) {
             params.set(key, value.join(','));
-          } else if (typeof value === 'object' && value !== null && (value.from || value.to)) {
-            if (value.from) params.set(`${key}_from`, value.from);
-            if (value.to) params.set(`${key}_to`, value.to);
+            hasChanges = true;
           } else if (value && typeof value === 'string') {
             params.set(key, value);
+            hasChanges = true;
           }
-        });
-        
+        }
+      });
+      
+      if (hasChanges) {
         router.replace(`${pathname}?${params.toString()}`);
       }
     }
-  }, [hasMounted, searchParams, pathname, router, config.defaultValues, config.filters]);
+  }, []);
 
   const handleFilterChange = (filterId: string, value: any) => {
     setFilters(prev => ({ ...prev, [filterId]: value }));
@@ -112,8 +101,18 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       }
     });
     setFilters(resetState);
-    router.replace(pathname);
-  };
+    
+    // Create new URL with only page=1 and existing page_size
+    const params = new URLSearchParams();
+    params.set('page', '1');
+    
+    const currentPageSize = searchParams.get('page_size');
+    if (currentPageSize) {
+      params.set('page_size', currentPageSize);
+    }
+    
+    router.replace(`${pathname}?${params.toString()}`);
+    };
 
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams);
@@ -145,13 +144,6 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     onFiltersChange?.(filters);
   };
 
-  // Auto-apply filters if showApplyButton is false
-  useEffect(() => {
-    if (!config.showApplyButton && hasMounted) {
-      const timeoutId = setTimeout(applyFilters, 500); // Debounce
-      return () => clearTimeout(timeoutId);
-    }
-  }, [filters, config.showApplyButton, hasMounted]);
 
   const hasActiveFilters = Object.values(filters).some(value => {
     if (Array.isArray(value)) return value.length > 0;
@@ -353,7 +345,6 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
             size="sm"
             onClick={resetFilters}
             className="text-xs"
-            disabled={!hasActiveFilters}
           >
             <RotateCcw className="w-3 h-3 mr-1" />
             Reset
@@ -365,18 +356,15 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         {config.filters.map(renderFilter)}
       </div>
 
-      {config.showApplyButton && (
-        <div className="pt-4 border-t space-y-2">
-          <Button
-            onClick={applyFilters}
-            disabled={!hasActiveFilters}
-            className="w-full"
-            size="sm"
-          >
-            Apply Filters
-          </Button>
-        </div>
-      )}
+      <div className="pt-4 border-t space-y-2">
+        <Button
+          onClick={applyFilters}
+          className="w-full"
+          size="sm"
+        >
+          Apply Filters
+        </Button>
+      </div>
     </div>
   );
 }

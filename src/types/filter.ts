@@ -33,7 +33,6 @@ export interface FilterConfig {
 export interface PageFilterConfig {
   filters: FilterConfig[];
   defaultValues?: Record<string, any>;
-  showApplyButton?: boolean;
   showResetButton?: boolean;
 }
 
