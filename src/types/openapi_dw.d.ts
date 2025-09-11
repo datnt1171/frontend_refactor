@@ -509,8 +509,8 @@ export interface operations {
                 is_active?: boolean;
                 has_onsite?: boolean;
                 search?: string;
-                offset?: number;
-                limit?: number;
+                page?: number;
+                page_size?: number;
             };
             header?: never;
             path?: never;
@@ -641,8 +641,8 @@ export interface operations {
         parameters: {
             query?: {
                 search?: string;
-                offset?: number;
-                limit?: number;
+                page?: number;
+                page_size?: number;
             };
             header?: never;
             path?: never;
