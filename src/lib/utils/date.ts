@@ -26,3 +26,44 @@ export function formatDateToUTC7(dateString: string): string {
 
   return `${year}-${month}-${day}, ${hour}:${minute}`;
 }
+
+export function formatDuration(durationSeconds: string | number): string {
+  if (!durationSeconds) return '-'
+  
+  const totalSeconds = typeof durationSeconds === 'string' 
+    ? parseFloat(durationSeconds) 
+    : durationSeconds
+  
+  if (isNaN(totalSeconds) || totalSeconds < 0) return '-'
+  
+  const days = Math.floor(totalSeconds / 86400) // 24 * 60 * 60
+  const hours = Math.floor((totalSeconds % 86400) / 3600) // 60 * 60
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = Math.floor(totalSeconds % 60)
+  
+  const parts: string[] = []
+  
+  if (days > 0) {
+    parts.push(`${days}d`)
+  }
+  
+  if (hours > 0) {
+    parts.push(`${hours}h`)
+  }
+  
+  if (minutes > 0) {
+    parts.push(`${minutes}m`)
+  }
+  
+  // Show seconds if less than 1 hour total, or if it's the only unit
+  if ((days === 0 && hours === 0) || (days === 0 && hours === 0 && minutes === 0)) {
+    if (totalSeconds < 60) {
+      // Show decimal for sub-minute durations
+      parts.push(`${totalSeconds.toFixed(1)}s`)
+    } else {
+      parts.push(`${seconds}s`)
+    }
+  }
+  
+  return parts.length > 0 ? parts.join(' ') : '0s'
+}

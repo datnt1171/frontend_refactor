@@ -164,6 +164,38 @@ export interface paths {
         patch: operations["api_tasks_data_partial_update"];
         trace?: never;
     };
+    "/api/tasks/action-detail/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_action_detail_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tasks/data-detail/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_data_detail_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/received/": {
         parameters: {
             query?: never;
@@ -377,9 +409,9 @@ export interface components {
             sampler: string;
             chemical_waste: string;
             conveyor_speed: string;
-            with_panel_test: boolean;
-            testing: boolean;
-            chemical_yellowing: boolean;
+            with_panel_test?: boolean;
+            testing?: boolean;
+            chemical_yellowing?: boolean;
             /** Format: date-time */
             readonly created_at: string;
             /** Format: uuid */
@@ -696,6 +728,21 @@ export interface components {
             /** Format: uri */
             file?: File;
         };
+        TaskActionDetail: {
+            /** Format: uuid */
+            task_id: string;
+            title: string;
+            /** Format: date-time */
+            created_at: string;
+            created_by: string;
+            state: string;
+            action: string;
+            action_created_by: string;
+            /** Format: date-time */
+            action_created_at: string;
+            comment: string;
+            duration: string;
+        };
         TaskActionLog: {
             /** Format: uuid */
             readonly id: string;
@@ -718,6 +765,33 @@ export interface components {
             /** Format: uri */
             file?: string;
             readonly history: components["schemas"]["TaskDataHistory"][];
+        };
+        TaskDataDetail: {
+            /** Format: uuid */
+            task_id: string;
+            title: string;
+            /** Format: date */
+            created_at: string;
+            created_by: string;
+            state: string;
+            name_of_customer: string;
+            finishing_code: string;
+            retailer: string;
+            customer_color_name: string;
+            type_of_substrate: string;
+            collection: string;
+            sample_type: string;
+            quantity_requirement: string;
+            requester_name: string;
+            deadline_request: string;
+            sampler: string;
+            type_of_paint: string;
+            finishing_surface_grain: string;
+            sheen_level: string;
+            substrate_surface_treatment: string;
+            panel_category: string;
+            purpose_of_usage: string;
+            additional_detail: string;
         };
         TaskDataHistory: {
             value?: string | null;
@@ -743,7 +817,7 @@ export interface components {
             readonly created_at: string;
             data: components["schemas"]["TaskData"][];
             action_logs: components["schemas"]["TaskActionLog"][];
-            readonly available_actions: components["schemas"]["Action"][];
+            readonly available_actions: components["schemas"]["Action"];
         };
         TaskFileData: {
             original_filename?: string;
@@ -1183,6 +1257,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TaskData"];
+                };
+            };
+        };
+    };
+    api_tasks_action_detail_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskActionDetail"][];
+                };
+            };
+        };
+    };
+    api_tasks_data_detail_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskDataDetail"][];
                 };
             };
         };
