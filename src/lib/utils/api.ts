@@ -11,7 +11,7 @@ import type { ApiErrorResponse,
 export async function getSessionCookie(): Promise<{ access_token: string | null; locale: string }> {
   const cookieStore = await cookies()
   const access_token = cookieStore.get("access_token")?.value || null
-  const locale = cookieStore.get("NEXT_LOCALE")?.value || "en"
+  const locale = cookieStore.get("NEXT_LOCALE")?.value || "vi"
   return { access_token, locale }
 }
 
