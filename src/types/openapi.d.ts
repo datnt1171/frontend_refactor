@@ -409,9 +409,9 @@ export interface components {
             sampler: string;
             chemical_waste: string;
             conveyor_speed: string;
-            with_panel_test?: boolean;
-            testing?: boolean;
-            chemical_yellowing?: boolean;
+            with_panel_test: boolean;
+            testing: boolean;
+            chemical_yellowing: boolean;
             /** Format: date-time */
             readonly created_at: string;
             /** Format: uuid */
@@ -817,7 +817,7 @@ export interface components {
             readonly created_at: string;
             data: components["schemas"]["TaskData"][];
             action_logs: components["schemas"]["TaskActionLog"][];
-            readonly available_actions: components["schemas"]["Action"];
+            readonly available_actions: components["schemas"]["Action"][];
         };
         TaskFileData: {
             original_filename?: string;
@@ -870,6 +870,8 @@ export interface operations {
                 ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
                 /** @description A search term. */
                 search?: string;
             };
@@ -918,6 +920,8 @@ export interface operations {
                 ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
                 /** @description A search term. */
                 search?: string;
                 task?: string;
@@ -1306,6 +1310,8 @@ export interface operations {
                 ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
                 /** @description A search term. */
                 search?: string;
             };
@@ -1332,6 +1338,8 @@ export interface operations {
                 ordering?: string;
                 /** @description A page number within the paginated result set. */
                 page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
                 /** @description A search term. */
                 search?: string;
             };
