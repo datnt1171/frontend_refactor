@@ -381,11 +381,25 @@ export interface components {
             readonly id: string;
             name: string;
         };
+        FieldCondition: {
+            /** Format: uuid */
+            readonly id: string;
+            /**
+             * Format: uuid
+             * @description The field to check the value of
+             */
+            condition_field?: string | null;
+            operator: components["schemas"]["OperatorEnum"];
+            /** @description Value(s) to compare against */
+            value: unknown;
+        };
         /**
          * @description * `text` - Text
          *     * `number` - Number
          *     * `date` - Date
+         *     * `time` - Time
          *     * `select` - Select
+         *     * `multiselect` - Multi Select
          *     * `file` - File
          *     * `json` - Table
          *     * `assignee` - Assignee
@@ -393,7 +407,7 @@ export interface components {
          *     * `retailer` - Retailer
          * @enum {string}
          */
-        FieldTypeEnum: "text" | "number" | "date" | "select" | "file" | "json" | "assignee" | "factory" | "retailer";
+        FieldTypeEnum: "text" | "number" | "date" | "time" | "select" | "multiselect" | "file" | "json" | "assignee" | "factory" | "retailer";
         FinishingSheet: {
             /** Format: uuid */
             readonly id: string;
@@ -430,6 +444,23 @@ export interface components {
             wft?: number | null;
             products: components["schemas"]["ProductTemplate"][];
         };
+        /**
+         * @description * `exact` - Exact
+         *     * `not_exact` - Not Exact
+         *     * `contains` - Contains
+         *     * `not_contains` - Not Contains
+         *     * `in` - In
+         *     * `not_in` - Not In
+         *     * `gt` - Greater Than
+         *     * `lt` - Less Than
+         *     * `gte` - Greater Than or Equal
+         *     * `lte` - Less Than or Equal
+         *     * `is_empty` - Is Empty
+         *     * `is_not_empty` - Is Not Empty
+         *     * `weekday` - Week day
+         * @enum {string}
+         */
+        OperatorEnum: "exact" | "not_exact" | "contains" | "not_contains" | "in" | "not_in" | "gt" | "lt" | "gte" | "lte" | "is_empty" | "is_not_empty" | "weekday";
         PaginatedFinishingSheetList: {
             /** @example 123 */
             count: number;
@@ -570,6 +601,7 @@ export interface components {
             order: number;
             required: boolean;
             options?: unknown;
+            readonly conditions: components["schemas"]["FieldCondition"][];
         };
         ProductTemplate: {
             /** Format: uuid */
@@ -697,9 +729,10 @@ export interface components {
          *     * `denied` - Denied
          *     * `canceled` - Canceled
          *     * `closed` - Closed
+         *     * `static` - Static
          * @enum {string}
          */
-        StateTypeEnum: "pending_approve" | "analyze" | "working" | "pending_review" | "start" | "denied" | "canceled" | "closed";
+        StateTypeEnum: "pending_approve" | "analyze" | "working" | "pending_review" | "start" | "denied" | "canceled" | "closed" | "static";
         /** @description Always return all the translation regardless Accept-Language
          *     because finising sheet is a snapshot so it wont benefit from FK */
         StepTemplate: {

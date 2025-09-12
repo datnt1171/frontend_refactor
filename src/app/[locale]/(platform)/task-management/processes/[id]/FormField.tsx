@@ -3,8 +3,9 @@
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Combobox } from "@/components/ui/combobox"
+import { MultiSelect } from "@/components/ui/multi-select"
 import { useTranslations } from 'next-intl'
-import type { ProcessField, UserList, Factory, Retailer } from "@/types"
+import type { ProcessField, UserList, Factory, Retailer, ValueLabel } from "@/types"
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 import { compressImage } from "@/lib/utils/imageCompression"
 
@@ -125,7 +126,6 @@ export function FormField({
         />
       )
 
-
     case "text":
       return (
         <Input
@@ -164,6 +164,18 @@ export function FormField({
         />
       )
 
+    case "time":
+      return (
+        <Input
+          id={`field-${field.id}`}
+          type="time"
+          value={value || ""}
+          onChange={(e) => onChange(e.target.value)}
+          required={field.required}
+          disabled={disabled}
+        />
+      )
+
     case "select":
       const optionsArray: string[] = Array.isArray(field.options)
         ? field.options as string[]
@@ -186,6 +198,22 @@ export function FormField({
             ))}
           </SelectContent>
         </Select>
+      )
+
+    case "multiselect":
+      const multiSelectOptions = Array.isArray(field.options)
+        ? field.options as ValueLabel[]
+        : []
+      
+      return (
+        <MultiSelect
+          options={multiSelectOptions}
+          onValueChange={onChange}
+          defaultValue={value || []}
+          disabled={disabled}
+          responsive={true}
+          modalPopover={true}
+        />
       )
 
     case "file":

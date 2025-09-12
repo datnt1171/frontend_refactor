@@ -16,6 +16,10 @@ export type ProcessDetail = components['schemas']['ProcessDetail']
 export type ProcessList = components['schemas']['Process']
 export type Action = components['schemas']['Action']
 export type ActionTypeEnum = components['schemas']['ActionTypeEnum']
+export type ValueLabel = {
+  value: string;
+  label: string;
+};
 
 // Workflow_engine
 export type State = components['schemas']['State']
