@@ -21,6 +21,8 @@ export type ValueLabel = {
   label: string;
 };
 
+export type FieldCondition = components['schemas']['FieldCondition']
+
 // Workflow_engine
 export type State = components['schemas']['State']
 export type StateTypeEnum = components['schemas']['StateTypeEnum']
