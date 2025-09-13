@@ -208,6 +208,18 @@
     },
     "appTitle": "Báo cáo",
     "appDescription": "Báo cáo các bộ phận",
+    "filter": {
+      "filter": "Bộ lọc",
+      "noFilter": "Không có bộ lọc nào cho trang này",
+      "pagination": "Phân trang",
+      "15perPage": "15 mỗi trang",
+      "50perPage": "50 mỗi trang",
+      "100perPage": "100 mỗi trang",
+      "showAll": "Tất cả",
+      "showingAll": "Hiện toàn bộ {totalCount} kết quả",
+      "showingRange": "Hiện {start} đến {end} trong {totalCount} kết quả"
+
+    },
     "sideBar": {
       "Warehouse": "Kho",
       "overview": "Tổng quan",

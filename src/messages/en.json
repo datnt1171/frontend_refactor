@@ -209,6 +209,18 @@
     },
     "appTitle": "Dashboard",
     "appDescription": "Reports and Dashboards",
+    "filter": {
+      "filter": "Filter",
+      "noFilter": "No filters configured for this page",
+      "pagination": "Pagination",
+      "15perPage": "15 per page",
+      "50perPage": "50 per page",
+      "100perPage": "100 per page",
+      "showAll": "Show all",
+      "showingAll": "Showing all {totalCount} results",
+      "showingRange": "Showing {start} to {end} of {totalCount} results"
+
+    },
     "sideBar": {
       "Warehouse": "Warehouse",
       "overview": "Overview",
@@ -220,6 +232,8 @@
       "ratio": "Ratio",
       "agingProduct": "Aging Product",
       "importData": "Import Data",
+      "taskAction": "Task Action",
+      "sample": "Sample",
 
       "Task": "Task",
       "sampleRequest": "All sample request"

@@ -112,6 +112,8 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
       icon: ListCheck,
       items: [
         { title: "dashboard.sideBar.sampleRequest", url: "/dashboard/task-management/sample-request" },
+        { title: "dashboard.sideBar.taskAction", url: "/dashboard/task-management/action-detail" },
+        { title: "dashboard.sideBar.sample", url: "/dashboard/task-management/data-detail" },
       ],
     }
   ]

@@ -31,14 +31,14 @@
     "searchFactory": "搜尋工廠",
     "selectRetailer": "選擇零售商",
     "searchRetailer": "搜尋零售商",
-    "actionPerformedSuccessfully": "Thao tác đã thực hiện thành công!",
-    "failedToPerformAction": "Thao tác thất bại",
-    "deleteAlertTitle": "Bạn có chắc chắn không?",
-    "deleteAlertDescription": "Hành động này không thể hoàn tác. Thao tác này sẽ xóa vĩnh viễn tệp \"{name}\" và loại bỏ tất cả dữ liệu liên quan.",
-    "file": "Tệp",
-    "fileSize": "Kích thước tệp",
-    "preview": "Xem trước",
-    "download": "Tải xuống"
+    "actionPerformedSuccessfully": "操作已成功完成！",
+    "failedToPerformAction": "操作失敗",
+    "deleteAlertTitle": "您確定嗎？",
+    "deleteAlertDescription": "此操作無法復原。這將永久刪除檔案「{name}」，並移除所有相關資料。",
+    "file": "檔案",
+    "fileSize": "檔案大小",
+    "preview": "預覽",
+    "download": "下載"
   },
   "home": {
   "title": "首頁",
@@ -208,6 +208,18 @@
     },
     "appTitle": "儀表板",
     "appDescription": "報表與儀表板",
+    "filter": {
+      "filter": "篩選",
+      "noFilter": "此頁面尚未設定篩選條件",
+      "pagination": "分頁",
+      "15perPage": "每頁 15 筆",
+      "50perPage": "每頁 50 筆",
+      "100perPage": "每頁 100 筆",
+      "showAll": "顯示全部",
+      "showingAll": "顯示全部 {totalCount} 筆結果",
+      "showingRange": "顯示第 {start} 到第 {end} 筆，共 {totalCount} 筆結果"
+
+    },
     "sideBar": {
       "Warehouse": "倉庫",
       "overview": "總覽",

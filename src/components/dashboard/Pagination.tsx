@@ -19,6 +19,7 @@ import {
 import { PaginationProps } from "@/types"
 import { usePathname, useRouter } from "@/i18n/navigation"
 import { useSearchParams } from "next/navigation"
+import { useTranslations } from "next-intl"
 
 // Helper function to generate pagination URLs
 function createPageURL(pathname: string, searchParams: URLSearchParams, pageNumber: number) {
@@ -60,17 +61,11 @@ function generatePagination(currentPage: number, totalPages: number) {
   ]
 }
 
-const PAGE_SIZE_OPTIONS = [
-  { value: '15', label: '15 per page' },
-  { value: '50', label: '50 per page' },
-  { value: '100', label: '100 per page' },
-  { value: '999999', label: 'Show all' },
-]
-
 export function DataPagination({
   totalCount,
 }: PaginationProps) {
   
+  const t = useTranslations()
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -79,19 +74,32 @@ export function DataPagination({
   const totalPages = Math.ceil(totalCount / pageSize)
   const allPages = generatePagination(currentPage, totalPages)
 
+  const PAGE_SIZE_OPTIONS = [
+    { value: '15', label: t('dashboard.filter.15perPage') },
+    { value: '50', label: t('dashboard.filter.50perPage') },
+    { value: '100', label: t('dashboard.filter.100perPage') },
+    { value: '999999', label: t('dashboard.filter.showAll') },
+  ]
+
   const handlePageSizeChange = (value: string) => {
     const newUrl = createPageSizeURL(pathname, searchParams, Number(value))
     router.push(newUrl)
   }
 
   return (
-    <div className="flex justify-between items-center mt-4 w-full">
+    <div className="flex flex-wrap justify-between items-center gap-2 mt-4 w-full">
       {/* Results info */}
-      <div className="text-sm text-muted-foreground">
+      <div className="hidden sm:block text-sm text-muted-foreground">
         {totalPages <= 1 && totalCount <= pageSize ? 
-          `Showing all ${totalCount} results` :
-          `Showing ${((currentPage - 1) * pageSize) + 1} to ${Math.min(currentPage * pageSize, totalCount)} of ${totalCount} results`
-        }
+        (t('dashboard.filter.showingAll', { totalCount })
+        ) : (
+          t('dashboard.filter.showingRange', {
+            start: (currentPage - 1) * pageSize + 1,
+            end: Math.min(currentPage * pageSize, totalCount),
+            totalCount,
+          })
+        )
+      }
       </div>
 
       {/* Pagination Controls */}
@@ -134,7 +142,7 @@ export function DataPagination({
 
       {/* Page Size Selector */}
       <Select value={pageSize.toString()} onValueChange={handlePageSizeChange}>
-        <SelectTrigger className="w-[140px]">
+        <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>

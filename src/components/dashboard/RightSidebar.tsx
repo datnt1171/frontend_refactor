@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { useRightSidebar } from "@/contexts/FilterContext"
 import { useIsMobile } from "@/hooks/use-mobile"
 import type { PageFilterConfig } from "@/types"
+import { useTranslations } from "next-intl"
 
 interface SidebarRightProps extends React.ComponentProps<typeof Sidebar> {
   filterConfig?: PageFilterConfig;
@@ -16,6 +17,7 @@ interface SidebarRightProps extends React.ComponentProps<typeof Sidebar> {
 export function SidebarRight({ filterConfig, ...props }: SidebarRightProps) {
   const { isOpen, toggle } = useRightSidebar()
   const isMobile = useIsMobile()
+  const t = useTranslations()
 
   if (!isOpen) {
     return (
@@ -27,7 +29,6 @@ export function SidebarRight({ filterConfig, ...props }: SidebarRightProps) {
           className="h-8 w-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
           <PanelRightOpen className="h-4 w-4" />
-          <span className="sr-only">Open Right Sidebar</span>
         </Button>
       </div>
     )
@@ -45,7 +46,6 @@ export function SidebarRight({ filterConfig, ...props }: SidebarRightProps) {
               className="h-8 w-8 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             >
               <PanelRightClose className="h-4 w-4" />
-              <span className="sr-only">Close Right Sidebar</span>
             </Button>
           )}
         </div>
@@ -55,7 +55,7 @@ export function SidebarRight({ filterConfig, ...props }: SidebarRightProps) {
           <ConfigurableFilters config={filterConfig} />
         ) : (
           <div className="p-4 text-center text-gray-500 text-sm">
-            No filters configured for this page
+            {t('dashboard.filter.noFilter')}
           </div>
         )}
       </SidebarContent>
