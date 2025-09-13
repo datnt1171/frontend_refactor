@@ -1,4 +1,5 @@
 import { getActionDetail } from "@/lib/api/server/reports"
+import React from "react"
 import {
   Table,
   TableBody,
@@ -16,6 +17,34 @@ const formatDateTime = (dateTime: string) => {
 
 export default async function TaskActionDetailPage() {
   const data = await getActionDetail()
+
+  // Group data by task_id
+  const groupedData = data
+    .sort((a, b) => {
+      if (a.task_id !== b.task_id) {
+        return a.task_id.localeCompare(b.task_id)
+      }
+      // Sort by action_created_at within each task group
+      return new Date(a.action_created_at).getTime() - new Date(b.action_created_at).getTime()
+    })
+    .reduce((acc: { [key: string]: typeof data }, action) => {
+      if (!acc[action.task_id]) {
+        acc[action.task_id] = []
+      }
+      acc[action.task_id]!.push(action)
+      return acc
+    }, {})
+
+  // Calculate total duration for each task_id
+  const taskTotals = Object.entries(groupedData).map(([taskId, actions]) => {
+    const totalDuration = actions.reduce((sum, action) => {
+      const duration = typeof action.duration === 'string' 
+        ? parseFloat(action.duration) 
+        : action.duration
+      return sum + (isNaN(duration) ? 0 : duration)
+    }, 0)
+    return { taskId, totalDuration }
+  })
 
   return (
     <div className="container mx-auto py-6">
@@ -42,24 +71,42 @@ export default async function TaskActionDetailPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.map((action, index) => (
-                  <TableRow key={`${action.task_id}-${index}`}>
-                    <TableCell className="font-medium">{action.title}</TableCell>
-                    <TableCell>{action.action}</TableCell>
-                    <TableCell>{action.state}</TableCell>
-                    <TableCell>{action.action_created_by}</TableCell>
-                    <TableCell>{formatDateTime(action.action_created_at)}</TableCell>
-                    <TableCell>
-                      {formatDuration(action.duration)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="max-w-xs truncate" title={action.comment}>
-                        {action.comment}
-                      </div>
-                    </TableCell>
-                    <TableCell>{action.created_by}</TableCell>
-                  </TableRow>
-                ))}
+                {Object.entries(groupedData).map(([taskId, actions]) => {
+                  const taskTotal = taskTotals.find(t => t.taskId === taskId)?.totalDuration || 0
+                  
+                  return (
+                    <React.Fragment key={taskId}>
+                      {actions.map((action, index) => (
+                        <TableRow key={`${action.task_id}-${index}`}>
+                          <TableCell className="font-medium">{action.title}</TableCell>
+                          <TableCell>{action.action}</TableCell>
+                          <TableCell>{action.state}</TableCell>
+                          <TableCell>{action.action_created_by}</TableCell>
+                          <TableCell>{formatDateTime(action.action_created_at)}</TableCell>
+                          <TableCell>
+                            {formatDuration(action.duration)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="max-w-xs truncate" title={action.comment}>
+                              {action.comment}
+                            </div>
+                          </TableCell>
+                          <TableCell>{action.created_by}</TableCell>
+                        </TableRow>
+                      ))}
+                      {/* Subtotal row for each task_id */}
+                      <TableRow className="bg-gray-50 font-semibold border-t-2">
+                        <TableCell colSpan={5} className="text-right">
+                          Total Duration ({actions[0]!.title}):
+                        </TableCell>
+                        <TableCell className="font-bold">
+                          {formatDuration(taskTotal)}
+                        </TableCell>
+                        <TableCell colSpan={2}></TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  )
+                })}
               </TableBody>
             </Table>
           </div>
