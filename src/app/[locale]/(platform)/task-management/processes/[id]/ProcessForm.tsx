@@ -8,6 +8,7 @@ import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
 import { ProcessFormHeader } from "./ProcessFormHeader"
 import { ProcessFormContent } from "./ProcessFormContent"
 import { FormReview } from "./FormReview"
+import { getVisibleFields } from "@/lib/utils/field"
 
 interface ProcessFormClientProps {
   process: ProcessDetail
@@ -37,7 +38,11 @@ export function ProcessFormClient({
   }
 
   const validateForm = () => {
-    const missingFields = process.fields
+    // Get only visible fields based on current form values
+    const visibleFields = getVisibleFields(process.fields, formValues)
+    
+    // Check only visible required fields
+    const missingFields = visibleFields
       .filter(field => field.required && !formValues[field.id])
       .map(field => field.name)
     
