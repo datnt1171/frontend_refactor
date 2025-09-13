@@ -769,7 +769,9 @@ export interface components {
             created_at: string;
             created_by: string;
             state: string;
+            state_type: string;
             action: string;
+            action_type: string;
             action_created_by: string;
             /** Format: date-time */
             action_created_at: string;
@@ -807,6 +809,7 @@ export interface components {
             created_at: string;
             created_by: string;
             state: string;
+            state_type: string;
             name_of_customer: string;
             finishing_code: string;
             retailer: string;

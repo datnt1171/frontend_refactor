@@ -9,11 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { formatDuration } from "@/lib/utils/date"
-
-const formatDateTime = (dateTime: string) => {
-  return new Date(dateTime).toLocaleString()
-}
+import { Badge } from "@/components/ui/badge"
+import { formatDuration, formatDateToUTC7 } from "@/lib/utils/date"
+import { getActionColor, getStatusColor } from "@/lib/utils/format"
+import { Link } from "@/i18n/navigation"
 
 export default async function TaskActionDetailPage() {
   const data = await getActionDetail()
@@ -61,8 +60,8 @@ export default async function TaskActionDetailPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Task Title</TableHead>
-                  <TableHead>Action</TableHead>
                   <TableHead>State</TableHead>
+                  <TableHead>Action</TableHead>
                   <TableHead>Action By</TableHead>
                   <TableHead>Action Date</TableHead>
                   <TableHead>Duration</TableHead>
@@ -78,11 +77,34 @@ export default async function TaskActionDetailPage() {
                     <React.Fragment key={taskId}>
                       {actions.map((action, index) => (
                         <TableRow key={`${action.task_id}-${index}`}>
-                          <TableCell className="font-medium">{action.title}</TableCell>
-                          <TableCell>{action.action}</TableCell>
-                          <TableCell>{action.state}</TableCell>
+                          {/* Show Task Title only on first row of each group */}
+                          {index === 0 && (
+                            <TableCell 
+                              className="border-r" 
+                              rowSpan={actions.length}
+                            >
+                              <Link href={`/task-management/tasks/${action.task_id}`} className="font-bold hover:underline">
+                                {action.title}
+                              </Link>
+                            </TableCell>
+                          )}
+                          
+                          {/* Show State only on first row of each group */}
+                          {index === 0 && (
+                            <TableCell className="border-r" rowSpan={actions.length}>
+                              <Badge variant="outline" className={getStatusColor(action.state_type)}>
+                                {action.state}
+                              </Badge>
+                            </TableCell>
+                          )}
+                          
+                          <TableCell>
+                            <Badge variant="outline" className={getActionColor(action.action_type)}>
+                              {action.action}
+                            </Badge>
+                          </TableCell>
                           <TableCell>{action.action_created_by}</TableCell>
-                          <TableCell>{formatDateTime(action.action_created_at)}</TableCell>
+                          <TableCell>{formatDateToUTC7(action.action_created_at)}</TableCell>
                           <TableCell>
                             {formatDuration(action.duration)}
                           </TableCell>
