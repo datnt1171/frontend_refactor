@@ -14,7 +14,7 @@ import { logout } from "@/lib/api/client/api"
 import type { UserDetail } from "@/types/api"
 
 interface UserMenuProps {
-  user: UserDetail | null
+  user: UserDetail
 }
 
 export function UserMenu({ user }: UserMenuProps) {
@@ -40,14 +40,14 @@ export function UserMenu({ user }: UserMenuProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center h-10 px-2">
           <div className="text-right mr-2 hidden sm:block">
-            <p className="text-sm font-medium text-gray-700">{user?.username || "User"}</p>
+            <p className="text-sm font-medium text-gray-700">{user.username}</p>
             <p className="text-xs text-gray-500 truncate max-w-24">
-              {user?.department?.name || user?.role?.name || ""}
+              {user.department?.name || user.role?.name || ""}
             </p>
           </div>
           <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
             <span className="text-sm font-medium text-gray-700">
-              {user?.first_name?.[0] || user?.username?.[0] || "U"}
+              {user.first_name?.[0] || user.username?.[0] || "U"}
             </span>
           </div>
           <ChevronDown className="ml-1 h-3 w-3" />
