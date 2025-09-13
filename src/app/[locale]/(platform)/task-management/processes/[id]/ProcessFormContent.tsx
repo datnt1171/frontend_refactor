@@ -57,7 +57,6 @@ export function ProcessFormContent({
                 value={formValues[field.id]}
                 onChange={(value) => onInputChange(field.id, value)}
                 disabled={false}
-                formValues={formValues}
               />
             </div>
           ))}

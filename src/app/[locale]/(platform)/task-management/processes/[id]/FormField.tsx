@@ -8,7 +8,6 @@ import { useTranslations } from 'next-intl'
 import type { ProcessField, UserList, Factory, Retailer, ValueLabel } from "@/types"
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 import { compressImage } from "@/lib/utils/imageCompression"
-import { isFieldVisible } from "@/lib/utils/field"
 
 interface FormFieldProps {
   field: ProcessField
@@ -18,7 +17,6 @@ interface FormFieldProps {
   value: any
   onChange: (value: any) => void
   disabled: boolean
-  formValues: Record<string, any> // Add formValues to check conditions
 }
 
 export function FormField({ 
@@ -28,24 +26,15 @@ export function FormField({
   retailers,
   value, 
   onChange, 
-  disabled,
-  formValues
+  disabled
 }: FormFieldProps) {
   const t = useTranslations('taskManagement.createTask')
   const commonT = useTranslations('common')
   
-  // Check if field should be visible based on conditions
-  const visible = isFieldVisible(field, formValues)
-  
-  // If not visible, don't render anything
-  if (!visible) {
-    return null
-  }
   
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      
       try {
         // Compress image if it's an image file
         const compressedFile = await compressImage(file, {
