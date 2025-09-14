@@ -97,7 +97,7 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
                         <TableBody>
                           {tasks.map((task) => (
                             <TableRow key={task.id}>
-                              <TableCell className="font-medium">
+                              <TableCell className="font-bold">
                                 <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
                                   {task.title}
                                 </Link>

@@ -94,12 +94,12 @@ export default async function UserListPage({ searchParams }: FactoryPageProps) {
                   <TableBody>
                     {factories.map((factory) => (
                       <TableRow key={factory.factory_code}>
-                        <TableCell className="font-mono text-sm">
+                        <TableCell className="font-bold text-sm">
                           <Link href={`/crm/factories/${factory.factory_code}`} className="hover:underline">
                             {factory.factory_code}
                           </Link>
                         </TableCell>
-                        <TableCell className="font-medium">
+                        <TableCell>
                           {factory.factory_name}
                         </TableCell>
                         <TableCell>

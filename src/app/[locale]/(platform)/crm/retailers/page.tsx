@@ -68,7 +68,7 @@ export default async function UserListPage({ searchParams }: RetailerPageProps) 
                   <TableBody>
                     {retailers.map((retailer) => (
                       <TableRow key={retailer.id}>
-                        <TableCell className="font-mono text-sm">
+                        <TableCell className="font-bold text-sm">
                           <Link href={`/crm/retailers/${retailer.id}`} className="hover:underline">
                             {retailer.name}
                           </Link>

@@ -93,7 +93,7 @@ export default async function UserListPage({ searchParams }: UserPageProps) {
                           <TableCell>
                             <Link
                               href={`/user/${user.id}`}
-                              className="text-black-600 hover:underline"
+                              className="text-black-600 font-bold hover:underline"
                             >
                               {user.username}
                             </Link>
