@@ -18,7 +18,7 @@ export async function GET() {
     const TaskDataDetails: TaskDataDetail[] = await response.json()
 
     // Factory
-    const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories?limit=999999`, {
+    const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories?page=1&page_size=999999`, {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export async function GET() {
     }))
 
     // Retailer
-    const retailerResponse = await fetch(`${process.env.DW_API_URL}/api/crm/retailers?limit=999999`, {
+    const retailerResponse = await fetch(`${process.env.DW_API_URL}/api/crm/retailers?page=1&page_size=999999`, {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
           "Content-Type": "application/json",
