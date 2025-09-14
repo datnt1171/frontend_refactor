@@ -38,7 +38,8 @@
     "file": "Tệp",
     "fileSize": "Kích thước tệp",
     "preview": "Xem trước",
-    "download": "Tải xuống"
+    "download": "Tải xuống",
+    "comment": "Bình luận"
   },
   "home": {
   "title": "Trang chủ",
@@ -191,6 +192,12 @@
       "noFileUploaded": "Chưa tải tệp nào lên",
       "EditFailed": "Có lỗi xảy ra khi chỉnh sửa dữ liệu",
       "EditSuccessfully": "Chỉnh sửa thành công"
+    },
+    "action": {
+      "action": "Hành động",
+      "actionBy": "Thực hiện bởi",
+      "actionAt": "Thực hiện lúc",
+      "duration": "Thời lượng"
     }
   },
   "dashboard": {
@@ -231,6 +238,8 @@
       "ratio": "Tỉ lệ",
       "agingProduct": "Hàng tồn kho",
       "importData": "Nhập dữ liệu",
+      "taskAction": "Lịch sử hành động",
+      "sample": "Mẫu",
 
       "Task": "Phiếu",
       "sampleRequest": "Tất cả yêu cầu mẫu"
@@ -260,7 +269,32 @@
       "status": "Trạng thái",
       "onsite": "Kỹ thuật ngoài"
 
+    },
+    "retailer": {
+      "retailer": "KH đặt hàng"
     }
+  },
+  
+  "sample": {
+    "sample": "Mẫu",
+    "finishingCode": "Mã hoàn thiện",
+    "customersColorName": "Tên màu của khách hàng",
+    "typeOfSubstrate": "Loại vật liệu nền",
+    "collection": "Bộ sưu tập",
+    "sampleType": "Loại mẫu",
+    "quantityRequirement": "Yêu cầu số lượng",
+    "requesterName": "Tên người yêu cầu",
+    "deadlineRequest": "Thời hạn yêu cầu",
+    "sampler": "Người lấy mẫu",
+    "typeOfPaint": "Loại sơn",
+    "finishingSurfaceGrain": "Vân bề mặt hoàn thiện",
+    "sheenLevel": "Mức độ bóng",
+    "substrateSurfaceTreatment": "Xử lý bề mặt vật liệu nền",
+    "panelCategory": "Danh mục tấm",
+    "purposeOfUsage": "Mục đích sử dụng",
+    "additionalDetail": "Chi tiết bổ sung",
+    "frontSide": "Mặt trước",
+    "backSide": "Mặt sau"
   },
 
   "edms": {

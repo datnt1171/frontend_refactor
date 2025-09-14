@@ -13,8 +13,10 @@ import { Badge } from "@/components/ui/badge"
 import { formatDuration, formatDateToUTC7 } from "@/lib/utils/date"
 import { getActionColor, getStatusColor } from "@/lib/utils/format"
 import { Link } from "@/i18n/navigation"
+import { getTranslations } from "next-intl/server"
 
 export default async function TaskActionDetailPage() {
+  const t = await getTranslations()
   const data = await getActionDetail()
 
   // Group data by task_id
@@ -48,25 +50,25 @@ export default async function TaskActionDetailPage() {
   return (
     <div className="container mx-auto py-6">
       <Card>
-        <CardHeader>
+        {/* <CardHeader>
           <CardTitle>Task Action Detail</CardTitle>
           <CardDescription>
             History of all task actions ({data.length} actions)
           </CardDescription>
-        </CardHeader>
+        </CardHeader> */}
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Task Title</TableHead>
-                  <TableHead>State</TableHead>
-                  <TableHead>Action</TableHead>
-                  <TableHead>Action By</TableHead>
-                  <TableHead>Action Date</TableHead>
-                  <TableHead>Duration</TableHead>
-                  <TableHead>Comment</TableHead>
-                  <TableHead>Created By</TableHead>
+                  <TableHead>{t('common.id')}</TableHead>
+                  <TableHead>{t('taskManagement.common.status')}</TableHead>
+                  <TableHead>{t('taskManagement.action.action')}</TableHead>
+                  <TableHead>{t('taskManagement.action.actionBy')}</TableHead>
+                  <TableHead>{t('taskManagement.action.actionAt')}</TableHead>
+                  <TableHead>{t('taskManagement.action.duration')}</TableHead>
+                  <TableHead>{t('common.comment')}</TableHead>
+                  <TableHead>{t('common.createdBy')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -119,7 +121,7 @@ export default async function TaskActionDetailPage() {
                       {/* Subtotal row for each task_id */}
                       <TableRow className="bg-gray-50 font-semibold border-t-2">
                         <TableCell colSpan={5} className="text-right">
-                          Total Duration ({actions[0]!.title}):
+                          {t('taskManagement.action.duration')} ({actions[0]!.title}):
                         </TableCell>
                         <TableCell className="font-bold">
                           {formatDuration(taskTotal)}

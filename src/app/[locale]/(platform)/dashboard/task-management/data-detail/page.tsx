@@ -9,13 +9,17 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { TaskDataDetail } from "@/types"
-
+import { formatDateToUTC7 } from "@/lib/utils/date"
+import { getStatusColor } from "@/lib/utils/format"
+import { Link } from "@/i18n/navigation"
+import { getTranslations } from "next-intl/server"
 
 export default async function TaskDataDetailPage() {
+  const t = await getTranslations()
   const data = await getDataDetail()
 
-  // Group and sort data
   const groupedData = data
     .sort((a, b) => {
       if (a.name_of_customer !== b.name_of_customer) {
@@ -24,7 +28,7 @@ export default async function TaskDataDetailPage() {
       return a.sample_type.localeCompare(b.sample_type)
     })
     .reduce((acc: { [key: string]: TaskDataDetail[] }, task) => {
-      const groupKey = `${task.name_of_customer}|${task.sample_type}`
+      const groupKey = task.name_of_customer
       if (!acc[groupKey]) {
         acc[groupKey] = []
       }
@@ -44,28 +48,28 @@ export default async function TaskDataDetailPage() {
   return (
     <div className="container mx-auto py-6">
       <Card>
-        <CardHeader>
+        {/* <CardHeader>
           <CardTitle>Task Data Detail</CardTitle>
           <CardDescription>
             Overview of all task details ({data.length} tasks)
           </CardDescription>
-        </CardHeader>
+        </CardHeader> */}
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>State</TableHead>
-                  <TableHead>Created</TableHead>
-                  <TableHead>Retailer</TableHead>
-                  <TableHead>Color</TableHead>
-                  <TableHead>Substrate</TableHead>
-                  <TableHead>Collection</TableHead>
-                  <TableHead>Sample Type</TableHead>
-                  <TableHead>Deadline</TableHead>
-                  <TableHead>Quantity</TableHead>
+                  <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                  <TableHead>{t('sample.sampleType')}</TableHead>
+                  <TableHead>{t('sample.finishingCode')}</TableHead>
+                  <TableHead>{t('sample.quantityRequirement')}</TableHead>
+                  <TableHead>{t('taskManagement.common.status')}</TableHead>
+                  <TableHead>{t('common.createdAt')}</TableHead>
+                  <TableHead>{t('sample.deadlineRequest')}</TableHead>
+                  <TableHead>{t('crm.retailer.retailer')}</TableHead>
+                  <TableHead>{t('sample.customersColorName')}</TableHead>
+                  <TableHead>{t('sample.typeOfSubstrate')}</TableHead>
+                  <TableHead>{t('common.id')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -76,26 +80,38 @@ export default async function TaskDataDetailPage() {
                     <React.Fragment key={groupKey}>
                       {tasks.map((task, index) => (
                         <TableRow key={task.task_id}>
-                          <TableCell className="font-medium">{task.title}</TableCell>
                           <TableCell>{task.name_of_customer}</TableCell>
-                          <TableCell>{task.state}</TableCell>
-                          <TableCell>{new Date(task.created_at).toLocaleDateString()}</TableCell>
+                          <TableCell>{task.sample_type}</TableCell>
+                          <TableCell>{task.finishing_code}</TableCell>
+                          <TableCell>{task.quantity_requirement}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className={getStatusColor(task.state_type)}>
+                              {task.state}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{formatDateToUTC7(task.created_at)}</TableCell>
+                          <TableCell>{formatDateToUTC7(task.deadline_request)}</TableCell>
                           <TableCell>{task.retailer}</TableCell>
                           <TableCell>{task.customer_color_name}</TableCell>
                           <TableCell>{task.type_of_substrate}</TableCell>
-                          <TableCell>{task.collection}</TableCell>
-                          <TableCell>{task.sample_type}</TableCell>
-                          <TableCell>{task.deadline_request}</TableCell>
-                          <TableCell>{task.quantity_requirement}</TableCell>
+                          <TableCell>
+                            <Link 
+                              href={`/task-management/tasks/${task.task_id}`} 
+                              className="font-bold hover:underline">
+                              {task.title}
+                            </Link>           
+                          </TableCell>
                         </TableRow>
                       ))}
                       {/* Subtotal row */}
                       {tasks[0] && (
                         <TableRow className="bg-gray-50 font-semibold border-t-2">
-                          <TableCell colSpan={10} className="text-right">
-                            Tổng ({tasks[0].name_of_customer} - {tasks[0].sample_type}):
+                          <TableCell colSpan={3}>
+                            {tasks[0].name_of_customer}
                           </TableCell>
-                          <TableCell className="font-bold">{groupTotal}</TableCell>
+                          <TableCell>
+                            {groupTotal}
+                          </TableCell>
                         </TableRow>
                       )}
                     </React.Fragment>

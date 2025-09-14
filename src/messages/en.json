@@ -38,7 +38,8 @@
     "file": "File",
     "fileSize": "File Size",
     "preview": "Preview",
-    "download": "Download"
+    "download": "Download",
+    "comment": "Comment"
   },
   "home": {
     "title": "Home Page",
@@ -192,6 +193,12 @@
       "noFileUploaded": "No file uploaded",
       "EditFailed": "Failed to edit",
       "EditSuccessfully": "Edit successfully!"
+    },
+    "action": {
+      "action": "Action",
+      "actionBy": "Action by",
+      "actionAt": "Action at",
+      "duration": "Duration"
     }
   },
   "dashboard": {
@@ -232,7 +239,7 @@
       "ratio": "Ratio",
       "agingProduct": "Aging Product",
       "importData": "Import Data",
-      "taskAction": "Task Action",
+      "taskAction": "Task Action Log",
       "sample": "Sample",
 
       "Task": "Task",
@@ -264,7 +271,32 @@
       "status": "Status",
       "onsite": "Onsite"
 
+    },
+    "retailer": {
+      "retailer": "Retailer"
     }
+  },
+  
+  "sample": {
+    "sample": "Sample",
+    "finishingCode": "Finishing code",
+    "customersColorName": "Customer's color name",
+    "typeOfSubstrate": "Type of substrate",
+    "collection": "Collection",
+    "sampleType": "Sample Type",
+    "quantityRequirement": "Quantity requirement",
+    "requesterName": "Requester name",
+    "deadlineRequest": "Deadline request",
+    "sampler": "Sampler",
+    "typeOfPaint": "Type of paint",
+    "finishingSurfaceGrain": "Finishing surface grain",
+    "sheenLevel": "Sheen level",
+    "substrateSurfaceTreatment": "Substrate surface treatment",
+    "panelCategory": "Panel category",
+    "purposeOfUsage": "Purpose of usage",
+    "additionalDetail": "Additional detail",
+    "frontSide": "Front side",
+    "backSide": "Back side"
   },
 
   "edms": {

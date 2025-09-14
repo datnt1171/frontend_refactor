@@ -38,7 +38,8 @@
     "file": "檔案",
     "fileSize": "檔案大小",
     "preview": "預覽",
-    "download": "下載"
+    "download": "下載",
+    "comment": "評論"
   },
   "home": {
   "title": "首頁",
@@ -191,6 +192,12 @@
       "noFileUploaded": "尚未上傳任何檔案",
       "EditFailed": "編輯失敗",
       "EditSuccessfully": "編輯成功"
+    },
+    "action": {
+      "action": "操作",
+      "actionBy": "執行者",
+      "actionAt": "執行時間",
+      "duration": "持續時間"
     }
   },
   "dashboard": {
@@ -231,6 +238,8 @@
       "ratio": "比例",
       "agingProduct": "滯銷產品",
       "importData": "匯入資料",
+      "taskAction": "任務操作記錄",
+      "sample": "樣品",
 
       "Task": "任務",
       "sampleRequest": "所有樣本請求"
@@ -261,9 +270,33 @@
       "status": "地位",
       "onsite": "現場"
 
+    },
+    "retailer": {
+      "retailer": "零售商"
     }
   },
 
+  "sample": {
+    "sample": "樣品",
+    "finishingCode": "表面處理代碼",
+    "customersColorName": "客戶色名",
+    "typeOfSubstrate": "基材類型",
+    "collection": "系列",
+    "sampleType": "樣品類型",
+    "quantityRequirement": "數量需求",
+    "requesterName": "申請人姓名",
+    "deadlineRequest": "申請截止日期",
+    "sampler": "取樣人",
+    "typeOfPaint": "塗料類型",
+    "finishingSurfaceGrain": "表面紋理",
+    "sheenLevel": "光澤度",
+    "substrateSurfaceTreatment": "基材表面處理",
+    "panelCategory": "板材類別",
+    "purposeOfUsage": "使用目的",
+    "additionalDetail": "其他細節",
+    "frontSide": "正面",
+    "backSide": "背面"
+  },
   "edms": {
     "appTitle": "EDMS",
     "appDescription": "File Management System"
