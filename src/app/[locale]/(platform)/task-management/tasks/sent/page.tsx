@@ -17,6 +17,12 @@ import type { PageFilterConfig } from "@/types"
 
 const SentTaskFilterConfig: PageFilterConfig = {
   showResetButton: true,
+  defaultValues: {
+    state__state_type__in: [
+      'pending_approve', 'analyze', 'working',
+      'pending_review', 'start', 'closed'
+    ]
+  },
   filters: [
     {
       id: 'state__state_type__in',
@@ -30,7 +36,8 @@ const SentTaskFilterConfig: PageFilterConfig = {
         { value: 'start', label: 'Start' },
         { value: 'denied', label: 'Denied' },
         { value: 'canceled', label: 'Canceled' },
-        { value: 'closed', label: 'Closed' }
+        { value: 'closed', label: 'Closed' },
+        { value: 'static', label: 'Static'}
       ]
     },
     {
