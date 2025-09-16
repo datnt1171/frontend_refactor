@@ -1,5 +1,7 @@
 import type { components } from "@/types/openapi";
 
+// CONST
+export type MonthEnum = components['schemas']['MonthEnum']
 // Auth
 export type SetPasswordRetype = components['schemas']['ChangePassword']
 
@@ -8,6 +10,9 @@ export type Department = components['schemas']['Department']
 export type Role = components['schemas']['Role']
 export type UserList = components['schemas']['User']
 export type UserDetail = components['schemas']['UserDetail']
+
+// Onsite - Transfer - Absence
+export type UserFactoryOnsite = components['schemas']['UserFactoryOnsite']
 
 // Process
 export type ProcessField = components['schemas']['ProcessField']

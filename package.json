@@ -11,6 +11,7 @@
     "generate:types_dw": "openapi-typescript http://localhost:8001/openapi.json --output src/types/openapi_dw.d.ts"
   },
   "dependencies": {
+    "@handsontable/react": "^16.1.0",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-collapsible": "^1.1.11",
@@ -28,12 +29,14 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "echarts": "^6.0.0",
+    "handsontable": "^16.1.0",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.513.0",
     "next": "15.3.3",
     "next-intl": "^4.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-select": "^5.10.2",
     "tailwind-merge": "^3.3.0",
     "vaul": "^1.1.2"
   },

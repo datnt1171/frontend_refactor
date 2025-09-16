@@ -345,6 +345,55 @@ export interface paths {
         patch: operations["api_users_me_change_password_partial_update"];
         trace?: never;
     };
+    "/api/users/onsite/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_users_onsite_list"];
+        put?: never;
+        post: operations["api_users_onsite_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/onsite/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_users_onsite_retrieve"];
+        put: operations["api_users_onsite_update"];
+        post?: never;
+        delete: operations["api_users_onsite_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_users_onsite_partial_update"];
+        trace?: never;
+    };
+    "/api/users/onsite/bulk_update/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Update multiple assignments at once */
+        post: operations["api_users_onsite_bulk_update_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -444,6 +493,22 @@ export interface components {
             wft?: number | null;
             products: components["schemas"]["ProductTemplate"][];
         };
+        /**
+         * @description * `1` - 1
+         *     * `2` - 2
+         *     * `3` - 3
+         *     * `4` - 4
+         *     * `5` - 5
+         *     * `6` - 6
+         *     * `7` - 7
+         *     * `8` - 8
+         *     * `9` - 9
+         *     * `10` - 10
+         *     * `11` - 11
+         *     * `12` - 12
+         * @enum {integer}
+         */
+        MonthEnum: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
         /**
          * @description * `exact` - Exact
          *     * `not_exact` - Not Exact
@@ -576,6 +641,15 @@ export interface components {
             /** Format: uri */
             file?: string;
             readonly history?: components["schemas"]["TaskDataHistory"][];
+        };
+        PatchedUserFactoryOnsite: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            user?: string;
+            factory?: string;
+            year?: number;
+            month?: components["schemas"]["MonthEnum"];
         };
         Process: {
             /** Format: uuid */
@@ -889,6 +963,15 @@ export interface components {
             role: components["schemas"]["Role"];
             readonly supervisor: components["schemas"]["User"];
             is_password_changed: boolean;
+        };
+        UserFactoryOnsite: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            user: string;
+            factory: string;
+            year: number;
+            month: components["schemas"]["MonthEnum"];
         };
     };
     responses: never;
@@ -1584,6 +1667,175 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ChangePassword"];
+                };
+            };
+        };
+    };
+    api_users_onsite_list: {
+        parameters: {
+            query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A search term. */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserFactoryOnsite"][];
+                };
+            };
+        };
+    };
+    api_users_onsite_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserFactoryOnsite"];
+                "application/x-www-form-urlencoded": components["schemas"]["UserFactoryOnsite"];
+                "multipart/form-data": components["schemas"]["UserFactoryOnsite"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserFactoryOnsite"];
+                };
+            };
+        };
+    };
+    api_users_onsite_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserFactoryOnsite"];
+                };
+            };
+        };
+    };
+    api_users_onsite_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserFactoryOnsite"];
+                "application/x-www-form-urlencoded": components["schemas"]["UserFactoryOnsite"];
+                "multipart/form-data": components["schemas"]["UserFactoryOnsite"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserFactoryOnsite"];
+                };
+            };
+        };
+    };
+    api_users_onsite_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_users_onsite_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedUserFactoryOnsite"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedUserFactoryOnsite"];
+                "multipart/form-data": components["schemas"]["PatchedUserFactoryOnsite"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserFactoryOnsite"];
+                };
+            };
+        };
+    };
+    api_users_onsite_bulk_update_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UserFactoryOnsite"];
+                "application/x-www-form-urlencoded": components["schemas"]["UserFactoryOnsite"];
+                "multipart/form-data": components["schemas"]["UserFactoryOnsite"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UserFactoryOnsite"];
                 };
             };
         };

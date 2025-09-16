@@ -1,5 +1,5 @@
 import { api } from '@/lib/api/server/api'
-import type { UserDetail, PaginatedUserList, UserList } from '@/types/api'
+import type { UserDetail, PaginatedUserList, UserList, UserFactoryOnsite } from '@/types/api'
 
 export const getCurrentUser = async (): Promise<UserDetail> => {
   const res = await api("/users/me/")
@@ -29,5 +29,27 @@ export const getUsers = async (searchParams?: Record<string, string>): Promise<P
 export const getUser = async (id: string): Promise<UserList> => {
   const res = await api(`/users/${id}/`)
   if (!res.ok) throw new Error(`Failed to fetch user: ${res.status}`)
+  return res.json()
+}
+
+export const getUserFactoryOnsite = async (
+  searchParams?: Record<string, string>
+): Promise<UserFactoryOnsite[]> => {
+
+  const queryParams = new URLSearchParams()
+
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/users/onsite?${queryString}` : '/users/onsite'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch User factory onsite: ${res.status}`)
   return res.json()
 }
