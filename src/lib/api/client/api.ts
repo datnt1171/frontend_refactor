@@ -6,7 +6,8 @@ import type {
   FactoryUpdate,
   BlueprintCreate,
   BlueprintUpdate,
-  FinishingSheet
+  FinishingSheet,
+  UserFactoryOnsite
 } from '@/types/'
 
 type ApiResponse<T> = {
@@ -287,6 +288,19 @@ const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
     
     if (!response.ok) {
       throw new Error(`Failed to delete Finishing sheet: ${response.status}`)
+    }
+
+    return response.data
+}
+
+export const CreateUpdateOnsite = async (data: UserFactoryOnsite[]) => {
+  const response = await apiClient(`/users/onsite/bulk_update`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+      throw new Error(`Failed to create or update User factory onsite: ${response.status}`)
     }
 
     return response.data
