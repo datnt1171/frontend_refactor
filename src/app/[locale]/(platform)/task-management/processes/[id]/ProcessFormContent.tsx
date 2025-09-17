@@ -7,7 +7,6 @@ import { Eye } from "lucide-react"
 import { useTranslations } from 'next-intl'
 import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
 import { FormField } from "./FormField"
-import { useFieldVisibility } from "@/lib/utils/field"
 
 interface ProcessFormContentProps {
   process: ProcessDetail
@@ -29,9 +28,6 @@ export function ProcessFormContent({
   onReview
 }: ProcessFormContentProps) {
   const t = useTranslations('taskManagement.createTask')
-  
-  // Get visible fields based on current form values
-  const { visibleFields } = useFieldVisibility(process.fields, formValues)
 
   return (
     <Card>
@@ -40,7 +36,7 @@ export function ProcessFormContent({
       </CardHeader>
       <form onSubmit={onReview}>
         <CardContent className="space-y-4">
-          {visibleFields.map((field) => (
+          {process.fields.map((field) => (
             <div key={field.id} className="space-y-2">
               <Label htmlFor={`field-${field.id}`}>
                 {field.name}

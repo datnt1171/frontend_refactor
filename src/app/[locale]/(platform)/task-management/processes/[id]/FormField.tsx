@@ -19,6 +19,14 @@ interface FormFieldProps {
   disabled: boolean
 }
 
+// const ALLOWED_FILE_TYPES = [
+//   "image/jpeg", "image/png", "application/pdf",
+//   "application/msword",
+//   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+//   "application/vnd.ms-excel",
+//   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+// ]
+
 export function FormField({ 
   field, 
   users, 
@@ -26,15 +34,15 @@ export function FormField({
   retailers,
   value, 
   onChange, 
-  disabled
+  disabled 
 }: FormFieldProps) {
   const t = useTranslations('taskManagement.createTask')
   const commonT = useTranslations('common')
   
-  
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      
       try {
         // Compress image if it's an image file
         const compressedFile = await compressImage(file, {
