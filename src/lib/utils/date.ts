@@ -67,3 +67,33 @@ export function formatDuration(durationSeconds: string | number): string {
   
   return parts.length > 0 ? parts.join(' ') : '0s'
 }
+
+interface YearOption {
+  value: string;
+  label: string;
+}
+
+interface YearFilterOptions {
+  yearsBack?: number;
+  startYear?: number;
+  ascending?: boolean;
+}
+
+export const generateYearOptions = (options: YearFilterOptions = {}): YearOption[] => {
+  const {
+    yearsBack = 4,
+    startYear = new Date().getFullYear(),
+    ascending = false
+  } = options;
+
+  const years = Array.from({ length: yearsBack + 1 }, (_, i) => {
+    const year = startYear - i;
+    return { value: year.toString(), label: year.toString() };
+  });
+
+  return ascending ? years.reverse() : years;
+};
+
+export const getCurrentYear = (): string => {
+  return new Date().getFullYear().toString();
+};

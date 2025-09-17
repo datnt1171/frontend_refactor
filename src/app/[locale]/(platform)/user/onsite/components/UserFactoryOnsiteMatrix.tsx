@@ -4,17 +4,19 @@ import { useState, useMemo } from 'react'
 import { HotTable } from '@handsontable/react'
 import 'handsontable/dist/handsontable.full.min.css'
 import { registerAllModules } from 'handsontable/registry';
+import Handsontable from 'handsontable';
 import { CreateUpdateOnsite } from '@/lib/api/client/api'
-import type { UserDetail, UserFactoryOnsite, MonthEnum } from '@/types'
+import type { UserDetail, UserFactoryOnsite, MonthEnum, Factory } from '@/types'
+import { Button } from '@/components/ui/button';
+import { useRouter } from '@/i18n/navigation';
+
 registerAllModules();
 const MONTHS: MonthEnum[] = [1,2,3,4,5,6,7,8,9,10,11,12]
-
-// Hardcoded factories (first option = empty string)
-const FACTORIES = ['', '30127', '30895.4', '30150.1', '30301', '30567.1']
 
 interface Props {
   users: UserDetail[]
   onsiteData: UserFactoryOnsite[]
+  factories: Factory[]
 }
 
 interface Change {
@@ -24,7 +26,28 @@ interface Change {
   originalValue: string
 }
 
-export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
+export function UserFactoryOnsiteMatrix({ users, onsiteData, factories }: Props) {
+  const router = useRouter()
+  
+  // Create mapping objects for factory code <-> name conversion
+  const { factoryCodeToName, factoryNameToCode, dropdownSource } = useMemo(() => {
+    const codeToName: Record<string, string> = { '': '' } // Empty option
+    const nameToCode: Record<string, string> = { '': '' } // Empty option
+    const source = [''] // Start with empty option
+    
+    factories.forEach(factory => {
+      codeToName[factory.factory_code] = factory.factory_name
+      nameToCode[factory.factory_name] = factory.factory_code
+      source.push(factory.factory_name)
+    })
+    
+    return {
+      factoryCodeToName: codeToName,
+      factoryNameToCode: nameToCode,
+      dropdownSource: source
+    }
+  }, [factories])
+
   const { initialData, originalAssignments } = useMemo(() => {
     const assignments: Record<string, Record<MonthEnum, string>> = {}
     users.forEach(u => {
@@ -39,20 +62,50 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
         }
     })
 
+    // Convert factory codes to names for display
     const tableData = users.map(u => [
-        u.username,
-        ...MONTHS.map(m => assignments[u.id]![m] ?? '')
+        `${u.last_name} ${u.first_name}`,
+        ...MONTHS.map(m => {
+          const factoryCode = assignments[u.id]![m] ?? ''
+          return factoryCodeToName[factoryCode] ?? ''
+        })
     ])
 
     return {
       initialData: tableData,
       originalAssignments: assignments
     }
-  }, [users, onsiteData])
+  }, [users, onsiteData, factoryCodeToName])
 
   const [data, setData] = useState(initialData)
   const [changes, setChanges] = useState<Change[]>([])
   const [isSaving, setIsSaving] = useState(false)
+
+  // Custom renderer for highlighting changes from previous month
+  const highlightChangeRenderer = (monthIndex: number) => {
+    return function(this: any, instance: any, td: HTMLTableCellElement, row: number, col: number, prop: any, value: any, cellProperties: any) {
+      // Apply default dropdown renderer first
+      Handsontable.renderers.DropdownRenderer.apply(this, [instance, td, row, col, prop, value, cellProperties]);
+      
+      // Skip highlighting for first month (no previous month to compare)
+      if (monthIndex === 0) return
+      
+      const currentValue = value || ''
+      const prevMonthValue = data[row]?.[monthIndex] || '' // Previous month column
+      
+      // Highlight if current month is different from previous month and both are not empty
+      if (currentValue && prevMonthValue && currentValue !== prevMonthValue) {
+        td.style.backgroundColor = '#fef3c7' // Light yellow background
+        td.style.borderLeft = '3px solid #f59e0b' // Orange left border
+        td.title = `Changed from previous month: ${prevMonthValue} → ${currentValue}`
+      } else {
+        // Reset styles if no change
+        td.style.backgroundColor = ''
+        td.style.borderLeft = ''
+        td.title = ''
+      }
+    }
+  }
 
   // Column configuration with dropdown for factory columns
   const columnSettings = [
@@ -64,10 +117,11 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
     ...MONTHS.map((_, i) => ({
       data: i + 1,
       type: 'dropdown',
-      source: FACTORIES,
+      source: dropdownSource,
       strict: true,
       allowInvalid: false,
-      trimDropdown: false
+      trimDropdown: false,
+      renderer: highlightChangeRenderer(i)
     }))
   ]
 
@@ -82,13 +136,13 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
       // Get current year from search params or default to current year
       const currentYear = new Date().getFullYear()
       
-      // Convert changes to API format
+      // Convert changes to API format (factory codes, not names)
       const apiData: UserFactoryOnsite[] = changes.map(change => ({
         id: '', // Temporary empty id for bulk operations
         user: change.userId,
         year: currentYear,
         month: change.month,
-        factory: change.factory
+        factory: change.factory // This is already the factory code
       }))
 
       await CreateUpdateOnsite(apiData)
@@ -96,6 +150,7 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
       // Clear changes after successful save
       setChanges([])
       alert('Changes saved successfully!')
+      router.refresh()
     } catch (error) {
       console.error('Failed to save changes:', error)
       alert('Failed to save changes. Please try again.')
@@ -117,27 +172,36 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
     <div className="space-y-4">
       {/* Action buttons */}
       <div className="flex items-center gap-4">
-        <button
+        <Button
           onClick={handleSaveChanges}
           disabled={changes.length === 0 || isSaving}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          {isSaving ? 'Saving...' : `Save Changes ${changes.length > 0 ? `(${changes.length})` : ''}`}
-        </button>
-        
-        <button
+          {isSaving
+            ? "Saving..."
+            : `Save Changes ${changes.length > 0 ? `(${changes.length})` : ""}`}
+        </Button>
+
+        <Button
+          variant="destructive"
           onClick={handleDiscardChanges}
           disabled={changes.length === 0}
-          className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           Discard Changes
-        </button>
+        </Button>
 
         {changes.length > 0 && (
           <span className="text-sm text-orange-600 font-medium">
             {changes.length} unsaved change{changes.length !== 1 ? 's' : ''}
           </span>
         )}
+      </div>
+
+      {/* Legend for highlighting */}
+      <div className="flex items-center gap-4 text-sm">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-yellow-200 border-l-4 border-orange-500 rounded-sm"></div>
+          <span className="text-gray-700">Factory assignment changed from previous month</span>
+        </div>
       </div>
 
       {/* Table */}
@@ -163,7 +227,7 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
 
               tableChanges.forEach(([row, prop, oldVal, newVal]) => {
                 if (oldVal !== newVal) {
-                  // Update table data
+                  // Update table data (keeping display names)
                   newData[row]![prop as number] = newVal
 
                   // Track the change
@@ -174,7 +238,9 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
                   const month = MONTHS[monthIndex]
                   if (!month) return // Skip if month not found
                   
-                  const originalValue = originalAssignments[user.id]?.[month] ?? ''
+                  // Convert factory name back to code for comparison and storage
+                  const newFactoryCode = factoryNameToCode[newVal] ?? ''
+                  const originalFactoryCode = originalAssignments[user.id]?.[month] ?? ''
 
                   // Remove any existing change for this cell
                   const existingChangeIndex = newChanges.findIndex(
@@ -184,13 +250,13 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
                     newChanges.splice(existingChangeIndex, 1)
                   }
 
-                  // Only track as change if different from original value
-                  if (newVal !== originalValue) {
+                  // Only track as change if different from original value (comparing codes)
+                  if (newFactoryCode !== originalFactoryCode) {
                     newChanges.push({
                       userId: user.id,
                       month: month,
-                      factory: newVal || '',
-                      originalValue: originalValue
+                      factory: newFactoryCode, // Store the factory code
+                      originalValue: originalFactoryCode
                     })
                   }
                 }
@@ -198,6 +264,14 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
 
               setData(newData)
               setChanges(newChanges)
+              
+              // Force re-render to update highlighting after changes
+              setTimeout(() => {
+                const hotInstance = (document.querySelector('.handsontable') as any)?.__hotInstance
+                if (hotInstance) {
+                  hotInstance.render()
+                }
+              }, 0)
             }
           }}
         />
@@ -210,13 +284,15 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData }: Props) {
           <div className="text-xs space-y-1">
             {changes.map((change, index) => {
               const user = users.find(u => u.id === change.userId)
+              const originalName = factoryCodeToName[change.originalValue] || change.originalValue
+              const newName = factoryCodeToName[change.factory] || change.factory
               return (
                 <div key={index} className="flex gap-2">
-                  <span className="font-medium">{user?.username}</span>
+                  <span className="font-medium">{user?.last_name} {user?.first_name}</span>
                   <span>M{change.month}:</span>
-                  <span className="text-red-600">"{change.originalValue}"</span>
+                  <span className="text-red-600">"{originalName}" ({change.originalValue})</span>
                   <span>→</span>
-                  <span className="text-green-600">"{change.factory}"</span>
+                  <span className="text-green-600">"{newName}" ({change.factory})</span>
                 </div>
               )
             })}
