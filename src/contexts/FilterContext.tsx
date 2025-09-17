@@ -12,7 +12,7 @@ type RightSidebarContextType = {
 const RightSidebarContext = React.createContext<RightSidebarContextType | null>(null)
 
 export function RightSidebarProvider({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(true)
 
   const toggle = React.useCallback(() => {
     setIsOpen((prev) => !prev)
