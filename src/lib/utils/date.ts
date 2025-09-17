@@ -1,4 +1,9 @@
-export function formatDateToUTC7(dateString: string): string {
+export type DateFormat = "full" | "date" | "year-month" | "year";
+
+export function formatDateToUTC7(
+  dateString: string, 
+  format: DateFormat = "full"
+): string {
   const date = new Date(dateString);
 
   // Get UTC+7 time parts
@@ -22,9 +27,18 @@ export function formatDateToUTC7(dateString: string): string {
   const day = parts.find(p => p.type === "day")?.value;
   const hour = parts.find(p => p.type === "hour")?.value;
   const minute = parts.find(p => p.type === "minute")?.value;
-  // const second = parts.find(p => p.type === "second")?.value;
 
-  return `${year}-${month}-${day}, ${hour}:${minute}`;
+  switch (format) {
+    case "year":
+      return year || "";
+    case "year-month":
+      return `${year}-${month}`;
+    case "date":
+      return `${year}-${month}-${day}`;
+    case "full":
+    default:
+      return `${year}-${month}-${day}, ${hour}:${minute}`;
+  }
 }
 
 export function formatDuration(durationSeconds: string | number): string {

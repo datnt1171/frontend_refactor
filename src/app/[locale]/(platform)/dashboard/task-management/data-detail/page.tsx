@@ -82,24 +82,27 @@ export default async function TaskDataDetailPage() {
                         <TableRow key={task.task_id}>
                           <TableCell>{task.name_of_customer}</TableCell>
                           <TableCell>{task.sample_type}</TableCell>
-                          <TableCell>{task.finishing_code}</TableCell>
+                          <TableCell className="font-bold">
+                                <Link href={`/task-management/tasks/${task.task_id}`} className="hover:underline">
+                                  {task.title.startsWith('SP')
+                                    ? `${task.finishing_code}${task.customer_color_name ? ` - ${task.customer_color_name}` : ''}`
+                                    : task.title
+                                  }
+                                </Link>
+                              </TableCell>
                           <TableCell>{task.quantity_requirement}</TableCell>
                           <TableCell>
                             <Badge variant="outline" className={getStatusColor(task.state_type)}>
                               {task.state}
                             </Badge>
                           </TableCell>
-                          <TableCell>{formatDateToUTC7(task.created_at)}</TableCell>
-                          <TableCell>{formatDateToUTC7(task.deadline_request)}</TableCell>
+                          <TableCell>{formatDateToUTC7(task.created_at, 'date')}</TableCell>
+                          <TableCell>{formatDateToUTC7(task.deadline_request, 'date')}</TableCell>
                           <TableCell>{task.retailer}</TableCell>
                           <TableCell>{task.customer_color_name}</TableCell>
                           <TableCell>{task.type_of_substrate}</TableCell>
                           <TableCell>
-                            <Link 
-                              href={`/task-management/tasks/${task.task_id}`} 
-                              className="font-bold hover:underline">
-                              {task.title}
-                            </Link>           
+                            {task.title}
                           </TableCell>
                         </TableRow>
                       ))}
