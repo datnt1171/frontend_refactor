@@ -95,7 +95,10 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
                             <TableRow key={task.id}>
                               <TableCell className="font-bold">
                                 <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
-                                  {task.title}
+                                  {task.title.startsWith('SP')
+                                    ? `${task.finishing_code}${task.customer_color_name ? ` - ${task.customer_color_name}` : ''}`
+                                    : task.title
+                                  }
                                 </Link>
                               </TableCell>
                               <TableCell>
@@ -104,7 +107,7 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
                                 </Badge>
                               </TableCell>
                               <TableCell>{task.created_by}</TableCell>
-                              <TableCell>{task.process}</TableCell>
+                              <TableCell>{task.title}</TableCell>
                               <TableCell>{formatDateToUTC7(task.created_at)}</TableCell>
                               <TableCell>
                                 <DropdownMenu>

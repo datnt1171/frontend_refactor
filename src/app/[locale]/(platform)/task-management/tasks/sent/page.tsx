@@ -95,8 +95,8 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
                           <TableRow>
                             <TableHead>{commonT('id')}</TableHead>
                             <TableHead>{t('status')}</TableHead>
-                            <TableHead>{t('recipient')}</TableHead>
                             <TableHead>{t('formType')}</TableHead>
+                            <TableHead>{t('recipient')}</TableHead>
                             <TableHead>{t('sentDate')}</TableHead>
                             <TableHead className="w-[50px]"></TableHead>
                           </TableRow>
@@ -104,9 +104,12 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
                         <TableBody>
                           {tasks.map((task) => (
                             <TableRow key={task.id}>
-                              <TableCell className="font-bold">
+                             <TableCell className="font-bold">
                                 <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
-                                  {task.title}
+                                  {task.title.startsWith('SP')
+                                    ? `${task.finishing_code}${task.customer_color_name ? ` - ${task.customer_color_name}` : ''}`
+                                    : task.title
+                                  }
                                 </Link>
                               </TableCell>
                               <TableCell>
@@ -114,8 +117,8 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
                                   {task.state}
                                 </Badge>
                               </TableCell>
+                              <TableCell>{task.title}</TableCell>
                               <TableCell>{task.recipient}</TableCell>
-                              <TableCell>{task.process}</TableCell>
                               <TableCell>{ formatDateToUTC7(task.created_at) }</TableCell>
                               <TableCell>
                                 <DropdownMenu>

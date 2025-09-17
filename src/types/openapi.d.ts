@@ -698,6 +698,10 @@ export interface components {
             created_by: string;
             /** @description Single query optimization for current user's permissions. */
             readonly action: string | null;
+            /** @description Get finishing code for SP tasks only. */
+            readonly finishing_code: string | null;
+            /** @description Get customer color name for SP tasks only. */
+            readonly customer_color_name: string | null;
         };
         Role: {
             /** Format: uuid */
@@ -755,6 +759,10 @@ export interface components {
             readonly created_at: string;
             /** @description Single query optimization - get all permissions for this task at once. */
             readonly recipient: string | null;
+            /** @description Get finishing code for SP tasks only. */
+            readonly finishing_code: string | null;
+            /** @description Get customer color name for SP tasks only. */
+            readonly customer_color_name: string | null;
         };
         SheetRow: {
             /** Format: uuid */
@@ -1674,10 +1682,26 @@ export interface operations {
     api_users_onsite_list: {
         parameters: {
             query?: {
+                factory?: string;
+                /** @description * `1` - 1
+                 *     * `2` - 2
+                 *     * `3` - 3
+                 *     * `4` - 4
+                 *     * `5` - 5
+                 *     * `6` - 6
+                 *     * `7` - 7
+                 *     * `8` - 8
+                 *     * `9` - 9
+                 *     * `10` - 10
+                 *     * `11` - 11
+                 *     * `12` - 12 */
+                month?: 1 | 10 | 11 | 12 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
                 /** @description Which field to use when ordering the results. */
                 ordering?: string;
                 /** @description A search term. */
                 search?: string;
+                user?: string;
+                year?: number;
             };
             header?: never;
             path?: never;
@@ -1725,6 +1749,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description A UUID string identifying this user factory onsite. */
                 id: string;
             };
             cookie?: never;
@@ -1746,6 +1771,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description A UUID string identifying this user factory onsite. */
                 id: string;
             };
             cookie?: never;
@@ -1773,6 +1799,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description A UUID string identifying this user factory onsite. */
                 id: string;
             };
             cookie?: never;
@@ -1793,6 +1820,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                /** @description A UUID string identifying this user factory onsite. */
                 id: string;
             };
             cookie?: never;
