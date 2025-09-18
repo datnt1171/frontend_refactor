@@ -81,7 +81,8 @@
     "appDescription": "Users Information",
     "sideBar": {
       "HRM": "HRM",
-      "users": "Users"
+      "users": "Users",
+      "onsite": "Onsite"
     },
     "userDetail": "User Detail",
     "username": "Username",

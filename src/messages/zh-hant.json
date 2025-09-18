@@ -81,7 +81,8 @@
     "appDescription": "使用者資訊",
     "sideBar": {
       "HRM": "使用者",
-      "users": "書兄弟"
+      "users": "書兄弟",
+      "onsite": "現場"
     },
     "userDetail": "使用者詳細資料",
     "username": "使用者名稱",

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { HotTable } from '@handsontable/react'
+import { HotTable } from '@handsontable/react-wrapper'
 import 'handsontable/dist/handsontable.full.min.css'
 import { registerAllModules } from 'handsontable/registry';
 import Handsontable from 'handsontable';
@@ -194,14 +194,6 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData, factories }: Props)
             {changes.length} unsaved change{changes.length !== 1 ? 's' : ''}
           </span>
         )}
-      </div>
-
-      {/* Legend for highlighting */}
-      <div className="flex items-center gap-4 text-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 bg-yellow-200 border-l-4 border-orange-500 rounded-sm"></div>
-          <span className="text-gray-700">Factory assignment changed from previous month</span>
-        </div>
       </div>
 
       {/* Table */}

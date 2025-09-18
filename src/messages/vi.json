@@ -81,7 +81,8 @@
     "appDescription": "Thông tin người dùng",
     "sideBar": {
       "HRM": "Người dùng",
-      "users": "Danh sách"
+      "users": "Danh sách",
+      "onsite": "Cắm chốt"
     },
     "userDetail": "Chi tiết người dùng",
     "username": "Tên đăng nhập",

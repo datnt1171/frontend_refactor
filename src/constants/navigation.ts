@@ -87,6 +87,7 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
       icon: UserSearch,
       items: [
         { title: "user.sideBar.users", url: "/user" },
+        { title: "user.sideBar.onsite", url: "/user/onsite" },
       ],
     }
   ],
