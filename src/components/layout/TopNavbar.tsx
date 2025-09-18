@@ -16,7 +16,7 @@ export async function TopNavbar() {
       <div className="flex-1" />
 
       {/* Right side - External apps + Language selector + User menu */}
-      <div className="flex items-center gap-0 sm:gap-3">
+      <div className="flex items-center gap-3">
         <ExternalAppsMenu />
         <LanguageSelector />
         <UserMenu user={user} />

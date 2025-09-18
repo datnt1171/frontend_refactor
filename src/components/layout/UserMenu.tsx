@@ -50,7 +50,6 @@ export function UserMenu({ user }: UserMenuProps) {
               {user.first_name?.[0] || user.username?.[0] || "U"}
             </span>
           </div>
-          <ChevronDown className="ml-1 h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

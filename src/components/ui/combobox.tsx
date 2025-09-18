@@ -93,7 +93,7 @@ export function Combobox({
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className={cn("w-full justify-between text-xs min-w-0", className)}
+            className={cn("w-full justify-between min-w-0", className)}
             disabled={disabled}
           >
             {selectedOption ? selectedOption.label : placeholder}
