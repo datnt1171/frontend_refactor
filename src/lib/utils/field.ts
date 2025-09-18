@@ -90,7 +90,6 @@ function evaluateCondition(
              (!Array.isArray(fieldValue) || fieldValue.length > 0)
 
     default:
-      console.log("Unknown operator:", condition.operator)
       return true
   }
 }
@@ -102,37 +101,27 @@ function evaluateWeekdayCondition(
   condition: FieldCondition,
   formValues: Record<string, any>
 ): boolean {
+  if (typeof window === 'undefined') {
+    return true // Always show fields during SSR
+  }
+  
   const conditionValue = condition.value
-  console.log("case weekday", { condition, conditionValue })
-
   let dayOfWeek: number
 
   if (!condition.condition_field) {
-    // Check current day of week
     const today = new Date()
-    dayOfWeek = today.getDay() // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    console.log("weekday check - current day:", { dayOfWeek })
+    dayOfWeek = today.getDay()
   } else {
-    // Check specific field value (should be a date string)
     const fieldValue = formValues[condition.condition_field]
-    if (!fieldValue || typeof fieldValue !== "string") {
-      console.log("weekday check - invalid field value:", fieldValue)
-      return false
-    }
-    
-    const date = new Date(fieldValue)
-    dayOfWeek = date.getDay() // 0 = Sunday, 1 = Monday, etc.
-    console.log("weekday check - field value:", { fieldValue, dayOfWeek })
+    if (!fieldValue || typeof fieldValue !== "string") return false
+    dayOfWeek = new Date(fieldValue).getDay()
   }
 
-  // Convert condition values to numbers for comparison
   const expectedDays = Array.isArray(conditionValue) 
     ? conditionValue.map(val => Number(val))
     : [Number(conditionValue)]
     
-  const result = expectedDays.includes(dayOfWeek)
-  console.log("weekday check result:", { dayOfWeek, expectedDays, result })
-  return result
+  return expectedDays.includes(dayOfWeek)
 }
 
 /**
@@ -143,22 +132,18 @@ export function isFieldVisible(
   field: ProcessField,
   formValues: Record<string, any>
 ): boolean {
-  console.log("isFieldVisible called for field:", field.name, "conditions:", field.conditions)
   
   // If no conditions, field is always visible
   if (!field.conditions || field.conditions.length === 0) {
-    console.log("No conditions, field visible")
     return true
   }
 
   // All conditions must be true for field to be visible
   const result = field.conditions.every(condition => {
     const conditionResult = evaluateCondition(condition, formValues)
-    console.log("Condition result:", conditionResult, "for condition:", condition)
     return conditionResult
   })
   
-  console.log("Final visibility result:", result)
   return result
 }
 

@@ -70,16 +70,17 @@ export function FormField({
       }))
 
       return (
-        <Combobox
+        <ReactSelect
           options={userOptions}
-          value={value || ""}
-          onValueChange={onChange}
+          value={userOptions.find(option => option.value === value) || null}
+          onChange={(selectedOption) => onChange(selectedOption?.value || "")}
           placeholder={t('selectUser')}
-          searchPlaceholder={t('searchUsers')}
-          emptyMessage={commonT('noDataFound')}
-          disabled={disabled}
+          noOptionsMessage={() => commonT('noDataFound')}
+          isDisabled={disabled}
+          isSearchable={true}
+          isClearable={true}
         />
-      )
+      );
     
     case "factory":
       const factoryOptions = factories.map(factory => ({
@@ -109,16 +110,17 @@ export function FormField({
       }))
 
       return (
-        <Combobox
+        <ReactSelect
           options={retailerOptions}
-          value={value || ""}
-          onValueChange={onChange}
+          value={retailerOptions.find(option => option.value === value) || null}
+          onChange={(selectedOption) => onChange(selectedOption?.value || "")}
           placeholder={commonT('selectRetailer')}
-          searchPlaceholder={commonT('searchRetailer')}
-          emptyMessage={commonT('noDataFound')}
-          disabled={disabled}
+          noOptionsMessage={() => commonT('noDataFound')}
+          isDisabled={disabled}
+          isSearchable={true}
+          isClearable={true}
         />
-      )
+      );
 
     case "text":
       return (
