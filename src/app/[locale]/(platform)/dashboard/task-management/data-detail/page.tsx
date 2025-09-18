@@ -15,10 +15,61 @@ import { formatDateToUTC7 } from "@/lib/utils/date"
 import { getStatusColor } from "@/lib/utils/format"
 import { Link } from "@/i18n/navigation"
 import { getTranslations } from "next-intl/server"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarRight } from "@/components/dashboard/RightSidebar"
+import { RightSidebarProvider } from "@/contexts/FilterContext"
+import type { PageFilterConfig } from "@/types"
+import { getFactoryOptions, getStateTypeOptions, getRetailerOptions, getUserOptions } from "@/lib/utils/filter"
 
-export default async function TaskDataDetailPage() {
+
+
+interface PageProps {
+  searchParams: Promise<{
+    search?: string,
+    page?: string
+    page_size?: string
+  }>
+}
+
+export default async function TaskDataDetailPage({searchParams}: PageProps) {
+  const FilterConfig: PageFilterConfig = {
+  showResetButton: true,
+  defaultValues: {
+    state_type__in: [
+      'pending_approve', 'analyze', 'working',
+      'pending_review', 'start', 'closed'
+    ]
+  },
+  filters: [
+    {
+      id: 'state_type__in',
+      type: 'multiselect',
+      label: 'State Filter',
+      options: getStateTypeOptions()
+    },
+    {
+      id: 'name_of_customer__in',
+      type: 'multiselect',
+      label: 'Factory Filter',
+      options: await getFactoryOptions()
+    },
+    {
+      id: 'retailer__in',
+      type: 'multiselect',
+      label: 'Retailer Filter',
+      options: await getRetailerOptions()
+    },
+    {
+      id: 'sampler__in',
+      type: 'multiselect',
+      label: 'User Filter',
+      options: await getUserOptions()
+    },
+  ]
+}
+  const params = await searchParams
   const t = await getTranslations()
-  const data = await getDataDetail()
+  const data = await getDataDetail(params)
 
   const groupedData = data
     .sort((a, b) => {
@@ -46,6 +97,15 @@ export default async function TaskDataDetailPage() {
   })
 
   return (
+    <RightSidebarProvider>
+      <SidebarProvider>
+        <div className="flex flex-1 min-w-0">
+          <div className="flex-1 min-w-0">
+            <div className="sticky top-14 z-10 bg-background px-2">
+              <div className="flex items-center gap-2 lg:hidden">
+                <SidebarTrigger />
+                <span className="text-sm font-medium">Filter</span>
+              </div>
     <div className="container mx-auto py-6">
       <Card>
         {/* <CardHeader>
@@ -126,5 +186,11 @@ export default async function TaskDataDetailPage() {
         </CardContent>
       </Card>
     </div>
+    </div>
+              </div>
+              <SidebarRight filterConfig={FilterConfig} />
+            </div>
+          </SidebarProvider>
+        </RightSidebarProvider>
   )
 }

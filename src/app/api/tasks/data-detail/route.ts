@@ -1,13 +1,18 @@
 import { getSessionCookie, unauthorizedResponse, handleError } from "@/lib/utils/api"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import type { PaginatedFactoryList, TaskDataDetail, PaginatedRetailerList } from "@/types"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const response = await fetch(`${process.env.API_URL}/api/tasks/data-detail/`, {
+    const apiUrl = new URL(`${process.env.API_URL}/api/tasks/data-detail/`)
+    request.nextUrl.searchParams.forEach((value, key) => {
+      apiUrl.searchParams.set(key, value)
+    })
+
+    const response = await fetch(apiUrl, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
