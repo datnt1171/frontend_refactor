@@ -201,18 +201,6 @@
     }
   },
   "dashboard": {
-    "sprReport": {
-      "title": "所有樣本請求",
-      "customerName": "客戶名稱",
-      "state": "狀態",
-      "finishingCode": "完成編號",
-      "customerColorName": "客戶顏色名稱",
-      "collection": "系列",
-      "quantity": "數量",
-      "deadline": "截止日期",
-      "failedToLoad": "載入報告失敗",
-      "viewTask": "查看任務"
-    },
     "appTitle": "儀表板",
     "appDescription": "報表與儀表板",
     "filter": {

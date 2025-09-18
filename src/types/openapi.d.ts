@@ -228,23 +228,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/tasks/spr-report/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a report of tasks for a specific process using raw SQL. */
-        get: operations["api_tasks_spr_report_list"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/token/": {
         parameters: {
             query?: never;
@@ -729,24 +712,6 @@ export interface components {
             readonly updated_by: string;
             /** Format: date-time */
             readonly updated_at: string;
-        };
-        SPRReportRow: {
-            /** Format: uuid */
-            task_id: string;
-            title: string;
-            /** Format: date-time */
-            created_at: string;
-            created_by: string;
-            /** Format: uuid */
-            user_id: string;
-            state: string;
-            state_type: string;
-            customer_name: string;
-            finishing_code: string;
-            customer_color_name: string;
-            collection: string;
-            quantity: string;
-            deadline: string;
         };
         SentTask: {
             /** Format: uuid */
@@ -1482,25 +1447,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginatedSentTaskList"];
-                };
-            };
-        };
-    };
-    api_tasks_spr_report_list: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SPRReportRow"][];
                 };
             };
         };

@@ -201,18 +201,6 @@
     }
   },
   "dashboard": {
-    "sprReport": {
-      "title": "Tất cả yêu cầu mẫu",
-      "customerName": "Tên khách hàng",
-      "state": "Trạng thái",
-      "finishingCode": "Mã hoàn thiện",
-      "customerColorName": "Tên màu khách hàng",
-      "collection": "Bộ sưu tập",
-      "quantity": "Số lượng",
-      "deadline": "Ngày KH cần",
-      "failedToLoad": "Không tải được báo cáo",
-      "viewTask": "Xem Công việc"
-    },
     "appTitle": "Báo cáo",
     "appDescription": "Báo cáo các bộ phận",
     "filter": {
@@ -277,22 +265,22 @@
   
   "sample": {
     "sample": "Mẫu",
-    "finishingCode": "Mã hoàn thiện",
+    "finishingCode": "Mã màu",
     "customersColorName": "Tên màu của khách hàng",
-    "typeOfSubstrate": "Loại vật liệu nền",
-    "collection": "Bộ sưu tập",
+    "typeOfSubstrate": "Loại gỗ",
+    "collection": "Dòng hàng",
     "sampleType": "Loại mẫu",
-    "quantityRequirement": "Yêu cầu số lượng",
-    "requesterName": "Tên người yêu cầu",
-    "deadlineRequest": "Thời hạn yêu cầu",
-    "sampler": "Người lấy mẫu",
+    "quantityRequirement": "Số lượng yêu cầu",
+    "requesterName": "Tên người đề nghị",
+    "deadlineRequest": "Ngày cần",
+    "sampler": "Người làm mẫu",
     "typeOfPaint": "Loại sơn",
-    "finishingSurfaceGrain": "Vân bề mặt hoàn thiện",
-    "sheenLevel": "Mức độ bóng",
-    "substrateSurfaceTreatment": "Xử lý bề mặt vật liệu nền",
-    "panelCategory": "Danh mục tấm",
+    "finishingSurfaceGrain": "Hình thức bề mặt",
+    "sheenLevel": "Độ bóng",
+    "substrateSurfaceTreatment": "Xử lý bề mặt",
+    "panelCategory": "Loại ván",
     "purposeOfUsage": "Mục đích sử dụng",
-    "additionalDetail": "Chi tiết bổ sung",
+    "additionalDetail": "Thông tin thêm nếu có",
     "frontSide": "Mặt trước",
     "backSide": "Mặt sau"
   },

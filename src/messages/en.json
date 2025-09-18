@@ -202,18 +202,6 @@
     }
   },
   "dashboard": {
-    "sprReport": {
-      "title": "All sample request",
-      "customerName": "Customer's Name",
-      "state": "State",
-      "finishingCode": "Finishing Code",
-      "customerColorName": "Customer's Color Name",
-      "collection": "Collection",
-      "quantity": "Quantity",
-      "deadline": "Deadline",
-      "failedToLoad": "Failed to load report",
-      "viewTask": "View Task"
-    },
     "appTitle": "Dashboard",
     "appDescription": "Reports and Dashboards",
     "filter": {
