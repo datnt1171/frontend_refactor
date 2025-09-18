@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Eye } from "lucide-react"
 import { useTranslations } from 'next-intl'
+import { useMemo } from 'react'
 import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
 import { FormField } from "./FormField"
-import { useFieldVisibility } from "@/lib/utils/field"
+import { getVisibleFields } from "@/lib/utils/field"
 
 interface ProcessFormContentProps {
   process: ProcessDetail
@@ -30,8 +31,10 @@ export function ProcessFormContent({
 }: ProcessFormContentProps) {
   const t = useTranslations('taskManagement.createTask')
   
-  // Get visible fields based on current form values
-  const { visibleFields } = useFieldVisibility(process.fields, formValues)
+  // Memoize visible fields to prevent unnecessary re-renders
+  const visibleFields = useMemo(() => {
+    return getVisibleFields(process.fields, formValues)
+  }, [process.fields, formValues])
 
   return (
     <Card>
