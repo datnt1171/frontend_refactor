@@ -8,6 +8,7 @@ import { useTranslations } from 'next-intl'
 import type { ProcessField, UserList, Factory, Retailer, ValueLabel } from "@/types"
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 import { compressImage } from "@/lib/utils/imageCompression"
+import ReactSelect from 'react-select';
 
 interface FormFieldProps {
   field: ProcessField
@@ -19,14 +20,6 @@ interface FormFieldProps {
   disabled: boolean
 }
 
-// const ALLOWED_FILE_TYPES = [
-//   "image/jpeg", "image/png", "application/pdf",
-//   "application/msword",
-//   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-//   "application/vnd.ms-excel",
-//   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-// ]
-
 export function FormField({ 
   field, 
   users, 
@@ -34,22 +27,22 @@ export function FormField({
   retailers,
   value, 
   onChange, 
-  disabled 
+  disabled
 }: FormFieldProps) {
   const t = useTranslations('taskManagement.createTask')
   const commonT = useTranslations('common')
   
+  
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      
       try {
         // Compress image if it's an image file
         const compressedFile = await compressImage(file, {
-          maxWidth: 1080,
-          maxHeight: 1440,
-          quality: 0.85,
-          maxSizeKB: 1024
+          maxWidth: 1280,
+          maxHeight: 720,
+          quality: 0.7,
+          maxSizeKB: 200
         })
         
         onChange(compressedFile)
@@ -96,16 +89,17 @@ export function FormField({
       }))
 
       return (
-        <Combobox
+        <ReactSelect
           options={factoryOptions}
-          value={value || ""}
-          onValueChange={onChange}
+          value={factoryOptions.find(option => option.value === value) || null}
+          onChange={(selectedOption) => onChange(selectedOption?.value || "")}
           placeholder={commonT('selectFactory')}
-          searchPlaceholder={commonT('searchFactory')}
-          emptyMessage={commonT('noDataFound')}
-          disabled={disabled}
+          noOptionsMessage={() => commonT('noDataFound')}
+          isDisabled={disabled}
+          isSearchable={true}
+          isClearable={true}
         />
-      )
+      );
 
     case "retailer":
       const retailerOptions = retailers.map(retailer => ({
