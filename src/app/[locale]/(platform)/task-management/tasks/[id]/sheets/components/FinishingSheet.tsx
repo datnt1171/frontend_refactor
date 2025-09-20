@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Combobox } from "@/components/ui/combobox"
+import ReactSelect from 'react-select';
 import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet } from '@/types';
 import { putFinishingSheet, createFinishingSheet } from '@/lib/api/client/api';
 import { Button } from '@/components/ui/button';
@@ -10,7 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { generatePDF } from '@/lib/pdf-generator';
+import { MultiSelect } from '@/components/ui/multi-select';
+import { generatePDF, generateSimpleFormPDF } from '@/lib/pdf-generator';
 import { MoreVertical, Plus, Trash2, FileText } from "lucide-react";
 import { useRouter } from '@/i18n/navigation';
 
@@ -66,6 +67,11 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   );
 
   const [isSaving, setIsSaving] = useState(false);
+  const [languageSettings, setLanguageSettings] = useState({
+    en: false,
+    vi: true,
+    zh_hant: true
+  });
   const router = useRouter();
   // Generic update function for the entire finishing sheet
   const updateFinishingSheet = (updates: Partial<FinishingSheet>) => {
@@ -347,13 +353,15 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
 
   // Create options for dropdowns
   const stepOptions = stepTemplates.map(step => ({
-    value: step.id,
+    value: step.id.toString(),
     label: step.short_name,
+    searchValue: `${step.short_name} ${step.name || ''}`.trim()
   }));
 
   const formularOptions = formularTemplates.map(formular => ({
-    value: formular.id,
+    value: formular.id.toString(),
     label: formular.code,
+    searchValue: `${formular.code}`.trim()
   }));
 
   // Save function - handles both create and update
@@ -375,32 +383,63 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
       
       // Call success callback if provided
       onSaveSuccess?.(savedSheet);
-      
+      router.back();
     } catch (error) {
       alert(`Error ${mode === 'create' ? 'creating' : 'saving'} finishing sheet`);
     } finally {
-      if (mode === 'create') {
-        router.back();
-      } else {
-        setIsSaving(false);
-      }
+      setIsSaving(false);
     }
   };
 
   return (
     <div>
       <div className="mb-4 flex justify-between items-center">
-        <div>
+        <div className="flex gap-2">
           <Button onClick={addRow}>
             Add Row
           </Button>
-        </div>
-        <div className="flex gap-2">
           <Button 
             onClick={handleSave}
             disabled={isSaving}
           >
             {isSaving ? 'Saving...' : (mode === 'create' ? 'Create' : 'Save')}
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <div className="min-w-0">
+            <MultiSelect
+              options={[
+                { value: 'en', label: 'English' },
+                { value: 'vi', label: 'Tiếng Việt' },
+                { value: 'zh_hant', label: '繁體中文' }
+              ]}
+              onValueChange={(selectedLanguages) => {
+                const newLanguageSettings = {
+                  en: selectedLanguages.includes('en'),
+                  vi: selectedLanguages.includes('vi'),
+                  zh_hant: selectedLanguages.includes('zh_hant')
+                };
+                setLanguageSettings(newLanguageSettings);
+              }}
+              defaultValue={['vi', 'zh_hant']}
+              disabled={false}
+              responsive={true}
+              modalPopover={true}
+              maxCount={2}
+            />
+          </div>
+          <Button
+            onClick={() => generateSimpleFormPDF(
+              finishingSheet, 
+              languageSettings.en, 
+              languageSettings.vi, 
+              languageSettings.zh_hant
+            )}
+            variant="outline"
+            disabled={finishingSheet.rows.length === 0}
+          >
+            <FileText size={16} />
+            Generate simple form
           </Button>
           <Button
             onClick={() => generatePDF(finishingSheet)}
@@ -617,14 +656,13 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Step Name Dropdown - only show on first product row */}
                     {productIndex === 0 && (
                       <td rowSpan={record.products.length}>
-                        <Combobox
+                        <ReactSelect
                           options={stepOptions}
-                          value={record.step_template || ''}
-                          onValueChange={(val) => handleStepChange(record.id, val)}
-                          placeholder="Select Step"
-                          searchPlaceholder="Search steps..."
-                          emptyMessage="No step found."
-                          className="text-xs"
+                          value={stepOptions.find(option => option.value === record.step_template?.toString()) || null}
+                          onChange={(selectedOption) => handleStepChange(record.id, selectedOption?.value || "")}
+                          noOptionsMessage={() => "No step found."}
+                          isSearchable={true}
+                          isClearable={true}
                         />
                       </td>
                     )}
@@ -663,14 +701,13 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Chemical Mixing Code Dropdown - only show on first product row */}
                     {productIndex === 0 && (
                       <td rowSpan={record.products.length}>
-                        <Combobox
+                        <ReactSelect
                           options={formularOptions}
-                          value={record.formular_template || ''}
-                          onValueChange={(val) => handleFormularChange(record.id, val)}
-                          placeholder="Select Formula"
-                          searchPlaceholder="Search formulas..."
-                          emptyMessage="No formula found."
-                          className="text-xs"
+                          value={formularOptions.find(option => option.value === record.formular_template?.toString()) || null}
+                          onChange={(selectedOption) => handleFormularChange(record.id, selectedOption?.value || "")}
+                          noOptionsMessage={() => "No formula found."}
+                          isSearchable={true}
+                          isClearable={true}
                         />
                       </td>
                     )}

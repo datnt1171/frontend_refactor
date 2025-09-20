@@ -19,8 +19,8 @@ type RouteConfig = {
 export const routePermissions: Record<string, RouteConfig> = {
  // Users
  '/user': {
-   roles: ['admin'],
-   departments: ['admin']
+   roles: ['admin', 'assistant'],
+   departments: ['admin', 'TT']
  },
 
  // Dashboard route

@@ -215,3 +215,215 @@ export const generatePDF = (finishingSheet: FinishingSheet) => {
     console.error('Failed to open print window');
   }
 };
+
+export const generateSimpleFormPDF = (
+  finishingSheet: FinishingSheet, 
+  en: boolean = false, 
+  vi: boolean = true, 
+  zh_hant: boolean = true
+) => {
+
+  let htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    @page { 
+      size: A5 portrait; 
+      margin: 5mm; 
+    }
+    
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      font-size: 11px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #000;
+    }
+    
+    table { 
+      width: 100%; 
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    
+    th, td { 
+      border: 1px solid #000; 
+      padding: 4px; 
+      vertical-align: top; 
+      word-wrap: break-word;
+    }
+    
+    th { 
+      background-color: #f0f0f0;
+      font-weight: bold; 
+      text-align: center;
+      font-size: 11px;
+    }
+    
+    .col-no { 
+      width: 8%; 
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .col-product { 
+      width: 35%; 
+    }
+    
+    .col-vicosity { 
+      width: 32%; 
+    }
+    
+    .col-hold-time { 
+      width: 25%; 
+    }
+
+    .signature-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-top: 30px;
+      text-align: center;
+    }
+    
+    .signature-box {
+      border-top: 1px solid #000;
+      padding-top: 5px;
+      font-size: 11px;
+    }
+    
+    @media print {
+      body { print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="company-name">CÔNG TY TNHH HÓA PHẨM VIỆT LIÊN</div>
+    <div class="company-name-chinese">越聯化工責任有限公司</div>
+    <div class="contact-info">Tel:0274.368.6910（11-12） fax:0274.368.6907</div>
+    <div class="process-title">Production Process ${finishingSheet.finishing_code || ''}</div>
+  </div>
+
+  <div>
+    <div>
+      <div><span">Created date:</span> ${new Date(finishingSheet.created_at).toLocaleDateString() || ''}</div>
+      <div><span">Panel No.:</span> customer name</div>
+      <div><span">Panel No.:</span> ${finishingSheet.finishing_code || ''}</div>
+      <div><span">Sheen:</span> ${finishingSheet.sheen || ''}</div>
+    </div>
+    <div>
+      <div><span">Paint System:</span> ${finishingSheet.type_of_paint || ''}</div>
+      <div><span">Material:</span> ${finishingSheet.type_of_substrate || ''}</div>
+      <div><span">Sampler:</span> ${finishingSheet.sampler || ''}</div>
+      <div><span">Distressing:</span> Distressing</div>
+    </div>
+  </div>
+
+  <div class="special-instruction">
+    CHECK MATERIALS THEN USE #240 SANDPAPER<br>
+    KIỂM TRA HÀNG TRẮNG SAU ĐÓ CHÀ NHÁM #240
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th class="col-no">No.</th>
+        <th class="col-process">Process</th>
+        <th class="col-remark">Remark</th>
+        <th class="col-drying">Drying time</th>
+      </tr>
+    </thead>
+    <tbody>`;
+
+  finishingSheet.rows.forEach((stepData, stepIndex) => {
+    // Generate process column (list of product names with line breaks)
+    const processContent = stepData.products
+      .map(product => product.product_name)
+      .join('<br>');
+
+    // Generate remark column based on language preferences
+    const remarkContent = generateMultiLanguageContent(
+      stepData.viscosity_en,
+      stepData.viscosity_vi,
+      stepData.viscosity_zh_hant,
+      en,
+      vi,
+      zh_hant
+    );
+
+    // Generate drying time column based on language preferences
+    const dryingTimeContent = generateMultiLanguageContent(
+      stepData.spec_en,
+      stepData.spec_vi,
+      stepData.spec_zh_hant,
+      en,
+      vi,
+      zh_hant
+    );
+
+    htmlContent += `
+      <tr>
+        <td class="col-no">${stepIndex + 1}</td>
+        <td class="col-process">${processContent}</td>
+        <td class="col-remark">${remarkContent}</td>
+        <td class="col-drying">${dryingTimeContent}</td>
+      </tr>`;
+  });
+
+
+  htmlContent += `
+    </tbody>
+  </table>
+
+  <div class="signature-section">
+    <div class="signature-box">Customer confirm</div>
+    <div class="signature-box">Manager confirm</div>
+  </div>
+
+</body>
+</html>`;
+
+  // Create and print the document
+  const blob = new Blob([htmlContent], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const printWindow = window.open(url, '_blank');
+  
+  if (printWindow) {
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+      setTimeout(() => {
+        printWindow.close();
+        URL.revokeObjectURL(url);
+      }, 100);
+    };
+  } else {
+    URL.revokeObjectURL(url);
+    console.error('Failed to open print window');
+  }
+};
+
+
+const generateMultiLanguageContent = (
+  enText: string,
+  viText: string,
+  zhHantText: string,
+  en: boolean,
+  vi: boolean,
+  zh_hant: boolean
+): string => {
+  const contents: string[] = [];
+
+  if (en && enText) contents.push(enText);
+  if (vi && viText) contents.push(viText);
+  if (zh_hant && zhHantText) contents.push(zhHantText);
+
+  return contents.join('<br>');
+};
