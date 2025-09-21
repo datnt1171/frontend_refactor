@@ -1,7 +1,7 @@
 import { api } from '@/lib/api/server/api'
 import type { TaskDataDetail, TaskActionDetail } from '@/types/api'
 
-export const getDataDetail = async (searchParams?: Record<string, string>): Promise<TaskDataDetail[]> => {
+export const getDataDetails = async (searchParams?: Record<string, string>): Promise<TaskDataDetail[]> => {
   const queryParams = new URLSearchParams()
   
   if (searchParams) {
@@ -16,6 +16,12 @@ export const getDataDetail = async (searchParams?: Record<string, string>): Prom
   const endpoint = queryString ? `/tasks/data-detail?${queryString}` : '/tasks/data-detail'
   
   const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch task data detail: ${res.status}`)
+  return res.json()
+}
+
+export const getDataDetail = async (id: string): Promise<TaskDataDetail> => {
+  const res = await api(`/tasks/data-detail/${id}`)
   if (!res.ok) throw new Error(`Failed to fetch task data detail: ${res.status}`)
   return res.json()
 }

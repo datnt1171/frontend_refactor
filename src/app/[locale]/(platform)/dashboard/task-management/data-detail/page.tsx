@@ -1,4 +1,4 @@
-import { getDataDetail } from "@/lib/api/server/reports"
+import { getDataDetails } from "@/lib/api/server/reports"
 import React from "react"
 import {
   Table,
@@ -69,7 +69,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
 }
   const params = await searchParams
   const t = await getTranslations()
-  const data = await getDataDetail(params)
+  const data = await getDataDetails(params)
 
   const groupedData = data
     .sort((a, b) => {

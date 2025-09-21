@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import ReactSelect from 'react-select';
-import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet } from '@/types';
+import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet, TaskDataDetail } from '@/types';
 import { putFinishingSheet, createFinishingSheet } from '@/lib/api/client/api';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +22,7 @@ interface CombinedSheetTableProps {
   taskId: string;
   mode?: 'create' | 'edit'; // New prop to determine mode
   onSaveSuccess?: (sheet: FinishingSheet) => void; // Callback for successful save
+  taskDataDetail: TaskDataDetail
 }
 
 // Generate unique ID for new records
@@ -29,19 +30,19 @@ let idCounter = 0;
 const generateId = () => `temp-${(++idCounter).toString()}`;
 
 // Function to create empty finishing sheet
-const createEmptyFinishingSheet = (taskId: string): FinishingSheet => ({
+const createEmptyFinishingSheet = (taskId: string, taskDataDetail: TaskDataDetail): FinishingSheet => ({
   id: generateId(),
   task: taskId,
-  finishing_code: '',
-  name: '',
-  sheen: '',
+  finishing_code: taskDataDetail.finishing_code || '',
+  name: taskDataDetail.customer_color_name || '',
+  sheen: taskDataDetail.sheen_level || '',
   dft: '',
-  type_of_paint: '',
-  type_of_substrate: '',
-  finishing_surface_grain: '',
-  sampler: '',
-  chemical_waste: '',
-  conveyor_speed: '',
+  type_of_paint: taskDataDetail.type_of_paint || '',
+  type_of_substrate: taskDataDetail.type_of_substrate || '',
+  finishing_surface_grain: taskDataDetail.finishing_surface_grain || '',
+  sampler: taskDataDetail.sampler || '',
+  chemical_waste: '0%',
+  conveyor_speed: '1.5 METER PER MINUTE',
   with_panel_test: false,
   testing: false,
   chemical_yellowing: false,
@@ -59,11 +60,12 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   formularTemplates,
   taskId,
   mode = 'edit', // Default to edit mode for backward compatibility
-  onSaveSuccess
+  onSaveSuccess,
+  taskDataDetail
 }) => {
   // Initialize with provided data or empty sheet for create mode
   const [finishingSheet, setFinishingSheet] = useState<FinishingSheet>(
-    data || createEmptyFinishingSheet(taskId)
+    data || createEmptyFinishingSheet(taskId, taskDataDetail)
   );
 
   const [isSaving, setIsSaving] = useState(false);
@@ -375,6 +377,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
         // Create new finishing sheet
         savedSheet = await createFinishingSheet(taskId, finishingSheet);
         alert('Finishing sheet created successfully');
+        router.push(`/task-management/tasks/${taskId}/sheets`);
       } else {
         // Update existing finishing sheet
         savedSheet = await putFinishingSheet(taskId, finishingSheet.id, finishingSheet);
@@ -383,7 +386,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
       
       // Call success callback if provided
       onSaveSuccess?.(savedSheet);
-      router.back();
+      
     } catch (error) {
       alert(`Error ${mode === 'create' ? 'creating' : 'saving'} finishing sheet`);
     } finally {
@@ -431,6 +434,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
           <Button
             onClick={() => generateSimpleFormPDF(
               finishingSheet, 
+              taskDataDetail,
               languageSettings.en, 
               languageSettings.vi, 
               languageSettings.zh_hant

@@ -1,5 +1,5 @@
 import React from 'react';
-import { getStepTemplates, getFormularTemplates } from '@/lib/api/server';
+import { getStepTemplates, getFormularTemplates, getDataDetail } from '@/lib/api/server';
 import CombinedSheetTable from '../components/FinishingSheet';
 
 export default async function CreateSheetPageServer({ 
@@ -10,9 +10,10 @@ export default async function CreateSheetPageServer({
     const { id } = await params;
 
     // Fetch templates in parallel
-    const [stepTemplates, formularTemplates] = await Promise.all([
+    const [stepTemplates, formularTemplates, taskDataDetail] = await Promise.all([
       getStepTemplates(),
-      getFormularTemplates()
+      getFormularTemplates(),
+      getDataDetail(id)
     ]);
     
     return (
@@ -26,6 +27,7 @@ export default async function CreateSheetPageServer({
             formularTemplates={formularTemplates}
             taskId={id}
             mode="create"
+            taskDataDetail={taskDataDetail}
           />
         </div>
       </div>

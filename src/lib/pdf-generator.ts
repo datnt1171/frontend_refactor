@@ -1,4 +1,4 @@
-import { FinishingSheet } from '@/types';
+import { FinishingSheet, TaskDataDetail } from '@/types';
 
 export const generatePDF = (finishingSheet: FinishingSheet) => {
   let htmlContent = `
@@ -217,7 +217,8 @@ export const generatePDF = (finishingSheet: FinishingSheet) => {
 };
 
 export const generateSimpleFormPDF = (
-  finishingSheet: FinishingSheet, 
+  finishingSheet: FinishingSheet,
+  TaskDataDetail: TaskDataDetail, 
   en: boolean = false, 
   vi: boolean = true, 
   zh_hant: boolean = true
@@ -242,14 +243,12 @@ export const generateSimpleFormPDF = (
     
     .header {
       text-align: center;
-      margin-bottom: 10px;
-      border-bottom: 1px solid #000;
     }
     
     table { 
       width: 100%; 
       border-collapse: collapse;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     
     th, td { 
@@ -260,12 +259,15 @@ export const generateSimpleFormPDF = (
     }
     
     th { 
-      background-color: #f0f0f0;
+      background-color: #ffffffff;
       font-weight: bold; 
       text-align: center;
       font-size: 11px;
     }
-    
+    .label {
+      font-weight: bold;
+      width: 50%;
+    }
     .col-no { 
       width: 8%; 
       text-align: center;
@@ -288,13 +290,11 @@ export const generateSimpleFormPDF = (
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 50px;
-      margin-top: 30px;
       text-align: center;
     }
     
     .signature-box {
-      border-top: 1px solid #000;
-      padding-top: 5px;
+      border-bottom: 1px solid #000;
       font-size: 11px;
     }
     
@@ -311,22 +311,58 @@ export const generateSimpleFormPDF = (
     <div class="process-title">Production Process ${finishingSheet.finishing_code || ''}</div>
   </div>
 
-  <div>
-    <div>
-      <div><span">Created date:</span> ${new Date(finishingSheet.created_at).toLocaleDateString() || ''}</div>
-      <div><span">Panel No.:</span> customer name</div>
-      <div><span">Panel No.:</span> ${finishingSheet.finishing_code || ''}</div>
-      <div><span">Sheen:</span> ${finishingSheet.sheen || ''}</div>
-    </div>
-    <div>
-      <div><span">Paint System:</span> ${finishingSheet.type_of_paint || ''}</div>
-      <div><span">Material:</span> ${finishingSheet.type_of_substrate || ''}</div>
-      <div><span">Sampler:</span> ${finishingSheet.sampler || ''}</div>
-      <div><span">Distressing:</span> Distressing</div>
-    </div>
-  </div>
+  <table>
+    <tr>
+        <td class="label">
+            製作日期:<br>
+            <span>Ngày làm:</span>
+            <span id="date">${new Date(finishingSheet.created_at).toLocaleDateString() || ''}</span>
+        </td>
+        <td class="label">
+            塗裝系統:<br>
+            <span>Hệ sơn:</span>
+            <span id="paint">${finishingSheet.type_of_paint || ''}</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">
+            客戶名稱:<br>
+            <span>Tên Công Ty:</span>
+            <span id="customer">${TaskDataDetail.name_of_customer || ''}</span>
+        </td>
+        <td class="label">
+            材種:<br>
+            <span>Loại gỗ:</span>
+            <span id="material">${finishingSheet.type_of_substrate || ''}</span>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">
+            色板名稱:<br>
+            <span>Mã số bản mẫu:</span>
+            <span id="code">${finishingSheet.finishing_code || ''}</span>
+        </td>
+        <td class="label">
+            製作人:<br>
+            <span>Người làm:</span>
+            <span id="sampler">${finishingSheet.sampler || ''}</span>
+        </td>
+    </tr>
+    <tr>
+      <td class="label">
+          亮度:<br>
+          <span>Độ bóng:</span>
+          <span id="sheen">${finishingSheet.sheen || ''}</span>
+      </td>
+      <td class="label">
+          破壞處理:<br>
+          <span>Xử lý phá hoại:</span>
+          <span id="distress">Distressing</span>
+      </td>
+    </tr>
+  </table>
 
-  <div class="special-instruction">
+  <div class="header">
     CHECK MATERIALS THEN USE #240 SANDPAPER<br>
     KIỂM TRA HÀNG TRẮNG SAU ĐÓ CHÀ NHÁM #240
   </div>
@@ -335,9 +371,9 @@ export const generateSimpleFormPDF = (
     <thead>
       <tr>
         <th class="col-no">No.</th>
-        <th class="col-process">Process</th>
-        <th class="col-remark">Remark</th>
-        <th class="col-drying">Drying time</th>
+        <th class="col-product">Process</th>
+        <th class="col-viscosity">Remark</th>
+        <th class="col-hold-time">Drying time</th>
       </tr>
     </thead>
     <tbody>`;
@@ -370,10 +406,10 @@ export const generateSimpleFormPDF = (
 
     htmlContent += `
       <tr>
-        <td class="col-no">${stepIndex + 1}</td>
-        <td class="col-process">${processContent}</td>
-        <td class="col-remark">${remarkContent}</td>
-        <td class="col-drying">${dryingTimeContent}</td>
+        <td>${stepIndex + 1}</td>
+        <td>${processContent}</td>
+        <td>${remarkContent}</td>
+        <td>${dryingTimeContent}</td>
       </tr>`;
   });
 
