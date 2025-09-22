@@ -2,7 +2,6 @@ import { api } from '@/lib/api/server/api'
 import type {
   FinishingSheet, 
   PaginatedFinishingSheetList, 
-  GetFinishingSheetsParams, 
   StepTemplate,
   FormularTemplate, 
   PaginatedSheetBlueprintList, 
@@ -11,18 +10,20 @@ import type {
 
 export async function getFinishingSheets(
   taskId: string,
-  params: GetFinishingSheetsParams = {}
+  searchParams?: Record<string, string>
 ): Promise<PaginatedFinishingSheetList> {
-  const searchParams = new URLSearchParams()
+
+  const queryParams = new URLSearchParams()
   
-  // Add all non-undefined parameters to the query string
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      searchParams.set(key, value.toString())
-    }
-  })
-  
-  const queryString = searchParams.toString()
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+
+  const queryString = queryParams.toString()
   const endpoint = `/tasks/${taskId}/sheets${queryString ? `?${queryString}` : ''}`
   
   const response = await api(endpoint)

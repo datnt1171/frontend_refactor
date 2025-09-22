@@ -55,15 +55,6 @@ export type PaginatedFinishingSheetList = components['schemas']['PaginatedFinish
 export type SheetBlueprint = components['schemas']['SheetBlueprint']
 export type PaginatedSheetBlueprintList = components['schemas']['PaginatedSheetBlueprintList']
 
-export interface GetFinishingSheetsParams {
-  created_by?: string;
-  search?: string;
-  ordering?: 'created_at' | '-created_at' | 'updated_at' | '-updated_at' | 'id' | '-id';
-  start_date?: string;
-  end_date?: string;
-  limit?: number;
-  offset?: number;
-}
 
 // Sheet templates
 export type StepTemplate = components['schemas']['StepTemplate']

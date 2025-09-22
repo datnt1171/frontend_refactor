@@ -3,7 +3,7 @@ import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText, Plus } from 'lucide-react'
-
+import { formatDateToUTC7 } from '@/lib/utils/date'
 export default async function BlueprintsPage({ 
   params 
 }: { 
@@ -50,11 +50,19 @@ export default async function BlueprintsPage({
                 <div className="space-y-2 text-sm text-muted-foreground mb-4">
                   <div className="flex justify-between">
                     <span>Created by:</span>
-                    <span className="font-medium">{sheet.created_by}</span>
+                    <span className="font-medium">{sheet.created_by.username}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Created at:</span>
-                    <span className="font-medium">{sheet.created_at}</span>
+                    <span className="font-medium">{formatDateToUTC7(sheet.created_at)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Created at:</span>
+                    <span className="font-medium">{sheet.updated_by.username}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Created at:</span>
+                    <span className="font-medium">{formatDateToUTC7(sheet.updated_at)}</span>
                   </div>
                 </div>
                 <div className="flex">

@@ -20,6 +20,12 @@ export default async function BlueprintsPage({
   const sheetBlueprints = paginatedSheetBlueprints.results
   const t = await getTranslations()
 
+  // Helper function to get blueprint name by ID
+  const getBlueprintName = (blueprintId: string) => {
+    const blueprint = blueprints.find(bp => bp.id === blueprintId)
+    return blueprint?.name || blueprintId
+  }
+
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
@@ -48,7 +54,9 @@ export default async function BlueprintsPage({
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <CardTitle className="text-xl mb-2">{sheetBlueprint.blueprint}</CardTitle>
+                    <CardTitle className="text-xl mb-2">
+                      {getBlueprintName(sheetBlueprint.blueprint)}
+                    </CardTitle>
                   </div>
                   <FileText className="h-8 w-8 text-muted-foreground" />
                 </div>
@@ -60,7 +68,7 @@ export default async function BlueprintsPage({
                 <div className="space-y-2 text-sm text-muted-foreground mb-4">
                   <div className="flex justify-between">
                     <span>{t('common.createdBy')}:</span>
-                    <span className="font-medium">{sheetBlueprint.created_by}</span>
+                    <span className="font-medium">{sheetBlueprint.created_by.username}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('common.createdAt')}:</span>
@@ -69,8 +77,8 @@ export default async function BlueprintsPage({
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span>{t('common.createdBy')}:</span>
-                    <span className="font-medium">{sheetBlueprint.updated_by}</span>
+                    <span>{t('common.updatedBy')}:</span>
+                    <span className="font-medium">{sheetBlueprint.updated_by.username}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>{t('common.updatedAt')}:</span>

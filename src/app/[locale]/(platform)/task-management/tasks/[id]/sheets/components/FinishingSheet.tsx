@@ -46,9 +46,19 @@ const createEmptyFinishingSheet = (taskId: string, taskDataDetail: TaskDataDetai
   testing: false,
   chemical_yellowing: false,
   created_at: new Date().toISOString(),
-  created_by: '',
+  created_by: {
+    id: '',
+    username: '',
+    first_name: '',
+    last_name: ''
+  },
   updated_at: new Date().toISOString(),
-  updated_by: '',
+  updated_by: {
+    id: '',
+    username: '',
+    first_name: '',
+    last_name: ''
+  },
   rows: []
 });
 
