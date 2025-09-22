@@ -514,31 +514,6 @@ export interface components {
             readonly updated_by: components["schemas"]["User"];
             rows: components["schemas"]["SheetRow"][];
         };
-        FinishingSheetRead: {
-            /** Format: uuid */
-            readonly id: string;
-            /** Format: uuid */
-            task: string;
-            finishing_code: string;
-            name: string;
-            sheen: string;
-            dft: string;
-            type_of_paint: string;
-            type_of_substrate: string;
-            finishing_surface_grain: string;
-            sampler: string;
-            chemical_waste: string;
-            conveyor_speed: string;
-            with_panel_test: boolean;
-            testing: boolean;
-            chemical_yellowing: boolean;
-            /** Format: date-time */
-            readonly created_at: string;
-            readonly created_by: components["schemas"]["User"];
-            /** Format: date-time */
-            readonly updated_at: string;
-            readonly updated_by: components["schemas"]["User"];
-        };
         FormularTemplate: {
             /** Format: uuid */
             readonly id: string;
@@ -706,7 +681,7 @@ export interface components {
             readonly id?: string;
             /** Format: uuid */
             finishing_sheet?: string;
-            readonly finishing_sheet_detail?: components["schemas"]["FinishingSheetRead"];
+            readonly finishing_sheet_detail?: components["schemas"]["FinishingSheet"];
             blueprint?: string;
             description?: string;
             /** Format: date-time */
@@ -833,7 +808,7 @@ export interface components {
             readonly id: string;
             /** Format: uuid */
             finishing_sheet: string;
-            readonly finishing_sheet_detail: components["schemas"]["FinishingSheetRead"];
+            readonly finishing_sheet_detail: components["schemas"]["FinishingSheet"];
             blueprint: string;
             description?: string;
             /** Format: date-time */

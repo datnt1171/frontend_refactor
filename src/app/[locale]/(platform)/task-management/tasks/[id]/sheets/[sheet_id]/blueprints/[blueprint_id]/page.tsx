@@ -1,6 +1,7 @@
-import { getSheetBlueprint } from '@/lib/api/server'
+import { getSheetBlueprint, getBlueprint, getDataDetail } from '@/lib/api/server'
 import { getTranslations } from 'next-intl/server'
-import BlueprintPreview from './BlueprintPreview'
+import { getLocale } from 'next-intl/server'
+import BlueprintViewer from './BlueprintPreview'
 
 export default async function BlueprintsPage({ 
   params 
@@ -8,14 +9,33 @@ export default async function BlueprintsPage({
   params: Promise<{ id: string, sheet_id: string, blueprint_id: string }> 
 }) {
   const { id, sheet_id, blueprint_id } = await params
-  const sheetBlueprint = await getSheetBlueprint(id, sheet_id, blueprint_id)
+  const locale = await getLocale()
   const t = await getTranslations()
-
+  
+  // Fetch the sheet blueprint data
+  const dataDetail = await getDataDetail(id)
+  const sheetBlueprint = await getSheetBlueprint(id, sheet_id, blueprint_id)
+  const blueprint = await getBlueprint(dataDetail.name_of_customer, sheetBlueprint.blueprint)
+  // Map Next.js locale to component language format
+  const getLanguage = (locale: string): 'en' | 'vi' | 'zh_hant' => {
+    switch (locale) {
+      case 'vi':
+        return 'vi'
+      case 'zh':
+      case 'zh-TW':
+      case 'zh-HK':
+        return 'zh_hant'
+      default:
+        return 'en'
+    }
+  }
   return (
-    <BlueprintPreview
+    <div>
+      <BlueprintViewer
         sheetBlueprint={sheetBlueprint}
-        language="en" // Change to 'vi' or 'zh_hant' as needed
-        onRefresh={loadSheetBlueprint}
+        blueprint={blueprint}
+        language={getLanguage(locale)}
       />
+    </div>
   )
 }
