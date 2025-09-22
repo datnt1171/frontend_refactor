@@ -140,7 +140,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
                     <React.Fragment key={groupKey}>
                       {tasks.map((task, index) => (
                         <TableRow key={task.task_id}>
-                          <TableCell>{task.name_of_customer}</TableCell>
+                          <TableCell>{task.factory_name}</TableCell>
                           <TableCell>{task.sample_type}</TableCell>
                           <TableCell className="font-bold">
                                 <Link href={`/task-management/tasks/${task.task_id}`} className="hover:underline">
@@ -158,7 +158,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
                           </TableCell>
                           <TableCell>{formatDateToUTC7(task.created_at, 'date')}</TableCell>
                           <TableCell>{formatDateToUTC7(task.deadline_request, 'date')}</TableCell>
-                          <TableCell>{task.retailer}</TableCell>
+                          <TableCell>{task.retailer_name}</TableCell>
                           <TableCell>{task.customer_color_name}</TableCell>
                           <TableCell>{task.type_of_substrate}</TableCell>
                           <TableCell>
@@ -170,7 +170,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
                       {tasks[0] && (
                         <TableRow className="bg-gray-50 font-semibold border-t-2">
                           <TableCell colSpan={3}>
-                            {tasks[0].name_of_customer}
+                            {tasks[0].factory_name}
                           </TableCell>
                           <TableCell>
                             {groupTotal}

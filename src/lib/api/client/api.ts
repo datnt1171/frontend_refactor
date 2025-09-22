@@ -7,7 +7,8 @@ import type {
   BlueprintCreate,
   BlueprintUpdate,
   FinishingSheet,
-  UserFactoryOnsite
+  UserFactoryOnsite,
+  SheetBlueprint
 } from '@/types/'
 
 type ApiResponse<T> = {
@@ -267,7 +268,6 @@ export const putFinishingSheet = async (
   sheetId: string, 
   data: FinishingSheet
 ) => {
-  console.log(data)
   const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}`, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -301,6 +301,23 @@ export const CreateUpdateOnsite = async (data: UserFactoryOnsite[]) => {
 
   if (!response.ok) {
       throw new Error(`Failed to create or update User factory onsite: ${response.status}`)
+    }
+
+    return response.data
+}
+
+export const createSheetBlueprint = async (
+  TaskId: string, 
+  SheetId: string, 
+  data: Pick<SheetBlueprint, 'finishing_sheet' | 'blueprint' | 'description'>
+) => {
+  const response = await apiClient(`/tasks/${TaskId}/sheets/${SheetId}/blueprints`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+  })
+
+  if (!response.ok) {
+      throw new Error(`Failed to create SheetBlueprint: ${response.status}`)
     }
 
     return response.data

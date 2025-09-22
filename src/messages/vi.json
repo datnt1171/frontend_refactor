@@ -6,6 +6,7 @@
     "errorTitle": "Đã có lỗi xảy ra",
     "errorDescription": "Đã xảy ra lỗi không mong muốn. Vui lòng thử lại sau.",
     "invalidFile": "Loại tệp không hợp lệ. Vui lòng chọn tệp hợp lệ.",
+    "noFileProvided": "Không có file nào được cung cấp, vui lòng chọn hoặc tải lên một file",
     "tryAgain": "Thử lại",
     "id": "ID",
     "openMenu": "Mở menu",

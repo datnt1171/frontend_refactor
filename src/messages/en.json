@@ -6,6 +6,7 @@
     "errorTitle": "Something went wrong",
     "errorDescription": "An unexpected error occurred. Please try again later.",
     "invalidFile": "Invalid file type. Please select a valid file.",
+    "noFileProvided": "No File provided, please choose or upload a file",
     "tryAgain": "Try Again",
     "id": "ID",
     "openMenu": "Open menu",

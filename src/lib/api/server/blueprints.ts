@@ -12,9 +12,3 @@ export const getBlueprint = async (factory_id: string, blueprint_id : string): P
   if (!res.ok) throw new Error(`Failed to fetch blueprint: ${res.status}`)
   return res.json()
 }
-
-// export const getSheetBlueprint = async (task_id: string, sheet_id : string): Promise<Blueprint> => {
-//   const res = await api(`/crm/factories/${factory_id}/blueprints/${blueprint_id}`)
-//   if (!res.ok) throw new Error(`Failed to fetch blueprint: ${res.status}`)
-//   return res.json()
-// }

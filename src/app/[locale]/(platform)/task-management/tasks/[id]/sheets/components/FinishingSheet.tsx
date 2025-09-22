@@ -21,7 +21,6 @@ interface CombinedSheetTableProps {
   formularTemplates: FormularTemplate[];
   taskId: string;
   mode?: 'create' | 'edit'; // New prop to determine mode
-  onSaveSuccess?: (sheet: FinishingSheet) => void; // Callback for successful save
   taskDataDetail: TaskDataDetail
 }
 
@@ -60,7 +59,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   formularTemplates,
   taskId,
   mode = 'edit', // Default to edit mode for backward compatibility
-  onSaveSuccess,
   taskDataDetail
 }) => {
   // Initialize with provided data or empty sheet for create mode
@@ -371,21 +369,18 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     setIsSaving(true);
     
     try {
-      let savedSheet: FinishingSheet;
       
       if (mode === 'create') {
         // Create new finishing sheet
-        savedSheet = await createFinishingSheet(taskId, finishingSheet);
+        await createFinishingSheet(taskId, finishingSheet);
         alert('Finishing sheet created successfully');
         router.push(`/task-management/tasks/${taskId}/sheets`);
       } else {
         // Update existing finishing sheet
-        savedSheet = await putFinishingSheet(taskId, finishingSheet.id, finishingSheet);
+        await putFinishingSheet(taskId, finishingSheet.id, finishingSheet);
         alert('Finishing sheet saved successfully');
+        router.refresh()
       }
-      
-      // Call success callback if provided
-      onSaveSuccess?.(savedSheet);
       
     } catch (error) {
       alert(`Error ${mode === 'create' ? 'creating' : 'saving'} finishing sheet`);

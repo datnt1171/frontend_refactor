@@ -52,6 +52,8 @@ export type FinishingSheet = components['schemas']['FinishingSheet']
 export type SheetRow = components['schemas']['SheetRow'] 
 export type RowProduct = components['schemas']['RowProduct']
 export type PaginatedFinishingSheetList = components['schemas']['PaginatedFinishingSheetList']
+export type SheetBlueprint = components['schemas']['SheetBlueprint']
+export type PaginatedSheetBlueprintList = components['schemas']['PaginatedSheetBlueprintList']
 
 export interface GetFinishingSheetsParams {
   created_by?: string;

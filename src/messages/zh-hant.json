@@ -6,6 +6,7 @@
     "errorTitle": "發生錯誤",
     "errorDescription": "發生了意外錯誤。請稍後再試。",
     "invalidFile": "檔案類型無效。請選擇有效的檔案。",
+    "noFileProvided": "未提供檔案，請選擇或上傳檔案",
     "tryAgain": "再試一次",
     "id": "ID",
     "openMenu": "開啟選單",

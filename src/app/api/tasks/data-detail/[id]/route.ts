@@ -1,16 +1,17 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
+import type { TaskDataDetail, FactoryDetail, RetailerDetail } from "@/types"
+import { NextResponse } from "next/server"
 
 export async function GET(
   _request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }  
 ) {
+  const { id } = await params
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
     
-    const { id } = await params
-    
-    const response = await fetch(`${process.env.API_URL}/api/tasks/data-detail/${id}`, {
+    const response = await fetch(`${process.env.API_URL}/api/tasks/data-detail/${id}/`, {
       headers: {
         Authorization: `Bearer ${session.access_token}`,
         "Content-Type": "application/json",
@@ -18,7 +19,68 @@ export async function GET(
       },
     })
 
-    return handleApiResponse(response)
+    if (!response.ok) {
+      return handleApiResponse(response)
+    }
+
+    const taskDataDetail: TaskDataDetail = await response.json()
+    
+    // Initialize the additional fields
+    let factory_name: string = ""
+    let retailer_name: string = ""
+
+    // Factory - only fetch if name_of_customer exists
+    if (taskDataDetail.name_of_customer) {
+      try {
+        const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${taskDataDetail.name_of_customer}`, {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        
+        if (factoryResponse.ok) {
+          const factory: FactoryDetail = await factoryResponse.json()
+          factory_name = factory.factory_name
+        } else {
+          console.warn(`Factory not found for code: ${taskDataDetail.name_of_customer} (Status: ${factoryResponse.status})`)
+        }
+      } catch (error) {
+        console.warn('Failed to fetch factory details:', error)
+        // Continue execution even if factory fetch fails
+      }
+    }
+
+    // Retailer - only fetch if retailer exists
+    if (taskDataDetail.retailer) {
+      try {
+        const retailerResponse = await fetch(`${process.env.DW_API_URL}/api/crm/retailers/${taskDataDetail.retailer}`, {
+          headers: {
+            Authorization: `Bearer ${session.access_token}`,
+            "Content-Type": "application/json",
+          },
+        })
+        
+        if (retailerResponse.ok) {
+          const retailer: RetailerDetail = await retailerResponse.json()
+          retailer_name = retailer.name
+        } else {
+          console.warn(`Retailer not found for id: ${taskDataDetail.retailer} (Status: ${retailerResponse.status})`)
+        }
+      } catch (error) {
+        console.warn('Failed to fetch retailer details:', error)
+        // Continue execution even if retailer fetch fails
+      }
+    }
+    
+    // Return the enhanced task detail
+    const enhancedTaskDataDetail = {
+      ...taskDataDetail,
+      factory_name,
+      retailer_name
+    }
+    return NextResponse.json(enhancedTaskDataDetail)
+    
   } catch (error: unknown) {
     return handleError(error)
   }

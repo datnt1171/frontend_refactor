@@ -4,7 +4,9 @@ import type {
   PaginatedFinishingSheetList, 
   GetFinishingSheetsParams, 
   StepTemplate,
-  FormularTemplate
+  FormularTemplate, 
+  PaginatedSheetBlueprintList, 
+  SheetBlueprint
 } from '@/types'
 
 export async function getFinishingSheets(
@@ -57,5 +59,17 @@ export const getStepTemplates = async (): Promise<StepTemplate[]> => {
 export const getFormularTemplates = async (): Promise<FormularTemplate[]> => {
   const res = await api("/sheets/formular-templates")
   if (!res.ok) throw new Error(`Failed to fetch Formular template: ${res.status}`)
+  return res.json()
+}
+
+export const getSheetBlueprints = async (taskId: string, sheetId : string): Promise<PaginatedSheetBlueprintList> => {
+  const res = await api(`/tasks/${taskId}/sheets/${sheetId}/blueprints`)
+  if (!res.ok) throw new Error(`Failed to fetch sheet blueprints: ${res.status}`)
+  return res.json()
+}
+
+export const getSheetBlueprint = async (taskId: string, sheetId : string, blueprintId: string): Promise<SheetBlueprint> => {
+  const res = await api(`/tasks/${taskId}/sheets/${sheetId}/blueprints/${blueprintId}`)
+  if (!res.ok) throw new Error(`Failed to fetch sheet blueprint: ${res.status}`)
   return res.json()
 }

@@ -84,6 +84,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/sheets/sheet-blueprints/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_sheet_blueprints_list"];
+        put?: never;
+        post: operations["api_sheets_sheet_blueprints_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sheets/sheet-blueprints/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_sheets_sheet_blueprints_retrieve"];
+        put: operations["api_sheets_sheet_blueprints_update"];
+        post?: never;
+        delete: operations["api_sheets_sheet_blueprints_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_sheets_sheet_blueprints_partial_update"];
+        trace?: never;
+    };
     "/api/sheets/step-templates/": {
         parameters: {
             query?: never;
@@ -188,6 +220,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["api_tasks_data_detail_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tasks/data-detail/{task_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_data_detail_retrieve"];
         put?: never;
         post?: never;
         delete?: never;
@@ -569,6 +617,21 @@ export interface components {
             previous: string | null;
             results: components["schemas"]["SentTask"][];
         };
+        PaginatedSheetBlueprintList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous: string | null;
+            results: components["schemas"]["SheetBlueprint"][];
+        };
         PaginatedUserDetailList: {
             /** @example 123 */
             count: number;
@@ -616,6 +679,22 @@ export interface components {
             /** Format: uuid */
             readonly updated_by?: string;
             rows?: components["schemas"]["SheetRow"][];
+        };
+        PatchedSheetBlueprint: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            finishing_sheet?: string;
+            blueprint?: string;
+            description?: string;
+            /** Format: date-time */
+            readonly created_at?: string;
+            /** Format: uuid */
+            readonly created_by?: string;
+            /** Format: date-time */
+            readonly updated_at?: string;
+            /** Format: uuid */
+            readonly updated_by?: string;
         };
         PatchedTaskData: {
             readonly field?: components["schemas"]["ProcessField"];
@@ -728,6 +807,22 @@ export interface components {
             readonly finishing_code: string | null;
             /** @description Get customer color name for SP tasks only. */
             readonly customer_color_name: string | null;
+        };
+        SheetBlueprint: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            finishing_sheet: string;
+            blueprint: string;
+            description?: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+            /** Format: uuid */
+            readonly updated_by: string;
         };
         SheetRow: {
             /** Format: uuid */
@@ -857,9 +952,11 @@ export interface components {
             created_by: string;
             state: string;
             state_type: string;
-            name_of_customer: string;
+            name_of_customer: string; //Factory code
+            factory_name: string;
             finishing_code: string;
-            retailer: string;
+            retailer: string; //Retailer id
+            retailer_name: string;
             customer_color_name: string;
             type_of_substrate: string;
             collection: string;
@@ -868,6 +965,7 @@ export interface components {
             requester_name: string;
             deadline_request: string;
             sampler: string;
+            sampler_id: string;
             type_of_paint: string;
             finishing_surface_grain: string;
             sheen_level: string;
@@ -1182,6 +1280,160 @@ export interface operations {
             };
         };
     };
+    api_sheets_sheet_blueprints_list: {
+        parameters: {
+            query?: {
+                blueprint?: string;
+                finishing_sheet?: string;
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A page number within the paginated result set. */
+                page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+                /** @description A search term. */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedSheetBlueprintList"];
+                };
+            };
+        };
+    };
+    api_sheets_sheet_blueprints_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SheetBlueprint"];
+                "application/x-www-form-urlencoded": components["schemas"]["SheetBlueprint"];
+                "multipart/form-data": components["schemas"]["SheetBlueprint"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SheetBlueprint"];
+                };
+            };
+        };
+    };
+    api_sheets_sheet_blueprints_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this sheet blueprint. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SheetBlueprint"];
+                };
+            };
+        };
+    };
+    api_sheets_sheet_blueprints_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this sheet blueprint. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SheetBlueprint"];
+                "application/x-www-form-urlencoded": components["schemas"]["SheetBlueprint"];
+                "multipart/form-data": components["schemas"]["SheetBlueprint"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SheetBlueprint"];
+                };
+            };
+        };
+    };
+    api_sheets_sheet_blueprints_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this sheet blueprint. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_sheets_sheet_blueprints_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this sheet blueprint. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedSheetBlueprint"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedSheetBlueprint"];
+                "multipart/form-data": components["schemas"]["PatchedSheetBlueprint"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SheetBlueprint"];
+                };
+            };
+        };
+    };
     api_sheets_step_templates_list: {
         parameters: {
             query?: {
@@ -1391,6 +1643,27 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TaskDataDetail"][];
+                };
+            };
+        };
+    };
+    api_tasks_data_detail_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TaskDataDetail"];
                 };
             };
         };

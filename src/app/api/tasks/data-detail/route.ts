@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
       return map
     }, {})
     
-    // Replace name_of_customer (factory_code) with name_of_customer
+    // Add factory_name field while keeping name_of_customer (factory_code)
     const updatedTaskDataDetails = TaskDataDetails.map((item: TaskDataDetail) => ({
       ...item,
-      name_of_customer: factoryMap[item.name_of_customer] || item.name_of_customer
+      factory_name: factoryMap[item.name_of_customer] || ""
     }))
 
     // Retailer
@@ -66,10 +66,10 @@ export async function GET(request: NextRequest) {
       return map
     }, {})
     
-    // Replace retailer id with name
+    // Add retailer_name field while keeping retailer id
     const updatedTaskDataDetails2 = updatedTaskDataDetails.map((item: TaskDataDetail) => ({
       ...item,
-      retailer: retailerMap[item.retailer] || item.retailer
+      retailer_name: retailerMap[item.retailer] || ""
     }))
     
     return NextResponse.json(updatedTaskDataDetails2)

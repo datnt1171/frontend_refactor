@@ -328,7 +328,7 @@ export const generateSimpleFormPDF = (
         <td class="label">
             客戶名稱:<br>
             <span>Tên Công Ty:</span>
-            <span id="customer">${TaskDataDetail.name_of_customer || ''}</span>
+            <span id="customer">${TaskDataDetail.factory_name || ''}</span>
         </td>
         <td class="label">
             材種:<br>
