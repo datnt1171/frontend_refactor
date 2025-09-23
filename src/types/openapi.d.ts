@@ -739,6 +739,9 @@ export interface components {
             readonly id: string;
             code: string;
             name: string;
+            readonly type_en: string;
+            readonly type_vi: string;
+            readonly type_zh_hant: string;
             /** Format: decimal */
             ratio: string;
             unit?: string;
@@ -771,6 +774,9 @@ export interface components {
             order: number;
             product_code: string;
             product_name: string;
+            product_type_en: string;
+            product_type_vi: string;
+            product_type_zh_hant: string;
             ratio: string;
             qty: string;
             unit: string;
@@ -831,6 +837,12 @@ export interface components {
             stepname_en: string;
             stepname_vi: string;
             stepname_zh_hant: string;
+            stepname_short_en: string;
+            stepname_short_vi: string;
+            stepname_short_zh_hant: string;
+            sanding_en: string;
+            sanding_vi: string;
+            sanding_zh_hant: string;
             viscosity_en: string;
             viscosity_vi: string;
             viscosity_zh_hant: string;
@@ -889,6 +901,9 @@ export interface components {
             readonly spec_en: string;
             readonly spec_vi: string;
             readonly spec_zh_hant: string;
+            readonly sanding_en: string;
+            readonly sanding_vi: string;
+            readonly sanding_zh_hant: string;
         };
         TaskAction: {
             /** Format: uuid */
