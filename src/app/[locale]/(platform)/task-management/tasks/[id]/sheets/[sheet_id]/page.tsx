@@ -26,7 +26,7 @@ export default async function SheetDetailPage({
       <div className="container mx-auto p-4">
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="mb-4 flex justify-between items-center">
-            <h1 className="text-2xl font-bold">{t('common.edit')}</h1>
+            <h1 className="text-2xl font-bold">{t('common.edit')}: {finishingSheet.finishing_code} </h1>
             <div className='flex gap-2'>
               <DeleteFinishingButton 
                 taskId={id}

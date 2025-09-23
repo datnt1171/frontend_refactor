@@ -4,25 +4,27 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FileText, Plus } from 'lucide-react'
 import { formatDateToUTC7 } from '@/lib/utils/date'
+import { getTranslations } from 'next-intl/server'
+
 export default async function BlueprintsPage({ 
   params 
 }: { 
   params: Promise<{ id: string }> 
 }) {
+  const t = await getTranslations()
   const { id } = await params
   const response = await getFinishingSheets(id)
   const sheets = response.results
   return (
     <div className="container mx-auto py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Systemsheet</h1>
-          <p className="text-muted-foreground mt-2">Systemsheet</p>
+          <h1 className="text-3xl font-bold tracking-tight">{t('finishingSheet.finishingSheet')}</h1>
         </div>
         <Link href={`/task-management/tasks/${id}/sheets/create`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            Create New Sheet
+            {t('finishingSheet.add')}
           </Button>
         </Link>
       </div>
@@ -31,7 +33,7 @@ export default async function BlueprintsPage({
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Sheet found</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('common.noDataFound')}</h3>
           </CardContent>
         </Card>
       ) : (
@@ -49,26 +51,26 @@ export default async function BlueprintsPage({
               <CardContent>
                 <div className="space-y-2 text-sm text-muted-foreground mb-4">
                   <div className="flex justify-between">
-                    <span>Created by:</span>
+                    <span>{t('common.createdBy')}:</span>
                     <span className="font-medium">{sheet.created_by.username}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Created at:</span>
+                    <span>{t('common.createdAt')}:</span>
                     <span className="font-medium">{formatDateToUTC7(sheet.created_at)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Created at:</span>
+                    <span>{t('common.updatedBy')}:</span>
                     <span className="font-medium">{sheet.updated_by.username}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Created at:</span>
+                    <span>{t('common.updatedAt')}:</span>
                     <span className="font-medium">{formatDateToUTC7(sheet.updated_at)}</span>
                   </div>
                 </div>
                 <div className="flex">
                   <Button asChild size="sm" className="flex-1">
                     <Link href={`/task-management/tasks/${id}/sheets/${sheet.id}`}>
-                      View
+                      {t('common.viewDetails')}
                     </Link>
                   </Button>
                 </div>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Trash2, Loader2 } from 'lucide-react'
 import { deleteFinishingSheet } from '@/lib/api/client/api'
+import { useTranslations } from 'next-intl'
 
 interface BlueprintDeleteButtonProps {
   taskId: string
@@ -18,6 +19,7 @@ export default function DeleteFinishingButton({
   sheetId, 
   finishingCode 
 }: BlueprintDeleteButtonProps) {
+  const commonT = useTranslations('common')
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -27,11 +29,12 @@ export default function DeleteFinishingButton({
 
     try {
       await deleteFinishingSheet(taskId, sheetId)
+      alert(commonT('actionPerformedSuccessfully'))
     } catch (error) {
-      alert('Delete failed')
+      alert(commonT('failedToPerformAction'))
     } finally {
       setIsLoading(false)
-      router.back()
+      router.push(`/task-management/tasks/${taskId}/sheets`)
     }
   }
 
@@ -40,19 +43,18 @@ export default function DeleteFinishingButton({
       <AlertDialogTrigger asChild>
         <Button variant="destructive">
           <Trash2 className="h-4 w-4 mr-2" />
-          Delete
+          {commonT('delete')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>{commonT('deleteAlertTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the blueprint{' '}
-            <span className="font-semibold">"{finishingCode}"</span> and remove all associated data.
+            {commonT('deleteAlertDescription', { name: finishingCode })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{commonT('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
@@ -61,10 +63,10 @@ export default function DeleteFinishingButton({
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Deleting...
+                {commonT('processing')}
               </>
             ) : (
-              'Delete Blueprint'
+              commonT('delete')
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

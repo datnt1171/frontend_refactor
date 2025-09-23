@@ -14,6 +14,7 @@ import { MultiSelect } from '@/components/ui/multi-select';
 import { generatePDF, generateSimpleFormPDF } from '@/lib/pdf-generator';
 import { MoreVertical, Plus, Trash2, FileText } from "lucide-react";
 import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 interface CombinedSheetTableProps {
   data?: FinishingSheet; // Optional for create mode
@@ -32,14 +33,14 @@ const generateId = () => `temp-${(++idCounter).toString()}`;
 const createEmptyFinishingSheet = (taskId: string, taskDataDetail: TaskDataDetail): FinishingSheet => ({
   id: generateId(),
   task: taskId,
-  finishing_code: taskDataDetail.finishing_code || '',
-  name: taskDataDetail.customer_color_name || '',
-  sheen: taskDataDetail.sheen_level || '',
-  dft: '',
-  type_of_paint: taskDataDetail.type_of_paint || '',
-  type_of_substrate: taskDataDetail.type_of_substrate || '',
-  finishing_surface_grain: taskDataDetail.finishing_surface_grain || '',
-  sampler: taskDataDetail.sampler || '',
+  finishing_code: taskDataDetail.finishing_code,
+  name: taskDataDetail.customer_color_name,
+  sheen: taskDataDetail.sheen_level,
+  dft: '250',
+  type_of_paint: taskDataDetail.type_of_paint,
+  type_of_substrate: taskDataDetail.type_of_substrate,
+  finishing_surface_grain: taskDataDetail.finishing_surface_grain,
+  sampler: taskDataDetail.sampler,
   chemical_waste: '0%',
   conveyor_speed: '1.5 METER PER MINUTE',
   with_panel_test: false,
@@ -68,7 +69,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
   stepTemplates, 
   formularTemplates,
   taskId,
-  mode = 'edit', // Default to edit mode for backward compatibility
+  mode,
   taskDataDetail
 }) => {
   // Initialize with provided data or empty sheet for create mode
@@ -83,6 +84,8 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
     zh_hant: true
   });
   const router = useRouter();
+  const t = useTranslations();
+
   // Generic update function for the entire finishing sheet
   const updateFinishingSheet = (updates: Partial<FinishingSheet>) => {
     setFinishingSheet(prev => ({ ...prev, ...updates }));
@@ -404,13 +407,13 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
       <div className="mb-4 flex justify-between items-center">
         <div className="flex gap-2">
           <Button onClick={addRow}>
-            Add Row
+            {t('common.addRow')}
           </Button>
           <Button 
             onClick={handleSave}
             disabled={isSaving}
           >
-            {isSaving ? 'Saving...' : (mode === 'create' ? 'Create' : 'Save')}
+            {isSaving ? t('common.processing') : (mode === 'create' ? t('common.create') : t('common.save'))}
           </Button>
         </div>
         <div className="flex gap-2">
@@ -448,7 +451,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
             disabled={finishingSheet.rows.length === 0}
           >
             <FileText size={16} />
-            Generate simple form
+            {t('common.generateSimplePDF')}
           </Button>
           <Button
             onClick={() => generatePDF(finishingSheet)}
@@ -456,7 +459,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
             disabled={finishingSheet.rows.length === 0}
           >
             <FileText size={16} />
-            Generate PDF
+            {t('common.generatePDF')}
           </Button>
         </div>
       </div>
@@ -482,7 +485,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
             <tr>
               <td colSpan={3}>
                 <div>
-                  <strong>Name:</strong> 
+                  <strong>{t('finishingSheet.name')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.name}
@@ -490,7 +493,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     className="ml-1 px-1"
                   />
                   <br/>
-                  <strong>Sheen:</strong> 
+                  <strong>{t('finishingSheet.sheen')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.sheen}
@@ -498,7 +501,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     className="ml-1 px-1"
                   />
                   <br/>
-                  <strong>DFT:</strong> 
+                  <strong>{t('finishingSheet.dft')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.dft}
@@ -506,7 +509,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     className="ml-1 px-1"
                   />
                   <br/>
-                  <strong>Chemical:</strong> 
+                  <strong>{t('finishingSheet.typeOfPaint')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.type_of_paint}
@@ -514,7 +517,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     className="ml-1 px-1"
                   />
                   <br/>
-                  <strong>Substrate:</strong> 
+                  <strong>{t('finishingSheet.typeOfSubstrate')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.type_of_substrate}
@@ -522,7 +525,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     className="ml-1 px-1"
                   />
                   <br/>
-                  <strong>Grain Filling:</strong> 
+                  <strong>{t('finishingSheet.finishingSurfaceGrain')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.finishing_surface_grain}
@@ -530,7 +533,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     className="ml-1 px-1"
                   />
                   <br/>
-                  <strong>Developed/Duplicated by:</strong> 
+                  <strong>{t('finishingSheet.sampler')}:</strong> 
                   <input
                     type="text"
                     value={finishingSheet.sampler}
@@ -540,7 +543,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                 </div>
               </td>
               <td colSpan={1}>
-                <strong>Chemical waste:</strong> 
+                <strong>{t('finishingSheet.chemicalWaste')}:</strong> 
                 <input
                   type="text"
                   value={finishingSheet.chemical_waste}
@@ -548,7 +551,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                   className="ml-1 px-1 w-full"
                 />
                 <br/><br/>
-                <strong>Conveyor speed:</strong> 
+                <strong>{t('finishingSheet.conveyorSpeed')}:</strong> 
                 <input
                   type="text"
                   value={finishingSheet.conveyor_speed}
@@ -559,7 +562,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
               <td colSpan={3}>
               </td>
               <td colSpan={2}>
-                <strong>With panel test:</strong> 
+                <strong>{t('finishingSheet.withPanelTest')}:</strong> 
                 <input
                   type="checkbox"
                   checked={finishingSheet.with_panel_test}
@@ -567,8 +570,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                   className="ml-1"
                 />
                 <br/>
-                (Có mẫu test chuyền)<br/>
-                <strong>No panel test:</strong> 
+                <strong>{t('finishingSheet.noPanelTest')}:</strong> 
                 <input
                   type="checkbox"
                   checked={!finishingSheet.with_panel_test}
@@ -576,8 +578,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                   className="ml-1"
                 />
                 <br/>
-                (Không có mẫu test chuyền)<br/>
-                <strong>Testing:</strong> 
+                <strong>{t('finishingSheet.testing')}:</strong> 
                 <input
                   type="checkbox"
                   checked={finishingSheet.testing}
@@ -585,7 +586,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                   className="ml-1"
                 />
                 <br/>
-                <strong>Chemical Yellowing:</strong> 
+                <strong>{t('finishingSheet.chemicalYellowing')}:</strong> 
                 <input
                   type="checkbox"
                   checked={finishingSheet.chemical_yellowing}
@@ -596,33 +597,32 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
               <td colSpan={5}>
               </td>
               <td colSpan={4} className="text-center">
-                <div className="font-bold">DAILY CHECK LIST</div>
-                <div>(Kiểm tra hằng ngày)</div>
+                <div className="font-bold">{t('finishingSheet.dailyCheckList')}</div>
                 <div>Date: _______________</div>
               </td>
             </tr>
 
             {/* Column Headers Row */}
             <tr className="font-bold text-center">
-              <td style={{ width: '2.39%' }}>Step</td>
-              <td style={{ width: '4.14%' }}>Step Name</td>
-              <td style={{ width: '7.37%' }}>Viscosity & Wet Mill Thickness (EN)</td>
-              <td style={{ width: '7.37%' }}>Viscosity & Wet Mill Thickness (VN)</td>
-              <td style={{ width: '7.37%' }}>SPEC EN</td>
-              <td style={{ width: '7.37%' }}>SPEC VN</td>
-              <td style={{ width: '3.02%' }}>Hold Time (min)</td>
-              <td style={{ width: '5.61%' }}>Chemical Mixing Code</td>
-              <td style={{ width: '5.61%' }}>Consumption (per m2)</td>
-              <td style={{ width: '6.74%' }}>Material Code</td>
-              <td style={{ width: '7.51%' }}>Material Name</td>
-              <td style={{ width: '3.51%' }}>Ratio</td>
-              <td style={{ width: '3.51%' }}>Qty (per m2)</td>
-              <td style={{ width: '3.51%' }}>Unit</td>
-              <td style={{ width: '8%' }}>Check Result</td>
-              <td style={{ width: '8%' }}>Correct Action</td>
-              <td style={{ width: '4.49%' }}>TE-1's Name & Signature</td>
-              <td style={{ width: '4.49%' }}>Customer Signature</td>
-              <td style={{ width: '3%' }}>Actions</td>
+              <td style={{ width: '2.39%' }}>{t('finishingSheet.step')}</td>
+              <td style={{ width: '4.14%' }}>{t('finishingSheet.stepName')}</td>
+              <td style={{ width: '7.37%' }}>{t('finishingSheet.viscosity_en')}</td>
+              <td style={{ width: '7.37%' }}>{t('finishingSheet.viscosity_vi')}</td>
+              <td style={{ width: '7.37%' }}>{t('finishingSheet.spec_en')}</td>
+              <td style={{ width: '7.37%' }}>{t('finishingSheet.spec_vi')}</td>
+              <td style={{ width: '3.02%' }}>{t('finishingSheet.holdTime')}</td>
+              <td style={{ width: '5.61%' }}>{t('finishingSheet.chemicalCode')}</td>
+              <td style={{ width: '5.61%' }}>{t('finishingSheet.consumption')}</td>
+              <td style={{ width: '6.74%' }}>{t('finishingSheet.productCode')}</td>
+              <td style={{ width: '7.51%' }}>{t('finishingSheet.productName')}</td>
+              <td style={{ width: '3.51%' }}>{t('finishingSheet.ratio')}</td>
+              <td style={{ width: '3.51%' }}>{t('finishingSheet.qty')}</td>
+              <td style={{ width: '3.51%' }}>{t('finishingSheet.unit')}</td>
+              <td style={{ width: '8%' }}>{t('finishingSheet.checkResult')}</td>
+              <td style={{ width: '8%' }}>C{t('finishingSheet.correctAction')}</td>
+              <td style={{ width: '4.49%' }}>{t('finishingSheet.te1Sign')}</td>
+              <td style={{ width: '4.49%' }}>{t('finishingSheet.customerSign')}</td>
+              <td style={{ width: '3%' }}>{t('finishingSheet.actions')}</td>
             </tr>
           </thead>
 
@@ -631,7 +631,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
             {finishingSheet.rows.length === 0 ? (
               <tr>
                 <td colSpan={19} className="text-center py-8 text-gray-500">
-                  No rows added yet. Click "Add Row" to get started.
+                  {t('finishingSheet.noRow')}
                 </td>
               </tr>
             ) : (
@@ -645,8 +645,8 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                     {/* Step Number - only show on first product row */}
                     {productIndex === 0 && (
                       <td rowSpan={record.products.length}>
-                        <div>Step {record.step_num}</div>
-                        Booth
+                        <div>{t('finishingSheet.step')} {record.step_num}</div>
+                        {t('finishingSheet.booth')}
                         <input
                           type="text"
                           value={record.spot || ''}
@@ -669,7 +669,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                           options={stepOptions}
                           value={stepOptions.find(option => option.value === record.step_template?.toString()) || null}
                           onChange={(selectedOption) => handleStepChange(record.id, selectedOption?.value || "")}
-                          noOptionsMessage={() => "No step found."}
+                          noOptionsMessage={() => t('common.noDataFound')}
                           isSearchable={true}
                           isClearable={true}
                         />
@@ -714,7 +714,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                           options={formularOptions}
                           value={formularOptions.find(option => option.value === record.formular_template?.toString()) || null}
                           onChange={(selectedOption) => handleFormularChange(record.id, selectedOption?.value || "")}
-                          noOptionsMessage={() => "No formula found."}
+                          noOptionsMessage={() => t('common.noDataFound')}
                           isSearchable={true}
                           isClearable={true}
                         />
@@ -740,7 +740,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                         value={product.check_result}
                         onChange={(e) => updateProduct(record.id, product.id, { check_result: e.target.value })}
                         className="w-full"
-                        placeholder="Check Result"
                       />
                     </td>
                     <td>
@@ -749,7 +748,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                         value={product.correct_action}
                         onChange={(e) => updateProduct(record.id, product.id, { correct_action: e.target.value })}
                         className="w-full"
-                        placeholder="Correct Action"
                       />
                     </td>
                     <td>
@@ -758,7 +756,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                         value={product.te1_signature}
                         onChange={(e) => updateProduct(record.id, product.id, { te1_signature: e.target.value })}
                         className="w-full"
-                        placeholder="TE-1 Signature"
                       />
                     </td>
                     <td>
@@ -767,7 +764,6 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                         value={product.customer_signature}
                         onChange={(e) => updateProduct(record.id, product.id, { customer_signature: e.target.value })}
                         className="w-full"
-                        placeholder="Customer Signature"
                       />
                     </td>
 
@@ -779,17 +775,16 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                                 <MoreVertical className="h-4 w-4" />
-                                <span className="sr-only">Open menu</span>
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem onClick={() => addRowBefore(record.id)}>
                                 <Plus className="mr-2 h-4 w-4" />
-                                Add Row Before
+                                {t('common.addRowBefore')}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => addRowAfter(record.id)}>
                                 <Plus className="mr-2 h-4 w-4" />
-                                Add Row After
+                                {t('common.addRowAfter')}
                               </DropdownMenuItem>
                               <DropdownMenuItem 
                                 onClick={() => removeRow(record.id)}
@@ -797,7 +792,7 @@ const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({
                                 className="text-red-600 focus:text-red-600"
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Remove Row
+                                {t('common.removeRow')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
