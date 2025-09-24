@@ -57,12 +57,6 @@ export const generatePDF = (finishingSheet: FinishingSheet) => {
         .col-check { width: 8%; min-width: 8%; max-width: 8%; }
         .col-action { width: 8%; min-width: 8%; max-width: 8%; }
         .col-signature { width: 4.49%; min-width: 4.49%; max-width: 4.49%; }
-        
-        /* Ensure text wraps properly in fixed-width cells */
-        .col-spec, .col-material-name, .col-check, .col-action {
-          word-break: break-all;
-          hyphens: auto;
-        }
 
         .checkbox {
           display: inline-block;
@@ -386,9 +380,9 @@ export const generateSimpleFormPDF = (
 
     // Generate remark column based on language preferences
     const remarkContent = generateMultiLanguageContent(
-      stepData.viscosity_en,
-      stepData.viscosity_vi,
-      stepData.viscosity_zh_hant,
+      stepData.viscosity_en + ", " + stepData.spec_en,
+      stepData.viscosity_vi + ", " + stepData.spec_vi,
+      stepData.viscosity_zh_hant + ", " + stepData.spec_zh_hant,
       en,
       vi,
       zh_hant
@@ -396,9 +390,9 @@ export const generateSimpleFormPDF = (
 
     // Generate drying time column based on language preferences
     const dryingTimeContent = generateMultiLanguageContent(
-      stepData.spec_en,
-      stepData.spec_vi,
-      stepData.spec_zh_hant,
+      `${stepData.hold_time ? stepData.hold_time + ' minute' : ''}${stepData.sanding_en ? ', ' + stepData.sanding_en : ''}`,
+      `${stepData.hold_time ? stepData.hold_time + ' phút' : ''}${stepData.sanding_vi ? ', ' + stepData.sanding_vi : ''}`,
+      `${stepData.hold_time ? stepData.hold_time + ' 分鐘' : ''}${stepData.sanding_zh_hant ? ', ' + stepData.sanding_zh_hant : ''}`,
       en,
       vi,
       zh_hant

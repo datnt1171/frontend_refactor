@@ -518,7 +518,7 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             code: string;
-            viscosity: number;
+            viscosity: number | null;
             wft?: number | null;
             products: components["schemas"]["ProductTemplate"][];
         };
