@@ -2,7 +2,6 @@
 
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Combobox } from "@/components/ui/combobox"
 import { MultiSelect } from "@/components/ui/multi-select"
 import { useTranslations } from 'next-intl'
 import type { ProcessField, UserList, Factory, Retailer, ValueLabel } from "@/types"
@@ -209,6 +208,7 @@ export function FormField({
           disabled={disabled}
           responsive={true}
           modalPopover={true}
+          closeOnSelect={true}
         />
       )
 

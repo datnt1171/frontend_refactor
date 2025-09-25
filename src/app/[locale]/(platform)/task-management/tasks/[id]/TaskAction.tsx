@@ -91,6 +91,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
           <>
             <div className="relative mb-2">
               <Input
+                className="file:bg-black file:text-white file:rounded-sm file:p-1 file:mr-4 hover:file:bg-gray-800"
                 type="file"
                 // accept={ACCEPTED_FILE_TYPES}
                 onChange={handleFileChange}

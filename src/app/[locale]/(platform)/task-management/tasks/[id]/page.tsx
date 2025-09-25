@@ -21,7 +21,7 @@ export default async function TaskDetailPage({
   const [task, t, commonT, currentUser] = await Promise.all([
     getTask(id),
     getTranslations('taskManagement.taskDetail'),
-    getTranslations('common'),
+    getTranslations(),
     getCurrentUser()
   ])
 
@@ -62,25 +62,11 @@ export default async function TaskDetailPage({
                       >
                         <Link href={`/task-management/tasks/${id}/data/${data.field.id}`}>
                           <Edit className="h-3 w-3 mr-1" />
-                          {commonT('edit')}
+                          {commonT('common.edit')}
                         </Link>
                       </Button>
                     )}
                   </div>
-                  {/* <div className="p-3 bg-muted rounded-md space-y-1">
-                    {data.field.field_type === "file" ? (
-                      data.files && data.files.length > 0 ? (
-                        data.files.map((file, index) => (
-                          <p key={index}>
-
-                              href={file.uploaded_file}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline"
-                            >
-                              {file.original_filename}
-                            </a>
-                          </p> */}
                   <div className="p-3 bg-muted rounded-md space-y-1">
                   {data.field.field_type === "file" ? (
                     data.files && data.files[0] ? (
@@ -156,7 +142,7 @@ export default async function TaskDetailPage({
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">{commonT('createdAt')}</p>
+                  <p className="text-sm font-medium">{commonT('common.createdAt')}</p>
                   <p className="text-sm text-muted-foreground">{formatDateToUTC7(task.created_at)}</p>
                 </div>
               </div>
@@ -164,14 +150,14 @@ export default async function TaskDetailPage({
               <div className="flex items-center">
                 <User className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">{commonT('createdBy')}</p>
+                  <p className="text-sm font-medium">{commonT('common.createdBy')}</p>
                   <p className="text-sm text-muted-foreground">{task.created_by.username}</p>
                 </div>
               </div>
               <Button asChild>
                 <Link href={`/task-management/tasks/${id}/sheets`}>
                   <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  View Sheets
+                  {commonT('finishingSheet.finishingSheet')}
                 </Link>
               </Button>
             </CardContent>

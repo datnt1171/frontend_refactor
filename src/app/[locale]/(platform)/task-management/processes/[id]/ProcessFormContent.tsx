@@ -64,7 +64,7 @@ export function ProcessFormContent({
             </div>
           ))}
         </CardContent>
-        <CardFooter>
+        <CardFooter className="pt-4">
           <Button type="submit">
             <Eye className="mr-2 h-4 w-4" />
             {t('review')}
