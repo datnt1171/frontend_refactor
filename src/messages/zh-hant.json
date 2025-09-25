@@ -237,9 +237,11 @@
       "importData": "匯入資料",
       "taskAction": "任務操作記錄",
       "sample": "樣品",
+      "onsiteTechnician": "客戶名單+報告",
+      "transferAbsence": "調動+請假",
+      "overtime": "加班V線上",
 
-      "Task": "任務",
-      "sampleRequest": "所有樣本請求"
+      "Task": "任務"
     },
 
 

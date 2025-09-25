@@ -114,6 +114,9 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
       items: [
         { title: "dashboard.sideBar.taskAction", url: "/dashboard/task-management/action-detail" },
         { title: "dashboard.sideBar.sample", url: "/dashboard/task-management/data-detail" },
+        { title: "dashboard.sideBar.onsiteTechnician", url: "/dashboard/task-management/onsite-transfer-absence" },
+        { title: "dashboard.sideBar.transferAbsence", url: "/dashboard/task-management/transfer-absence" },
+        { title: "dashboard.sideBar.overtime", url: "/dashboard/task-management/overtime" },
       ],
     }
   ]

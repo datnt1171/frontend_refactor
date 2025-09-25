@@ -238,9 +238,11 @@
       "importData": "Import Data",
       "taskAction": "Task Action Log",
       "sample": "Sample",
+      "onsiteTechnician": "Onsite Technician",
+      "transferAbsence": "Transfer Absence",
+      "overtime": "Overtime",
 
-      "Task": "Task",
-      "sampleRequest": "All sample request"
+      "Task": "Task"
     },
 
     "warehouse": {

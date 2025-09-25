@@ -237,9 +237,11 @@
       "importData": "Nhập dữ liệu",
       "taskAction": "Lịch sử hành động",
       "sample": "Mẫu",
+      "onsiteTechnician": "Báo cáo tổng",
+      "transferAbsence": "Điều động nghỉ phép",
+      "overtime": "Tăng ca",
 
-      "Task": "Phiếu",
-      "sampleRequest": "Tất cả yêu cầu mẫu"
+      "Task": "Phiếu"
     },
 
     "warehouse": {
