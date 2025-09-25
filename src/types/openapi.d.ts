@@ -244,6 +244,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/onsite-transfer-absence/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_onsite_transfer_absence_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tasks/overtime/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_overtime_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/received/": {
         parameters: {
             query?: never;
@@ -268,6 +300,22 @@ export interface paths {
             cookie?: never;
         };
         get: operations["api_tasks_sent_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/tasks/transfer-absence/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_transfer_absence_list"];
         put?: never;
         post?: never;
         delete?: never;
@@ -538,6 +586,22 @@ export interface components {
          * @enum {integer}
          */
         MonthEnum: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+        OnsiteTransferAbsence: {
+            factory_code: string;
+            ktw_onsite: number;
+            ktc_onsite: number;
+            kvn_onsite: number;
+            ktw_in: number;
+            ktc_in: number;
+            kvn_in: number;
+            ktw_out: number;
+            ktc_out: number;
+            kvn_out: number;
+            ktw_absence: number;
+            ktc_absence: number;
+            kvn_absence: number;
+            factory_name: string;
+        };
         /**
          * @description * `exact` - Exact
          *     * `not_exact` - Not Exact
@@ -555,6 +619,32 @@ export interface components {
          * @enum {string}
          */
         OperatorEnum: "exact" | "not_exact" | "contains" | "not_contains" | "in" | "not_in" | "gt" | "lt" | "gte" | "lte" | "is_empty" | "is_not_empty" | "weekday";
+        Overtime: {
+            name_of_customer: string;
+            weekday_ot: string;
+            /** Format: time */
+            weekday_ot_start: string;
+            /** Format: time */
+            weekday_ot_end: string;
+            weekday_ot_num: number;
+            hanging_line_today: string;
+            pallet_line_today: string;
+            others_today: string;
+            hanging_line_tomorrow: string;
+            pallet_line_tomorrow: string;
+            others_tomorrow: string;
+            instock: string;
+            instock_by_code: string;
+            sunday_ot: string;
+            /** Format: time */
+            sunday_ot_end: string;
+            sunday_ot_num: number;
+            hanging_line_sunday: string;
+            pallet_line_sunday: string;
+            /** Format: date */
+            created_at: string;
+            factory_name: string;
+        };
         PaginatedFinishingSheetList: {
             /** @example 123 */
             count: number;
@@ -1018,6 +1108,20 @@ export interface components {
         TokenRefresh: {
             readonly access: string;
             refresh: string;
+        };
+        TransferAbsence: {
+            name_of_customer: string;
+            user_id: string;
+            transfer_type: string;
+            /** Format: date */
+            from_date: string;
+            /** Format: date */
+            to_date: string;
+            reason: string;
+            username: string;
+            first_name: string;
+            last_name: string;
+            factory_name: string;
         };
         User: {
             /** Format: uuid */
@@ -1677,6 +1781,44 @@ export interface operations {
             };
         };
     };
+    api_tasks_onsite_transfer_absence_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnsiteTransferAbsence"][];
+                };
+            };
+        };
+    };
+    api_tasks_overtime_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Overtime"][];
+                };
+            };
+        };
+    };
     api_tasks_received_list: {
         parameters: {
             query?: {
@@ -1729,6 +1871,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginatedSentTaskList"];
+                };
+            };
+        };
+    };
+    api_tasks_transfer_absence_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TransferAbsence"][];
                 };
             };
         };

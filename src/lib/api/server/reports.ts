@@ -1,5 +1,11 @@
 import { api } from '@/lib/api/server/api'
-import type { TaskDataDetail, TaskActionDetail } from '@/types/api'
+import type { 
+  TaskDataDetail, 
+  TaskActionDetail,
+  OnsiteTransferAbsence,
+  TransferAbsence,
+  Overtime,
+ } from '@/types/api'
 
 export const getDataDetails = async (searchParams?: Record<string, string>): Promise<TaskDataDetail[]> => {
   const queryParams = new URLSearchParams()
@@ -42,5 +48,63 @@ export const getActionDetail = async (searchParams?: Record<string, string>): Pr
   
   const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch task action detail: ${res.status}`)
+  return res.json()
+}
+
+
+export const getOnsiteTransferAbsences = async (searchParams?: Record<string, string>): Promise<OnsiteTransferAbsence[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/onsite-transfer-absence?${queryString}` : '/tasks/onsite-transfer-absence'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Onsite transfer absence: ${res.status}`)
+  return res.json()
+}
+
+export const getTransferAbsences = async (searchParams?: Record<string, string>): Promise<TransferAbsence[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/transfer-absence?${queryString}` : '/tasks/transfer-absence'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Transfer absence: ${res.status}`)
+  return res.json()
+}
+
+export const getOvertimes = async (searchParams?: Record<string, string>): Promise<Overtime[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/overtime?${queryString}` : '/tasks/overtime'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Overtime: ${res.status}`)
   return res.json()
 }
