@@ -6,6 +6,7 @@ export type FilterType =
   | 'sort' 
   | 'date-range' 
   | 'search'
+  | 'date'
 
 export interface FilterOption {
   value: string;

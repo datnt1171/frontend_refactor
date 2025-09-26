@@ -240,6 +240,23 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
           </div>
         );
 
+      case 'date':
+        return (
+          <div key={filter.id} className="space-y-3">
+            <Label className="text-sm font-medium">{filter.label}</Label>
+            <div className="relative">
+              <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="date"
+                value={filters[filter.id] || ''}
+                onChange={(e) => handleFilterChange(filter.id, e.target.value)}
+                className="pl-9"
+                placeholder={filter.placeholder || "Select date"}
+              />
+            </div>
+          </div>
+        );
+
       case 'day-range':
         return (
           <div key={filter.id} className="space-y-3">
