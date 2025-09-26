@@ -16,6 +16,7 @@ export default async function FormPage({ params }: PageProps) {
   // Get Techicians only
   const users = needsUsers ? (await getUsers({
     'department__name__in': 'KTC,KTW,KVN',
+    'role__name__in': 'technician',
     'page_size': '999999',
     'page': '1'
   })).results : []

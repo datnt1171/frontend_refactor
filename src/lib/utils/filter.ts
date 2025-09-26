@@ -29,6 +29,7 @@ export async function getRetailerOptions() {
 export async function getUserOptions() {
   const users = await getUsers({
     'department__name__in': 'KTC,KTW,KVN',
+    'role__name__in': 'technician',
     'page_size': '999999',
     'page': '1'
   });

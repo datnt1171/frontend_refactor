@@ -36,6 +36,7 @@ export default async function UserFactoryOnsitePage({ searchParams }: PageProps)
   const [users, onsiteData, factories] = await Promise.all([
     getUsers({
     'department__name__in': 'KTC,KTW,KVN',
+    'role__name__in': 'technician',
     'page_size': '999999',
     'page': '1',
     'ordering': 'username'
