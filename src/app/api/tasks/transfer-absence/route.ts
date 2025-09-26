@@ -44,7 +44,8 @@ export async function GET(request: NextRequest) {
     // Add factory_name field while keeping factory_code
     const updatedTransferAbsences = TransferAbsences.map((item: TransferAbsence) => ({
       ...item,
-      factory_name: factoryMap[item.factory_code] || ""
+      factory_name: factoryMap[item.factory_code] || "",
+      factory_name_onsite: factoryMap[item.factory_code_onsite] || ""
     }))
     
     return NextResponse.json(updatedTransferAbsences)

@@ -620,6 +620,7 @@ export interface components {
          */
         OperatorEnum: "exact" | "not_exact" | "contains" | "not_contains" | "in" | "not_in" | "gt" | "lt" | "gte" | "lte" | "is_empty" | "is_not_empty" | "weekday";
         Overtime: {
+            task_id: string;
             factory_code: string;
             weekday_ot: string;
             /** Format: time */
@@ -1110,6 +1111,7 @@ export interface components {
             refresh: string;
         };
         TransferAbsence: {
+            task_id: string;
             factory_code: string;
             user_id: string;
             transfer_type: string;
@@ -1121,7 +1123,10 @@ export interface components {
             username: string;
             first_name: string;
             last_name: string;
+            department: string;
             factory_name: string;
+            factory_code_onsite: string;
+            factory_name_onsite: string;
         };
         User: {
             /** Format: uuid */

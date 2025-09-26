@@ -47,3 +47,9 @@ export interface PaginatedResponse<T = any> {
 export interface PaginationProps {
   totalCount: number;
 }
+
+export interface ColumnConfig {
+  header: string
+  key: string
+  transform?: (value: any, row: any) => any
+}

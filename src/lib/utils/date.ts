@@ -111,3 +111,20 @@ export const generateYearOptions = (options: YearFilterOptions = {}): YearOption
 export const getCurrentYear = (): string => {
   return new Date().getFullYear().toString();
 };
+
+export const daysDiff = (fromDate: string, toDate: string): number => {
+  const from = new Date(fromDate)
+  const to = new Date(toDate)
+  return Math.abs(to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)
+}
+
+export const addDayToDate = (dateString: string, numDays: number): string => {
+    const date = new Date(dateString)
+    date.setDate(date.getDate() + numDays)
+    return date.toISOString()
+  }
+
+export const formatDate = (dateString: string): string => {
+    const date = new Date(dateString)
+    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+  }

@@ -14,14 +14,21 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { timeDiff } from "@/lib/utils/time"
-import { DownloadCSVButtons } from "./DownloadCSV"
+import { OvertimeCSVButtons } from "./OvertimeCSVButtons"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
-    date: new Date().toISOString().split('T')[0]
+    date__gte: new Date().toISOString().split('T')[0],
+    date__lte: new Date().toISOString().split('T')[0]
   },
-  filters: []
+  filters: [
+    {
+      id: 'date',
+      type: 'date-range',
+      label: 'Select Date'
+    },
+  ]
 }
 
 interface PageProps {
@@ -50,7 +57,7 @@ export default async function UserListPage({ searchParams }: PageProps) {
               
               {/* Add download button */}
               <div className="flex justify-end mb-4">
-                <DownloadCSVButtons data={rows} />
+                <OvertimeCSVButtons data={rows} />
               </div>
               
               <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
@@ -65,6 +72,7 @@ export default async function UserListPage({ searchParams }: PageProps) {
                       <TableHead>OT num</TableHead>
                       <TableHead>Pallet</TableHead>
                       <TableHead>Hanging</TableHead>
+                      <TableHead>Others</TableHead>
                       <TableHead>total OT</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -77,7 +85,7 @@ export default async function UserListPage({ searchParams }: PageProps) {
                       </TableRow>
                     ) : (
                       rows.map((row) => (
-                        <TableRow key={row.factory_code}>
+                        <TableRow key={row.task_id}>
                           <TableCell>{formatDateToUTC7(row.created_at,'date')}</TableCell>
                           <TableCell>{row.factory_code}</TableCell>
                           <TableCell>{row.factory_name}</TableCell>
@@ -86,6 +94,7 @@ export default async function UserListPage({ searchParams }: PageProps) {
                           <TableCell>{row.weekday_ot_num}</TableCell>
                           <TableCell>{row.pallet_line_today}</TableCell>
                           <TableCell>{row.hanging_line_today}</TableCell>
+                          <TableCell>{row.others_today}</TableCell>
                           <TableCell>{timeDiff(row.weekday_ot_start, row.weekday_ot_end) * row.weekday_ot_num}</TableCell>
                         </TableRow>
                       ))
