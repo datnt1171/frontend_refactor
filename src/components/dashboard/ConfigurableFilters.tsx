@@ -37,14 +37,23 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         } else {
           initialState[filter.id] = urlValue;
         }
+      } else if (filter.type === 'day-range' || filter.type === 'date-range') {
+        // Check for Django-style range params
+        const gteValue = searchParams.get(`${filter.id}__gte`);
+        const lteValue = searchParams.get(`${filter.id}__lte`);
+        if (gteValue || lteValue) {
+          initialState[filter.id] = { gte: gteValue || '', lte: lteValue || '' };
+        } else if (config.defaultValues?.[filter.id]) {
+          initialState[filter.id] = config.defaultValues[filter.id];
+        } else {
+          initialState[filter.id] = { gte: '', lte: '' };
+        }
       } else if (config.defaultValues?.[filter.id]) {
         initialState[filter.id] = config.defaultValues[filter.id];
       } else {
         // Set default empty values based on filter type
         if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
           initialState[filter.id] = [];
-        } else if (filter.type === 'day-range' || filter.type === 'date-range') {
-          initialState[filter.id] = { from: '', to: '' };
         } else {
           initialState[filter.id] = '';
         }
@@ -82,7 +91,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     setFilters(prev => ({ ...prev, [filterId]: value }));
   };
 
-  const handleRangeChange = (filterId: string, field: 'from' | 'to', value: string) => {
+  const handleRangeChange = (filterId: string, field: 'gte' | 'lte', value: string) => {
     setFilters(prev => ({
       ...prev,
       [filterId]: { ...prev[filterId], [field]: value }
@@ -95,7 +104,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
         resetState[filter.id] = [];
       } else if (filter.type === 'day-range' || filter.type === 'date-range') {
-        resetState[filter.id] = { from: '', to: '' };
+        resetState[filter.id] = { gte: '', lte: '' };
       } else {
         resetState[filter.id] = '';
       }
@@ -123,20 +132,20 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     Object.entries(filters).forEach(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
         params.set(key, value.join(','));
-      } else if (typeof value === 'object' && value !== null && (value.from || value.to)) {
-        // Handle range filters
-        if (value.from) params.set(`${key}_from`, value.from);
-        else params.delete(`${key}_from`);
-        if (value.to) params.set(`${key}_to`, value.to);
-        else params.delete(`${key}_to`);
+      } else if (typeof value === 'object' && value !== null && (value.gte || value.lte)) {
+        // Handle range filters with Django convention
+        if (value.gte) params.set(`${key}__gte`, value.gte);
+        else params.delete(`${key}__gte`);
+        if (value.lte) params.set(`${key}__lte`, value.lte);
+        else params.delete(`${key}__lte`);
         params.delete(key); // Remove the main key for range filters
       } else if (value && typeof value === 'string') {
         params.set(key, value);
       } else {
         // Remove empty values and their related params
         params.delete(key);
-        params.delete(`${key}_from`);
-        params.delete(`${key}_to`);
+        params.delete(`${key}__gte`);
+        params.delete(`${key}__lte`);
       }
     });
     
@@ -147,7 +156,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
 
   const hasActiveFilters = Object.values(filters).some(value => {
     if (Array.isArray(value)) return value.length > 0;
-    if (typeof value === 'object') return value.from || value.to;
+    if (typeof value === 'object') return value.gte || value.lte;
     return value !== '';
   });
 
@@ -267,8 +276,8 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 min={filter.min || 1}
                 max={filter.max || 31}
                 placeholder="From"
-                value={filters[filter.id]?.from || ''}
-                onChange={(e) => handleRangeChange(filter.id, 'from', e.target.value)}
+                value={filters[filter.id]?.gte || ''}
+                onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
                 className="w-20"
               />
               <span className="text-muted-foreground text-sm">to</span>
@@ -277,8 +286,8 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 min={filter.min || 1}
                 max={filter.max || 31}
                 placeholder="To"
-                value={filters[filter.id]?.to || ''}
-                onChange={(e) => handleRangeChange(filter.id, 'to', e.target.value)}
+                value={filters[filter.id]?.lte || ''}
+                onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
                 className="w-20"
               />
             </div>
@@ -294,8 +303,8 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="date"
-                  value={filters[filter.id]?.from || ''}
-                  onChange={(e) => handleRangeChange(filter.id, 'from', e.target.value)}
+                  value={filters[filter.id]?.gte || ''}
+                  onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
                   className="pl-9"
                   placeholder="From date"
                 />
@@ -304,8 +313,8 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="date"
-                  value={filters[filter.id]?.to || ''}
-                  onChange={(e) => handleRangeChange(filter.id, 'to', e.target.value)}
+                  value={filters[filter.id]?.lte || ''}
+                  onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
                   className="pl-9"
                   placeholder="To date"
                 />
@@ -339,7 +348,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   const getActiveFilterCount = () => {
     return Object.values(filters).filter(value => {
       if (Array.isArray(value)) return value.length > 0;
-      if (typeof value === 'object') return value.from || value.to;
+      if (typeof value === 'object') return value.gte || value.lte;
       return value !== '';
     }).length;
   };
