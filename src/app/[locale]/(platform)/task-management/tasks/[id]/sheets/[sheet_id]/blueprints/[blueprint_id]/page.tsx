@@ -15,7 +15,7 @@ export default async function BlueprintsPage({
   // Fetch the sheet blueprint data
   const dataDetail = await getDataDetail(id)
   const sheetBlueprint = await getSheetBlueprint(id, sheet_id, blueprint_id)
-  const blueprint = await getBlueprint(dataDetail.name_of_customer, sheetBlueprint.blueprint)
+  const blueprint = await getBlueprint(dataDetail.factory_code, sheetBlueprint.blueprint)
   // Map Next.js locale to component language format
   const getLanguage = (locale: string): 'en' | 'vi' | 'zh_hant' => {
     switch (locale) {

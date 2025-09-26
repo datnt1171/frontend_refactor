@@ -48,13 +48,13 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
       options: getStateTypeOptions()
     },
     {
-      id: 'name_of_customer__in',
+      id: 'factory_code__in',
       type: 'multiselect',
       label: 'Factory Filter',
       options: await getFactoryOptions()
     },
     {
-      id: 'retailer__in',
+      id: 'retailer_id__in',
       type: 'multiselect',
       label: 'Retailer Filter',
       options: await getRetailerOptions()
@@ -73,13 +73,13 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
 
   const groupedData = data
     .sort((a, b) => {
-      if (a.name_of_customer !== b.name_of_customer) {
-        return a.name_of_customer.localeCompare(b.name_of_customer)
+      if (a.factory_code !== b.factory_code) {
+        return a.factory_code.localeCompare(b.factory_code)
       }
       return a.sample_type.localeCompare(b.sample_type)
     })
     .reduce((acc: { [key: string]: TaskDataDetail[] }, task) => {
-      const groupKey = task.name_of_customer
+      const groupKey = task.factory_code
       if (!acc[groupKey]) {
         acc[groupKey] = []
       }

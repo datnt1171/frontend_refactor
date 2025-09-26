@@ -29,10 +29,10 @@ export async function GET(
     let factory_name: string = ""
     let retailer_name: string = ""
 
-    // Factory - only fetch if name_of_customer exists
-    if (taskDataDetail.name_of_customer) {
+    // Factory - only fetch if factory_code exists
+    if (taskDataDetail.factory_code) {
       try {
-        const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${taskDataDetail.name_of_customer}`, {
+        const factoryResponse = await fetch(`${process.env.DW_API_URL}/api/crm/factories/${taskDataDetail.factory_code}`, {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
             "Content-Type": "application/json",
@@ -43,7 +43,7 @@ export async function GET(
           const factory: FactoryDetail = await factoryResponse.json()
           factory_name = factory.factory_name
         } else {
-          console.warn(`Factory not found for code: ${taskDataDetail.name_of_customer} (Status: ${factoryResponse.status})`)
+          console.warn(`Factory not found for code: ${taskDataDetail.factory_code} (Status: ${factoryResponse.status})`)
         }
       } catch (error) {
         console.warn('Failed to fetch factory details:', error)
@@ -52,9 +52,9 @@ export async function GET(
     }
 
     // Retailer - only fetch if retailer exists
-    if (taskDataDetail.retailer) {
+    if (taskDataDetail.retailer_id) {
       try {
-        const retailerResponse = await fetch(`${process.env.DW_API_URL}/api/crm/retailers/${taskDataDetail.retailer}`, {
+        const retailerResponse = await fetch(`${process.env.DW_API_URL}/api/crm/retailers/${taskDataDetail.retailer_id}`, {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
             "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export async function GET(
           const retailer: RetailerDetail = await retailerResponse.json()
           retailer_name = retailer.name
         } else {
-          console.warn(`Retailer not found for id: ${taskDataDetail.retailer} (Status: ${retailerResponse.status})`)
+          console.warn(`Retailer not found for id: ${taskDataDetail.retailer_id} (Status: ${retailerResponse.status})`)
         }
       } catch (error) {
         console.warn('Failed to fetch retailer details:', error)

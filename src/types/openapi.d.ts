@@ -620,7 +620,7 @@ export interface components {
          */
         OperatorEnum: "exact" | "not_exact" | "contains" | "not_contains" | "in" | "not_in" | "gt" | "lt" | "gte" | "lte" | "is_empty" | "is_not_empty" | "weekday";
         Overtime: {
-            name_of_customer: string;
+            factory_code: string;
             weekday_ot: string;
             /** Format: time */
             weekday_ot_start: string;
@@ -1051,11 +1051,9 @@ export interface components {
             created_by: string;
             state: string;
             state_type: string;
-            name_of_customer: string; //Factory code
-            factory_name: string;
+            factory_code: string;
             finishing_code: string;
-            retailer: string; //Retailer id
-            retailer_name: string;
+            retailer_id: string;
             customer_color_name: string;
             type_of_substrate: string;
             collection: string;
@@ -1072,6 +1070,8 @@ export interface components {
             panel_category: string;
             purpose_of_usage: string;
             additional_detail: string;
+            retailer_name: string;
+            factory_name: string;
         };
         TaskDataHistory: {
             value?: string | null;
@@ -1110,7 +1110,7 @@ export interface components {
             refresh: string;
         };
         TransferAbsence: {
-            name_of_customer: string;
+            factory_code: string;
             user_id: string;
             transfer_type: string;
             /** Format: date */

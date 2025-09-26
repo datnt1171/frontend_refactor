@@ -77,9 +77,9 @@ export default async function UserListPage({ searchParams }: PageProps) {
                       </TableRow>
                     ) : (
                       rows.map((row) => (
-                        <TableRow key={row.name_of_customer}>
+                        <TableRow key={row.factory_code}>
                           <TableCell>{formatDateToUTC7(row.created_at,'date')}</TableCell>
-                          <TableCell>{row.name_of_customer}</TableCell>
+                          <TableCell>{row.factory_code}</TableCell>
                           <TableCell>{row.factory_name}</TableCell>
                           <TableCell>{row.weekday_ot_start}</TableCell>
                           <TableCell>{row.weekday_ot_end}</TableCell>

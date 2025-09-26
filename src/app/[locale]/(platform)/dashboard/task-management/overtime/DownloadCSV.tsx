@@ -2,30 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
+import type { Overtime } from "@/types"
 
 interface DownloadCSVButtonsProps {
-  data: {
-    name_of_customer: string;
-    weekday_ot: string;
-    weekday_ot_start: string;
-    weekday_ot_end: string;
-    weekday_ot_num: number;
-    hanging_line_today: string;
-    pallet_line_today: string;
-    others_today: string;
-    hanging_line_tomorrow: string;
-    pallet_line_tomorrow: string;
-    others_tomorrow: string;
-    instock: string;
-    instock_by_code: string;
-    sunday_ot: string;
-    sunday_ot_end: string;
-    sunday_ot_num: number;
-    hanging_line_sunday: string;
-    pallet_line_sunday: string;
-    created_at: string;
-    factory_name: string;
-  }[]
+  data: Overtime[]
 }
 
 export function DownloadCSVButtons({ data }: DownloadCSVButtonsProps) {
@@ -93,7 +73,7 @@ export function DownloadCSVButtons({ data }: DownloadCSVButtonsProps) {
 
     const csvData = data.map(row => [
       formatDate(row.created_at),
-      row.name_of_customer,
+      row.factory_code,
       row.factory_name,
       row.weekday_ot_start,
       row.weekday_ot_end,
@@ -120,7 +100,7 @@ export function DownloadCSVButtons({ data }: DownloadCSVButtonsProps) {
 
     const csvData = data.map(row => [
       addDayToDate(row.created_at),
-      row.name_of_customer,
+      row.factory_code,
       row.factory_name,
       row.hanging_line_tomorrow,
       row.pallet_line_tomorrow,
@@ -144,7 +124,7 @@ export function DownloadCSVButtons({ data }: DownloadCSVButtonsProps) {
 
     const csvData = data.map(row => [
       formatDate(row.created_at),
-      row.name_of_customer,
+      row.factory_code,
       row.factory_name,
       row.sunday_ot,
       row.sunday_ot_end,

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       return map
     }, {})
     
-    // Add factory_name field while keeping name_of_customer (factory_code)
+    // Add factory_name field while keeping factory_code
     const updatedOvertimes = OnsiteTransferAbsences.map((item: OnsiteTransferAbsence) => ({
       ...item,
       factory_name: factoryMap[item.factory_code] || ""

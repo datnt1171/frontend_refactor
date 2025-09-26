@@ -15,7 +15,7 @@ export default async function BlueprintsPage({
   const { id, sheet_id } = await params
   const taskDataDetail = await getDataDetail(id)
   const finishingSheet = await getFinishingSheet(id, sheet_id)
-  const blueprints = await getBlueprints(taskDataDetail.name_of_customer)
+  const blueprints = await getBlueprints(taskDataDetail.factory_code)
   const paginatedSheetBlueprints = await getSheetBlueprints(id, sheet_id)
   const sheetBlueprints = paginatedSheetBlueprints.results
   const t = await getTranslations()
