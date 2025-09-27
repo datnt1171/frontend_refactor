@@ -23,6 +23,12 @@ export const routePermissions: Record<string, RouteConfig> = {
    departments: ['admin', 'TT']
  },
 
+ // CRM
+ '/crm': {
+   roles: ['admin', 'assistant'],
+   departments: ['admin', 'TT']
+ },
+
  // Dashboard route
  '/dashboard': {
    roles: ['manager', 'admin', 'assistant'],

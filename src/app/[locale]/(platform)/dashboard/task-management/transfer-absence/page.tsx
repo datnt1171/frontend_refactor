@@ -33,11 +33,12 @@ const FilterConfig: PageFilterConfig = {
 
 interface PageProps {
   searchParams: Promise<{
-    date: string
+    date_gte: string
+    date_lte: string
   }>
 }
 
-export default async function UserListPage({ searchParams }: PageProps) {
+export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
   

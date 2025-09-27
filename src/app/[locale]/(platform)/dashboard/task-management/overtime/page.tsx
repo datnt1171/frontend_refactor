@@ -12,7 +12,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
-import { formatDateToUTC7 } from "@/lib/utils/date"
+import { formatDateToUTC7, addDayToDate } from "@/lib/utils/date"
 import { timeDiff } from "@/lib/utils/time"
 import { OvertimeCSVButtons } from "./OvertimeCSVButtons"
 
@@ -33,13 +33,16 @@ const FilterConfig: PageFilterConfig = {
 
 interface PageProps {
   searchParams: Promise<{
-    date: string
+    date_gte: string
+    date_lte: string
   }>
 }
 
-export default async function UserListPage({ searchParams }: PageProps) {
+export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
+  const today = new Date()
+  const isSaturday = today.getDay() === 6
   
   const response = await getOvertimes(params)
   const rows = response
@@ -59,48 +62,137 @@ export default async function UserListPage({ searchParams }: PageProps) {
               <div className="flex justify-end mb-4">
                 <OvertimeCSVButtons data={rows} />
               </div>
-              
-              <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Created_at</TableHead>
-                      <TableHead>Factory code</TableHead>
-                      <TableHead>Factory name</TableHead>
-                      <TableHead>OT start</TableHead>
-                      <TableHead>OT end</TableHead>
-                      <TableHead>OT num</TableHead>
-                      <TableHead>Pallet</TableHead>
-                      <TableHead>Hanging</TableHead>
-                      <TableHead>Others</TableHead>
-                      <TableHead>total OT</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {rows.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={3} className="text-center">
-                          {t('common.noDataFound')}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      rows.map((row) => (
-                        <TableRow key={row.task_id}>
-                          <TableCell>{formatDateToUTC7(row.created_at,'date')}</TableCell>
-                          <TableCell>{row.factory_code}</TableCell>
-                          <TableCell>{row.factory_name}</TableCell>
-                          <TableCell>{row.weekday_ot_start}</TableCell>
-                          <TableCell>{row.weekday_ot_end}</TableCell>
-                          <TableCell>{row.weekday_ot_num}</TableCell>
-                          <TableCell>{row.pallet_line_today}</TableCell>
-                          <TableCell>{row.hanging_line_today}</TableCell>
-                          <TableCell>{row.others_today}</TableCell>
-                          <TableCell>{timeDiff(row.weekday_ot_start, row.weekday_ot_end) * row.weekday_ot_num}</TableCell>
+
+              <div className="space-y-8">
+                {/* Today OT */}
+                <div>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">Today Overtime</h2>
+                  <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Factory code</TableHead>
+                          <TableHead>Factory name</TableHead>
+                          <TableHead>OT start</TableHead>
+                          <TableHead>OT end</TableHead>
+                          <TableHead>OT num</TableHead>
+                          <TableHead>Pallet</TableHead>
+                          <TableHead>Hanging</TableHead>
+                          <TableHead>Others</TableHead>
+                          <TableHead>total OT</TableHead>
                         </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {rows.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center">
+                              {t('common.noDataFound')}
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          rows.map((row) => (
+                            <TableRow key={row.task_id}>
+                              <TableCell>{formatDateToUTC7(row.created_at,'date')}</TableCell>
+                              <TableCell>{row.factory_code}</TableCell>
+                              <TableCell>{row.factory_name}</TableCell>
+                              <TableCell>{row.weekday_ot_start}</TableCell>
+                              <TableCell>{row.weekday_ot_end}</TableCell>
+                              <TableCell>{row.weekday_ot_num}</TableCell>
+                              <TableCell>{row.pallet_line_today}</TableCell>
+                              <TableCell>{row.hanging_line_today}</TableCell>
+                              <TableCell>{row.others_today}</TableCell>
+                              <TableCell>{timeDiff(row.weekday_ot_start, row.weekday_ot_end) * row.weekday_ot_num}</TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+              
+                {/* Tomorrow OT */}
+                <div>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">Tomorrow Overtime</h2>
+                  <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date (Tomorrow)</TableHead>
+                          <TableHead>Factory code</TableHead>
+                          <TableHead>Factory name</TableHead>
+                          <TableHead>Pallet</TableHead>
+                          <TableHead>Hanging</TableHead>
+                          <TableHead>Others</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {rows.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center">
+                              {t('common.noDataFound')}
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          rows.map((row) => (
+                            <TableRow key={row.task_id}>
+                              <TableCell>{formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 2) : row.created_at, 'date')}</TableCell>
+                              <TableCell>{row.factory_code}</TableCell>
+                              <TableCell>{row.factory_name}</TableCell>
+                              <TableCell>{row.hanging_line_tomorrow}</TableCell>
+                              <TableCell>{row.pallet_line_tomorrow}</TableCell>
+                              <TableCell>{row.others_tomorrow}</TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+                
+                {/* Sunday OT */}
+                <div>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">Sunday Overtime</h2>
+                  <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Factory code</TableHead>
+                          <TableHead>Factory name</TableHead>
+                          <TableHead>Sunday OT</TableHead>
+                          <TableHead>Sunday OT End</TableHead>
+                          <TableHead>Sunday OT Num</TableHead>
+                          <TableHead>Pallet</TableHead>
+                          <TableHead>Hanging</TableHead>
+                          <TableHead>Others</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {rows.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={3} className="text-center">
+                              {t('common.noDataFound')}
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          rows.map((row) => (
+                            <TableRow key={row.task_id}>
+                              <TableCell>{isSaturday ? addDayToDate(row.created_at, 1) : row.created_at}</TableCell>
+                              <TableCell>{row.factory_code}</TableCell>
+                              <TableCell>{row.factory_name}</TableCell>
+                              <TableCell>{row.sunday_ot}</TableCell>
+                              <TableCell>{row.sunday_ot_end}</TableCell>
+                              <TableCell>{row.sunday_ot_num}</TableCell>
+                              <TableCell>{row.pallet_line_sunday}</TableCell>
+                              <TableCell>{row.hanging_line_sunday}</TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

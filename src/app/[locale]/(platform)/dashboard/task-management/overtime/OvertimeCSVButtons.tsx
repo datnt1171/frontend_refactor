@@ -43,8 +43,8 @@ export function OvertimeCSVButtons({ data }: OvertimeCSVButtonsProps) {
     { header: 'Sunday OT', key: 'sunday_ot' },
     { header: 'Sunday OT End', key: 'sunday_ot_end' },
     { header: 'Sunday OT Number', key: 'sunday_ot_num' },
-    { header: 'Hanging Line Sunday', key: 'hanging_line_sunday' },
-    { header: 'Pallet Line Sunday', key: 'pallet_line_sunday' }
+    { header: 'Pallet Line Sunday', key: 'pallet_line_sunday' },
+    { header: 'Hanging Line Sunday', key: 'hanging_line_sunday' }
   ]
 
   return (
