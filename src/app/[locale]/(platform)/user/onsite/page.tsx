@@ -35,7 +35,7 @@ export default async function UserFactoryOnsitePage({ searchParams }: PageProps)
   // Fetch users and onsite data in parallel
   const [users, onsiteData, factories] = await Promise.all([
     getUsers({
-    'department__name__in': 'KTC,KTW,KVN',
+    'department__name__in': 'KTC,KTW,KVN,TT',
     'role__name__in': 'technician',
     'page_size': '999999',
     'page': '1',
