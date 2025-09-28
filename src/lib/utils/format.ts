@@ -56,3 +56,41 @@ export const formatFileSize = (bytes: number): string => {
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
   }
+
+export const getValueColor = (value: number) => {
+  if (value > 0) return '#22c55e';
+  if (value < 0) return '#ef4444';
+  return '#6b7280';
+};
+
+
+export const getValueStyle = (value: number) => {
+  const baseStyle = {
+    textAlign: 'center' as const,
+    boxSizing: 'border-box' as const,
+  };
+
+  if (value > 0) {
+    return {
+      ...baseStyle,
+      color: 'black',
+      backgroundColor: '#dcfce7', // green-100
+      fontWeight: 'bold',
+    };
+  }
+
+  if (value < 0) {
+    return {
+      ...baseStyle,
+      color: 'black',
+      backgroundColor: '#fee2e2', // red-100
+      fontWeight: 'bold',
+    };
+  }
+
+  return {
+    ...baseStyle,
+    color: '#6b7280', // gray-500
+    fontWeight: 'normal',
+  };
+};

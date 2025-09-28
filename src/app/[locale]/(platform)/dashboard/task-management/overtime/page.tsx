@@ -178,7 +178,7 @@ export default async function Page({ searchParams }: PageProps) {
                         ) : (
                           rows.map((row) => (
                             <TableRow key={row.task_id}>
-                              <TableCell>{isSaturday ? addDayToDate(row.created_at, 1) : row.created_at}</TableCell>
+                              <TableCell>{formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 1) : row.created_at, 'date')}</TableCell>
                               <TableCell>{row.factory_code}</TableCell>
                               <TableCell>{row.factory_name}</TableCell>
                               <TableCell>{row.sunday_ot}</TableCell>

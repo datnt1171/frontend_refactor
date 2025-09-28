@@ -591,16 +591,20 @@ export interface components {
             ktw_onsite: number;
             ktc_onsite: number;
             kvn_onsite: number;
+            tt_onsite: number;
             ktw_in: number;
             ktc_in: number;
             kvn_in: number;
+            tt_in: number;
             ktw_out: number;
             ktc_out: number;
             kvn_out: number;
+            tt_out: number;
             ktw_absence: number;
             ktc_absence: number;
             kvn_absence: number;
             factory_name: string;
+            tt_absence: string;
         };
         /**
          * @description * `exact` - Exact

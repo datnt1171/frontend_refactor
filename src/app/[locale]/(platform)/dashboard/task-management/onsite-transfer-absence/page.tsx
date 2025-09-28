@@ -12,6 +12,8 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
+import { getValueStyle } from '@/lib/utils/format'
+import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
@@ -50,23 +52,27 @@ export default async function Page({ searchParams }: PageProps) {
                 <span className="text-sm font-medium">Filter</span>
               </div>
               
-              <div className="mt-8">
-                <h3 className="text-lg font-medium mb-4">Enhanced Version with Better Styling:</h3>
-                
-                <Table>
+              <div className="flex justify-end">
+                  <ScreenshotButton 
+                    targetId="table-report" 
+                    filename="table-screenshot.png" 
+                  />
+              </div>
+              <div id="table-container" className="overflow-auto mt-8">
+                <Table id="table-report">
                   <TableHeader>
                     <TableRow className="bg-gray-100">
                       <TableHead 
                         rowSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 align-middle"
                       >
-                        Factory Code
+                        Code
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 align-middle"
                       >
-                        Factory Name
+                        Name
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
@@ -82,25 +88,25 @@ export default async function Page({ searchParams }: PageProps) {
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
-                        className="text-center font-semibold bg-green-100"
+                        className="text-center font-semibold border-r-2 border-gray-300 bg-green-100"
                       >
                         Work
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
-                        className="text-center font-semibold bg-red-100"
+                        className="text-center font-semibold border-r-2 border-gray-300 bg-red-100"
                       >
                         Absence
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
-                        className="text-center font-semibold bg-gray-100"
+                        className="text-center font-semibold border-r-2 border-gray-300 bg-yellow-100"
                       >
                         Out
                       </TableHead>
                       <TableHead 
-                        colSpan={3} 
-                        className="text-center font-semibold bg-green-100"
+                        colSpan={4} 
+                        className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         In
                       </TableHead>
@@ -112,16 +118,17 @@ export default async function Page({ searchParams }: PageProps) {
                       <TableHead className="text-center text-sm bg-blue-50 border-r-2 border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50">KVN</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50">KVN</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50">KVN</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50">KVN</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-300">KVN</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-300">TT</TableHead>
                     </TableRow>
                   </TableHeader>
                   
@@ -139,26 +146,31 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell>{row.factory_name}</TableCell>
                           <TableCell>{row.factory_code}</TableCell>
 
-                          <TableCell>{row.ktw_onsite}</TableCell>
-                          <TableCell>{row.ktc_onsite}</TableCell>
-                          <TableCell>{row.kvn_onsite}</TableCell>
-                          {/*Change to current work */}
-                          <TableCell>{row.ktw_onsite}</TableCell> 
-                          <TableCell>{row.ktc_onsite}</TableCell>
-                          <TableCell>{row.kvn_onsite}</TableCell>
-                          {/*Change to current work */}
+                          {/* Onsite */}
+                          <TableCell style={getValueStyle(row.ktw_onsite)}>{row.ktw_onsite}</TableCell>
+                          <TableCell style={getValueStyle(row.ktc_onsite)}>{row.ktc_onsite}</TableCell>
+                          <TableCell style={getValueStyle(row.kvn_onsite)}>{row.kvn_onsite}</TableCell>
 
-                          <TableCell>{row.ktw_absence}</TableCell>
-                          <TableCell>{row.ktc_absence}</TableCell>
-                          <TableCell>{row.kvn_absence}</TableCell>
+                          {/* Onsite */}
+                          <TableCell style={getValueStyle(row.ktw_onsite)}>{row.ktw_onsite}</TableCell>
+                          <TableCell style={getValueStyle(row.ktc_onsite)}>{row.ktc_onsite}</TableCell>
+                          <TableCell style={getValueStyle(row.kvn_onsite)}>{row.kvn_onsite}</TableCell>
 
-                          <TableCell>{row.ktw_out}</TableCell>
-                          <TableCell>{row.ktc_out}</TableCell>
-                          <TableCell>{row.kvn_out}</TableCell>
+                          {/* Absence */}
+                          <TableCell style={getValueStyle(-row.ktw_absence)}>{-row.ktw_absence}</TableCell>
+                          <TableCell style={getValueStyle(-row.ktc_absence)}>{-row.ktc_absence}</TableCell>
+                          <TableCell style={getValueStyle(-row.kvn_absence)}>{-row.kvn_absence}</TableCell>
 
-                          <TableCell>{row.ktw_in}</TableCell>
-                          <TableCell>{row.ktc_in}</TableCell>
-                          <TableCell>{row.kvn_in}</TableCell>
+                          {/* Out */}
+                          <TableCell style={getValueStyle(-row.ktw_out)}>{-row.ktw_out}</TableCell>
+                          <TableCell style={getValueStyle(-row.ktc_out)}>{-row.ktc_out}</TableCell>
+                          <TableCell style={getValueStyle(-row.kvn_out)}>{-row.kvn_out}</TableCell>
+
+                          {/* In */}
+                          <TableCell style={getValueStyle(row.ktw_in)}>{row.ktw_in}</TableCell>
+                          <TableCell style={getValueStyle(row.ktc_in)}>{row.ktc_in}</TableCell>
+                          <TableCell style={getValueStyle(row.kvn_in)}>{row.kvn_in}</TableCell>
+                          <TableCell style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
                         </TableRow>
                       ))
                     )}
