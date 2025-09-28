@@ -66,49 +66,49 @@ export default async function Page({ searchParams }: PageProps) {
                         rowSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 align-middle"
                       >
-                        Code
+                        {t('crm.factories.factoryId')}
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 align-middle"
                       >
-                        Name
+                        {t('crm.factories.factoryName')}
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 align-middle"
                       >
-                        Salesman
+                        {t('crm.factories.factoryName')}
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
-                        Onsite
+                        {t('crm.factories.onsite')}
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-green-100"
                       >
-                        Work
+                        {t('crm.factories.work')}
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-red-100"
                       >
-                        Absence
+                        {t('user.absence')}
                       </TableHead>
                       <TableHead 
                         colSpan={3} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-yellow-100"
                       >
-                        Out
+                        {t('crm.factories.support')}-
                       </TableHead>
                       <TableHead 
                         colSpan={4} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
-                        In
+                        {t('crm.factories.support')}+
                       </TableHead>
                     </TableRow>
                     

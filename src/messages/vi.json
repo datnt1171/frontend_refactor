@@ -112,7 +112,8 @@
       "passwordNotNumeric": "Không chỉ chứa số",
       "passwordNotSimilar": "Không quá giống với thông tin cá nhân của bạn",
       "passwordNotCommon": "Không phải mật khẩu phổ biến"
-    }
+    },
+    "absence": "Nghỉ phép"
   },
   "taskManagement": {
     "appTitle":"Quản lý công việc",
@@ -266,7 +267,9 @@
       "factoryId": "Mã KH",
       "factoryName": "Tên KH",
       "status": "Trạng thái",
-      "onsite": "Kỹ thuật ngoài"
+      "onsite": "Cắm chốt",
+      "work": "Đi làm",
+      "support": "Chi viện"
 
     },
     "retailer": {

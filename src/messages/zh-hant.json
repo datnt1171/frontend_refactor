@@ -112,7 +112,8 @@
       "passwordNotNumeric": "不能全為數字",
       "passwordNotSimilar": "不能與您的個人資訊過於相似",
       "passwordNotCommon": "不能是常見密碼"
-    }
+    },
+    "absence": "底假"
   },
   "taskManagement": {
     "appTitle":"Task Management",
@@ -267,7 +268,9 @@
       "factoryId": "工廠編號",
       "factoryName": "工廠名稱",
       "status": "地位",
-      "onsite": "現場"
+      "onsite": "標準",
+      "work": "上班",
+      "support": "支援"
 
     },
     "retailer": {
