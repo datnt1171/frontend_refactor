@@ -52,6 +52,9 @@
     "endDate": "End Date",
     "numOfDays": "Num of Days",
     "date": "Date",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "sunday": "Sunday",
     "others": "Others"
   },
   "home": {
@@ -120,9 +123,7 @@
       "passwordNotCommon": "Not a common password"
     },
     "absence": "Absence",
-    "todayOvertime": "Today Overtime",
-    "tomorrowOvertime": "",
-    "sundatOvertime": "",
+    "overtime": "Overtime",
     "overtimeStart": "OT Start",
     "overtimeEnd": "OT End",
     "overtimeNum": "OT Num",

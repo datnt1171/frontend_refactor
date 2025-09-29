@@ -47,7 +47,15 @@
     "addRowAfter": "在後方新增列",
     "removeRow": "刪除列",
     "generatePDF": "生成 PDF",
-    "generateSimplePDF": "生成簡易 PDF"
+    "generateSimplePDF": "生成簡易 PDF",
+    "startDate": "日期-開",
+    "endDate": "日期-結",
+    "numOfDays": "天數",
+    "date": "日期",
+    "today": "今天",
+    "tomorrow": "明天",
+    "sunday": "星期日",
+    "others": "其他的"
   },
   "home": {
   "title": "首頁",
@@ -93,11 +101,12 @@
       "onsite": "現場"
     },
     "userDetail": "使用者詳細資料",
-    "username": "使用者名稱",
+    "username": "人員",
     "firstName": "名字",
     "lastName": "姓氏",
+    "fullName": "姓名",
     "email": "電子郵件",
-    "department": "部門",
+    "department": "日月薪",
     "role": "角色",
     "supervisor": "主管",
     "changePassword": {
@@ -113,7 +122,12 @@
       "passwordNotSimilar": "不能與您的個人資訊過於相似",
       "passwordNotCommon": "不能是常見密碼"
     },
-    "absence": "底假"
+    "absence": "請假",
+    "overtime": "加班",
+    "overtimeStart": "加班開始",
+    "overtimeEnd": "加班時間",
+    "overtimeNum": "加班人數",
+    "overtimeTotalHours": "全部的加班"
   },
   "taskManagement": {
     "appTitle":"Task Management",

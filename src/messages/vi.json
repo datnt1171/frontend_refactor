@@ -47,7 +47,15 @@
     "addRowAfter": "Thêm dòng phía dưới",
     "removeRow": "Xóa dòng",
     "generatePDF": "Tải PDF",
-    "generateSimplePDF": "Tải PDF đơn giản"
+    "generateSimplePDF": "Tải PDF đơn giản",
+    "startDate": "Ngày bắt đầu",
+    "endDate": "Ngày kết thúc",
+    "numOfDays": "Số ngày",
+    "date": "Ngày",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "sunday": "Chủ Nhật",
+    "others": "Khác"
   },
   "home": {
   "title": "Trang chủ",
@@ -96,6 +104,7 @@
     "username": "Tên đăng nhập",
     "firstName": "Tên",
     "lastName": "Họ",
+    "fullName": "Họ Tên",
     "email": "Email",
     "department": "Bộ phận",
     "role": "Vai trò",
@@ -113,7 +122,12 @@
       "passwordNotSimilar": "Không quá giống với thông tin cá nhân của bạn",
       "passwordNotCommon": "Không phải mật khẩu phổ biến"
     },
-    "absence": "Nghỉ phép"
+    "absence": "Nghỉ phép",
+    "overtime": "Tăng ca",
+    "overtimeStart": "BĐ tăng ca",
+    "overtimeEnd": "KT tăng ca",
+    "overtimeNum": "Só người tăng ca",
+    "overtimeTotalHours": "Tổng tăng ca (h)"
   },
   "taskManagement": {
     "appTitle":"Quản lý công việc",
