@@ -47,7 +47,12 @@
     "addRowAfter": "Add Row After",
     "removeRow": "Remove Row",
     "generatePDF": "Generate PDF",
-    "generateSimplePDF": "Generate Simple PDF"
+    "generateSimplePDF": "Generate Simple PDF",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "numOfDays": "Num of Days",
+    "date": "Date",
+    "others": "Others"
   },
   "home": {
     "title": "Home Page",
@@ -96,6 +101,7 @@
     "username": "Username",
     "firstName": "First Name",
     "lastName": "Last Name",
+    "fullName": "Full Name",
     "email": "Email",
     "department": "Department",
     "role": "Role",
@@ -113,7 +119,14 @@
       "passwordNotSimilar": "Not too similar to your personal info",
       "passwordNotCommon": "Not a common password"
     },
-    "absence": "Absence"
+    "absence": "Absence",
+    "todayOvertime": "Today Overtime",
+    "tomorrowOvertime": "",
+    "sundatOvertime": "",
+    "overtimeStart": "OT Start",
+    "overtimeEnd": "OT End",
+    "overtimeNum": "OT Num",
+    "overtimeTotalHours": "Total OT"
   },
   "taskManagement": {
     "appTitle":"Task Management",

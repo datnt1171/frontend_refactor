@@ -65,14 +65,14 @@ export default async function Page({ searchParams }: PageProps) {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>From date</TableHead>
-                      <TableHead>To date</TableHead>
-                      <TableHead>User dept</TableHead>
-                      <TableHead>Username</TableHead>
-                      <TableHead>Full name</TableHead>
-                      <TableHead>Onsite</TableHead>
-                      <TableHead>To Factory</TableHead>
-                      <TableHead>Num of Days</TableHead>
+                      <TableHead>{t('common.startDate')}</TableHead>
+                      <TableHead>{t('common.endDate')}</TableHead>
+                      <TableHead>{t('user.department')}</TableHead>
+                      <TableHead>{t('user.username')}</TableHead>
+                      <TableHead>{t('user.fullName')}</TableHead>
+                      <TableHead>{t('crm.factories.onsite')}</TableHead>
+                      <TableHead>{t('crm.factories.support')}</TableHead>
+                      <TableHead>{t('common.numOfDays')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -91,7 +91,7 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell>{row.username}</TableCell>
                           <TableCell>{row.first_name + " " + row.last_name}</TableCell>
                           <TableCell>{row.factory_name_onsite}</TableCell>
-                          <TableCell>{row.factory_name || "Nghỉ phép"}</TableCell>
+                          <TableCell>{row.factory_name || t('user.absence')}</TableCell>
                           <TableCell>{daysDiff(row.from_date, row.to_date) + 1}</TableCell>
                         </TableRow>
                       ))

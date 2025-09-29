@@ -66,21 +66,21 @@ export default async function Page({ searchParams }: PageProps) {
               <div className="space-y-8">
                 {/* Today OT */}
                 <div>
-                  <h2 className="text-xl font-semibold mb-4 text-gray-900">Today Overtime</h2>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">{t('crm.user.todayOvertime')}</h2>
                   <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Date</TableHead>
-                          <TableHead>Factory code</TableHead>
-                          <TableHead>Factory name</TableHead>
-                          <TableHead>OT start</TableHead>
-                          <TableHead>OT end</TableHead>
-                          <TableHead>OT num</TableHead>
-                          <TableHead>Pallet</TableHead>
-                          <TableHead>Hanging</TableHead>
-                          <TableHead>Others</TableHead>
-                          <TableHead>total OT</TableHead>
+                          <TableHead>{t('common.date')}</TableHead>
+                          <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                          <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                          <TableHead>{t('crm.user.overtimeStart')}</TableHead>
+                          <TableHead>{t('crm.user.overtimeEnd')}</TableHead>
+                          <TableHead>{t('crm.user.overtimeNum')}</TableHead>
+                          <TableHead>{t('blueprint.pallet')}</TableHead>
+                          <TableHead>{t('blueprint.hanging')}</TableHead>
+                          <TableHead>{t('common.others')}</TableHead>
+                          <TableHead>{t('crm.user.overtimeTotalHours')}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -113,7 +113,7 @@ export default async function Page({ searchParams }: PageProps) {
               
                 {/* Tomorrow OT */}
                 <div>
-                  <h2 className="text-xl font-semibold mb-4 text-gray-900">Tomorrow Overtime</h2>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">{t('crm.user.todayOvertime')}</h2>
                   <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
                     <Table>
                       <TableHeader>
