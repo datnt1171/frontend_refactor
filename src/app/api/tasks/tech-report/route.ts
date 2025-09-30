@@ -102,6 +102,15 @@ export async function GET(request: NextRequest) {
     }))
 
     const sortedData = joinedData.sort((a, b) => {
+      const targetSalesman = "陳國勇"
+      
+      // If a is 陳國勇, push to end
+      if (a.salesman === targetSalesman) return 1
+      
+      // If b is 陳國勇, push to end
+      if (b.salesman === targetSalesman) return -1
+      
+      // Otherwise, sort normally
       return a.salesman.localeCompare(b.salesman)
     })
     
