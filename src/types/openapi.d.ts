@@ -292,6 +292,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/sample-by-factory/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_sample_by_factory_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/sent/": {
         parameters: {
             query?: never;
@@ -603,8 +619,7 @@ export interface components {
             ktw_absence: number;
             ktc_absence: number;
             kvn_absence: number;
-            factory_name: string;
-            tt_absence: string;
+            tt_absence: number;
         };
         /**
          * @description * `exact` - Exact
@@ -648,7 +663,6 @@ export interface components {
             pallet_line_sunday: string;
             /** Format: date */
             created_at: string;
-            factory_name: string;
         };
         PaginatedFinishingSheetList: {
             /** @example 123 */
@@ -888,6 +902,10 @@ export interface components {
             /** Format: date-time */
             readonly updated_at: string;
         };
+        SampleByFactory: {
+            factory_code: string;
+            quantity_requirement: number;
+        };
         SentTask: {
             /** Format: uuid */
             readonly id: string;
@@ -1075,8 +1093,6 @@ export interface components {
             panel_category: string;
             purpose_of_usage: string;
             additional_detail: string;
-            retailer_name: string;
-            factory_name: string;
         };
         TaskDataHistory: {
             value?: string | null;
@@ -1128,9 +1144,7 @@ export interface components {
             first_name: string;
             last_name: string;
             department: string;
-            factory_name: string;
             factory_code_onsite: string;
-            factory_name_onsite: string;
         };
         User: {
             /** Format: uuid */
@@ -1852,6 +1866,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PaginatedReceivedTaskList"];
+                };
+            };
+        };
+    };
+    api_tasks_sample_by_factory_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleByFactory"][];
                 };
             };
         };

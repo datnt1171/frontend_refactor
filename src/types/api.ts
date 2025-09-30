@@ -44,15 +44,30 @@ export type TaskData = components['schemas']['TaskData']
 export type TaskActionLog = components['schemas']['TaskActionLog']
 export type TaskDetail = components['schemas']['TaskDetail']
 
-export type TaskDataDetail = components['schemas']['TaskDataDetail']
+export type TaskDataDetail = components['schemas']['TaskDataDetail'] & {
+  retailer_name: string;
+  factory_name: string;
+}
 export type TaskActionDetail = components['schemas']['TaskActionDetail']
 
-export type OnsiteTransferAbsence = components['schemas']['OnsiteTransferAbsence']
-export type TransferAbsence = components['schemas']['TransferAbsence']
-export type Overtime = components['schemas']['Overtime']
-export type OnsiteTransferAbsenceWithOvertime = OnsiteTransferAbsence & {
+export type OnsiteTransferAbsence = components['schemas']['OnsiteTransferAbsence'] & {
   factory_name: string;
+  salesman: string;
+}
+
+export type TransferAbsence = components['schemas']['TransferAbsence'] & {
+  factory_name: string;
+  factory_name_onsite: string;
+}
+export type Overtime = components['schemas']['Overtime'] & {
+    factory_name: string;
+}
+
+export type SampleByFactory = components['schemas']['SampleByFactory']
+export type OnsiteTransferAbsenceWithOvertime = OnsiteTransferAbsence & {
   overtime: Overtime;
+  sample_by_factory: SampleByFactory;
+
 }
 // Finishing sheet
 export type FinishingSheet = components['schemas']['FinishingSheet']

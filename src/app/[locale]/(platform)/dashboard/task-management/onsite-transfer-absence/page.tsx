@@ -136,6 +136,11 @@ export default async function Page({ searchParams }: PageProps) {
                         className="text-center text-sm bg-blue-50 border-r border-gray-300">
                         {t('common.others')}
                       </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        {t('sample.sample')}
+                      </TableHead>
                     </TableRow>
                     
                     <TableRow className="bg-gray-50">
@@ -199,11 +204,14 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
 
                           {/* Overtime */}
-                          <TableCell >{timeDiff(row.overtime.weekday_ot_start, row.overtime.weekday_ot_end) * row.overtime.weekday_ot_num}</TableCell>
+                          <TableCell >{timeDiff(row.overtime?.weekday_ot_start, row.overtime.weekday_ot_end) * row.overtime.weekday_ot_num}</TableCell>
                           <TableCell >{row.overtime.weekday_ot_num}</TableCell>
                           <TableCell >{row.overtime.pallet_line_today}</TableCell>
                           <TableCell >{row.overtime.hanging_line_today}</TableCell>
                           <TableCell >{row.overtime.hanging_line_today}</TableCell>
+
+                          {/* Sample */}
+                          <TableCell >{row.sample_by_factory.quantity_requirement}</TableCell>
                         </TableRow>
                       ))
                     )}
