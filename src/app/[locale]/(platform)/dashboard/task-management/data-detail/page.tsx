@@ -20,8 +20,7 @@ import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getFactoryOptions, getStateTypeOptions, getRetailerOptions, getUserOptions } from "@/lib/utils/filter"
-
-
+import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 
 interface PageProps {
   searchParams: Promise<{
@@ -37,7 +36,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
   defaultValues: {
     state_type__in: [
       'pending_approve', 'analyze', 'working',
-      'pending_review', 'start', 'closed'
+      'pending_review', 'start'
     ]
   },
   filters: [
@@ -106,6 +105,13 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
                 <SidebarTrigger />
                 <span className="text-sm font-medium">Filter</span>
               </div>
+
+    <div className="flex justify-end">
+      <ScreenshotButton 
+        targetId="sample-detail-table" 
+        filename="sample_screenshot.png" 
+      />
+    </div>
     <div className="container mx-auto py-6">
       <Card>
         {/* <CardHeader>
@@ -116,7 +122,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
         </CardHeader> */}
         <CardContent>
           <div className="overflow-x-auto">
-            <Table>
+            <Table id="sample-detail-table">
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('crm.factories.factoryName')}</TableHead>
