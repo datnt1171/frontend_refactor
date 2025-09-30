@@ -348,6 +348,7 @@ export interface components {
              * @description Factory name
              */
             factory_name: string;
+            salesman: string;
             /**
              * Is Active
              * @description Active status

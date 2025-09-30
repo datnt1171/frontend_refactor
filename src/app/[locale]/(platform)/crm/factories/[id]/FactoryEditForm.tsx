@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { updateFactory } from '@/lib/api/client/api'
-import type { Factory, FactoryUpdate } from '@/types'
+import type { FactoryDetail, FactoryUpdate } from '@/types'
 import { useRouter } from '@/i18n/navigation'
 
 interface FactoryEditFormProps {
-  factory: Factory
+  factory: FactoryDetail
   translations: {
     factoryId: string
     factoryName: string
