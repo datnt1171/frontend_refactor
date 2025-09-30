@@ -13,6 +13,10 @@ import type { PageFilterConfig } from "@/types"
 
 const ProcessFilterConfig: PageFilterConfig = {
   showResetButton: true,
+  defaultValues: {
+    page_size: '15',
+    page: '1'
+  },
   filters: [
     {
       id: 'search',

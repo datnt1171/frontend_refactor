@@ -19,6 +19,10 @@ import type { PageFilterConfig } from "@/types"
 
 const ReceivedTaskFilterConfig: PageFilterConfig = {
   showResetButton: true,
+  defaultValues: {
+    page_size: '15',
+    page: '1'
+  },
   filters: [
     {
       id: 'state__state_type__in',

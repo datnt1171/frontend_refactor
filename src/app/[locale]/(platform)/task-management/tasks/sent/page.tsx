@@ -21,7 +21,9 @@ const SentTaskFilterConfig: PageFilterConfig = {
     state__state_type__in: [
       'pending_approve', 'analyze', 'working',
       'pending_review', 'start', 'closed'
-    ]
+    ],
+    page_size: '15',
+    page: '1'
   },
   filters: [
     {
