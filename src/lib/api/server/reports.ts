@@ -5,6 +5,7 @@ import type {
   OnsiteTransferAbsence,
   TransferAbsence,
   Overtime,
+  OnsiteTransferAbsenceWithOvertime,
  } from '@/types/api'
 
 export const getDataDetails = async (searchParams?: Record<string, string>): Promise<TaskDataDetail[]> => {
@@ -106,5 +107,25 @@ export const getOvertimes = async (searchParams?: Record<string, string>): Promi
   
   const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch Overtime: ${res.status}`)
+  return res.json()
+}
+
+
+export const getTechReport = async (searchParams?: Record<string, string>): Promise<OnsiteTransferAbsenceWithOvertime[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/tech-report?${queryString}` : '/tasks/tech-report'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Tech report: ${res.status}`)
   return res.json()
 }

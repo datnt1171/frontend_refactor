@@ -1,4 +1,4 @@
-import { getOnsiteTransferAbsences } from "@/lib/api/server"
+import { getTechReport } from "@/lib/api/server"
 import {
   Table,
   TableHeader,
@@ -14,6 +14,7 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getValueStyle } from '@/lib/utils/format'
 import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
+import { timeDiff } from "@/lib/utils/time"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
@@ -39,7 +40,7 @@ export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
   
-  const response = await getOnsiteTransferAbsences(params)
+  const response = await getTechReport(params)
   const rows = response
   return (
     <RightSidebarProvider>
@@ -74,12 +75,12 @@ export default async function Page({ searchParams }: PageProps) {
                       >
                         {t('crm.factories.factoryName')}
                       </TableHead>
-                      <TableHead 
+                      {/* <TableHead 
                         rowSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 align-middle"
                       >
                         {t('crm.factories.factoryName')}
-                      </TableHead>
+                      </TableHead> */}
                       <TableHead 
                         colSpan={3} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
@@ -109,6 +110,31 @@ export default async function Page({ searchParams }: PageProps) {
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         {t('crm.factories.support')}+
+                      </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-200">
+                        {t('user.overtimeTotalHours')}
+                      </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        {t('user.overtimeNum')}
+                        </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        {t('blueprint.pallet')}
+                        </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        {t('blueprint.hanging')}
+                        </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        {t('common.others')}
                       </TableHead>
                     </TableRow>
                     
@@ -144,7 +170,7 @@ export default async function Page({ searchParams }: PageProps) {
                         <TableRow key={row.factory_code}>
                           <TableCell>{row.factory_code}</TableCell>
                           <TableCell>{row.factory_name}</TableCell>
-                          <TableCell>{row.factory_code}</TableCell>
+                          {/* <TableCell>{row.factory_code}</TableCell> */}
 
                           {/* Onsite */}
                           <TableCell style={getValueStyle(row.ktw_onsite)}>{row.ktw_onsite}</TableCell>
@@ -171,6 +197,13 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell style={getValueStyle(row.ktc_in)}>{row.ktc_in}</TableCell>
                           <TableCell style={getValueStyle(row.kvn_in)}>{row.kvn_in}</TableCell>
                           <TableCell style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
+
+                          {/* Overtime */}
+                          <TableCell >{timeDiff(row.overtime.weekday_ot_start, row.overtime.weekday_ot_end) * row.overtime.weekday_ot_num}</TableCell>
+                          <TableCell >{row.overtime.weekday_ot_num}</TableCell>
+                          <TableCell >{row.overtime.pallet_line_today}</TableCell>
+                          <TableCell >{row.overtime.hanging_line_today}</TableCell>
+                          <TableCell >{row.overtime.hanging_line_today}</TableCell>
                         </TableRow>
                       ))
                     )}

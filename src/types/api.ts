@@ -50,7 +50,10 @@ export type TaskActionDetail = components['schemas']['TaskActionDetail']
 export type OnsiteTransferAbsence = components['schemas']['OnsiteTransferAbsence']
 export type TransferAbsence = components['schemas']['TransferAbsence']
 export type Overtime = components['schemas']['Overtime']
-
+export type OnsiteTransferAbsenceWithOvertime = OnsiteTransferAbsence & {
+  factory_name: string;
+  overtime: Overtime;
+}
 // Finishing sheet
 export type FinishingSheet = components['schemas']['FinishingSheet']
 export type SheetRow = components['schemas']['SheetRow'] 
