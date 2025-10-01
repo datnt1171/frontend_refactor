@@ -168,6 +168,26 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData, factories }: Props)
     }
   }
 
+  const getCurrentMonthColumns = () => {
+  const currentMonth = new Date().getMonth() + 1
+  const visibleMonths = [
+    currentMonth - 2,
+    currentMonth - 1,
+    currentMonth,
+    currentMonth + 1
+  ]
+  
+  // Return indices of columns to hide (excluding column 0 which is username)
+  const columnsToHide: number[] = []
+  MONTHS.forEach((month, index) => {
+    if (!visibleMonths.includes(month)) {
+      columnsToHide.push(index + 1) // +1 because column 0 is username
+    }
+  })
+  
+  return columnsToHide
+}
+
   return (
     <div className="space-y-4">
       {/* Action buttons */}
@@ -207,9 +227,11 @@ export function UserFactoryOnsiteMatrix({ users, onsiteData, factories }: Props)
           height="auto"
           licenseKey="non-commercial-and-evaluation"
           copyPaste={true}
-          dropdownMenu={true}
-          contextMenu={true}
-          filters={true}
+          contextMenu={['hidden_columns_show', 'hidden_columns_hide']} // Add context menu options
+          hiddenColumns={{
+            columns: getCurrentMonthColumns(),
+            indicators: true // Shows visual indicators for hidden columns
+          }}
           manualColumnResize={true}
           manualRowResize={true}
           afterChange={(tableChanges) => {
