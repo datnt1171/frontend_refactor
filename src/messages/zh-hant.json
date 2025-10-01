@@ -55,7 +55,8 @@
     "today": "今天",
     "tomorrow": "明天",
     "sunday": "星期日",
-    "others": "其他的"
+    "others": "其他的",
+    "total": "全部的"
   },
   "home": {
   "title": "首頁",
@@ -253,6 +254,9 @@
       "taskAction": "任務操作記錄",
       "sample": "樣品",
       "onsiteTechnician": "客戶名單+報告",
+      "KTWWork": "KTW 報告",
+      "KTWOT": "KTW 加班",
+      "KVNWORK": "KVN 報告",
       "transferAbsence": "調動+請假",
       "overtime": "加班V線上",
 

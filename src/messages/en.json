@@ -55,7 +55,8 @@
     "today": "Today",
     "tomorrow": "Tomorrow",
     "sunday": "Sunday",
-    "others": "Others"
+    "others": "Others",
+    "total": "Total"
   },
   "home": {
     "title": "Home Page",
@@ -253,6 +254,9 @@
       "taskAction": "Task Action Log",
       "sample": "Sample",
       "onsiteTechnician": "Onsite Technician",
+      "KTWWork": "KTW Report",
+      "KTWOT": "KTW OT",
+      "KVNWORK": "KVN Report",
       "transferAbsence": "Transfer Absence",
       "overtime": "Overtime",
 

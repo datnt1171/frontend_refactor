@@ -55,7 +55,8 @@
     "today": "Hôm nay",
     "tomorrow": "Ngày mai",
     "sunday": "Chủ Nhật",
-    "others": "Khác"
+    "others": "Khác",
+    "total": "Tổng"
   },
   "home": {
   "title": "Trang chủ",
@@ -253,6 +254,9 @@
       "taskAction": "Lịch sử hành động",
       "sample": "Mẫu",
       "onsiteTechnician": "Báo cáo tổng",
+      "KTWWork": "KTW Báo cáo",
+      "KTWOT": "KTW Tăng ca",
+      "KVNWORK": "KVN Báo cáo",
       "transferAbsence": "Điều động nghỉ phép",
       "overtime": "Tăng ca",
 

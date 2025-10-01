@@ -41,7 +41,7 @@ export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams
   
   const response = await getTechReport(params)
-  const rows = response
+  const rows = response.filter(row => row.salesman !== "陳國勇")
   return (
     <RightSidebarProvider>
       <SidebarProvider>
@@ -76,25 +76,25 @@ export default async function Page({ searchParams }: PageProps) {
                         {t('crm.factories.factoryName')}
                       </TableHead>
                       <TableHead 
-                        colSpan={3} 
+                        colSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         {t('crm.factories.onsite')}
                       </TableHead>
                       <TableHead 
-                        colSpan={3} 
+                        colSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-green-100"
                       >
                         {t('crm.factories.work')}
                       </TableHead>
                       <TableHead 
-                        colSpan={3} 
+                        colSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-red-100"
                       >
                         {t('user.absence')}
                       </TableHead>
                       <TableHead 
-                        colSpan={3} 
+                        colSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-yellow-100"
                       >
                         {t('crm.factories.support')}-
@@ -104,16 +104,6 @@ export default async function Page({ searchParams }: PageProps) {
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         {t('crm.factories.support')}+
-                      </TableHead>
-                      <TableHead 
-                        rowSpan={2} 
-                        className="text-center text-sm bg-blue-50 border-r border-gray-200">
-                        {t('user.overtimeTotalHours')}
-                      </TableHead>
-                      <TableHead 
-                        rowSpan={2} 
-                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
-                        {t('user.overtimeNum')}
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
@@ -140,16 +130,16 @@ export default async function Page({ searchParams }: PageProps) {
                     <TableRow className="bg-gray-50">
                       <TableHead className="text-center text-sm bg-blue-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-blue-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-blue-50 border-r-2 border-gray-300">KVN</TableHead>
+
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
+
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
+
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
-                      <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
+
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KVN</TableHead>
@@ -174,7 +164,7 @@ export default async function Page({ searchParams }: PageProps) {
                             {/* Onsite */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktw_onsite)}>{row.ktw_onsite}</TableCell>
                             <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktc_onsite)}>{row.ktc_onsite}</TableCell>
-                            <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.kvn_onsite)}>{row.kvn_onsite}</TableCell>
+
 
                             {/* Work */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(
@@ -189,21 +179,13 @@ export default async function Page({ searchParams }: PageProps) {
                               {row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in}
                             </TableCell>
 
-                            <TableCell className="border-r-2 border-gray-300" style={getValueStyle(
-                              row.kvn_onsite - row.kvn_absence - row.kvn_out + row.kvn_in
-                            )}>
-                              {row.kvn_onsite - row.kvn_absence - row.kvn_out + row.kvn_in}
-                            </TableCell>
-
                             {/* Absence */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(-row.ktw_absence)}>{-row.ktw_absence}</TableCell>
                             <TableCell className="border-r border-gray-200" style={getValueStyle(-row.ktc_absence)}>{-row.ktc_absence}</TableCell>
-                            <TableCell className="border-r-2 border-gray-300" style={getValueStyle(-row.kvn_absence)}>{-row.kvn_absence}</TableCell>
 
                             {/* Out */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(-row.ktw_out)}>{-row.ktw_out}</TableCell>
                             <TableCell className="border-r border-gray-200" style={getValueStyle(-row.ktc_out)}>{-row.ktc_out}</TableCell>
-                            <TableCell className="border-r-2 border-gray-300" style={getValueStyle(-row.kvn_out)}>{-row.kvn_out}</TableCell>
 
                             {/* In */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktw_in)}>{row.ktw_in}</TableCell>
@@ -212,11 +194,9 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
 
                             {/* Overtime */}
-                            <TableCell className="border-r border-gray-200">{timeDiff(row.overtime?.weekday_ot_start, row.overtime.weekday_ot_end) * row.overtime.weekday_ot_num}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.weekday_ot_num}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.others_today}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_tomorrow}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_tomorrow}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.others_tomorrow}</TableCell>
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
@@ -230,22 +210,18 @@ export default async function Page({ searchParams }: PageProps) {
                           {/* Onsite Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktw_onsite, 0)}</TableCell>
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktc_onsite, 0)}</TableCell>
-                          <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + row.kvn_onsite, 0)}</TableCell>
                           
                           {/* Work Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in), 0)}</TableCell>
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in), 0)}</TableCell>
-                          <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + (row.kvn_onsite - row.kvn_absence - row.kvn_out + row.kvn_in), 0)}</TableCell>
                           
                           {/* Absence Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (-row.ktw_absence), 0)}</TableCell>
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (-row.ktc_absence), 0)}</TableCell>
-                          <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + (-row.kvn_absence), 0)}</TableCell>
                           
                           {/* Out Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (-row.ktw_out), 0)}</TableCell>
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (-row.ktc_out), 0)}</TableCell>
-                          <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + (-row.kvn_out), 0)}</TableCell>
                           
                           {/* In Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktw_in, 0)}</TableCell>
@@ -257,8 +233,6 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
-                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
-                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.sample_by_factory.quantity_requirement, 0)}</TableCell>
                         </TableRow>
 
@@ -267,26 +241,25 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell colSpan={2} className="text-center font-bold border border-gray-300">{t('common.total')}</TableCell>
                           
                           {/* Onsite Group Sum */}
-                          <TableCell colSpan={3} className="text-center text-center border-2 border-gray-300">
-                            {rows.reduce((sum, row) => sum + row.ktw_onsite + row.ktc_onsite + row.kvn_onsite, 0)}
+                          <TableCell colSpan={2} className="text-center text-center border-2 border-gray-300">
+                            {rows.reduce((sum, row) => sum + row.ktw_onsite + row.ktc_onsite, 0)}
                           </TableCell>
                           
                           {/* Work Group Sum */}
-                          <TableCell colSpan={3} className="text-center text-center border-2 border-gray-300">
+                          <TableCell colSpan={2} className="text-center text-center border-2 border-gray-300">
                             {rows.reduce((sum, row) => sum + 
                               (row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in) +
-                              (row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in) +
-                              (row.kvn_onsite - row.kvn_absence - row.kvn_out + row.kvn_in), 0)}
+                              (row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in), 0)}
                           </TableCell>
                           
                           {/* Absence Group Sum */}
-                          <TableCell colSpan={3} className="text-center text-center border-2 border-gray-300">
-                            {rows.reduce((sum, row) => sum + (-row.ktw_absence) + (-row.ktc_absence) + (-row.kvn_absence), 0)}
+                          <TableCell colSpan={2} className="text-center text-center border-2 border-gray-300">
+                            {rows.reduce((sum, row) => sum + (-row.ktw_absence) + (-row.ktc_absence), 0)}
                           </TableCell>
                           
                           {/* Out Group Sum */}
-                          <TableCell colSpan={3} className="text-center text-center border-2 border-gray-300">
-                            {rows.reduce((sum, row) => sum + (-row.ktw_out) + (-row.ktc_out) + (-row.kvn_out), 0)}
+                          <TableCell colSpan={2} className="text-center text-center border-2 border-gray-300">
+                            {rows.reduce((sum, row) => sum + (-row.ktw_out) + (-row.ktc_out), 0)}
                           </TableCell>
                           
                           {/* In Group Sum (including TT) */}

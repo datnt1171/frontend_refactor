@@ -93,6 +93,20 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
   ],
   'dashboard': [
     {
+      title: "dashboard.sideBar.Task",
+      icon: ListCheck,
+      items: [
+        { title: "dashboard.sideBar.taskAction", url: "/dashboard/task-management/action-detail" },
+        { title: "dashboard.sideBar.sample", url: "/dashboard/task-management/data-detail" },
+        { title: "dashboard.sideBar.onsiteTechnician", url: "/dashboard/task-management/onsite-transfer-absence" },
+        { title: "dashboard.sideBar.KTWWork", url: "/dashboard/task-management/ktw-work" },
+        { title: "dashboard.sideBar.KTWOT", url: "/dashboard/task-management/ktw-ot" },
+        { title: "dashboard.sideBar.KVNWORK", url: "/dashboard/task-management/kvn-work" },
+        { title: "dashboard.sideBar.transferAbsence", url: "/dashboard/task-management/transfer-absence" },
+        { title: "dashboard.sideBar.overtime", url: "/dashboard/task-management/overtime" },
+      ],
+    },
+    {
       title: "dashboard.sideBar.Warehouse",
       icon: Warehouse,
       items: [
@@ -108,17 +122,6 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
 
       ],
     },
-    {
-      title: "dashboard.sideBar.Task",
-      icon: ListCheck,
-      items: [
-        { title: "dashboard.sideBar.taskAction", url: "/dashboard/task-management/action-detail" },
-        { title: "dashboard.sideBar.sample", url: "/dashboard/task-management/data-detail" },
-        { title: "dashboard.sideBar.onsiteTechnician", url: "/dashboard/task-management/onsite-transfer-absence" },
-        { title: "dashboard.sideBar.transferAbsence", url: "/dashboard/task-management/transfer-absence" },
-        { title: "dashboard.sideBar.overtime", url: "/dashboard/task-management/overtime" },
-      ],
-    }
   ]
 }
 
