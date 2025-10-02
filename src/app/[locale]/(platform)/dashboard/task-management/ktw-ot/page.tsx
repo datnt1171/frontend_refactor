@@ -78,15 +78,9 @@ export default async function Page({ searchParams }: PageProps) {
                         {t('crm.factories.factoryName')}
                       </TableHead>
                       <TableHead 
-                        colSpan={2} 
-                        className="text-center font-semibold border-r-2 border-gray-300 bg-green-100"
-                      >
-                        {t('crm.factories.work')}
-                      </TableHead>
-                      <TableHead 
                         rowSpan={2} 
                         className="text-center text-sm bg-blue-50 border-r border-gray-200">
-                        {t('user.overtimeTotalHours')}
+                        {t('user.overtimeEnd')}
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
@@ -114,11 +108,6 @@ export default async function Page({ searchParams }: PageProps) {
                         {t('sample.sample')}
                       </TableHead>
                     </TableRow>
-                    
-                    <TableRow className="bg-gray-50">
-                      <TableHead className="text-center text-sm bg-blue-50 border-r border-gray-200">KTW</TableHead>
-                      <TableHead className="text-center text-sm bg-blue-50 border-r border-gray-200">KTC</TableHead>
-                    </TableRow>
                   </TableHeader>
                   
                   <TableBody>
@@ -135,28 +124,31 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border border-gray-300">{row.factory_code}</TableCell>
                             <TableCell className="border-r-2 border-gray-300">{row.factory_name}</TableCell>
 
-                            {/* Work */}
-                            <TableCell className="border-r border-gray-200" style={getValueStyle(
-                              row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in
-                            )}>
-                              {row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in}
-                            </TableCell>
-
-                            <TableCell className="border-r border-gray-200" style={getValueStyle(
-                              row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in
-                            )}>
-                              {row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in}
-                            </TableCell>
-
                             {/* Overtime */}
-                            <TableCell className="border-r border-gray-200">{timeDiff(row.overtime?.weekday_ot_start, row.overtime.weekday_ot_end) * row.overtime.weekday_ot_num}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.weekday_ot_num}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.others_today}</TableCell>
+                            <TableCell className={`text-center border-r border-gray-300 ${row.overtime.weekday_ot_end !== '-' && row.overtime.weekday_ot_end !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.weekday_ot_end === '-' 
+                                ? 'KCN' 
+                                : row.overtime.weekday_ot_end === '' 
+                                  ? 'KTC' 
+                                  : row.overtime.weekday_ot_end}
+                            </TableCell>
+                            <TableCell className={`text-center border-r border-gray-300 ${row.overtime.weekday_ot_num !== 0 && row.overtime.weekday_ot_num ? 'bg-red-100' : ''}`}>
+                              {row.overtime.weekday_ot_num == 0 ? '' : row.overtime.weekday_ot_num}
+                            </TableCell>
+                            <TableCell className={`border-r border-gray-300 ${row.overtime.pallet_line_today !== '-' && row.overtime.pallet_line_today !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.pallet_line_today}
+                            </TableCell>
+                            <TableCell className={`border-r border-gray-300 ${row.overtime.hanging_line_today !== '-' && row.overtime.hanging_line_today !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.hanging_line_today}
+                            </TableCell>
+                            <TableCell className={`border-r border-gray-300 ${row.overtime.others_today !== '-' && row.overtime.others_today !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.others_today}
+                            </TableCell>
 
                             {/* Sample */}
-                            <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
+                            <TableCell className={`text-center border-r border-gray-300 ${row.sample_by_factory.quantity_requirement !== 0 && row.sample_by_factory.quantity_requirement ? 'bg-red-100' : ''}`}>
+                              {row.sample_by_factory.quantity_requirement}
+                            </TableCell>
                           </TableRow>
                         ))}
 
@@ -164,17 +156,16 @@ export default async function Page({ searchParams }: PageProps) {
                         <TableRow className="font-bold border-2 border-gray-300">
                           <TableCell colSpan={2} className="text-center border-r border-gray-300">{t('common.total')}</TableCell>
                           
-                          {/* Work Sums */}
-                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in), 0)}</TableCell>
-                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in), 0)}</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">
+                            {rows.reduce((sum, row) => sum + Number(row.overtime.weekday_ot_num), 0)}
+                          </TableCell>
 
                           {/* Other columns */}
                           <TableCell className="border-r border-gray-200">-</TableCell>
                           <TableCell className="border-r border-gray-200">-</TableCell>
                           <TableCell className="border-r border-gray-200">-</TableCell>
-                          <TableCell className="border-r border-gray-200">-</TableCell>
-                          <TableCell className="border-r border-gray-200">-</TableCell>
-                          <TableCell className="border-r border-gray-200">{rows.reduce((sum, row) => sum + row.sample_by_factory.quantity_requirement, 0)}</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.sample_by_factory.quantity_requirement, 0)}</TableCell>
                         </TableRow>
                       </>
                     )}

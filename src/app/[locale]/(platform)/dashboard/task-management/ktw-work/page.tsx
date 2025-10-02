@@ -78,12 +78,6 @@ export default async function Page({ searchParams }: PageProps) {
                       </TableHead>
                       <TableHead 
                         colSpan={2} 
-                        className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
-                      >
-                        {t('crm.factories.onsite')}
-                      </TableHead>
-                      <TableHead 
-                        colSpan={2} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-green-100"
                       >
                         {t('crm.factories.work')}
@@ -129,8 +123,6 @@ export default async function Page({ searchParams }: PageProps) {
                     </TableRow>
                     
                     <TableRow className="bg-gray-50">
-                      <TableHead className="text-center text-sm bg-blue-50 border-r border-gray-200">KTW</TableHead>
-                      <TableHead className="text-center text-sm bg-blue-50 border-r border-gray-200">KTC</TableHead>
 
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
@@ -162,11 +154,6 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border border-gray-300">{row.factory_code}</TableCell>
                             <TableCell className="border-r-2 border-gray-300">{row.factory_name}</TableCell>
 
-                            {/* Onsite */}
-                            <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktw_onsite)}>{row.ktw_onsite}</TableCell>
-                            <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktc_onsite)}>{row.ktc_onsite}</TableCell>
-
-
                             {/* Work */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(
                               row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in
@@ -195,23 +182,28 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
 
                             {/* Overtime */}
-                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_tomorrow}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_tomorrow}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.others_tomorrow}</TableCell>
+                            
+                            <TableCell className={`border-r border-gray-300 ${row.overtime.pallet_line_tomorrow !== '-' && row.overtime.pallet_line_tomorrow !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.pallet_line_tomorrow}
+                            </TableCell>
+                            <TableCell className={`border-r border-gray-300 ${row.overtime.hanging_line_tomorrow !== '-' && row.overtime.hanging_line_tomorrow !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.hanging_line_tomorrow}
+                            </TableCell>
+                            <TableCell className={`border-r border-gray-300 ${row.overtime.others_tomorrow !== '-' && row.overtime.others_tomorrow !== '' ? 'bg-red-100' : ''}`}>
+                              {row.overtime.others_tomorrow}
+                            </TableCell>
 
                             {/* Sample */}
-                            <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
+                            <TableCell className={`text-center border-r border-gray-300 ${row.sample_by_factory.quantity_requirement !== 0 && row.sample_by_factory.quantity_requirement ? 'bg-red-100' : ''}`}>
+                              {row.sample_by_factory.quantity_requirement}
+                            </TableCell>
                           </TableRow>
                         ))}
 
                         {/* Summary Row 1: Individual Column Sums (KTW, KTC, KVN, TT) */}
                         <TableRow className="font-bold border-2 border-gray-300">
                           <TableCell colSpan={2} className="text-center border-r border-gray-300">{t('common.total')}</TableCell>
-                          
-                          {/* Onsite Sums */}
-                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktw_onsite, 0)}</TableCell>
-                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktc_onsite, 0)}</TableCell>
-                          
+                                                   
                           {/* Work Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (row.ktw_onsite - row.ktw_absence - row.ktw_out + row.ktw_in), 0)}</TableCell>
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + (row.ktc_onsite - row.ktc_absence - row.ktc_out + row.ktc_in), 0)}</TableCell>
@@ -240,12 +232,7 @@ export default async function Page({ searchParams }: PageProps) {
                         {/* Summary Row 2: Group Sums (Onsite, Work, Absence, Out, In) */}
                         <TableRow className="font-bold border-2 border-gray-300">
                           <TableCell colSpan={2} className="text-center font-bold border border-gray-300">{t('common.total')}</TableCell>
-                          
-                          {/* Onsite Group Sum */}
-                          <TableCell colSpan={2} className="text-center text-center border-2 border-gray-300">
-                            {rows.reduce((sum, row) => sum + row.ktw_onsite + row.ktc_onsite, 0)}
-                          </TableCell>
-                          
+                        
                           {/* Work Group Sum */}
                           <TableCell colSpan={2} className="text-center text-center border-2 border-gray-300">
                             {rows.reduce((sum, row) => sum + 
