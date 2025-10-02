@@ -9,6 +9,7 @@ import { formatDateToUTC7 } from "@/lib/utils/date"
 import TaskActions from "./TaskAction"
 import BackButton from "@/components/ui/BackButton"
 import { Link } from "@/i18n/navigation"
+import { cookies } from 'next/headers'
 
 export default async function TaskDetailPage({ 
   params 
@@ -24,8 +25,10 @@ export default async function TaskDetailPage({
     getTranslations(),
     getCurrentUser()
   ])
+  const cookieStore = await cookies()
+  const userRole = cookieStore.get('role')?.value
 
-  const canEdit = currentUser.id === task.created_by.id
+  const canEdit = currentUser.id === task.created_by.id || userRole === 'assistant'
 
   return (
     <div className="space-y-6">
