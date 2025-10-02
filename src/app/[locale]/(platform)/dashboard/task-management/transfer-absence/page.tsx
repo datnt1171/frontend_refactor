@@ -15,12 +15,14 @@ import type { PageFilterConfig } from "@/types"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { daysDiff } from "@/lib/utils/date"
 import { TransferAbsenceCSVButtons } from "./TransferAbsenceCSVButton"
+import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
-    date__gte: new Date().toISOString().split('T')[0],
-    date__lte: new Date().toISOString().split('T')[0]
+    date__gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+    date__lte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
   },
   filters: [
     {

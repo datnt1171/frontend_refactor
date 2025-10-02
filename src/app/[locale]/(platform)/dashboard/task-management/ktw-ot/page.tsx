@@ -15,11 +15,13 @@ import type { PageFilterConfig } from "@/types"
 import { getValueStyle } from '@/lib/utils/format'
 import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 import { timeDiff } from "@/lib/utils/time"
+import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
-    date: new Date().toISOString().split('T')[0]
+    date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
   },
   filters: [
     {
