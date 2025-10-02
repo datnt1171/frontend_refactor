@@ -15,7 +15,7 @@ export function TransferAbsenceCSVButtons({ data }: TransferAbsenceCSVButtonsPro
     { header: 'To date', key: 'to_date' },
     { header: 'User dept', key: 'department' },
     { header: 'Username', key: 'username' },
-    { header: 'Full name', key: 'first_name' },
+    { header: 'Full name', key: 'first_name', transform: (value, row) => `${row.last_name} ${row.first_name}` },
     { header: 'Onsite', key: 'factory_name_onsite' },
     { header: 'To Factory', key: 'factory_name' },
     { header: 'Num of Days', key: 'calculated_days', transform: (value, row) => daysDiff(row.from_date, row.to_date) + 1 }

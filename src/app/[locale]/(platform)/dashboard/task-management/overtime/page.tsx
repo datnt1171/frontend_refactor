@@ -17,6 +17,7 @@ import { timeDiff } from "@/lib/utils/time"
 import { OvertimeCSVButtons } from "./OvertimeCSVButtons"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
+import { Link } from "@/i18n/navigation"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
@@ -95,7 +96,11 @@ export default async function Page({ searchParams }: PageProps) {
                         ) : (
                           rows.map((row) => (
                             <TableRow key={row.task_id}>
-                              <TableCell>{formatDateToUTC7(row.created_at,'date')}</TableCell>
+                              <TableCell className="font-bold">
+                                <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                                  {formatDateToUTC7(row.created_at,'date')}
+                                </Link>
+                              </TableCell>
                               <TableCell>{row.factory_code}</TableCell>
                               <TableCell>{row.factory_name}</TableCell>
                               <TableCell>{row.weekday_ot_start}</TableCell>
@@ -138,7 +143,11 @@ export default async function Page({ searchParams }: PageProps) {
                         ) : (
                           rows.map((row) => (
                             <TableRow key={row.task_id}>
-                              <TableCell>{formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 2) : row.created_at, 'date')}</TableCell>
+                              <TableCell className="font-bold">
+                                <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                                  {formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 2) : row.created_at, 'date')}
+                                </Link>
+                              </TableCell>
                               <TableCell>{row.factory_code}</TableCell>
                               <TableCell>{row.factory_name}</TableCell>
                               <TableCell>{row.hanging_line_tomorrow}</TableCell>
@@ -180,7 +189,11 @@ export default async function Page({ searchParams }: PageProps) {
                         ) : (
                           rows.map((row) => (
                             <TableRow key={row.task_id}>
-                              <TableCell>{formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 1) : row.created_at, 'date')}</TableCell>
+                              <TableCell className="font-bold">
+                                <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                                  {formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 1) : row.created_at, 'date')}
+                                </Link>
+                              </TableCell>
                               <TableCell>{row.factory_code}</TableCell>
                               <TableCell>{row.factory_name}</TableCell>
                               <TableCell>{row.sunday_ot}</TableCell>

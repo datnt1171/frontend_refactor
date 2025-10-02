@@ -17,6 +17,7 @@ import { daysDiff } from "@/lib/utils/date"
 import { TransferAbsenceCSVButtons } from "./TransferAbsenceCSVButton"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
+import { Link } from "@/i18n/navigation"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
@@ -44,8 +45,7 @@ export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
   
-  const response = await getTransferAbsences(params)
-  const rows = response
+  const rows = await getTransferAbsences(params)
 
   return (
     <RightSidebarProvider>
@@ -87,7 +87,11 @@ export default async function Page({ searchParams }: PageProps) {
                     ) : (
                       rows.map((row) => (
                         <TableRow key={row.task_id}>
-                          <TableCell>{formatDateToUTC7(row.from_date, 'date')}</TableCell>
+                          <TableCell className="font-bold">
+                            <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                              {formatDateToUTC7(row.from_date, 'date')}
+                            </Link>
+                          </TableCell>
                           <TableCell>{formatDateToUTC7(row.to_date, 'date')}</TableCell>
                           <TableCell>{row.department}</TableCell>
                           <TableCell>{row.username}</TableCell>
