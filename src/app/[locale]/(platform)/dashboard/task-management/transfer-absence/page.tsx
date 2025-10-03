@@ -15,21 +15,29 @@ import type { PageFilterConfig } from "@/types"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { daysDiff } from "@/lib/utils/date"
 import { TransferAbsenceCSVButtons } from "./TransferAbsenceCSVButton"
-import { format } from 'date-fns'
+import { format, endOfMonth } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import { Link } from "@/i18n/navigation"
+import { getDepartmentOptions } from "@/lib/utils/filter"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
     date__gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
-    date__lte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
+    date__lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd'),
+    user__department__name: ['KTW', 'KTC', 'TT']
   },
   filters: [
     {
       id: 'date',
       type: 'date-range',
       label: 'Select Date'
+    },
+    {
+      id: 'user__department__name',
+      type: 'multiselect',
+      label: 'Department Filter',
+      options: getDepartmentOptions()
     },
   ]
 }
@@ -95,7 +103,7 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell>{formatDateToUTC7(row.to_date, 'date')}</TableCell>
                           <TableCell>{row.department}</TableCell>
                           <TableCell>{row.username}</TableCell>
-                          <TableCell>{row.first_name + " " + row.last_name}</TableCell>
+                          <TableCell>{row.last_name + " " + row.first_name}</TableCell>
                           <TableCell>{row.factory_name_onsite}</TableCell>
                           <TableCell>{row.factory_name || t('user.absence')}</TableCell>
                           <TableCell>{daysDiff(row.from_date, row.to_date) + 1}</TableCell>

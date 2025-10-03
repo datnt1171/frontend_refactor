@@ -53,3 +53,12 @@ export function getStateTypeOptions() {
     { value: 'static', label: 'Static'}
   ];
 }
+
+export function getDepartmentOptions() {
+  return [
+    { value: 'KTW', label: 'KTW' },
+    { value: 'KTC', label: 'KTC' },
+    { value: 'KVN', label: 'KVN' },
+    { value: 'TT', label: 'TT' },
+  ];
+}
