@@ -32,18 +32,34 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
-    
+
     // Prepare URLs
     const absenceUrl = new URL(`${process.env.API_URL}/api/tasks/onsite-transfer-absence/`)
     const overtimeUrl = new URL(`${process.env.API_URL}/api/tasks/overtime/`)
     const sampleByFactoryUrl = new URL(`${process.env.API_URL}/api/tasks/sample-by-factory/`)
-    
-    request.nextUrl.searchParams.forEach((value, key) => {
-      absenceUrl.searchParams.set(key, value)
-      overtimeUrl.searchParams.set(key, value)
-      sampleByFactoryUrl.searchParams.set(key, value)
-    })
 
+    // Extract search params from frontend
+    const date = request.nextUrl.searchParams.get("date")
+    if (date) {
+      // absenceUrl keeps using "date"
+      absenceUrl.searchParams.set("date", date)
+
+      // overtimeUrl expects date__gte and date__lte
+      overtimeUrl.searchParams.set("date__gte", date)
+      overtimeUrl.searchParams.set("date__lte", date)
+    }
+
+    // Copy other params except "date" (to avoid duplication)
+    request.nextUrl.searchParams.forEach((value, key) => {
+      if (key !== "date") {
+        absenceUrl.searchParams.set(key, value)
+        overtimeUrl.searchParams.set(key, value)
+        sampleByFactoryUrl.searchParams.set(key, value)
+      }
+    })
+    console.log("absenceUrl:", absenceUrl.href)
+    console.log("overtimeUrl:", overtimeUrl.href)
+    console.log("sampleByFactoryUrl:", sampleByFactoryUrl.href)
     const headers = {
       Authorization: `Bearer ${session.access_token}`,
       "Content-Type": "application/json",
