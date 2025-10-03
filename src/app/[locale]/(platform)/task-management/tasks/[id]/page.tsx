@@ -71,22 +71,28 @@ export default async function TaskDetailPage({
                     )}
                   </div>
                   <div className="p-3 bg-muted rounded-md space-y-1">
-                  {data.field.field_type === "file" ? (
-                    data.files && data.files[0] ? (
-                      <p>
-                        <a 
-                          href={data.files[0].uploaded_file}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 underline"
-                        >
-                          {data.files[0].original_filename}
-                        </a>
-                      </p>
-                    ) : (
+                    {/* Handle file and multifile types */}
+                    {(data.field.field_type === "file" || data.field.field_type === "multifile") ? (
+                      data.files && data.files.length > 0 ? (
+                        <div className="space-y-2">
+                          {data.files.map((file, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                              <a 
+                                href={file.uploaded_file}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline flex items-center gap-1"
+                              >
+                                {file.original_filename}
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
                         <span className="text-muted-foreground italic">{t('noFileUploaded')}</span>
                       )
                     ) : (
+                      // Handle all other field types
                       data.value || <span className="text-muted-foreground italic">{t('noResponseProvided')}</span>
                     )}
                   </div>

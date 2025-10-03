@@ -33,22 +33,28 @@ export function FormField({
   
   
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
+    const files = e.target.files
+    if (files && files.length > 0) {
       try {
-        // Compress image if it's an image file
-        const compressedFile = await compressImage(file, {
-          maxWidth: 1080,
-          maxHeight: 1440,
-          quality: 0.85,
-          maxSizeKB: 1024
-        })
+        // Always process as array, even for single file
+        const compressedFiles = await Promise.all(
+          Array.from(files).map(file => 
+            compressImage(file, {
+              maxWidth: 1080,
+              maxHeight: 1440,
+              quality: 0.85,
+              maxSizeKB: 1024
+            }).catch(error => {
+              console.error('Compression failed for file:', file.name, error)
+              return file // Fallback to original
+            })
+          )
+        )
         
-        onChange(compressedFile)
+        // Always send as array (even single file becomes [file])
+        onChange(compressedFiles)
       } catch (error) {
-        console.error('Compression failed:', error)
-        // Fall back to original file if compression fails
-        onChange(file)
+        console.error('File processing failed:', error)
       }
     }
   }
@@ -218,6 +224,18 @@ export function FormField({
           id={`field-${field.id}`}
           type="file"
           // accept={ACCEPTED_FILE_TYPES}
+          onChange={handleFileChange}
+          required={field.required}
+          disabled={disabled}
+        />
+      )
+
+    case "multifile":
+      return (
+        <Input
+          id={`field-${field.id}`}
+          type="file"
+          multiple={true}
           onChange={handleFileChange}
           required={field.required}
           disabled={disabled}

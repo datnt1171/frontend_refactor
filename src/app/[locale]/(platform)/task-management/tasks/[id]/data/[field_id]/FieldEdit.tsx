@@ -34,12 +34,14 @@ export function TaskDataEditor({
   const commonT = useTranslations('common')
   
   const [value, setValue] = useState(taskData.value)
-  const [file, setFile] = useState<File | null>(null)
+  const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleValueChange = (newValue: any) => {
-    if (field.field_type === 'file') {
-      setFile(newValue)
+    if (field.field_type === 'file' || field.field_type === 'multifile') {
+      // Always handle as array
+      const filesArray = Array.isArray(newValue) ? newValue : [newValue]
+      setFiles(filesArray)
     } else {
       setValue(newValue)
     }
@@ -52,10 +54,15 @@ export function TaskDataEditor({
     try {
       let updateData: FormData | Record<string, any>
 
-      if (field.field_type === 'file' && file) {
-        // File uploads
+      if ((field.field_type === 'file' || field.field_type === 'multifile') && files.length > 0) {
+        // File uploads - always send as FormData with multiple files
         updateData = new FormData()
-        updateData.append('file', file)
+        
+        // Append all files with the same key
+        files.forEach((file) => {
+          updateData.append('files', file)
+        })
+        
         if (value) {
           updateData.append('value', value)
         }
@@ -74,6 +81,10 @@ export function TaskDataEditor({
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  const handleRemoveFile = (index: number) => {
+    setFiles(files.filter((_, idx) => idx !== index))
   }
 
   return (
@@ -101,14 +112,62 @@ export function TaskDataEditor({
                 users={users}
                 factories={factories}
                 retailers={retailers}
-                value={field.field_type === 'file' ? file : value}
+                value={(field.field_type === 'file' || field.field_type === 'multifile') ? files : value}
                 onChange={handleValueChange}
                 disabled={isSubmitting}
               />
               
-              {field.field_type === 'file' && taskData.file && !file && (
-                <div className="mt-2 text-sm text-gray-600">
-                  {taskData.file}
+              {/* Show newly selected files */}
+              {(field.field_type === 'file' || field.field_type === 'multifile') && files.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  <p className="text-sm font-medium text-gray-700">{t('newFilesSelected')}:</p>
+                  {files.map((file, index) => (
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between p-2 bg-blue-50 rounded text-sm"
+                    >
+                        {file.name}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(index)}
+                        className="ml-2 text-red-500 hover:text-red-700"
+                        disabled={isSubmitting}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              
+              {/* Show existing files from server */}
+              {(field.field_type === 'file' || field.field_type === 'multifile') && 
+               taskData.files && 
+               taskData.files.length > 0 && 
+               files.length === 0 && (
+                <div className="mt-2 space-y-1">
+                  <p className="text-sm font-medium text-gray-700">{t('currentFiles')}:</p>
+                  {taskData.files.map((file, index) => (
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between p-2 bg-gray-50 rounded text-sm"
+                    >
+                      <a 
+                        href={file.uploaded_file}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline truncate flex-1"
+                      >
+                        📎 {file.original_filename}
+                      </a>
+                      <span className="text-xs text-gray-500 ml-2">
+                        {new Date(file.uploaded_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  ))}
+                  <p className="text-xs text-red-500 italic mt-1">
+                    {t('uploadingNewFilesWillReplaceExisting')}
+                  </p>
                 </div>
               )}
             </div>
@@ -120,7 +179,6 @@ export function TaskDataEditor({
               >
                 {isSubmitting ? commonT('processing') : commonT('save')}
               </Button>
-              
             </div>
           </form>
         </CardContent>

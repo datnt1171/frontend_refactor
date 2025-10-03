@@ -545,13 +545,14 @@ export interface components {
          *     * `select` - Select
          *     * `multiselect` - Multi Select
          *     * `file` - File
+         *     * `multifile` - Multi File
          *     * `json` - Table
          *     * `assignee` - Assignee
          *     * `factory` - Factory
          *     * `retailer` - Retailer
          * @enum {string}
          */
-        FieldTypeEnum: "text" | "number" | "date" | "time" | "select" | "multiselect" | "file" | "json" | "assignee" | "factory" | "retailer";
+        FieldTypeEnum: "text" | "number" | "date" | "time" | "select" | "multiselect" | "file" |  "multifile" | "json" | "assignee" | "factory" | "retailer";
         FinishingSheet: {
             /** Format: uuid */
             readonly id: string;
