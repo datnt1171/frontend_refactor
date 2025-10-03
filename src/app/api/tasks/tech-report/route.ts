@@ -39,6 +39,9 @@ export async function GET(request: NextRequest) {
     const sampleByFactoryUrl = new URL(`${process.env.API_URL}/api/tasks/sample-by-factory/`)
 
     // Extract search params from frontend
+    const allowedStates = ["working", "pending_approve", "start", "analyze"]
+    sampleByFactoryUrl.searchParams.set("state_type__in", allowedStates.join(","))
+
     const date = request.nextUrl.searchParams.get("date")
     if (date) {
       // absenceUrl keeps using "date"
@@ -49,17 +52,10 @@ export async function GET(request: NextRequest) {
       overtimeUrl.searchParams.set("date__lte", date)
     }
 
-    // Copy other params except "date" (to avoid duplication)
-    request.nextUrl.searchParams.forEach((value, key) => {
-      if (key !== "date") {
-        absenceUrl.searchParams.set(key, value)
-        overtimeUrl.searchParams.set(key, value)
-        sampleByFactoryUrl.searchParams.set(key, value)
-      }
-    })
     console.log("absenceUrl:", absenceUrl.href)
     console.log("overtimeUrl:", overtimeUrl.href)
     console.log("sampleByFactoryUrl:", sampleByFactoryUrl.href)
+
     const headers = {
       Authorization: `Bearer ${session.access_token}`,
       "Content-Type": "application/json",
