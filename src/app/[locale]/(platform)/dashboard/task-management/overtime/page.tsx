@@ -22,8 +22,10 @@ import { Link } from "@/i18n/navigation"
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
-    date__gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
-    date__lte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
+    date: {
+      gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+      lte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
+    },
   },
   filters: [
     {

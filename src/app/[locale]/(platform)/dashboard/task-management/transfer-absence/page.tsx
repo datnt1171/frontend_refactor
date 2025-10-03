@@ -23,8 +23,10 @@ import { getDepartmentOptions } from "@/lib/utils/filter"
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   defaultValues: {
-    date__gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
-    date__lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd'),
+    date: {
+      gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+      lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd')
+    },
     user__department__name: ['KTW', 'KTC', 'TT']
   },
   filters: [
