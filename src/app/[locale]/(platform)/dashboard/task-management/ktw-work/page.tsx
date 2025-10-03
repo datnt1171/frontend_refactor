@@ -1,4 +1,4 @@
-import { getTechReport } from "@/lib/api/server"
+import { getTechReportWorkYesterday } from "@/lib/api/server"
 import {
   Table,
   TableHeader,
@@ -41,7 +41,7 @@ export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
   
-  const response = await getTechReport(params)
+  const response = await getTechReportWorkYesterday(params)
   const rows = response.filter(row => row.salesman !== "陳國勇")
   return (
     <RightSidebarProvider>

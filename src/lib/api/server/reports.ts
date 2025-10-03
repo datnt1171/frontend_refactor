@@ -129,3 +129,23 @@ export const getTechReport = async (searchParams?: Record<string, string>): Prom
   if (!res.ok) throw new Error(`Failed to fetch Tech report: ${res.status}`)
   return res.json()
 }
+
+
+export const getTechReportWorkYesterday = async (searchParams?: Record<string, string>): Promise<OnsiteTransferAbsenceWithOvertime[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/tech-report-work-ytd?${queryString}` : '/tasks/tech-report-work-ytd'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Tech report: ${res.status}`)
+  return res.json()
+}
