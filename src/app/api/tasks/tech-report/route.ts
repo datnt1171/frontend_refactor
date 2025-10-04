@@ -2,6 +2,26 @@ import { getSessionCookie, unauthorizedResponse, handleError } from "@/lib/utils
 import { NextRequest, NextResponse } from "next/server"
 import type { PaginatedFactoryList, OnsiteTransferAbsence, Overtime, SampleByFactory } from "@/types"
 
+const defaultOnsiteTransferAbsence: Partial<OnsiteTransferAbsence> = {
+  factory_code: "-",
+  ktw_onsite: 0,
+  ktc_onsite: 0,
+  kvn_onsite: 0,
+  tt_onsite: 0,
+  ktw_in: 0,
+  ktc_in: 0,
+  kvn_in: 0,
+  tt_in: 0,
+  ktw_out: 0,
+  ktc_out: 0,
+  kvn_out: 0,
+  tt_out: 0,
+  ktw_absence: 0,
+  ktc_absence: 0,
+  kvn_absence: 0,
+  tt_absence: 0,
+}
+
 const defaultOvertime: Partial<Overtime> = {
   weekday_ot: "-",
   weekday_ot_start: "-",
@@ -90,10 +110,15 @@ export async function GET(request: NextRequest) {
     const factoryMap: FactoryMap = paginatedFactory.results.reduce((map: FactoryMap, factory) => {
       map[factory.factory_code] = {
         factory_name: factory.factory_name,
-        salesman: factory.salesman || "" // adjust property name as needed
+        salesman: factory.salesman || ""
       }
       return map
     }, {})
+
+    // Create absence maps for efficient lookup
+    const absenceMap = new Map(
+      absences.map(absence => [absence.factory_code, absence])
+    )
 
     // Create overtime map for efficient lookup
     const overtimeMap = new Map(
@@ -104,14 +129,35 @@ export async function GET(request: NextRequest) {
       samples.map(sample => [sample.factory_code, sample])
     )
 
-    // Perform left join: absence + overtime + sample + factory_name
-    const joinedData = absences.map((absence) => ({
-      ...absence,
-      factory_name: factoryMap[absence.factory_code]?.factory_name || "",
-      salesman: factoryMap[absence.factory_code]?.salesman || "",
-      overtime: overtimeMap.get(absence.factory_code) || defaultOvertime,
-      sample_by_factory: sampleMap.get(absence.factory_code) || defaultSampleByFactory
-    }))
+    // Get all unique factory codes from both absences and overtimes
+    const allFactoryCodes = new Set([
+      ...absences.map(a => a.factory_code),
+      ...overtimes.map(o => o.factory_code)
+    ])
+
+    // Perform full outer join: combine all factory codes with their respective data
+    const joinedData = Array.from(allFactoryCodes).map((factoryCode) => {
+      const absence = absenceMap.get(factoryCode) || { 
+        ...defaultOnsiteTransferAbsence, 
+        factory_code: factoryCode 
+      }
+      const overtime = overtimeMap.get(factoryCode) || { 
+        ...defaultOvertime, 
+        factory_code: factoryCode 
+      }
+      const sample = sampleMap.get(factoryCode) || { 
+        ...defaultSampleByFactory, 
+        factory_code: factoryCode 
+      }
+
+      return {
+        ...absence,
+        factory_name: factoryMap[factoryCode]?.factory_name || "",
+        salesman: factoryMap[factoryCode]?.salesman || "",
+        overtime,
+        sample_by_factory: sample
+      }
+    })
 
     const sortedData = joinedData.sort((a, b) => {
       const targetSalesman = "陳國勇"
