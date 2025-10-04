@@ -139,37 +139,6 @@ export function TaskDataEditor({
                   ))}
                 </div>
               )}
-              
-              {/* Show existing files from server */}
-              {(field.field_type === 'file' || field.field_type === 'multifile') && 
-               taskData.files && 
-               taskData.files.length > 0 && 
-               files.length === 0 && (
-                <div className="mt-2 space-y-1">
-                  <p className="text-sm font-medium text-gray-700">{t('currentFiles')}:</p>
-                  {taskData.files.map((file, index) => (
-                    <div 
-                      key={index} 
-                      className="flex items-center justify-between p-2 bg-gray-50 rounded text-sm"
-                    >
-                      <a 
-                        href={file.uploaded_file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline truncate flex-1"
-                      >
-                        📎 {file.original_filename}
-                      </a>
-                      <span className="text-xs text-gray-500 ml-2">
-                        {new Date(file.uploaded_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  ))}
-                  <p className="text-xs text-red-500 italic mt-1">
-                    {t('uploadingNewFilesWillReplaceExisting')}
-                  </p>
-                </div>
-              )}
             </div>
 
             <div className="flex gap-4">
