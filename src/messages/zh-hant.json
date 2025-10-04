@@ -216,7 +216,10 @@
       "noActionsAvailable": "此任務目前沒有可用操作。",
       "noFileUploaded": "尚未上傳任何檔案",
       "EditFailed": "編輯失敗",
-      "EditSuccessfully": "編輯成功"
+      "EditSuccessfully": "編輯成功",
+      "newFilesSelected": "新建文件",
+      "currentFiles": "目前文件",
+      "uploadingNewFilesWillReplaceExisting": "上傳新文件會取代現有文件"
     },
     "action": {
       "action": "操作",

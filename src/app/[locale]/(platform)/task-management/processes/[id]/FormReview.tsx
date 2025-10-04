@@ -56,8 +56,22 @@ export function FormReview({
       return retailer ? `${retailer.name}` : value
     }
     
-    if (field.field_type === "file" && value instanceof File) {
-      return value.name
+    if (field.field_type === "file" || field.field_type === "multifile") {
+      const files = Array.isArray(value) ? value : [value]
+      
+      if (files.length === 1) {
+        return `📎 ${files[0].name} (${(files[0].size / 1024).toFixed(2)} KB)`
+      }
+      
+      return (
+        <div className="space-y-1">
+          {files.map((file, idx) => (
+            <div key={idx}>
+              📎 {file.name} ({(file.size / 1024).toFixed(2)} KB)
+            </div>
+          ))}
+        </div>
+      )
     }
     
     return value

@@ -105,12 +105,12 @@ export default async function TaskDataPage({ params }: PageProps) {
         <Card>
           <CardHeader>
             <CardTitle>
-              {field.field_type === 'file' ? 'Files' : 'History'}
+              {field.field_type === 'file' || field.field_type === 'multifile' ? 'Files' : 'History'}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {field.field_type === 'file' ? (
+              {field.field_type === 'file' || field.field_type === 'multifile' ? (
                 mappedTaskData.files.length > 0 ? (
                   mappedTaskData.files.map((file, index) => (
                     <div key={index} className="flex items-start">

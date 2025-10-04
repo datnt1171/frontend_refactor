@@ -63,40 +63,47 @@ export function ProcessFormClient({
   }
 
   const handleSubmit = async () => {
-    setIsSubmitting(true)
+  setIsSubmitting(true)
 
-    try {
-      const formData = new FormData()
-      formData.append("process", String(process.id))
+  try {
+    const formData = new FormData()
+    formData.append("process", String(process.id))
 
-      process.fields.forEach((field, index) => {
-        formData.append(`fields[${index}][field_id]`, String(field.id))
-        const value = formValues[field.id]
+    process.fields.forEach((field, index) => {
+      formData.append(`fields[${index}][field_id]`, String(field.id))
+      const value = formValues[field.id]
 
-        if (field.field_type === "file" && value instanceof File) {
-          formData.append(`fields[${index}][file]`, value)
-        } else {
-          formData.append(`fields[${index}][value]`, value ?? "")
-        }
-      })
-
-      const response = await createTask(formData)
-      
-      // Check the success flag
-      if (response.success) {
-        alert(t('taskCreatedSuccessfully'))
-        router.push("/task-management/tasks/sent")
+      // Handle both "file" and "multifile" types uniformly
+      if ((field.field_type === "file" || field.field_type === "multifile") && value) {
+        // Always treat as array
+        const filesArray = Array.isArray(value) ? value : [value]
+        
+        filesArray.forEach((file) => {
+          if (file instanceof File) {
+            // Send all files with same key (backend will use getlist())
+            formData.append(`fields[${index}][files]`, file)
+          }
+        })
       } else {
-        // Handle the error case
-        throw new Error(response.error)
+        formData.append(`fields[${index}][value]`, value ?? "")
       }
-    } catch (err: any) {
-      console.error("Error creating task:", err)
-      alert(err.message || t('failedToCreateTask'))
-    } finally {
-      setIsSubmitting(false)
+    })
+
+    const response = await createTask(formData)
+    
+    if (response.success) {
+      alert(t('taskCreatedSuccessfully'))
+      router.push("/task-management/tasks/sent")
+    } else {
+      throw new Error(response.error)
     }
+  } catch (err: any) {
+    console.error("Error creating task:", err)
+    alert(err.message || t('failedToCreateTask'))
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="space-y-6">

@@ -216,7 +216,10 @@
       "noActionsAvailable": "No actions available for this task.",
       "noFileUploaded": "No file uploaded",
       "EditFailed": "Failed to edit",
-      "EditSuccessfully": "Edit successfully!"
+      "EditSuccessfully": "Edit successfully!",
+      "newFilesSelected": "New files selected",
+      "currentFiles": "Current files",
+      "uploadingNewFilesWillReplaceExisting": "Uploading new files will replace existing files"
     },
     "action": {
       "action": "Action",

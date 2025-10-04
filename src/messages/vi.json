@@ -216,7 +216,10 @@
       "noActionsAvailable": "Không có thao tác khả dụng cho công việc này.",
       "noFileUploaded": "Chưa tải tệp nào lên",
       "EditFailed": "Có lỗi xảy ra khi chỉnh sửa dữ liệu",
-      "EditSuccessfully": "Chỉnh sửa thành công"
+      "EditSuccessfully": "Chỉnh sửa thành công",
+      "newFilesSelected": "File mới",
+      "currentFiles": "File hiện tại",
+      "uploadingNewFilesWillReplaceExisting": "Tải file mới lên sẽ xóa file cũ"
     },
     "action": {
       "action": "Hành động",

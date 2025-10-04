@@ -71,7 +71,7 @@ export default async function TaskDetailPage({
                     )}
                   </div>
                   <div className="p-3 bg-muted rounded-md space-y-1">
-                  {data.field.field_type === "file" ? (
+                  {data.field.field_type === "file" || data.field.field_type === "multifile" ? (
                     data.files && data.files[0] ? (
                       <p>
                         <a 
