@@ -962,15 +962,15 @@ export interface components {
             stepname_short_en: string;
             stepname_short_vi: string;
             stepname_short_zh_hant: string;
-            sanding_en?: string;
-            sanding_vi?: string;
-            sanding_zh_hant?: string;
-            viscosity_en?: string;
-            viscosity_vi?: string;
-            viscosity_zh_hant?: string;
-            spec_en?: string;
-            spec_vi?: string;
-            spec_zh_hant?: string;
+            sanding_en: string;
+            sanding_vi: string;
+            sanding_zh_hant: string;
+            viscosity_en: string;
+            viscosity_vi: string;
+            viscosity_zh_hant: string;
+            spec_en: string;
+            spec_vi: string;
+            spec_zh_hant: string;
             hold_time: string;
             chemical_code: string;
             consumption: string;
@@ -1032,7 +1032,7 @@ export interface components {
             action_id: string;
             comment?: string | null;
             /** Format: uri */
-            file?: string | null;
+            file?: File;
         };
         TaskActionDetail: {
             /** Format: uuid */
