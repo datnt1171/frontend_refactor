@@ -40,6 +40,7 @@ const defaultOvertime: Partial<Overtime> = {
   sunday_ot_num: 0,
   hanging_line_sunday: "-",
   pallet_line_sunday: "-",
+  files: [],
   created_at: "-",
 }
 
@@ -67,17 +68,18 @@ export async function GET(request: NextRequest) {
         // absenceUrl keeps using "date"
         absenceUrl.searchParams.set("date", date)
 
-        // overtimeUrl expects date__gte (date - 1) and date__lte (date)
+        // Get yesterday data, if currentDate is Monday then get Saturday data
         const currentDate = new Date(date)
         const previousDate = new Date(currentDate)
-        previousDate.setDate(currentDate.getDate() - 1)
+        const daysToSubtract = currentDate.getDay() === 1 ? 2 : 1
+        previousDate.setDate(currentDate.getDate() - daysToSubtract)
         
         // Format back to string (assuming ISO format YYYY-MM-DD)
         const previousDateStr = previousDate.toISOString().split('T')[0]
         
         if (previousDateStr) {
           overtimeUrl.searchParams.set("date__gte", previousDateStr)
-          overtimeUrl.searchParams.set("date__lte", date)
+          overtimeUrl.searchParams.set("date__lte", previousDateStr)
         }
     }
 

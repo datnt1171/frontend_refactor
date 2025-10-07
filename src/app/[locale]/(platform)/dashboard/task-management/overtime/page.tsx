@@ -147,7 +147,7 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableRow key={row.task_id}>
                               <TableCell className="font-bold">
                                 <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
-                                  {formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 2) : row.created_at, 'date')}
+                                  {formatDateToUTC7(isSaturday ? addDayToDate(row.created_at, 2) : addDayToDate(row.created_at, 1), 'date')}
                                 </Link>
                               </TableCell>
                               <TableCell>{row.factory_code}</TableCell>
