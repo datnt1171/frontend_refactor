@@ -552,7 +552,7 @@ export interface components {
          *     * `retailer` - Retailer
          * @enum {string}
          */
-        FieldTypeEnum: "text" | "number" | "date" | "time" | "select" | "multiselect" | "file" |  "multifile" | "json" | "assignee" | "factory" | "retailer";
+        FieldTypeEnum: "text" | "number" | "date" | "time" | "select" | "multiselect" | "file" | "multifile" | "json" | "assignee" | "factory" | "retailer";
         FinishingSheet: {
             /** Format: uuid */
             readonly id: string;
@@ -635,18 +635,13 @@ export interface components {
          *     * `lte` - Less Than or Equal
          *     * `is_empty` - Is Empty
          *     * `is_not_empty` - Is Not Empty
+         *     * `weekday` - Week day
          *     * `user_dept` - User Department
          *     * `user_dept_in` - User Department In
          *     * `user_dept_not_in` - User Department Not In
          * @enum {string}
          */
-        OperatorEnum: 
-        "exact" | "not_exact" | "contains" 
-        | "not_contains" | "in" | "not_in" 
-        | "gt" | "lt" | "gte" | "lte" 
-        | "is_empty" | "is_not_empty" 
-        | "weekday"
-        | "user_dept" | "user_dept_in" | "user_dept_not_in" ;
+        OperatorEnum: "exact" | "not_exact" | "contains" | "not_contains" | "in" | "not_in" | "gt" | "lt" | "gte" | "lte" | "is_empty" | "is_not_empty" | "weekday" | "user_dept" | "user_dept_in" | "user_dept_not_in";
         Overtime: {
             task_id: string;
             factory_code: string;
@@ -670,6 +665,12 @@ export interface components {
             sunday_ot_num: number;
             hanging_line_sunday: string;
             pallet_line_sunday: string;
+            files: {
+                url: string;
+                filename: string;
+                size: number;
+                mime_type: string;
+            }[];
             /** Format: date */
             created_at: string;
         };
@@ -813,8 +814,7 @@ export interface components {
             readonly field?: components["schemas"]["ProcessField"];
             value?: string | null;
             readonly files?: components["schemas"]["TaskFileData"][];
-            /** Format: uri */
-            file?: string;
+            files_upload?: string[];
             readonly history?: components["schemas"]["TaskDataHistory"][];
         };
         PatchedUserFactoryOnsite: {
@@ -867,7 +867,7 @@ export interface components {
         ReceivedTask: {
             /** Format: uuid */
             readonly id: string;
-            readonly title: string;
+            title: string;
             process: string;
             state: string;
             state_type: string;
@@ -918,7 +918,7 @@ export interface components {
         SentTask: {
             /** Format: uuid */
             readonly id: string;
-            readonly title: string;
+            title: string;
             process: string;
             state: string;
             state_type: string;
@@ -962,15 +962,15 @@ export interface components {
             stepname_short_en: string;
             stepname_short_vi: string;
             stepname_short_zh_hant: string;
-            sanding_en: string;
-            sanding_vi: string;
-            sanding_zh_hant: string;
-            viscosity_en: string;
-            viscosity_vi: string;
-            viscosity_zh_hant: string;
-            spec_en: string;
-            spec_vi: string;
-            spec_zh_hant: string;
+            sanding_en?: string;
+            sanding_vi?: string;
+            sanding_zh_hant?: string;
+            viscosity_en?: string;
+            viscosity_vi?: string;
+            viscosity_zh_hant?: string;
+            spec_en?: string;
+            spec_vi?: string;
+            spec_zh_hant?: string;
             hold_time: string;
             chemical_code: string;
             consumption: string;
@@ -1032,7 +1032,7 @@ export interface components {
             action_id: string;
             comment?: string | null;
             /** Format: uri */
-            file?: File;
+            file?: string | null;
         };
         TaskActionDetail: {
             /** Format: uuid */
@@ -1070,8 +1070,7 @@ export interface components {
             readonly field: components["schemas"]["ProcessField"];
             value?: string | null;
             readonly files: components["schemas"]["TaskFileData"][];
-            /** Format: uri */
-            file?: string;
+            files_upload?: string[];
             readonly history: components["schemas"]["TaskDataHistory"][];
         };
         TaskDataDetail: {
@@ -1114,12 +1113,13 @@ export interface components {
             field_id: string;
             value?: string | null;
             /** Format: uri */
-            file?: string;
+            file?: string | null;
+            files?: string[];
         };
         TaskDetail: {
             /** Format: uuid */
             readonly id: string;
-            readonly title: string;
+            title: string;
             process: components["schemas"]["Process"];
             state: components["schemas"]["State"];
             created_by: components["schemas"]["User"];

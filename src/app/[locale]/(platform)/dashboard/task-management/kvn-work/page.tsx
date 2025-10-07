@@ -40,7 +40,7 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
-  
+
   const response = await getTechReport(params)
   const rows = response.filter(row => row.salesman === "陳國勇")
   return (
@@ -126,6 +126,11 @@ export default async function Page({ searchParams }: PageProps) {
                         className="text-center text-sm bg-blue-50 border-r border-gray-300">
                         {t('sample.sample')}
                       </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        {t('common.file')}
+                      </TableHead>
                     </TableRow>
                     
                     <TableRow className="bg-gray-50">
@@ -177,6 +182,29 @@ export default async function Page({ searchParams }: PageProps) {
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
+                            <TableCell className="border-r border-gray-300">
+                              {row.overtime.files.length === 0 ? (
+                                <span className="text-gray-400"></span>
+                              ) : (
+                                <div className="flex gap-2 flex-wrap">
+                                  {row.overtime.files.map((file, idx) => (
+                                    <a 
+                                      key={idx} 
+                                      href={file.url} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      className="hover:opacity-80"
+                                    >
+                                      <img 
+                                        src={file.url} 
+                                        alt={file.filename}
+                                        className="w-20 h-20 object-cover rounded border"
+                                      />
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
+                            </TableCell>
                           </TableRow>
                         ))}
 
