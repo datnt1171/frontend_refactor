@@ -1,13 +1,27 @@
 import type { ProcessField, FieldCondition } from "@/types"
 
 /**
- * Evaluates a single condition against form values
+ * Evaluates a single condition against form values and user context
  */
 function evaluateCondition(
   condition: FieldCondition,
-  formValues: Record<string, any>
+  formValues: Record<string, any>,
+  userDept?: string
 ): boolean {
-  // Handle special case for weekday operator - it can work without condition_field
+  // Handle user department operators
+  if (condition.operator === "user_dept") {
+    return evaluateUserDeptCondition(condition, userDept)
+  }
+  
+  if (condition.operator === "user_dept_in") {
+    return evaluateUserDeptInCondition(condition, userDept)
+  }
+  
+  if (condition.operator === "user_dept_not_in") {
+    return evaluateUserDeptNotInCondition(condition, userDept)
+  }
+
+  // Handle special case for weekday operator
   if (condition.operator === "weekday") {
     return evaluateWeekdayCondition(condition, formValues)
   }
@@ -95,6 +109,61 @@ function evaluateCondition(
 }
 
 /**
+ * Evaluates user department condition (exact match)
+ */
+function evaluateUserDeptCondition(
+  condition: FieldCondition,
+  userDept?: string
+): boolean {
+  if (!userDept) return false
+  
+  const conditionValue = condition.value
+  
+  if (Array.isArray(conditionValue)) {
+    // If value is array with single item, compare to that item
+    return conditionValue.length === 1 && conditionValue[0] === userDept
+  }
+  
+  return conditionValue === userDept
+}
+
+/**
+ * Evaluates if user department is in the list
+ */
+function evaluateUserDeptInCondition(
+  condition: FieldCondition,
+  userDept?: string
+): boolean {
+  if (!userDept) return false
+  
+  const conditionValue = condition.value
+  
+  if (Array.isArray(conditionValue)) {
+    return conditionValue.includes(userDept)
+  }
+  
+  return conditionValue === userDept
+}
+
+/**
+ * Evaluates if user department is NOT in the list
+ */
+function evaluateUserDeptNotInCondition(
+  condition: FieldCondition,
+  userDept?: string
+): boolean {
+  if (!userDept) return true // If no dept, show field
+  
+  const conditionValue = condition.value
+  
+  if (Array.isArray(conditionValue)) {
+    return !conditionValue.includes(userDept)
+  }
+  
+  return conditionValue !== userDept
+}
+
+/**
  * Evaluates weekday conditions - can work with or without condition_field
  */
 function evaluateWeekdayCondition(
@@ -130,7 +199,8 @@ function evaluateWeekdayCondition(
  */
 export function isFieldVisible(
   field: ProcessField,
-  formValues: Record<string, any>
+  formValues: Record<string, any>,
+  userDept?: string // NEW parameter
 ): boolean {
   
   // If no conditions, field is always visible
@@ -140,7 +210,7 @@ export function isFieldVisible(
 
   // All conditions must be true for field to be visible
   const result = field.conditions.every(condition => {
-    const conditionResult = evaluateCondition(condition, formValues)
+    const conditionResult = evaluateCondition(condition, formValues, userDept)
     return conditionResult
   })
   
@@ -152,9 +222,10 @@ export function isFieldVisible(
  */
 export function getVisibleFields(
   fields: ProcessField[],
-  formValues: Record<string, any>
+  formValues: Record<string, any>,
+  userDept?: string // NEW parameter
 ): ProcessField[] {
-  return fields.filter(field => isFieldVisible(field, formValues))
+  return fields.filter(field => isFieldVisible(field, formValues, userDept))
 }
 
 /**
@@ -162,13 +233,14 @@ export function getVisibleFields(
  */
 export function useFieldVisibility(
   fields: ProcessField[],
-  formValues: Record<string, any>
+  formValues: Record<string, any>,
+  userDept?: string // NEW parameter
 ) {
-  const visibleFields = getVisibleFields(fields, formValues)
+  const visibleFields = getVisibleFields(fields, formValues, userDept)
   
   const isVisible = (fieldId: string) => {
     const field = fields.find(f => f.id === fieldId)
-    return field ? isFieldVisible(field, formValues) : false
+    return field ? isFieldVisible(field, formValues, userDept) : false
   }
 
   return {

@@ -635,10 +635,18 @@ export interface components {
          *     * `lte` - Less Than or Equal
          *     * `is_empty` - Is Empty
          *     * `is_not_empty` - Is Not Empty
-         *     * `weekday` - Week day
+         *     * `user_dept` - User Department
+         *     * `user_dept_in` - User Department In
+         *     * `user_dept_not_in` - User Department Not In
          * @enum {string}
          */
-        OperatorEnum: "exact" | "not_exact" | "contains" | "not_contains" | "in" | "not_in" | "gt" | "lt" | "gte" | "lte" | "is_empty" | "is_not_empty" | "weekday";
+        OperatorEnum: 
+        "exact" | "not_exact" | "contains" 
+        | "not_contains" | "in" | "not_in" 
+        | "gt" | "lt" | "gte" | "lte" 
+        | "is_empty" | "is_not_empty" 
+        | "weekday"
+        | "user_dept" | "user_dept_in" | "user_dept_not_in" ;
         Overtime: {
             task_id: string;
             factory_code: string;

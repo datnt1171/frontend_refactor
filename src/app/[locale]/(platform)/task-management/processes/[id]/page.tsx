@@ -1,4 +1,4 @@
-import { getProcess, getUsers, getFactories, getRetailers } from "@/lib/api/server"
+import { getProcess, getUsers, getFactories, getRetailers, getCurrentUser } from "@/lib/api/server"
 import { ProcessFormClient } from "./ProcessForm"
 
 interface PageProps {
@@ -43,6 +43,7 @@ export default async function FormPage({ params }: PageProps) {
     
   )).results : []
 
+  const currentUser = await getCurrentUser()
 
   return (
     <ProcessFormClient 
@@ -50,6 +51,7 @@ export default async function FormPage({ params }: PageProps) {
       users={users}
       factories={factories}
       retailers={retailers}
+      currentUser={currentUser}
     />
   )
 }

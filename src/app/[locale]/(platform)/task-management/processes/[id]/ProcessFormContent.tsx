@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Eye } from "lucide-react"
 import { useTranslations } from 'next-intl'
 import { useMemo } from 'react'
-import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
+import type { ProcessDetail, UserList, Factory, Retailer, UserDetail } from "@/types"
 import { FormField } from "./FormField"
 import { getVisibleFields } from "@/lib/utils/field"
 
@@ -16,6 +16,7 @@ interface ProcessFormContentProps {
   factories: Factory[]
   retailers: Retailer[]
   formValues: Record<string, any>
+  currentUser: UserDetail
   onInputChange: (fieldId: string, value: any) => void
   onReview: (e: React.FormEvent) => void
 }
@@ -26,6 +27,7 @@ export function ProcessFormContent({
   factories,
   retailers,
   formValues,
+  currentUser,
   onInputChange,
   onReview
 }: ProcessFormContentProps) {
@@ -33,7 +35,7 @@ export function ProcessFormContent({
   
   // Memoize visible fields to prevent unnecessary re-renders
   const visibleFields = useMemo(() => {
-    return getVisibleFields(process.fields, formValues)
+    return getVisibleFields(process.fields, formValues, currentUser.department.name)
   }, [process.fields, formValues])
 
   return (

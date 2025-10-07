@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "@/i18n/navigation"
 import { useTranslations } from 'next-intl'
 import { createTask } from "@/lib/api/client/api"
-import type { ProcessDetail, UserList, Factory, Retailer } from "@/types"
+import type { ProcessDetail, UserList, Factory, Retailer, UserDetail } from "@/types"
 import { ProcessFormHeader } from "./ProcessFormHeader"
 import { ProcessFormContent } from "./ProcessFormContent"
 import { FormReview } from "./FormReview"
@@ -15,13 +15,15 @@ interface ProcessFormClientProps {
   users: UserList[]
   factories: Factory[]
   retailers: Retailer[]
+  currentUser: UserDetail
 }
 
 export function ProcessFormClient({ 
   process, 
   users,
   factories,
-  retailers
+  retailers,
+  currentUser
 }: ProcessFormClientProps) {
   const router = useRouter()
   const t = useTranslations('taskManagement.createTask')
@@ -39,7 +41,7 @@ export function ProcessFormClient({
 
   const validateForm = () => {
     // Get only visible fields based on current form values
-    const visibleFields = getVisibleFields(process.fields, formValues)
+    const visibleFields = getVisibleFields(process.fields, formValues, currentUser.department.name)
     
     // Check only visible required fields
     const missingFields = visibleFields
@@ -127,6 +129,7 @@ export function ProcessFormClient({
           factories={factories}
           retailers={retailers}
           formValues={formValues}
+          currentUser={currentUser}
           onInputChange={handleInputChange}
           onReview={handleReview}
         />
