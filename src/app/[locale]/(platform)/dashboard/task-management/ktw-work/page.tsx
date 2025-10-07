@@ -58,9 +58,10 @@ export default async function Page({ searchParams }: PageProps) {
                   <ScreenshotButton 
                     targetId="table-report" 
                     filename="table-screenshot.png" 
+                    imageTitle={params.date}
                   />
               </div>
-              <div id="table-container" className="overflow-auto mt-8">
+              <div id="table-container" className="overflow-auto mt-2">
                 <Table id="table-report" className="border border-gray-300">
                   <TableHeader>
                     <TableRow className="bg-gray-100">

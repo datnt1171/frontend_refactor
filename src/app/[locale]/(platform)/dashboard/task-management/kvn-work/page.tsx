@@ -40,7 +40,7 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
-
+  
   const response = await getTechReport(params)
   const rows = response.filter(row => row.salesman === "陳國勇")
   return (
@@ -57,10 +57,11 @@ export default async function Page({ searchParams }: PageProps) {
               <div className="flex justify-end">
                   <ScreenshotButton 
                     targetId="table-report" 
-                    filename="table-screenshot.png" 
+                    filename="table-screenshot.png"
+                    imageTitle={params.date}
                   />
               </div>
-              <div id="table-container" className="overflow-auto mt-8">
+              <div id="table-container" className="overflow-auto mt-2">
                 <Table id="table-report" className="border border-gray-300">
                   <TableHeader>
                     <TableRow className="bg-gray-100">

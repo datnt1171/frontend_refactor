@@ -10,6 +10,7 @@ interface ScreenshotButtonProps {
   filename?: string;
   className?: string;
   children?: React.ReactNode;
+  imageTitle?: string;
 }
 
 export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
@@ -22,6 +23,7 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
       Screenshot
     </>
   ),
+  imageTitle,
 }) => {
   const handleScreenshot = async () => {
     try {
@@ -105,61 +107,45 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
       element.style.height = targetOriginalStyles.height;
       element.style.maxHeight = targetOriginalStyles.maxHeight;
 
+      // If imageTitle is provided, add it to the image using canvas
+      let finalDataUrl = dataUrl;
+      if (imageTitle) {
+        const img = new Image();
+        img.src = dataUrl;
+        await new Promise((resolve) => {
+          img.onload = resolve;
+        });
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Could not get canvas context');
+
+        const padding = 20;
+        const titleHeight = 40;
+        
+        canvas.width = img.width;
+        canvas.height = img.height + titleHeight;
+
+        // Fill background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw title
+        ctx.fillStyle = '#000000';
+        ctx.font = 'bold 24px Arial, sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(imageTitle, padding, titleHeight / 2);
+
+        // Draw original image below title
+        ctx.drawImage(img, 0, titleHeight);
+
+        finalDataUrl = canvas.toDataURL('image/png', 1);
+      }
+
       // Download the image
       const link = document.createElement('a');
       link.download = filename;
-      link.href = dataUrl;
-      link.click();
-    } catch (error) {
-      console.error('Screenshot failed:', error);
-    }
-  };
-
-  return (
-    <Button onClick={handleScreenshot} className={className}>
-      {children}
-    </Button>
-  );
-};
-
-// Alternative approach: Target the table directly instead of container
-export const TableScreenshotButton: React.FC<ScreenshotButtonProps> = ({
-  targetId,
-  filename = 'table-screenshot.png',
-  className,
-  children = (
-    <>
-      <Camera className="w-4 h-4 mr-2" />
-      Table Screenshot
-    </>
-  ),
-}) => {
-  const handleScreenshot = async () => {
-    try {
-      // Target the actual table element, not its container
-      const tableElement = document.querySelector(`#${targetId} table`) || 
-                          document.getElementById(targetId);
-      
-      if (!tableElement) {
-        console.error(`Table element not found`);
-        return;
-      }
-
-      const dataUrl = await domToPng(tableElement as HTMLElement, {
-        backgroundColor: '#ffffff',
-        quality: 1,
-        scale: 2,
-        filter: (node: Node) => {
-          if (node instanceof HTMLElement) {
-            return !node.classList.contains('scrollbar') && !node.style.overflow;
-          }
-          return true;
-        },
-      });
-
-      const link = document.createElement('a');
-      link.download = filename;
-      link.href = dataUrl;
+      link.href = finalDataUrl;
       link.click();
     } catch (error) {
       console.error('Screenshot failed:', error);
