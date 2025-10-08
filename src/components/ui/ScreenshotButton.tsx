@@ -11,16 +11,18 @@ interface ScreenshotButtonProps {
   className?: string;
   children?: React.ReactNode;
   imageTitle?: string;
+  buttonText?: string;
 }
 
 export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
   targetId,
   filename = 'screenshot.png',
   className,
+  buttonText = 'Screenshot',
   children = (
     <>
       <Camera className="w-4 h-4 mr-2" />
-      Screenshot
+      {buttonText}
     </>
   ),
   imageTitle,
