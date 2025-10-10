@@ -32,6 +32,7 @@
     "date-fns-tz": "^3.2.0",
     "echarts": "^6.0.0",
     "handsontable": "^16.1.0",
+    "heic2any": "^0.0.4",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.513.0",
     "modern-screenshot": "^4.6.6",

@@ -8,6 +8,7 @@ import type { ProcessField, UserList, Factory, Retailer, ValueLabel } from "@/ty
 import { ACCEPTED_FILE_TYPES } from "@/constants/navigation"
 import { compressImage } from "@/lib/utils/imageCompression"
 import ReactSelect from 'react-select';
+import heic2any from 'heic2any';
 
 interface FormFieldProps {
   field: ProcessField
@@ -36,25 +37,79 @@ export function FormField({
     const files = e.target.files
     if (files && files.length > 0) {
       try {
-        // Always process as array, even for single file
-        const compressedFiles = await Promise.all(
-          Array.from(files).map(file => 
-            compressImage(file, {
+        const fileCount = files.length
+        
+        // Dynamic compression settings based on file count
+        const getCompressionOptions = (count: number) => {
+          if (count === 1) {
+            // Single image - higher quality for color panels
+            return {
+              maxWidth: 1440,
+              maxHeight: 1920,
+              quality: 0.89,
+              maxSizeKB: 1024
+            }
+          } else if (count <= 3) {
+            // Few images - medium quality
+            return {
               maxWidth: 1080,
               maxHeight: 1440,
-              quality: 0.85,
-              maxSizeKB: 1024
-            }).catch(error => {
-              console.error('Compression failed for file:', file.name, error)
-              return file // Fallback to original
-            })
-          )
-        )
+              quality: 0.8,
+              maxSizeKB: 600
+            }
+          } else {
+            // Multiple images - lower quality for daily reports
+            return {
+              maxWidth: 800,
+              maxHeight: 1200,
+              quality: 0.75,
+              maxSizeKB: 400
+            }
+          }
+        }
         
-        // Always send as array (even single file becomes [file])
-        onChange(compressedFiles)
+        const compressionOptions = getCompressionOptions(fileCount)
+        
+        const processedFiles = await Promise.all(
+          Array.from(files).map(async (file) => {
+            let fileToCompress = file;
+            
+            // Convert HEIC first if needed
+            if (file.name.toLowerCase().endsWith('.heic') || file.type === 'image/heic') {
+              try {
+                const convertedBlob = await heic2any({
+                  blob: file,
+                  toType: 'image/jpeg',
+                  quality: 0.9
+                });
+                
+                const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+                
+                if (!blob) {
+                  throw new Error('Conversion returned empty blob');
+                }
+                
+                fileToCompress = new File(
+                  [blob], 
+                  file.name.replace(/\.heic$/i, '.jpg'),
+                  { type: 'image/jpeg' }
+                );
+              } catch (error) {
+                console.error('HEIC conversion failed:', file.name, error);
+                return file;
+              }
+            }
+            
+            return compressImage(fileToCompress, compressionOptions).catch(error => {
+              console.error('Compression failed:', fileToCompress.name, error);
+              return fileToCompress;
+            });
+          })
+        );
+        
+        onChange(processedFiles);
       } catch (error) {
-        console.error('File processing failed:', error)
+        console.error('File processing failed:', error);
       }
     }
   }
