@@ -177,9 +177,9 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r border-gray-200" style={getValueStyle(row.kvn_in)}>{row.kvn_in}</TableCell>
 
                             {/* Overtime */}
-                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_tomorrow}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_tomorrow}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.others_tomorrow}</TableCell>
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>

@@ -220,7 +220,7 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r border-gray-300">{row.overtime.weekday_ot_num}</TableCell>
                             <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_today}</TableCell>
                             <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
+                            <TableCell className="border-r border-gray-300">{row.overtime.others_today}</TableCell>
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
