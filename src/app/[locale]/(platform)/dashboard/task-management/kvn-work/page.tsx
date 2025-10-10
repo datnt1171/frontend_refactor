@@ -177,9 +177,15 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r border-gray-200" style={getValueStyle(row.kvn_in)}>{row.kvn_in}</TableCell>
 
                             {/* Overtime */}
-                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_tomorrow}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_tomorrow}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.others_tomorrow}</TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                              {row.overtime.pallet_line_tomorrow}
+                            </TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                              {row.overtime.hanging_line_tomorrow}
+                            </TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                              {row.overtime.others_tomorrow}
+                            </TableCell>
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
@@ -187,7 +193,7 @@ export default async function Page({ searchParams }: PageProps) {
                               {row.overtime.files.length === 0 ? (
                                 <span className="text-gray-400"></span>
                               ) : (
-                                <div className="flex gap-2 flex-wrap">
+                                <div className="grid grid-rows-2 grid-flow-col gap-2 auto-cols-max">
                                   {row.overtime.files.map((file, idx) => (
                                     <a 
                                       key={idx} 
