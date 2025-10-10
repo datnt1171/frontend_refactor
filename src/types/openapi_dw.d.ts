@@ -145,6 +145,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/warehouse/overall": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Overall Warehouse Data
+         * @description Get overall warehouse data with sales and order statistics.
+         *     Returns aggregated data by month with target comparisons.
+         */
+        get: operations["get_overall_warehouse_data_api_warehouse_overall_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -321,6 +342,10 @@ export interface components {
              * @description Factory name
              */
             factory_name: string;
+            /**
+             * Salesman
+             * @description Sales Reps
+             */
             salesman: string;
             /**
              * Is Active
@@ -348,6 +373,10 @@ export interface components {
              * @description Factory name
              */
             factory_name: string;
+            /**
+             * Salesman
+             * @description Sales Reps
+             */
             salesman: string;
             /**
              * Is Active
@@ -377,6 +406,61 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** Overall */
+        Overall: {
+            /** Month */
+            month: number;
+            /**
+             * Sales Quantity
+             * @default 0
+             */
+            sales_quantity: number | null;
+            /**
+             * Exclude Factory Sales Quantity
+             * @default 0
+             */
+            exclude_factory_sales_quantity: number | null;
+            /**
+             * Remain Sales Quantity
+             * @default 0
+             */
+            remain_sales_quantity: number | null;
+            /**
+             * Order Quantity
+             * @default 0
+             */
+            order_quantity: number | null;
+            /**
+             * Exclude Factory Order Quantity
+             * @default 0
+             */
+            exclude_factory_order_quantity: number | null;
+            /**
+             * Remain Order Quantity
+             * @default 0
+             */
+            remain_order_quantity: number | null;
+            /**
+             * Sales Target Value
+             * @default 0
+             */
+            sales_target_value: number | null;
+            /**
+             * Order Target Value
+             * @default 0
+             */
+            order_target_value: number | null;
+            /**
+             * Sales Target Pct
+             * @default 0
+             */
+            sales_target_pct: number | null;
+            /**
+             * Order Target Pct
+             * @default 0
+             */
+            order_target_pct: number | null;
         };
         /** PaginatedResponse[Factory] */
         PaginatedFactoryList: {
@@ -947,6 +1031,52 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_overall_warehouse_data_api_warehouse_overall_get: {
+        parameters: {
+            query?: {
+                /** @description Start day */
+                day__gte?: number;
+                /** @description End day */
+                day__lte?: number;
+                /** @description Start month */
+                month__gte?: number;
+                /** @description End month */
+                month__lte?: number;
+                /** @description Year */
+                year?: number;
+                /** @description Target month */
+                target_month?: number;
+                /** @description Target year */
+                target_year?: number;
+                /** @description Factory code to exclude */
+                exclude_factory?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Overall"][];
+                };
             };
             /** @description Validation Error */
             422: {

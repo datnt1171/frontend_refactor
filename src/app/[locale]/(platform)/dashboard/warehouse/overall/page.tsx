@@ -1,10 +1,107 @@
+import { getWarehouseOverall } from '@/lib/api/server';
 import StackedChart from './charts';
+import { getTranslations } from "next-intl/server"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarRight } from "@/components/dashboard/RightSidebar"
+import { RightSidebarProvider } from "@/contexts/FilterContext"
+import type { PageFilterConfig } from "@/types"
+import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
+import { generateYearOptions } from '@/lib/utils/date';
+import { getFactoryOptions, MONTH_OPTIONS } from '@/lib/utils/filter';
 
-export default function HomePage() {
+interface PageProps {
+  searchParams: Promise<{
+    ordering?: string
+    search?: string,
+    page?: string
+    page_size?: string
+  }>
+}
+
+export default async function Page({ searchParams }: PageProps) {
+
+  const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+      defaultValues: {
+      day: {
+        gte: '1',
+        lte: format(today, 'd')
+      },
+      month: {
+        gte: '1',
+        lte: format(today, 'M')
+      },
+      year: format(today, 'yyyy'),
+      target_month: '5',
+      target_year: '2022',
+      exclude_factory: '30673'
+    },
+    isPaginated: false,
+    filters: [
+      {
+        id: 'day',
+        type: 'day-range',
+        label: 'Day Range',
+      },
+      {
+        id: 'month',
+        type: 'month-range',
+        label: 'Month Range',
+      },
+      {
+        id: 'year',
+        type: 'select',
+        label: 'Year',
+        options: generateYearOptions()
+      },
+      {
+        id: 'target_year',
+        type: 'select',
+        label: 'Target Year',
+        options: generateYearOptions()
+      },
+      {
+        id: 'target_month',
+        type: 'select',
+        label: 'Target month',
+        options: MONTH_OPTIONS
+      },
+      {
+        id: 'exclude_factory',
+        type: 'select',
+        label: 'Excluded factory',
+        options: await getFactoryOptions()
+      }
+    ]
+  }
+
+  const t = await getTranslations()
+  const params = await searchParams
+  
+  const data = await getWarehouseOverall(params)
+
   return (
-    <main style={{ padding: 32 }}>
-      <h1>Stacked Sales/Orders Chart</h1>
-      <StackedChart />
-    </main>
-  );
+    <RightSidebarProvider>
+      <SidebarProvider>
+        <div className="flex flex-1 min-w-0">
+          <div className="flex-1 min-w-0">
+            <div className="sticky top-14 z-10 bg-background px-2">
+              <div className="flex items-center gap-2 lg:hidden">
+                <SidebarTrigger />
+                <span className="text-sm font-medium">Filter</span>
+              </div>
+
+              <div>
+                <StackedChart data={data} />
+              </div>
+
+              </div>
+            </div>
+          <SidebarRight filterConfig={FilterConfig} />
+        </div>
+      </SidebarProvider>
+    </RightSidebarProvider>
+  )
 }
