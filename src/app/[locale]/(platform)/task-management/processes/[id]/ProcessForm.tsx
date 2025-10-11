@@ -66,6 +66,8 @@ export function ProcessFormClient({
 
   const handleSubmit = async () => {
   setIsSubmitting(true)
+  const startTime = performance.now()
+  console.log('[FRONTEND] Submit started')
 
   try {
     const formData = new FormData()
@@ -75,14 +77,11 @@ export function ProcessFormClient({
       formData.append(`fields[${index}][field_id]`, String(field.id))
       const value = formValues[field.id]
 
-      // Handle both "file" and "multifile" types uniformly
       if ((field.field_type === "file" || field.field_type === "multifile") && value) {
-        // Always treat as array
         const filesArray = Array.isArray(value) ? value : [value]
         
         filesArray.forEach((file) => {
           if (file instanceof File) {
-            // Send all files with same key (backend will use getlist())
             formData.append(`fields[${index}][files]`, file)
           }
         })
@@ -91,7 +90,14 @@ export function ProcessFormClient({
       }
     })
 
+    const formPrepTime = performance.now()
+    console.log(`[FRONTEND] FormData prepared in ${(formPrepTime - startTime).toFixed(0)}ms`)
+
     const response = await createTask(formData)
+    
+    const fetchTime = performance.now()
+    console.log(`[FRONTEND] Fetch completed in ${(fetchTime - formPrepTime).toFixed(0)}ms`)
+    console.log(`[FRONTEND] Total time: ${(fetchTime - startTime).toFixed(0)}ms`)
     
     if (response.success) {
       alert(t('taskCreatedSuccessfully'))

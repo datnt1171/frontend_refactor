@@ -100,11 +100,17 @@ export const logout = async () => {
 
 // Task functions
 export async function createTask(formData: FormData) {
+  const startTime = performance.now()
+  console.log('[API CLIENT] Request started')
+  
   try {
     const response = await apiClient('/tasks/', {
       method: 'POST',
       body: formData,
     })
+    
+    const endTime = performance.now()
+    console.log(`[API CLIENT] Request completed in ${(endTime - startTime).toFixed(0)}ms`)
     
     if (!response.ok) {
       return { success: false, error: response.data.message || 'Failed to create task' }
@@ -112,6 +118,7 @@ export async function createTask(formData: FormData) {
     
     return { success: true, data: response.data }
   } catch (error) {
+    console.error('[API CLIENT] Error:', error)
     return { success: false, error: 'Network error' }
   }
 }

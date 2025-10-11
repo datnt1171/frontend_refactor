@@ -46,16 +46,8 @@ export function FormField({
             return {
               maxWidth: 1440,
               maxHeight: 1920,
-              quality: 0.89,
+              quality: 0.9,
               maxSizeKB: 1024
-            }
-          } else if (count <= 3) {
-            // Few images - medium quality
-            return {
-              maxWidth: 1080,
-              maxHeight: 1440,
-              quality: 0.8,
-              maxSizeKB: 600
             }
           } else {
             // Multiple images - lower quality for daily reports

@@ -1,14 +1,23 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function POST(request: Request) {
+  const routeStartTime = Date.now()
+  console.log('[ROUTE] Request received')
+  
   try {
     const contentType = request.headers.get("content-type") || ""
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
 
-    // Handle multipart/form-data
+    const sessionTime = Date.now()
+    console.log(`[ROUTE] Session validated in ${sessionTime - routeStartTime}ms`)
+
     if (contentType.includes("multipart/form-data")) {
       const form = await request.formData()
+      const formParseTime = Date.now()
+      console.log(`[ROUTE] FormData parsed in ${formParseTime - sessionTime}ms`)
+      
+      const backendStartTime = Date.now()
       const response = await fetch(
         `${process.env.API_URL}/api/tasks/`,
         {
@@ -19,6 +28,10 @@ export async function POST(request: Request) {
           body: form,
         }
       )
+
+      const backendEndTime = Date.now()
+      console.log(`[ROUTE] Backend response in ${backendEndTime - backendStartTime}ms`)
+      console.log(`[ROUTE] Total route time: ${backendEndTime - routeStartTime}ms`)
 
       return handleApiResponse(response)
     }
@@ -40,7 +53,7 @@ export async function POST(request: Request) {
 
     return handleApiResponse(response)
   } catch (error: unknown) {
-    console.error("Task creation error:", error)
+    console.error("[ROUTE] Error:", error)
     return handleError(error)
   }
 }
