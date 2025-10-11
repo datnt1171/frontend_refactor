@@ -1,4 +1,4 @@
-import { getTechReport } from "@/lib/api/server"
+import { getTechReportWorkYesterday } from "@/lib/api/server"
 import {
   Table,
   TableHeader,
@@ -41,7 +41,7 @@ export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const params = await searchParams
   
-  const response = await getTechReport(params)
+  const response = await getTechReportWorkYesterday(params)
   const rows = response.filter(row => row.salesman === "陳國勇")
   return (
     <RightSidebarProvider>
@@ -102,7 +102,7 @@ export default async function Page({ searchParams }: PageProps) {
                         {t('crm.factories.support')}-
                       </TableHead>
                       <TableHead 
-                        colSpan={1} 
+                        colSpan={4} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         {t('crm.factories.support')}+
@@ -140,6 +140,9 @@ export default async function Page({ searchParams }: PageProps) {
                       <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KVN</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTW</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r border-gray-200">KTC</TableHead>
+                      <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">TT</TableHead>
                     </TableRow>
                   </TableHeader>
                   
@@ -175,6 +178,9 @@ export default async function Page({ searchParams }: PageProps) {
 
                             {/* In */}
                             <TableCell className="border-r border-gray-200" style={getValueStyle(row.kvn_in)}>{row.kvn_in}</TableCell>
+                            <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktw_in)}>{row.ktw_in}</TableCell>
+                            <TableCell className="border-r border-gray-200" style={getValueStyle(row.ktc_in)}>{row.ktc_in}</TableCell>
+                            <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
 
                             {/* Overtime */}
                             <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">

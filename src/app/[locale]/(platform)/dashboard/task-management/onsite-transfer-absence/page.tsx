@@ -1,4 +1,4 @@
-import { getTechReport } from "@/lib/api/server"
+import { getTechReportWorkYesterday } from "@/lib/api/server"
 import {
   Table,
   TableHeader,
@@ -14,7 +14,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getValueStyle } from '@/lib/utils/format'
 import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
-import { timeDiff } from "@/lib/utils/time"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 
@@ -43,7 +42,7 @@ export default async function Page({ searchParams }: PageProps) {
   console.log(format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'))
   const params = await searchParams
   
-  const response = await getTechReport(params)
+  const response = await getTechReportWorkYesterday(params)
   const rows = response
   return (
     <RightSidebarProvider>
@@ -108,16 +107,6 @@ export default async function Page({ searchParams }: PageProps) {
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         {t('crm.factories.support')}+
-                      </TableHead>
-                      <TableHead 
-                        rowSpan={2} 
-                        className="text-center text-sm bg-blue-50 border-r border-gray-200">
-                        {t('user.overtimeTotalHours')}
-                      </TableHead>
-                      <TableHead 
-                        rowSpan={2} 
-                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
-                        {t('user.overtimeNum')}
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
@@ -216,11 +205,15 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.tt_in)}>{row.tt_in}</TableCell>
 
                             {/* Overtime */}
-                            <TableCell className="border-r border-gray-200">{timeDiff(row.overtime?.weekday_ot_start, row.overtime.weekday_ot_end) * row.overtime.weekday_ot_num}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.weekday_ot_num}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.pallet_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.hanging_line_today}</TableCell>
-                            <TableCell className="border-r border-gray-300">{row.overtime.others_today}</TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                              {row.overtime.pallet_line_tomorrow}
+                            </TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                              {row.overtime.hanging_line_tomorrow}
+                            </TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                              {row.overtime.others_tomorrow}
+                            </TableCell>
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
@@ -258,8 +251,6 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell className="border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + row.tt_in, 0)}</TableCell>
                           
                           {/* Other columns */}
-                          <TableCell className="border-r border-gray-200">-</TableCell>
-                          <TableCell className="border-r border-gray-200">-</TableCell>
                           <TableCell className="border-r border-gray-200">-</TableCell>
                           <TableCell className="border-r border-gray-200">-</TableCell>
                           <TableCell className="border-r border-gray-200">-</TableCell>
