@@ -2,15 +2,16 @@
 import { getSessionCookie, unauthorizedResponse, handleApiResponse, handleError } from "@/lib/utils/api"
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> }  
 ) {
+  const { id } = await params
   try {
     const session = await getSessionCookie()
     if (!session.access_token) return unauthorizedResponse()
 
     const response = await fetch(
-      `${process.env.API_URL}/api/notifications/devices/${params.id}/`,
+      `${process.env.API_URL}/api/notifications/devices/${id}/`,
       {
         method: "DELETE",
         headers: {
