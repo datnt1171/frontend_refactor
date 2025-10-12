@@ -123,6 +123,50 @@ export async function createTask(formData: FormData) {
   }
 }
 
+
+export async function uploadTaskFilesInBackground(
+  taskId: string,
+  fileFields: Array<{fieldId: string, files: File[]}>
+) {
+  const totalStartTime = performance.now()
+  console.log(`[API CLIENT] Starting background upload of ${fileFields.length} file fields for task ${taskId}`)
+  
+  try {
+    for (const {fieldId, files} of fileFields) {
+      const startTime = performance.now()
+      
+      try {
+        const formData = new FormData()
+        formData.append('field_id', fieldId)
+        
+        files.forEach(file => {
+          formData.append('files', file)
+        })
+
+        const response = await apiClient(`/tasks/${taskId}/upload-files`, {
+          method: 'POST',
+          body: formData,
+        })
+        
+        const endTime = performance.now()
+        
+        if (response.ok) {
+          console.log(`[API CLIENT] Uploaded ${files.length} files for field ${fieldId} in ${(endTime - startTime).toFixed(0)}ms`)
+        } else {
+          console.error(`[API CLIENT] Upload failed for field ${fieldId}:`, response.data?.message)
+        }
+      } catch (error) {
+        console.error(`[API CLIENT] Upload error for field ${fieldId}:`, error)
+      }
+    }
+    
+    const totalEndTime = performance.now()
+    console.log(`[API CLIENT] Background upload completed in ${(totalEndTime - totalStartTime).toFixed(0)}ms`)
+  } catch (error) {
+    console.error('[API CLIENT] Background file upload failed:', error)
+  }
+}
+
 export const performTaskAction = async (
   id: string,
   actionData: TaskAction

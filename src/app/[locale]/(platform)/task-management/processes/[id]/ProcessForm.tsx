@@ -9,6 +9,7 @@ import { ProcessFormHeader } from "./ProcessFormHeader"
 import { ProcessFormContent } from "./ProcessFormContent"
 import { FormReview } from "./FormReview"
 import { getVisibleFields } from "@/lib/utils/field"
+import { uploadTaskFilesInBackground } from "@/lib/api/client/api"
 
 interface ProcessFormClientProps {
   process: ProcessDetail
@@ -66,50 +67,48 @@ export function ProcessFormClient({
 
   const handleSubmit = async () => {
   setIsSubmitting(true)
-  const startTime = performance.now()
-  console.log('[FRONTEND] Submit started')
 
   try {
+    // Step 1: Prepare data WITHOUT files
     const formData = new FormData()
-    formData.append("process", String(process.id))
+    formData.append("process", process.id)
+
+    const fileFieldsToUpload: Array<{fieldId: string, files: File[]}> = []
 
     process.fields.forEach((field, index) => {
-      formData.append(`fields[${index}][field_id]`, String(field.id))
+      formData.append(`fields[${index}][field_id]`, field.id)
       const value = formValues[field.id]
 
       if ((field.field_type === "file" || field.field_type === "multifile") && value) {
+        // Store files for later upload
         const filesArray = Array.isArray(value) ? value : [value]
-        
-        filesArray.forEach((file) => {
-          if (file instanceof File) {
-            formData.append(`fields[${index}][files]`, file)
-          }
+        fileFieldsToUpload.push({
+          fieldId: field.id,
+          files: filesArray.filter(f => f instanceof File) as File[]
         })
       } else {
         formData.append(`fields[${index}][value]`, value ?? "")
       }
     })
 
-    const formPrepTime = performance.now()
-    console.log(`[FRONTEND] FormData prepared in ${(formPrepTime - startTime).toFixed(0)}ms`)
-
-    const fetchStartTime = performance.now()
+    // Step 2: Create task
     const response = await createTask(formData)
-    const fetchEndTime = performance.now()
-    
-    console.log(`[FRONTEND] Network request took ${(fetchEndTime - fetchStartTime).toFixed(0)}ms`)
-    console.log('[FRONTEND] Request completed at', new Date().toISOString())
-    
-    const fetchTime = performance.now()
-    console.log(`[FRONTEND] Fetch completed in ${(fetchTime - formPrepTime).toFixed(0)}ms`)
-    console.log(`[FRONTEND] Total time: ${(fetchTime - startTime).toFixed(0)}ms`)
-    
-    if (response.success) {
-      alert(t('taskCreatedSuccessfully'))
-      router.push("/task-management/tasks/sent")
-    } else {
+
+    if (!response.success) {
       throw new Error(response.error)
     }
+
+    const taskId = response.data.id
+    // Step 3: Show success immediately
+    alert(t('taskCreatedSuccessfully'))
+    
+    // Step 4: Upload files in background
+    if (fileFieldsToUpload.length > 0) {
+      uploadTaskFilesInBackground(taskId, fileFieldsToUpload)
+    }
+
+    router.push("/task-management/tasks/sent")
+
   } catch (err: any) {
     console.error("Error creating task:", err)
     alert(err.message || t('failedToCreateTask'))

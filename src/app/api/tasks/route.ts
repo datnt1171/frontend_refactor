@@ -33,15 +33,14 @@ export async function POST(request: Request) {
       console.log(`[ROUTE] Backend response in ${backendEndTime - backendStartTime}ms`)
       console.log(`[ROUTE] Total route time: ${backendEndTime - routeStartTime}ms`)
 
-      const apiResponse = await handleApiResponse(response)
-    
-      // Add timing header
-      const headers = new Headers(apiResponse.headers)
-      headers.set('X-Server-Time', String(backendEndTime - routeStartTime))
+      const responseData = await response.json()
+      console.log('[ROUTE] Response data:', responseData)
       
-      return new Response(apiResponse.body, {
-        status: apiResponse.status,
-        headers
+      return new Response(JSON.stringify(responseData), {
+        status: response.status,
+        headers: {
+          'Content-Type': 'application/json'
+        }
       })
     }
 
@@ -59,8 +58,15 @@ export async function POST(request: Request) {
         body: JSON.stringify(body),
       }
     )
-
-    return handleApiResponse(response)
+    const responseData = await response.json()
+    console.log('[ROUTE] Response data:', responseData)
+    
+    return new Response(JSON.stringify(responseData), {
+      status: response.status,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   } catch (error: unknown) {
     console.error("[ROUTE] Error:", error)
     return handleError(error)
