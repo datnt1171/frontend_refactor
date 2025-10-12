@@ -116,6 +116,39 @@ export async function createTask(formData: FormData) {
   }
 }
 
+
+export async function uploadTaskFilesInBackground(
+  taskId: string,
+  fileFields: Array<{fieldId: string, files: File[]}>
+) {
+  try {
+    for (const {fieldId, files} of fileFields) {
+      try {
+        const formData = new FormData()
+        formData.append('field_id', fieldId)
+        
+        files.forEach(file => {
+          formData.append('files', file)
+        })
+
+        const response = await apiClient(`/tasks/${taskId}/upload-files`, {
+          method: 'POST',
+          body: formData,
+        })
+        
+        if (!response.ok) {
+          console.error(`[API CLIENT] Upload failed for field ${fieldId}:`, response.data?.message)
+        }
+      } catch (error) {
+        console.error(`[API CLIENT] Upload error for field ${fieldId}:`, error)
+      }
+    }
+  } catch (error) {
+    console.error('[API CLIENT] Background file upload failed:', error)
+  }
+}
+
+
 export const performTaskAction = async (
   id: string,
   actionData: TaskAction
