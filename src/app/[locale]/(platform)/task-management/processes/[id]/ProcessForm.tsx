@@ -93,7 +93,12 @@ export function ProcessFormClient({
     const formPrepTime = performance.now()
     console.log(`[FRONTEND] FormData prepared in ${(formPrepTime - startTime).toFixed(0)}ms`)
 
+    const fetchStartTime = performance.now()
     const response = await createTask(formData)
+    const fetchEndTime = performance.now()
+    
+    console.log(`[FRONTEND] Network request took ${(fetchEndTime - fetchStartTime).toFixed(0)}ms`)
+    console.log('[FRONTEND] Request completed at', new Date().toISOString())
     
     const fetchTime = performance.now()
     console.log(`[FRONTEND] Fetch completed in ${(fetchTime - formPrepTime).toFixed(0)}ms`)

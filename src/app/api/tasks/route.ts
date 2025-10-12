@@ -33,7 +33,16 @@ export async function POST(request: Request) {
       console.log(`[ROUTE] Backend response in ${backendEndTime - backendStartTime}ms`)
       console.log(`[ROUTE] Total route time: ${backendEndTime - routeStartTime}ms`)
 
-      return handleApiResponse(response)
+      const apiResponse = await handleApiResponse(response)
+    
+      // Add timing header
+      const headers = new Headers(apiResponse.headers)
+      headers.set('X-Server-Time', String(backendEndTime - routeStartTime))
+      
+      return new Response(apiResponse.body, {
+        status: apiResponse.status,
+        headers
+      })
     }
 
     // Handle application/json
