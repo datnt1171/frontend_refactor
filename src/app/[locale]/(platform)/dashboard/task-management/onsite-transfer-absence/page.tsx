@@ -222,7 +222,7 @@ export default async function Page({ searchParams }: PageProps) {
 
                         {/* Summary Row 1: Individual Column Sums (KTW, KTC, KVN, TT) */}
                         <TableRow className="font-bold border-2 border-gray-300">
-                          <TableCell colSpan={2} className="border-r border-gray-300">Total</TableCell>
+                          <TableCell colSpan={2} className="border-r border-gray-300">{t('common.total')}</TableCell>
                           
                           {/* Onsite Sums */}
                           <TableCell className="border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktw_onsite, 0)}</TableCell>
@@ -259,7 +259,7 @@ export default async function Page({ searchParams }: PageProps) {
 
                         {/* Summary Row 2: Group Sums (Onsite, Work, Absence, Out, In) */}
                         <TableRow className="font-bold border-2 border-gray-300">
-                          <TableCell colSpan={2} className="font-bold border border-gray-300">Group Total</TableCell>
+                          <TableCell colSpan={2} className="font-bold border border-gray-300">{t('common.total')}</TableCell>
                           
                           {/* Onsite Group Sum */}
                           <TableCell colSpan={3} className="text-center border-2 border-gray-300">

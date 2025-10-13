@@ -239,6 +239,9 @@ export default async function Page({ searchParams }: PageProps) {
                           
                           {/* In Sums */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.kvn_in, 0)}</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktw_in, 0)}</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.ktc_in, 0)}</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.tt_in, 0)}</TableCell>
                           
                           {/* Other columns */}
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
