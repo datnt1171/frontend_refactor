@@ -107,8 +107,21 @@ export function ProcessFormClient({
     if (fileFieldsToUpload.length > 0) {
       uploadTaskFilesInBackground(taskId, fileFieldsToUpload)
     }
-
-    router.push("/task-management/tasks/sent")
+    switch (response.data.process_prefix) {
+      case "SP":
+        router.push("/task-management/tasks/sent?page_size=15&page=1&process__prefix=SP");
+        break;
+      case "DR":
+        router.push("/task-management/tasks/sent?page_size=15&page=1&process__prefix=DR");
+        break;
+      case "TA":
+        router.push("/task-management/tasks/sent?page_size=15&page=1&process__prefix=TA");
+        break;
+      default:
+        router.push("/task-management/tasks/sent");
+        break;
+    }
+    
 
   } catch (err: any) {
     console.error("Error creating task:", err)

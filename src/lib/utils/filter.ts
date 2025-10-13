@@ -62,3 +62,11 @@ export function getDepartmentOptions() {
     { value: 'TT', label: 'TT' },
   ];
 }
+
+export function getProcessPrefixOptions() {
+  return [
+    { value: 'SP', label: 'Báo Mẫu' },
+    { value: 'DR', label: 'BC hằng ngày' },
+    { value: 'TA', label: 'Điều động' }
+  ];
+}

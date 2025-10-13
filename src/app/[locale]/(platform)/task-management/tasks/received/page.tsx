@@ -16,33 +16,27 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
+import { getStateTypeOptions, getProcessPrefixOptions } from "@/lib/utils/filter"
 
 const ReceivedTaskFilterConfig: PageFilterConfig = {
   showResetButton: true,
-  defaultValues: {
-    page_size: '15',
-    page: '1'
-  },
   filters: [
     {
+      id: 'process__prefix',
+      type: 'select',
+      label: 'Loại phiếu',
+      options: getProcessPrefixOptions()
+    },
+    {
       id: 'state__state_type__in',
-      type: 'multiselect',
+      type: 'select',
       label: 'State Filter',
-      options: [
-        { value: 'pending_approve', label: 'Pending Approve' },
-        { value: 'analyze', label: 'Analyze' },
-        { value: 'working', label: 'Working' },
-        { value: 'pending_review', label: 'Pending Review' },
-        { value: 'start', label: 'Start' },
-        { value: 'denied', label: 'Denied' },
-        { value: 'canceled', label: 'Canceled' },
-        { value: 'closed', label: 'Closed' }
-      ]
+      options: getStateTypeOptions()
     },
     {
       id: 'search',
       type: 'search',
-      label: 'Search Process',
+      label: 'Search task',
       placeholder: 'Search by task'
     }
   ]
