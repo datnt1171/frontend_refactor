@@ -60,13 +60,13 @@ export default async function Page({ searchParams }: PageProps) {
                   targetId="table-report" 
                   filename="table-screenshot.png"
                   imageTitle={params.date}
-                  buttonText="Screenshot (No Images)"
+                  buttonText="No Images)"
                 />
                 <ScreenshotButton 
                   targetId="table-report" 
                   filename="table-screenshot-full.png"
                   imageTitle={params.date}
-                  buttonText="Screenshot"
+                  buttonText="Images"
                   hideScreenshotClass={false}
                 />
               </div>
@@ -217,7 +217,7 @@ export default async function Page({ searchParams }: PageProps) {
                                       rel="noopener noreferrer"
                                       className="hover:opacity-80"
                                     >
-                                      <Image 
+                                      <img 
                                         src={file.url} 
                                         alt={file.filename}
                                         className="w-20 h-20 object-cover rounded border"
