@@ -16,6 +16,7 @@ import { getValueStyle } from '@/lib/utils/format'
 import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
+import Image from "next/image"
 
 const FilterConfig: PageFilterConfig = {
   showResetButton: true,
@@ -54,12 +55,20 @@ export default async function Page({ searchParams }: PageProps) {
                 <span className="text-sm font-medium">Filter</span>
               </div>
               
-              <div className="flex justify-end">
-                  <ScreenshotButton 
-                    targetId="table-report" 
-                    filename="table-screenshot.png"
-                    imageTitle={params.date}
-                  />
+              <div className="flex justify-end gap-2">
+                <ScreenshotButton 
+                  targetId="table-report" 
+                  filename="table-screenshot.png"
+                  imageTitle={params.date}
+                  buttonText="Screenshot (No Images)"
+                />
+                <ScreenshotButton 
+                  targetId="table-report" 
+                  filename="table-screenshot-full.png"
+                  imageTitle={params.date}
+                  buttonText="Screenshot"
+                  hideScreenshotClass={false}
+                />
               </div>
               <div id="table-container" className="overflow-auto mt-2">
                 <Table id="table-report" className="border border-gray-300">
@@ -129,7 +138,7 @@ export default async function Page({ searchParams }: PageProps) {
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
-                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300 screenshot-hide">
                         {t('common.file')}
                       </TableHead>
                     </TableRow>
@@ -195,7 +204,7 @@ export default async function Page({ searchParams }: PageProps) {
 
                             {/* Sample */}
                             <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
-                            <TableCell className="border-r border-gray-300">
+                            <TableCell className="border-r border-gray-300 screenshot-hide">
                               {row.overtime.files.length === 0 ? (
                                 <span className="text-gray-400"></span>
                               ) : (
@@ -208,7 +217,7 @@ export default async function Page({ searchParams }: PageProps) {
                                       rel="noopener noreferrer"
                                       className="hover:opacity-80"
                                     >
-                                      <img 
+                                      <Image 
                                         src={file.url} 
                                         alt={file.filename}
                                         className="w-20 h-20 object-cover rounded border"

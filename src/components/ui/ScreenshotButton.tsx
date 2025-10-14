@@ -12,6 +12,7 @@ interface ScreenshotButtonProps {
   children?: React.ReactNode;
   imageTitle?: string;
   buttonText?: string;
+  hideScreenshotClass?: boolean;
 }
 
 export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
@@ -26,6 +27,7 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
     </>
   ),
   imageTitle,
+  hideScreenshotClass = true,
 }) => {
   const handleScreenshot = async () => {
     try {
@@ -85,7 +87,13 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
 
       // Wait for layout changes
       await new Promise(resolve => setTimeout(resolve, 200));
-
+      const hideElements = hideScreenshotClass 
+        ? element.querySelectorAll('.screenshot-hide')
+        : [];
+      
+      hideElements.forEach(el => {
+        (el as HTMLElement).style.display = 'none';
+      });
       // Take screenshot with modern-screenshot
       const dataUrl = await domToPng(element, {
         backgroundColor: '#ffffff',
@@ -108,6 +116,9 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
       element.style.overflowY = targetOriginalStyles.overflowY;
       element.style.height = targetOriginalStyles.height;
       element.style.maxHeight = targetOriginalStyles.maxHeight;
+      hideElements.forEach(el => {
+        (el as HTMLElement).style.display = '';
+      });
 
       // If imageTitle is provided, add it to the image using canvas
       let finalDataUrl = dataUrl;
