@@ -180,6 +180,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/{id}/upload-files/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Upload files to existing task */
+        post: operations["api_tasks_upload_files_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/{task_id}/data/{field_id}/": {
         parameters: {
             query?: never;
@@ -665,6 +682,8 @@ export interface components {
             sunday_ot_num: number;
             hanging_line_sunday: string;
             pallet_line_sunday: string;
+            num_of_ppl: number;
+            name_of_ppl: string;
             files: {
                 url: string;
                 filename: string;
@@ -1112,8 +1131,6 @@ export interface components {
             /** Format: uuid */
             field_id: string;
             value?: string | null;
-            /** Format: uri */
-            file?: string | null;
             files?: string[];
         };
         TaskDetail: {
@@ -1673,6 +1690,26 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["TaskAction"];
                 };
+            };
+        };
+    };
+    api_tasks_upload_files_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

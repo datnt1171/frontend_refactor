@@ -60,7 +60,7 @@ export default async function Page({ searchParams }: PageProps) {
                   targetId="table-report" 
                   filename="table-screenshot.png"
                   imageTitle={params.date}
-                  buttonText="No Images)"
+                  buttonText="No Images"
                 />
                 <ScreenshotButton 
                   targetId="table-report" 
@@ -86,12 +86,12 @@ export default async function Page({ searchParams }: PageProps) {
                       >
                         {t('crm.factories.factoryName')}
                       </TableHead>
-                      <TableHead 
+                      {/* <TableHead 
                         colSpan={1} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-blue-100"
                       >
                         {t('crm.factories.onsite')}
-                      </TableHead>
+                      </TableHead> */}
                       <TableHead 
                         colSpan={1} 
                         className="text-center font-semibold border-r-2 border-gray-300 bg-green-100"
@@ -141,10 +141,20 @@ export default async function Page({ searchParams }: PageProps) {
                         className="text-center text-sm bg-blue-50 border-r border-gray-300 screenshot-hide">
                         {t('common.file')}
                       </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300 screenshot-hide">
+                        {t('user.firstName')}
+                      </TableHead>
+                      <TableHead 
+                        rowSpan={2} 
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300 screenshot-hide">
+                        {t('crm.factories.work')}
+                      </TableHead>
                     </TableRow>
                     
                     <TableRow className="bg-gray-50">
-                      <TableHead className="text-center text-sm bg-blue-50 border-r-2 border-gray-300">KVN</TableHead>
+                      {/* <TableHead className="text-center text-sm bg-blue-50 border-r-2 border-gray-300">KVN</TableHead> */}
                       <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
                       <TableHead className="text-center text-sm bg-green-50 border-r-2 border-gray-300">KVN</TableHead>
@@ -170,7 +180,7 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className="border-r-2 border-gray-300">{row.factory_name}</TableCell>
 
                             {/* Onsite */}
-                            <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.kvn_onsite)}>{row.kvn_onsite}</TableCell>
+                            {/* <TableCell className="border-r-2 border-gray-300" style={getValueStyle(row.kvn_onsite)}>{row.kvn_onsite}</TableCell> */}
 
                             {/* Work */}
                             <TableCell className="border-r-2 border-gray-300" style={getValueStyle(
@@ -227,6 +237,12 @@ export default async function Page({ searchParams }: PageProps) {
                                 </div>
                               )}
                             </TableCell>
+                            <TableCell className="text-right border-r border-gray-300 whitespace-normal break-words max-w-[150px] screenshot-hide">
+                              {row.overtime.name_of_ppl}
+                            </TableCell>
+                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px] screenshot-hide">
+                              {row.overtime.num_of_ppl}
+                            </TableCell>
                           </TableRow>
                         ))}
 
@@ -235,7 +251,7 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell colSpan={2} className="text-center border-r border-gray-300">{t('common.total')}</TableCell>
                           
                           {/* Onsite Sums */}
-                          <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + row.kvn_onsite, 0)}</TableCell>
+                          {/* <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + row.kvn_onsite, 0)}</TableCell> */}
                           
                           {/* Work Sums */}
                           <TableCell className="text-center border-r-2 border-gray-300">{rows.reduce((sum, row) => sum + (row.kvn_onsite - row.kvn_absence - row.kvn_out + row.kvn_in), 0)}</TableCell>
@@ -256,7 +272,18 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
                           <TableCell className="text-center border-r border-gray-200">-</TableCell>
+
+                          {/* Sample */}
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.sample_by_factory.quantity_requirement, 0)}</TableCell>
+                          
+                          {/* Other columns */}
+                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
+                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
+
+                          {/* Num of people */}
+                          <TableCell className="text-center border-r-2 border-gray-300">
+  {rows.reduce((sum, row) => sum + (+row.overtime.num_of_ppl), 0)}
+</TableCell>
                         </TableRow>
                       </>
                     )}

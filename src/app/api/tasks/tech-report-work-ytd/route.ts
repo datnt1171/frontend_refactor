@@ -40,6 +40,8 @@ const defaultOvertime: Partial<Overtime> = {
   sunday_ot_num: 0,
   hanging_line_sunday: "-",
   pallet_line_sunday: "-",
+  num_of_ppl: 0,
+  name_of_ppl: "-",
   files: [],
   created_at: "-",
 }
