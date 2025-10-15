@@ -220,16 +220,18 @@ export default async function Page({ searchParams }: PageProps) {
                               ) : (
                                 <div className="grid grid-rows-2 grid-flow-col gap-2 auto-cols-max">
                                   {row.overtime.files.map((file, idx) => (
-                                    <a 
-                                      key={idx} 
-                                      href={file.url} 
-                                      target="_blank" 
+                                    <a
+                                      key={idx}
+                                      href={file.url}
+                                      target="_blank"
                                       rel="noopener noreferrer"
                                       className="hover:opacity-80"
                                     >
-                                      <img 
-                                        src={file.url} 
+                                      <Image
+                                        src={file.url}
                                         alt={file.filename}
+                                        width={80}
+                                        height={80}
                                         className="w-20 h-20 object-cover rounded border"
                                       />
                                     </a>
