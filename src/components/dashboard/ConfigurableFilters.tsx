@@ -70,7 +70,20 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       let hasChanges = false;
       
       Object.entries(config.defaultValues).forEach(([key, value]) => {
-        if (!searchParams.has(key)) {
+        // Check if this is a range object with gte/lte
+        if (value && typeof value === 'object' && !Array.isArray(value) && (value.gte || value.lte)) {
+          // Handle range objects - check if either __gte or __lte exists in URL
+          if (!searchParams.has(`${key}__gte`) && !searchParams.has(`${key}__lte`)) {
+            if (value.gte) {
+              params.set(`${key}__gte`, value.gte);
+              hasChanges = true;
+            }
+            if (value.lte) {
+              params.set(`${key}__lte`, value.lte);
+              hasChanges = true;
+            }
+          }
+        } else if (!searchParams.has(key)) {
           if (Array.isArray(value) && value.length > 0) {
             params.set(key, value.join(','));
             hasChanges = true;
