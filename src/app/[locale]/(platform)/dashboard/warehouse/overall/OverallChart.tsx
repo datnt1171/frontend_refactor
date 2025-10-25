@@ -18,18 +18,16 @@ export default function OverallChart({ data }: OverallChartProps) {
 
     // Transform API data to chart format
     const months = data.map(item => item.month);
+    const sales = data.map(item => item.sales_quantity);
     const remainSales = data.map(item => item.remain_sales_quantity);
     const excludeFactorySales = data.map(item => item.exclude_factory_sales_quantity);
+    const orders = data.map(item => item.order_quantity);
     const remainOrders = data.map(item => item.remain_order_quantity);
     const excludeFactoryOrders = data.map(item => item.exclude_factory_order_quantity);
     const salesTargetPct = data.map(item => item.sales_target_pct);
     const orderTargetPct = data.map(item => item.order_target_pct);
 
     const option = {
-      title: {
-        text: 'Sales & Orders Overview',
-        left: 'center'
-      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -109,6 +107,15 @@ export default function OverallChart({ data }: OverallChartProps) {
           data: excludeFactorySales,
           itemStyle: {
             color: '#C1FFC1'
+          },
+          label: {
+            show: true,
+            position: 'top',
+            color: 'green',
+            formatter: (params: any) => {
+              const totalIndex = params.dataIndex;
+              return Math.round(sales[totalIndex]!).toLocaleString();
+            }
           }
         },
         {
@@ -127,6 +134,15 @@ export default function OverallChart({ data }: OverallChartProps) {
           data: excludeFactoryOrders,
           itemStyle: {
             color: '#DFF2EB'
+          },
+          label: {
+            show: true,
+            position: 'top',
+            color: 'blue',
+            formatter: (params: any) => {
+              const totalIndex = params.dataIndex;
+              return Math.round(orders[totalIndex]!).toLocaleString();
+            }
           }
         },
         {
@@ -135,13 +151,18 @@ export default function OverallChart({ data }: OverallChartProps) {
           yAxisIndex: 1,
           data: salesTargetPct,
           itemStyle: {
-            color: '#006400'
+            color: 'orange'
           },
           lineStyle: {
             width: 2
           },
           symbol: 'circle',
-          symbolSize: 5
+          symbolSize: 5,
+          label: {
+            show: true,
+            // color: 'orange',
+            formatter: (params: any) => `${(params.value * 100).toFixed(1)}%`
+          }
         },
         {
           name: 'Order Target %',
@@ -149,13 +170,18 @@ export default function OverallChart({ data }: OverallChartProps) {
           yAxisIndex: 1,
           data: orderTargetPct,
           itemStyle: {
-            color: '#00008B'
+            color: 'red'
           },
           lineStyle: {
             width: 2
           },
           symbol: 'triangle',
-          symbolSize: 5
+          symbolSize: 5,
+          label: {
+            show: true,
+            color: 'red',
+            formatter: (params: any) => `${(params.value * 100).toFixed(1)}%`
+          }
         }
       ]
     };
@@ -171,5 +197,5 @@ export default function OverallChart({ data }: OverallChartProps) {
     };
   }, [data]);
 
-  return <div ref={chartRef} style={{ width: '100%', height: 400 }} />;
+  return <div ref={chartRef} style={{ width: '100%', height: 500 }} />;
 }

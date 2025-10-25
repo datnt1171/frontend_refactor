@@ -12,10 +12,14 @@ import { getFactoryOptions, MONTH_OPTIONS } from '@/lib/utils/filter';
 
 interface PageProps {
   searchParams: Promise<{
-    ordering?: string
-    search?: string,
-    page?: string
-    page_size?: string
+    day__gte: string
+    day__lte: string
+    month__gte: string
+    month__lte: string
+    year: string
+    target_month: string
+    target_year: string
+    exclude_factory: string
   }>
 }
 
@@ -94,6 +98,11 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
 
               <div>
+                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  {params.year}年每月送貨比较与{params.target_year}年{params.target_month}月相比 
+                  (每月{params.day__gte}日~{params.day__lte}日)<br />
+                  SO SÁNH SỐ LƯỢNG GIAO HÀNG MỖI THÁNG SO VỚI THÁNG {params.target_month} NĂM {params.target_year}
+                </h1>
                 <StackedChart data={data} />
               </div>
 
