@@ -112,6 +112,10 @@ export const getCurrentYear = (): string => {
   return new Date().getFullYear().toString();
 };
 
+export const getLastYear = (): string => {
+  return (new Date().getFullYear() - 1).toString();
+};
+
 export const daysDiff = (fromDate: string, toDate: string): number => {
   const from = new Date(fromDate)
   const to = new Date(toDate)

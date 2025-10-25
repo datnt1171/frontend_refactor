@@ -77,3 +77,48 @@ export const MONTH_OPTIONS = [
   { value: '11', label: 'November' },
   { value: '12', label: 'December' }
 ];
+
+export const TIME_GROUP_BY_OPTIONS = [
+  { value: 'year', label: 'Year' },
+  { value: 'quarter', label: 'Quarter' },
+  { value: 'month', label: 'Month' },
+  { value: 'week_of_year', label: 'Week' },
+  { value: 'day_of_week', label: 'Weekday' },
+  { value: 'date', label: 'Date' },
+  { value: 'day', label: 'Day' },
+];
+
+export const TIME_SELECT_OPTIONS = [
+  { value: 'year,quarter', label: 'Timeline (Year-Quarter)' },
+  { value: 'year,month', label: 'Timeline (Year-Month)' },
+  { value: 'year,week_of_year', label: 'Timeline (Year-Week)' },
+  { value: 'year,date', label: 'By Date' },
+  { value: 'quarter,year', label: 'Compare Years by Quarter' },
+  { value: 'month,year', label: 'Compare Years by Month' },
+  { value: 'week_of_year,year', label: 'Compare Years by Week' },
+];
+
+export function getYearOptions(yearsBack: number = 3): Array<{ value: string; label: string }> {
+  const currentYear = new Date().getFullYear();
+  return Array.from({ length: yearsBack + 1 }, (_, i) => {
+    const year = currentYear - i;
+    return { value: year.toString(), label: year.toString() };
+  });
+}
+
+export const THINNER_PAINT_OPTIONS = [
+  { value: '原料溶劑 NL DUNG MOI', label: '原料溶劑 NL DUNG MOI' },
+  { value: '成品溶劑DUNG MOI TP', label: '成品溶劑DUNG MOI TP' },
+  { value: '烤調色PM HAP', label: '烤調色PM HAP' },
+  { value: '木調色PM GO', label: '木調色PM GO' },
+  { value: '底漆 LOT', label: '底漆 LOT' },
+  { value: '面漆 BONG', label: '面漆 BONG' },
+  { value: '水性SON NUOC', label: '水性SON NUOC' },
+  { value: '色母SON CAI', label: '色母SON CAI' },
+  { value: '補土 BOT TRET', label: '補土 BOT TRET' },
+  { value: '半成品BAN THANHPHAM', label: '半成品BAN THANHPHAM' },
+  { value: '助劑PHU GIA', label: '助劑PHU GIA' },
+  { value: '色精TINH MAU', label: '色精TINH MAU' },
+  { value: '粉類 BOT', label: '粉類 BOT' },
+  { value: '硬化劑chat cung', label: '硬化劑chat cung' },
+]

@@ -640,10 +640,6 @@ export interface components {
             diff_month_sales: number;
             /** Total Sales */
             total_sales: number;
-            /** Same Month Order */
-            same_month_order: number;
-            /** Diff Month Order */
-            diff_month_order: number;
             /** Total Order */
             total_order: number;
         };
@@ -1406,13 +1402,13 @@ export interface operations {
     };
     get_factory_sales_range_diff_api_warehouse_factory_sales_range_diff_get: {
         parameters: {
-            query: {
+            query?: {
                 threshold?: number;
                 increase?: boolean;
-                date__gte: string;
-                date__lte: string;
-                date_target__gte: string;
-                date_target__lte: string;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
             };
             header?: never;
             path?: never;
@@ -1442,13 +1438,13 @@ export interface operations {
     };
     get_factory_order_range_diff_api_warehouse_factory_order_range_diff_get: {
         parameters: {
-            query: {
+            query?: {
                 threshold?: number;
                 increase?: boolean;
-                date__gte: string;
-                date__lte: string;
-                date_target__gte: string;
-                date_target__lte: string;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
             };
             header?: never;
             path?: never;
@@ -1478,12 +1474,12 @@ export interface operations {
     };
     get_factory_sales_range_diff_api_warehouse_product_sales_range_diff_get: {
         parameters: {
-            query: {
+            query?: {
                 factory?: string | null;
-                date__gte: string;
-                date__lte: string;
-                date_target__gte: string;
-                date_target__lte: string;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
             };
             header?: never;
             path?: never;
@@ -1513,12 +1509,12 @@ export interface operations {
     };
     get_factory_order_range_diff_api_warehouse_product_order_range_diff_get: {
         parameters: {
-            query: {
+            query?: {
                 factory?: string | null;
-                date__gte: string;
-                date__lte: string;
-                date_target__gte: string;
-                date_target__lte: string;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
             };
             header?: never;
             path?: never;
@@ -1617,11 +1613,11 @@ export interface operations {
     };
     get_sales_pivot_api_warehouse_is_same_month_get: {
         parameters: {
-            query: {
-                date__gte: string;
-                date__lte: string;
-                date_target__gte: string;
-                date_target__lte: string;
+            query?: {
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
             };
             header?: never;
             path?: never;
@@ -1651,13 +1647,13 @@ export interface operations {
     };
     get_sales_pivot_api_warehouse_sales_order_pct_diff_get: {
         parameters: {
-            query: {
+            query?: {
                 /** @description Factory code to exclude */
                 exclude_factory?: string;
-                date__gte: string;
-                date__lte: string;
-                date_target__gte: string;
-                date_target__lte: string;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
             };
             header?: never;
             path?: never;
@@ -1671,7 +1667,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["SalesOrderPctDiff"][];
+                    "application/json": components["schemas"]["SalesOrderPctDiff"];
                 };
             };
             /** @description Validation Error */

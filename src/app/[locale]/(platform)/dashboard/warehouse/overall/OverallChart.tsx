@@ -4,11 +4,11 @@ import * as echarts from 'echarts';
 import { useEffect, useRef } from 'react';
 import type { Overall } from '@/types';
 
-interface StackedChartProps {
+interface OverallChartProps {
   data: Overall[];
 }
 
-export default function StackedChart({ data }: StackedChartProps) {
+export default function OverallChart({ data }: OverallChartProps) {
   const chartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

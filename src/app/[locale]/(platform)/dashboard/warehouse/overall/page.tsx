@@ -1,5 +1,5 @@
 import { getWarehouseOverall } from '@/lib/api/server';
-import StackedChart from './charts';
+import StackedChart from './OverallChart';
 import { getTranslations } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
