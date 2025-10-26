@@ -6,30 +6,29 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { generateYearOptions, getCurrentYear } from '@/lib/utils/date';
 
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    year: getCurrentYear()
-  },
-  filters: [
-    {
-      id: 'year',
-      type: 'select',
-      label: 'Select Year',
-      options: generateYearOptions({ yearsBack: 3 })
-      
-    }
-  ]
-}
-
 interface PageProps {
   searchParams: Promise<{
     year: string
   }>
 }
 
-
 export default async function UserFactoryOnsitePage({ searchParams }: PageProps) {
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      year: getCurrentYear()
+    },
+    filters: [
+      {
+        id: 'year',
+        type: 'select',
+        label: 'Select Year',
+        options: generateYearOptions({ yearsBack: 3 })
+        
+      }
+    ]
+  }
 
   const params = await searchParams
   // Fetch users and onsite data in parallel

@@ -15,34 +15,6 @@ import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
-
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    ordering: 'username',
-    page_size: '15',
-    page: '1'
-  },
-  filters: [
-    {
-      id: 'ordering',
-      type: 'sort',
-      label: 'Sort Options',
-      placeholder: 'Select sort order...',
-      sortFields: [
-        { value: 'username', label: 'Username' },
-        { value: 'first_name', label: 'First name' }
-      ]
-    },
-    {
-      id: 'search',
-      type: 'search',
-      label: 'Search User',
-      placeholder: 'Search by username, name'
-    }
-  ]
-}
-
 interface UserPageProps {
   searchParams: Promise<{
     ordering?: string
@@ -53,6 +25,34 @@ interface UserPageProps {
 }
 
 export default async function UserListPage({ searchParams }: UserPageProps) {
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      ordering: 'username',
+      page_size: '15',
+      page: '1'
+    },
+    filters: [
+      {
+        id: 'ordering',
+        type: 'sort',
+        label: 'Sort Options',
+        placeholder: 'Select sort order...',
+        sortFields: [
+          { value: 'username', label: 'Username' },
+          { value: 'first_name', label: 'First name' }
+        ]
+      },
+      {
+        id: 'search',
+        type: 'search',
+        label: 'Search User',
+        placeholder: 'Search by username, name'
+      }
+    ]
+  }
+
   const commonT = await getTranslations("common")
   const t = await getTranslations("user")
   const params = await searchParams

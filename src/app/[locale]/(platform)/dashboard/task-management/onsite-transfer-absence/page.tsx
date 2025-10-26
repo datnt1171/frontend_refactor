@@ -17,20 +17,6 @@ import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
-  },
-  filters: [
-    {
-      id: 'date',
-      type: 'date',
-      label: 'Select Date'
-    },
-  ]
-}
-
 interface PageProps {
   searchParams: Promise<{
     date: string
@@ -38,6 +24,21 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
+    },
+    filters: [
+      {
+        id: 'date',
+        type: 'date',
+        label: 'Select Date'
+      },
+    ]
+  }
+
   const t = await getTranslations()
   console.log(format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'))
   const params = await searchParams

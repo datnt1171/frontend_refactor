@@ -15,23 +15,6 @@ import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
-
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    page_size: '15',
-    page: '1'
-  },
-  filters: [
-    {
-      id: 'search',
-      type: 'search',
-      label: 'Search Retailer',
-      placeholder: 'Search by Retailer name'
-    }
-  ]
-}
-
 interface RetailerPageProps {
   searchParams: Promise<{
     search?: string,
@@ -41,6 +24,24 @@ interface RetailerPageProps {
 }
 
 export default async function UserListPage({ searchParams }: RetailerPageProps) {
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    
+    defaultValues: {
+      page_size: '15',
+      page: '1'
+    },
+    filters: [
+      {
+        id: 'search',
+        type: 'search',
+        label: 'Search Retailer',
+        placeholder: 'Search by Retailer name'
+      }
+    ]
+  }
+
   // const commonT = await getTranslations()
   const params = await searchParams
   

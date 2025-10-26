@@ -20,30 +20,6 @@ import { toZonedTime } from 'date-fns-tz'
 import { Link } from "@/i18n/navigation"
 import { getDepartmentOptions } from "@/lib/utils/filter"
 
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    date: {
-      gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
-      lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd')
-    },
-    user__department__name: ['KTW', 'KTC', 'TT']
-  },
-  filters: [
-    {
-      id: 'date',
-      type: 'date-range',
-      label: 'Select Date'
-    },
-    {
-      id: 'user__department__name',
-      type: 'multiselect',
-      label: 'Department Filter',
-      options: getDepartmentOptions()
-    },
-  ]
-}
-
 interface PageProps {
   searchParams: Promise<{
     date_gte: string
@@ -52,6 +28,31 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
+  
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      date: {
+        gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+        lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd')
+      },
+      user__department__name: ['KTW', 'KTC', 'TT']
+    },
+    filters: [
+      {
+        id: 'date',
+        type: 'date-range',
+        label: 'Select Date'
+      },
+      {
+        id: 'user__department__name',
+        type: 'multiselect',
+        label: 'Department Filter',
+        options: getDepartmentOptions()
+      },
+    ]
+  }
+
   const t = await getTranslations()
   const params = await searchParams
   

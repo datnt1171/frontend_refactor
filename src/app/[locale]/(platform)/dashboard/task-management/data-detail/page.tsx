@@ -32,40 +32,41 @@ interface PageProps {
 
 export default async function TaskDataDetailPage({searchParams}: PageProps) {
   const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    state_type__in: [
-      'pending_approve', 'analyze', 'working',
-      'pending_review', 'start'
+    showResetButton: true,
+    defaultValues: {
+      state_type__in: [
+        'pending_approve', 'analyze', 'working',
+        'pending_review', 'start'
+      ]
+    },
+    filters: [
+      {
+        id: 'state_type__in',
+        type: 'multiselect',
+        label: 'State Filter',
+        options: getStateTypeOptions()
+      },
+      {
+        id: 'factory_code__in',
+        type: 'multiselect',
+        label: 'Factory Filter',
+        options: await getFactoryOptions()
+      },
+      {
+        id: 'retailer_id__in',
+        type: 'multiselect',
+        label: 'Retailer Filter',
+        options: await getRetailerOptions()
+      },
+      {
+        id: 'sampler__in',
+        type: 'multiselect',
+        label: 'User Filter',
+        options: await getUserOptions()
+      },
     ]
-  },
-  filters: [
-    {
-      id: 'state_type__in',
-      type: 'multiselect',
-      label: 'State Filter',
-      options: getStateTypeOptions()
-    },
-    {
-      id: 'factory_code__in',
-      type: 'multiselect',
-      label: 'Factory Filter',
-      options: await getFactoryOptions()
-    },
-    {
-      id: 'retailer_id__in',
-      type: 'multiselect',
-      label: 'Retailer Filter',
-      options: await getRetailerOptions()
-    },
-    {
-      id: 'sampler__in',
-      type: 'multiselect',
-      label: 'User Filter',
-      options: await getUserOptions()
-    },
-  ]
-}
+  }
+  
   const params = await searchParams
   const t = await getTranslations()
   const data = await getDataDetails(params)

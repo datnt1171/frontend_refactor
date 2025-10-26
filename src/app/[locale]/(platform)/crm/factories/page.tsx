@@ -17,42 +17,6 @@ import { StatusBadge } from "@/components/ui/StatusBadge"
 import { OnsiteBadge } from "@/components/ui/OnsiteBadge"
 import type { PageFilterConfig } from "@/types"
 
-
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    is_active: 'true',
-    page_size: '15',
-    page: '1'
-  },
-  filters: [
-    {
-      id: 'is_active',
-      type: 'select',
-      label: 'Active',
-      options: [
-        { value: 'true', label: 'Active' },
-        { value: 'false', label: 'Inactive' },
-      ]
-    },
-    {
-      id: 'has_onsite',
-      type: 'select',
-      label: 'Onsite',
-      options: [
-        { value: 'true', label: 'Yes' },
-        { value: 'false', label: 'No' },
-      ]
-    },
-    {
-      id: 'search',
-      type: 'search',
-      label: 'Search Factory',
-      placeholder: 'Search by Factory code, name'
-    }
-  ]
-}
-
 interface FactoryPageProps {
   searchParams: Promise<{
     is_active?: string,
@@ -64,6 +28,42 @@ interface FactoryPageProps {
 }
 
 export default async function UserListPage({ searchParams }: FactoryPageProps) {
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      is_active: 'true',
+      page_size: '15',
+      page: '1'
+    },
+    filters: [
+      {
+        id: 'is_active',
+        type: 'select',
+        label: 'Active',
+        options: [
+          { value: 'true', label: 'Active' },
+          { value: 'false', label: 'Inactive' },
+        ]
+      },
+      {
+        id: 'has_onsite',
+        type: 'select',
+        label: 'Onsite',
+        options: [
+          { value: 'true', label: 'Yes' },
+          { value: 'false', label: 'No' },
+        ]
+      },
+      {
+        id: 'search',
+        type: 'search',
+        label: 'Search Factory',
+        placeholder: 'Search by Factory code, name'
+      }
+    ]
+  }
+
   // const commonT = await getTranslations()
   const params = await searchParams
   

@@ -18,20 +18,6 @@ import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import Image from "next/image"
 
-const FilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
-  },
-  filters: [
-    {
-      id: 'date',
-      type: 'date',
-      label: 'Select Date'
-    },
-  ]
-}
-
 interface PageProps {
   searchParams: Promise<{
     date: string
@@ -39,6 +25,21 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
+    },
+    filters: [
+      {
+        id: 'date',
+        type: 'date',
+        label: 'Select Date'
+      },
+    ]
+  }
+
   const t = await getTranslations()
   const params = await searchParams
   
