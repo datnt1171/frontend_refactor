@@ -20,9 +20,10 @@ const messaging = firebase.messaging();
 messaging.onBackgroundMessage((payload) => {
   console.log('Received background message:', payload);
 
-  const notificationTitle = payload.notification?.title || 'New Notification';
+  // Support both notification and data-only messages
+  const notificationTitle = payload.data?.title || 'New Notification';
   const notificationOptions = {
-    body: payload.notification?.body || 'You have a new notification',
+    body: payload.data?.body || 'You have a new notification',
     icon: '/android-chrome-192x192.png',
     badge: '/favicon-32x32.png',
     data: payload.data,
