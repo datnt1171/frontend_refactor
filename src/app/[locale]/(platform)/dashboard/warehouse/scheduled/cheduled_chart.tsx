@@ -2,16 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
-
-interface ScheduledSalesData {
-  scheduled_month: number;
-  scheduled_quantity: number;
-  sales_quantity: number;
-  sales_pct: number;
-}
+import type { ScheduledAndActualSales } from '@/types'
 
 interface ScheduledChartProps {
-  data: ScheduledSalesData[];
+  data: ScheduledAndActualSales[];
 }
 
 export default function ScheduledChart({ data }: ScheduledChartProps) {
@@ -25,22 +19,14 @@ export default function ScheduledChart({ data }: ScheduledChartProps) {
       chartInstance.current = echarts.init(chartRef.current);
     }
 
-    const months = data.map((item) => `Month ${item.scheduled_month}`);
+    const months = data.map((item) => `${item.scheduled_month}`);
     const scheduledQuantities = data.map((item) => item.scheduled_quantity);
     const salesQuantities = data.map((item) => item.sales_quantity);
     const salesPercentages = data.map((item) => 
-      item.sales_pct === 0 ? null : (item.sales_pct * 100).toFixed(2)
+      item.sales_pct === 0 ? null : item.sales_pct * 100
     );
 
     const option: echarts.EChartsOption = {
-      title: {
-        text: 'Scheduled vs Actual Sales',
-        left: 'center',
-        textStyle: {
-          fontSize: 18,
-          fontWeight: 'bold',
-        },
-      },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -48,61 +34,93 @@ export default function ScheduledChart({ data }: ScheduledChartProps) {
         },
       },
       legend: {
-        data: ['Scheduled Quantity', 'Sales Quantity', 'Sales %'],
-        top: 30,
+        data: [
+          '預計銷售額 - Dự định GH', 
+          '實際銷售額 - GH Thực tế', 
+          '%達到率 - %Tỉ lệ đạt được'
+        ],
+        top: 0,
       },
       grid: {
-        top: 80,
-        left: 50,
-        right: 80,
-        bottom: 50,
+        top: 30,
+        left: '4%',
+        right: '4%',
+        bottom: '7%',
+        containLabel: true
       },
       xAxis: {
         type: 'category',
         data: months,
+        name: '月 - Tháng',
+        position: 'bottom',
+        nameLocation: 'middle',
+        nameGap: 30,
       },
       yAxis: [
         {
           type: 'value',
-          name: 'Quantity',
+          name: '數量 - Số lượng (kg)',
           position: 'left',
+          nameLocation: 'middle',
+          nameGap: 70,
         },
         {
           type: 'value',
-          name: 'Sales %',
+          name: 'Tỉ lệ (%)',
           position: 'right',
+          nameLocation: 'middle',
+          nameGap: 50,
         },
       ],
       series: [
         {
-          name: 'Scheduled Quantity',
+          name: '預計銷售額 - Dự định GH',
           type: 'bar',
           data: scheduledQuantities,
           itemStyle: {
-            color: '#3b82f6',
+            color: '#7AB2D3',
           },
           yAxisIndex: 0,
+          label: {
+            show: true,
+            position: 'top',
+            color: 'blue',
+            formatter: (params: any) => Math.round(params.value).toLocaleString()
+          }
         },
         {
-          name: 'Sales Quantity',
+          name: '實際銷售額 - GH Thực tế',
           type: 'bar',
           data: salesQuantities,
           itemStyle: {
-            color: '#10b981',
+            color: '#72BF78',
           },
           yAxisIndex: 0,
+          label: {
+            show: true,
+            position: 'top',
+            color: 'green',
+            formatter: (params: any) => Math.round(params.value).toLocaleString()
+          }
         },
         {
-          name: 'Sales %',
+          name: '%達到率 - %Tỉ lệ đạt được',
           type: 'line',
           data: salesPercentages,
           itemStyle: {
-            color: '#f59e0b',
+            color: 'red',
           },
           yAxisIndex: 1,
           lineStyle: {
             width: 2,
           },
+          label: {
+            show: true,
+            position: 'top',
+            color: 'black',
+            fontSize: 14,
+            formatter: (params: any) => params.value !== null ? `${Number(params.value).toFixed(1)}%` : ''
+          }
         },
       ],
     };
@@ -124,7 +142,7 @@ export default function ScheduledChart({ data }: ScheduledChartProps) {
       ref={chartRef}
       style={{
         width: '100%',
-        height: '400px'
+        height: 500
       }}
     />
   );

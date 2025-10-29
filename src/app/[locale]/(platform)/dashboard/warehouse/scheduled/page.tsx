@@ -10,15 +10,15 @@ import ScheduledChart from './cheduled_chart';
 
 interface PageProps {
   searchParams: Promise<{
-    date__gte: string
-    date__lte: string
-    date_target__gte: string
-    date_target__lte: string
+    year: string
     factory: string
   }>
 }
 
 export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams
+  const factoryOptions = await getFactoryOptions()
+  const factoryName = factoryOptions.find(option => option.value === params.factory)?.label || params.factory
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
@@ -32,8 +32,7 @@ export default async function Page({ searchParams }: PageProps) {
         id: 'factory',
         type: 'combobox',
         label: 'Factory',
-        options: await getFactoryOptions()
-
+        options: factoryOptions
       },
       {
         id: 'year',
@@ -45,7 +44,6 @@ export default async function Page({ searchParams }: PageProps) {
   }
 
   const t = await getTranslations()
-  const params = await searchParams
   const scheduledAndActualSales = await getScheduledAndActualSales(params)
 
   return (
@@ -58,7 +56,11 @@ export default async function Page({ searchParams }: PageProps) {
                 <SidebarTrigger />
                 <span className="text-sm font-medium">Filter</span>
               </div>
-              <div className="w-full flex justify-center">
+              <div>
+                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  計劃及實際銷售 - {factoryName} <br />
+                  Dự định GH và GH thực tế - {factoryName}
+                </h1>
                 <ScheduledChart data={scheduledAndActualSales} />
               </div>
             </div>

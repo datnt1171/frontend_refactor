@@ -25,10 +25,16 @@ export default function SalesVsTargetChart({ data }: Props) {
         top: 0
       },
       grid: {
-        left: '10%'
+        top: '5%',
+        left: '10%',
+        bottom: '7%',
       },
       xAxis: {
         type: 'value',
+        name: 'Quantity',
+        position: 'bottom',
+        nameLocation: 'middle',
+        nameGap: 30,
         axisLabel: {
           formatter: (value) => {
             return Math.abs(value).toLocaleString();
@@ -54,6 +60,7 @@ export default function SalesVsTargetChart({ data }: Props) {
           label: {
             show: true,
             position: 'right',
+            formatter: (params) => Math.abs(params.value as number).toLocaleString(),
           },
           emphasis: {
             focus: 'series',
@@ -94,6 +101,6 @@ export default function SalesVsTargetChart({ data }: Props) {
   }, [data]);
 
   return (
-    <div ref={chartRef} style={{ width: '100%', height: '600px' }} />
+    <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
   );
 }

@@ -76,20 +76,15 @@ export default async function Page({ searchParams }: PageProps) {
 
   const factorySalesRangeDiff = await getFactorySalesRangeDiff(params)
 
-  const currentStart = new Date(params.date__gte)
-  const currentEnd = new Date(params.date__lte)
-  const targetStart = new Date(params.date_target__gte)
-  const targetEnd = new Date(params.date_target__lte)
+  // Parse dates from params
+  const dateGte = new Date(params.date__gte)
+  const dateTargetGte = new Date(params.date_target__gte)
   
   // Extract month and year
-  const currentMonth = currentStart.getMonth() + 1 // 0-indexed, so add 1
-  const currentYear = currentStart.getFullYear()
-  const targetMonth = targetStart.getMonth() + 1
-  const targetYear = targetStart.getFullYear()
-
-  // Get day range
-  const startDay = currentStart.getDate()
-  const endDay = currentEnd.getDate()
+  const dateGteMonth = dateGte.getMonth() + 1 // getMonth() returns 0-11
+  const dateGteYear = dateGte.getFullYear()
+  const dateTargetGteMonth = dateTargetGte.getMonth() + 1
+  const dateTargetGteYear = dateTargetGte.getFullYear()
 
   return (
     <RightSidebarProvider>
@@ -101,50 +96,87 @@ export default async function Page({ searchParams }: PageProps) {
                 <SidebarTrigger />
                 <span className="text-sm font-medium">Filter</span>
               </div>
-              <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+
+              <div>
+                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  {dateGteYear}年{dateGteMonth}月比{dateTargetGteYear}年{dateTargetGteMonth}月分客戶{params.increase}与的名单(1000KG 以上) <br />
+                  Giao hàng tháng {dateGteMonth}/{dateGteYear} {params.increase} so với {dateTargetGteMonth}/{dateTargetGteYear}
+                </h1>
+              </div>
+
+              <div className="border bg-white shadow-sm w-full overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>數字順序 - STT</TableHead>
-                      <TableHead>客戶代號 MÃ KHÁCH HÀNG</TableHead>
-                      <TableHead>客戶名称 TÊN KHÁCH HÀNG</TableHead>
-                      <TableHead>整個月的送货數量 SỐ LƯỢNG GIAO HÀNG CẢ THÁNG {targetMonth}</TableHead>
-                      <TableHead>{params.date_target__gte}~{params.date_target__lte} 送货数量 SỐ LƯỢNG GIAO HÀNG</TableHead>
-                      <TableHead>{params.date__gte}~{params.date__lte} 送货数量 SỐ LƯỢNG GIAO HÀNG</TableHead>
-                      <TableHead>数量差异 SỐ LƯỢNG CHÊNH LỆCH</TableHead>
-                      <TableHead>% 差異 TỈ LỆ CHÊNH LỆCH</TableHead>
-                      <TableHead>訂單未交數量 SỐ LƯỢNG ĐĐH CHƯA GIAO</TableHead>
+                    <TableRow className="bg-[#C1FFC1]">
+                      <TableHead className="border-r font-bold text-center">
+                        <div>數字順序</div>
+                        <div>STT</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>客戶代號</div>
+                        <div>MÃ KH</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>客戶名称</div>
+                        <div>TÊN KH</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>整個月{dateTargetGteMonth}的送货數量</div>
+                        <div>SL GIAO HÀNG CẢ THÁNG {dateTargetGteMonth}</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>{params.date_target__gte}→{params.date_target__lte}</div>
+                        <div>送货数量 SL GIAO HÀNG</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>{params.date__gte}→{params.date__lte}</div>
+                        <div>送货数量 SL GIAO HÀNG</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>数量差异</div>
+                        <div>SL CHÊNH LỆCH</div>
+                      </TableHead>
+                      <TableHead className="border-r font-bold text-center">
+                        <div>% 差異</div>
+                        <div>% CHÊNH LỆCH</div>
+                      </TableHead>
+                      <TableHead className="font-bold text-center">
+                        <div>訂單未交數量</div>
+                        <div>SL ĐĐH CHƯA GIAO</div>
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {factorySalesRangeDiff.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={3} className="text-center">
+                        <TableCell colSpan={9} className="text-center">
                           {t('common.noDataFound')}
                         </TableCell>
                       </TableRow>
                     ) : (
                       factorySalesRangeDiff.map((data, index) => (
                         <TableRow key={data.factory_code}>
-                        <TableCell className="text-center">{index + 1}</TableCell>
-                        <TableCell>{data.factory_code}</TableCell>
-                        <TableCell>{data.factory_name}</TableCell>
-                        <TableCell className="text-right">
-                          {data.whole_month_sales_quantity.toLocaleString()}
+                        <TableCell className="text-center border-r">{index + 1}</TableCell>
+                        <TableCell className="border-r">{data.factory_code}</TableCell>
+                        <TableCell className="border-r">{data.factory_name}</TableCell>
+                        <TableCell className={`text-right border-r ${data.whole_month_sales_quantity === 0 ? 'bg-red-300' : ''}`}>
+                          {Math.round(data.whole_month_sales_quantity).toLocaleString()}
+                        </TableCell>
+                        <TableCell className={`text-right border-r ${data.sales_quantity_target === 0 ? 'bg-red-300' : ''}`}>
+                          {Math.round(data.sales_quantity_target).toLocaleString()}
+                        </TableCell>
+                        <TableCell className={`text-right border-r ${data.sales_quantity === 0 ? 'bg-red-300' : ''}`}>
+                          {Math.round(data.sales_quantity).toLocaleString()}
+                        </TableCell>
+                        <TableCell className={`text-right border-r ${data.quantity_diff < 0 ? 'bg-red-300' : 'bg-green-200'}`}>
+                          {Math.round(data.quantity_diff).toLocaleString()}
                         </TableCell>
                         <TableCell className="text-right">
-                          {data.sales_quantity_target.toLocaleString()}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          {data.sales_quantity.toLocaleString()}
-                        </TableCell>
-                        <TableCell className={`text-right ${data.quantity_diff < 0 ? 'text-red-500' : 'text-green-500'}`}>
-                          {data.quantity_diff.toLocaleString()}
-                        </TableCell>
-                        <TableCell className={`text-right ${data.quantity_diff_pct < 0 ? 'text-red-500' : 'text-green-500'}`}>
                           {(data.quantity_diff_pct * 100).toFixed(2)}%
                         </TableCell>
-                        <TableCell className="text-right">{data.planned_deliveries.toLocaleString()}</TableCell>
+                        <TableCell className="text-right">
+                          {Math.round(data.planned_deliveries).toLocaleString()}
+                        </TableCell>
                       </TableRow>
                       ))
                     )}

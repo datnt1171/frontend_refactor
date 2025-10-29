@@ -20,17 +20,26 @@ export default function SalesDiffChart({ data }: Props) {
     }
 
     const option: echarts.EChartsOption = {
+      // legend: {
+      //   data: ['Diff'],
+      //   top: 0
+      // },
       grid: {
-        left: '5%'
+        top: '5%',
+        left: '10%',
+        bottom: '7%',
       },
       xAxis: {
         type: 'value',
+        name: 'Diff',
+        position: 'bottom',
+        nameLocation: 'middle',
+        nameGap: 30,
         axisLabel: {
           formatter: (value) => {
             return value.toLocaleString();
           },
         },
-        
         axisLine: {
           lineStyle: {
             color: '#999',
@@ -52,6 +61,7 @@ export default function SalesDiffChart({ data }: Props) {
       },
       series: [
         {
+          name: 'Diff',
           type: 'bar',
           data: data.map((item) => {
             const { quantity_diff: value } = item;
@@ -83,6 +93,6 @@ export default function SalesDiffChart({ data }: Props) {
   }, [data]);
 
   return (
-    <div ref={chartRef} style={{ width: '100%', height: '600px' }} />
+    <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
   );
 }

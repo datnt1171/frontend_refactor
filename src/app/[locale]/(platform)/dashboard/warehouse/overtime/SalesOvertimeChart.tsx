@@ -10,12 +10,13 @@ interface SalesData {
 
 interface SalesOvertimeChartProps {
   data: SalesData[]
-  groupBy: string[] // e.g., ['year', 'month'] or ['month']
+  group_by: string
+  xAxisName: string
 }
 
-export default function SalesOvertimeChart({ data, groupBy }: SalesOvertimeChartProps) {
+export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesOvertimeChartProps) {
   const chartRef = useRef<HTMLDivElement>(null)
-
+  const groupBy = group_by.split(',') || ['year', 'month']
   useEffect(() => {
     if (!chartRef.current || !data.length) return
 
@@ -25,27 +26,42 @@ export default function SalesOvertimeChart({ data, groupBy }: SalesOvertimeChart
     if (groupBy.length === 1) {
       const xField = groupBy[0]
       
-      const xAxisData = data.map(item => item[xField])
+      const xAxisData = data.map(item => item[xField!])
       const seriesData = data.map(item => item.sales_quantity)
 
       const option: echarts.EChartsOption = {
         tooltip: {
           trigger: 'axis'
         },
+        grid: {
+          left: '4%',
+          right: '4%',
+          bottom: '7%',
+          containLabel: true
+        },
         xAxis: {
           type: 'category',
+          position: 'bottom',
+          nameLocation: 'middle',
+          nameGap: 30,
           data: xAxisData,
-          name: xField
+          name: xAxisName
         },
         yAxis: {
           type: 'value',
-          name: 'Sales Quantity'
+          name: '數量 - Số lượng',
+          position: 'left',
+          nameLocation: 'middle',
+          nameGap: 70,
         },
         series: [{
-          name: 'Sales',
+          name: '數量 - Số lượng',
           type: 'line',
           data: seriesData,
-          smooth: true
+          label: {
+            show: true,
+            formatter: (params: any) => Math.round(params.value).toLocaleString()
+          }
         }]
       }
 
@@ -59,31 +75,46 @@ export default function SalesOvertimeChart({ data, groupBy }: SalesOvertimeChart
       // Determine if this should be a concatenated timeline (single line)
       // year,quarter | year,month | year,week_of_year
       const isConcatenatedTimeline = 
-        field1 === 'year' && ['quarter', 'month', 'week_of_year'].includes(field2)
+        field1 === 'year' && ['quarter', 'month', 'week_of_year'].includes(field2!)
       
       if (isConcatenatedTimeline) {
         // Single line: concatenated timeline
-        const xAxisData = data.map(item => `${item[field1]}-${item[field2]}`)
+        const xAxisData = data.map(item => `${item[field1]}-${item[field2!]}`)
         const seriesData = data.map(item => item.sales_quantity)
 
         const option: echarts.EChartsOption = {
           tooltip: {
             trigger: 'axis'
           },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '7%',
+            containLabel: true
+          },
           xAxis: {
             type: 'category',
+            position: 'bottom',
+            nameLocation: 'middle',
+            nameGap: 30,
             data: xAxisData,
-            name: `${field1}, ${field2}`
+            name: xAxisName
           },
           yAxis: {
             type: 'value',
-            name: 'Sales Quantity'
+            name: 'Sales Quantity',
+            position: 'left',
+            nameLocation: 'middle',
+            nameGap: 70,
           },
           series: [{
             name: 'Sales',
             type: 'line',
             data: seriesData,
-            smooth: true
+            label: {
+              show: true,
+              formatter: (params: any) => Math.round(params.value).toLocaleString()
+            }
           }]
         }
 
@@ -102,23 +133,26 @@ export default function SalesOvertimeChart({ data, groupBy }: SalesOvertimeChart
           xField = field1
         }
         
-        const groups = [...new Set(data.map(item => item[groupField]))]
-        const xAxisValues = [...new Set(data.map(item => item[xField]))]
+        const groups = [...new Set(data.map(item => item[groupField!]))]
+        const xAxisValues = [...new Set(data.map(item => item[xField!]))]
         
         const series = groups.map(group => {
           const groupData = xAxisValues.map(xValue => {
             const point = data.find(
-              item => item[groupField] === group && item[xField] === xValue
+              item => item[groupField!] === group && item[xField!] === xValue
             )
             return point ? point.sales_quantity : null
           })
           
           return {
             name: String(group),
-            type: 'line',
+            type: 'line' as const,
             data: groupData,
-            smooth: true,
-            connectNulls: false
+            connectNulls: false,
+            label: {
+              show: true,
+              formatter: (params: any) => Math.round(params.value).toLocaleString()
+            }
           }
         })
 
@@ -126,17 +160,30 @@ export default function SalesOvertimeChart({ data, groupBy }: SalesOvertimeChart
           tooltip: {
             trigger: 'axis'
           },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '7%',
+            containLabel: true
+          },
           legend: {
-            data: groups.map(String)
+            data: groups.map(String),
+            top: 0
           },
           xAxis: {
             type: 'category',
             data: xAxisValues,
-            name: xField
+            name: xAxisName,
+            position: 'bottom',
+            nameLocation: 'middle',
+            nameGap: 30,
           },
           yAxis: {
             type: 'value',
-            name: 'Sales Quantity'
+            name: 'Sales Quantity',
+            position: 'left',
+            nameLocation: 'middle',
+            nameGap: 70,
           },
           series
         }
@@ -151,5 +198,5 @@ export default function SalesOvertimeChart({ data, groupBy }: SalesOvertimeChart
     }
   }, [data, groupBy])
 
-  return <div ref={chartRef} style={{ width: '100%', height: '400px' }} />
+  return <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
 }

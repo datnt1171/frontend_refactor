@@ -20,15 +20,21 @@ export default function OrderVsTargetChart({ data }: Props) {
     }
 
     const option: echarts.EChartsOption = {
-      grid: {
-        left: '5%'
-      },
       legend: {
-        data: ['Actual Sales', 'Sales Target'],
+        data: ['Actual Order', 'Order Target'],
         top: 0
+      },
+      grid: {
+        top: '5%',
+        left: '10%',
+        bottom: '7%',
       },
       xAxis: {
         type: 'value',
+        name: 'Quantity',
+        position: 'bottom',
+        nameLocation: 'middle',
+        nameGap: 30,
         axisLabel: {
           formatter: (value) => {
             return Math.abs(value).toLocaleString();
@@ -48,12 +54,13 @@ export default function OrderVsTargetChart({ data }: Props) {
       },
       series: [
         {
-          name: 'Actual Sales',
+          name: 'Actual Order',
           type: 'bar',
           stack: 'Total',
           label: {
             show: true,
             position: 'right',
+            formatter: (params) => Math.abs(params.value as number).toLocaleString(),
           },
           emphasis: {
             focus: 'series',
@@ -64,7 +71,7 @@ export default function OrderVsTargetChart({ data }: Props) {
           data: data.map((item) => item.order_quantity),
         },
         {
-          name: 'Sales Target',
+          name: 'Order Target',
           type: 'bar',
           stack: 'Total',
           label: {
@@ -94,6 +101,6 @@ export default function OrderVsTargetChart({ data }: Props) {
   }, [data]);
 
   return (
-    <div ref={chartRef} style={{ width: '100%', height: '600px' }} />
+    <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
   );
 }

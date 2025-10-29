@@ -1,5 +1,5 @@
 import { getWarehouseOverall } from '@/lib/api/server';
-import StackedChart from './OverallChart';
+import OverallChart from './OverallChart';
 import { getTranslations } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -103,7 +103,7 @@ export default async function Page({ searchParams }: PageProps) {
                   (每月{params.day__gte}日~{params.day__lte}日)<br />
                   SO SÁNH SỐ LƯỢNG GIAO HÀNG MỖI THÁNG SO VỚI THÁNG {params.target_month} NĂM {params.target_year}
                 </h1>
-                <StackedChart data={data} />
+                <OverallChart data={data} />
               </div>
 
               </div>

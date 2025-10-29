@@ -89,6 +89,7 @@ export const TIME_GROUP_BY_OPTIONS = [
 ];
 
 export const TIME_SELECT_OPTIONS = [
+  { value: 'year', label: 'Year' },
   { value: 'year,quarter', label: 'Timeline (Year-Quarter)' },
   { value: 'year,month', label: 'Timeline (Year-Month)' },
   { value: 'year,week_of_year', label: 'Timeline (Year-Week)' },

@@ -10,6 +10,7 @@ import SalesVsTargetChart from './SalesVsTarget'
 import SalesDiffChart from './SalesDiff'
 import OrderVsTargetChart from './OrderVsTarget';
 import OrderDiffChart from './OrderDiff';
+import { ProductSalesRangeDiffTable, ProductOrderRangeDiffTable} from './DataTable';
 import { getFactoryOptions } from '@/lib/utils/filter';
 
 interface PageProps {
@@ -19,6 +20,7 @@ interface PageProps {
     date_target__gte: string
     date_target__lte: string
     factory: string
+    table: string
   }>
 }
 
@@ -60,6 +62,15 @@ export default async function Page({ searchParams }: PageProps) {
         type: 'combobox',
         label: 'Factory',
         options: await getFactoryOptions()
+      },
+      {
+        id: 'table',
+        type: 'multiselect',
+        label: "Table",
+        options: [
+          { value: 'sales', label: 'Sales' },
+          { value: 'order', label: 'Order' },
+        ]
       }
     ]
   }
@@ -80,20 +91,12 @@ export default async function Page({ searchParams }: PageProps) {
     ...productOrderRangeDiff.slice(-5)
   ];
 
-  const currentStart = new Date(params.date__gte)
-  const currentEnd = new Date(params.date__lte)
-  const targetStart = new Date(params.date_target__gte)
-  const targetEnd = new Date(params.date_target__lte)
-  
-  // Extract month and year
-  const currentMonth = currentStart.getMonth() + 1 // 0-indexed, so add 1
-  const currentYear = currentStart.getFullYear()
-  const targetMonth = targetStart.getMonth() + 1
-  const targetYear = targetStart.getFullYear()
+  const selectedTables = params.table 
+    ? params.table.split(',').map(t => t.trim()) 
+    : []
 
-  // Get day range
-  const startDay = currentStart.getDate()
-  const endDay = currentEnd.getDate()
+  const showSalesTable = selectedTables.includes('sales')
+  const showOrderTable = selectedTables.includes('order')
 
   return (
     <RightSidebarProvider>
@@ -105,12 +108,35 @@ export default async function Page({ searchParams }: PageProps) {
                 <SidebarTrigger />
                 <span className="text-sm font-medium">Filter</span>
               </div>
+
+              {/* Sales by Product */}
+              <div>
+                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  Sales by Product - Sales by Product <br />
+                  {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
+                </h1>
+              </div>
               <div className="grid grid-cols-1 lg:grid-cols-2">
                 <SalesVsTargetChart data={first5AndLast5Sales} />
                 <SalesDiffChart data={first5AndLast5Sales} />
+              </div>
+              {showSalesTable && (<ProductSalesRangeDiffTable data={productSalesRangeDiff}/>)}
+              
+
+              {/* Order by Product */}
+              <div>
+                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  Order by Product - Order by Product <br />
+                  {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
+                </h1>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2">
                 <OrderVsTargetChart data={first5AndLast5Order}/>
                 <OrderDiffChart data={first5AndLast5Order}/>
               </div>
+
+              {showOrderTable && (<ProductOrderRangeDiffTable data={productOrderRangeDiff}/>)}
+
             </div>
           </div>
           <SidebarRight filterConfig={FilterConfig} />
