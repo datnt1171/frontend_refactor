@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table"
 import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
+import { Link } from '@/i18n/navigation'
 
 interface PageProps {
   searchParams: Promise<{
@@ -199,7 +200,12 @@ export default async function Page({ searchParams }: PageProps) {
                       factorySalesRangeDiff.map((data, index) => (
                         <TableRow key={data.factory_code}>
                         <TableCell className="text-center border-r">{index + 1}</TableCell>
-                        <TableCell className="border-r">{data.factory_code}</TableCell>
+                        <TableCell className="font-bold border-r">
+                          <Link href={`/dashboard/warehouse/product?factory=${data.factory_code}&date_target__gte=${params.date__gte}&date_target__lte=${params.date__lte}&date__gte=${params.date_target__gte}&date__lte=${params.date_target__lte}`} 
+                                className="hover:underline">
+                            {data.factory_code}
+                          </Link>
+                        </TableCell>
                         <TableCell className="border-r">{data.factory_name}</TableCell>
                         <TableCell className={`text-right border-r ${data.whole_month_sales_quantity === 0 ? 'bg-red-300' : ''}`}>
                           {Math.round(data.whole_month_sales_quantity).toLocaleString()}
