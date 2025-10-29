@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/table"
 import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
+import { RatioTableWithSelect } from './RatioTableWithSelect';
 
 interface PageProps {
   searchParams: Promise<{
@@ -101,7 +102,6 @@ export default async function Page({ searchParams }: PageProps) {
 
   const thinnerColumns = createThinnerPaintColumns(monthColumns)
   const paintColumns = createThinnerPaintColumns(monthColumns)
-  const ratioColumns = createThinnerPaintColumns(monthColumns)
 
   return (
     <RightSidebarProvider>
@@ -116,39 +116,10 @@ export default async function Page({ searchParams }: PageProps) {
               
               {/* Ratio Table */}
               {showRatio && (
-                <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                  <div className="flex items-center justify-between px-4 py-2">
-                    <h3 className="font-semibold">Ratio Data</h3>
-                    <CSVDownloadButton
-                      data={thinnerPaintRatio.ratio_data}
-                      columns={ratioColumns}
-                      filename={'ratio'}
-                      buttonText="Download Ratio CSV"
-                    />
-                  </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Factory Code</TableHead>
-                        <TableHead>Factory Name</TableHead>
-                        {monthColumns.map(month => (
-                          <TableHead key={month}>{month}</TableHead>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {thinnerPaintRatio.ratio_data.map((row, idx) => (
-                        <TableRow key={idx}>
-                          <TableCell>{String(row.factory_code ?? '')}</TableCell>
-                          <TableCell>{String(row.factory_name ?? '')}</TableCell>
-                          {monthColumns.map(month => (
-                            <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
+                <RatioTableWithSelect
+                  data={thinnerPaintRatio}
+                  monthColumns={monthColumns}
+                />
               )}
 
               {/* Thinner Table */}
