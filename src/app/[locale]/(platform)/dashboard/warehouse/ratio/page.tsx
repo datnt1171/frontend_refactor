@@ -14,6 +14,8 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table"
+import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
+import type { ColumnConfig } from '@/types'
 
 interface PageProps {
   searchParams: Promise<{
@@ -88,6 +90,19 @@ export default async function Page({ searchParams }: PageProps) {
         .sort((a, b) => Number(a) - Number(b))
     : []
 
+  const createThinnerPaintColumns = (monthColumns: string[]): ColumnConfig[] => [
+    { key: 'factory_code', header: 'Factory Code' },
+    { key: 'factory_name', header: 'Factory Name' },
+    ...monthColumns.map(month => ({
+      key: month,
+      header: `${month}`
+    }))
+  ]
+
+  const thinnerColumns = createThinnerPaintColumns(monthColumns)
+  const paintColumns = createThinnerPaintColumns(monthColumns)
+  const ratioColumns = createThinnerPaintColumns(monthColumns)
+
   return (
     <RightSidebarProvider>
       <SidebarProvider>
@@ -102,14 +117,22 @@ export default async function Page({ searchParams }: PageProps) {
               {/* Ratio Table */}
               {showRatio && (
                 <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                  <h3 className="px-4 py-2 font-semibold">Ratio Data</h3>
+                  <div className="flex items-center justify-between px-4 py-2">
+                    <h3 className="font-semibold">Ratio Data</h3>
+                    <CSVDownloadButton
+                      data={thinnerPaintRatio.ratio_data}
+                      columns={ratioColumns}
+                      filename={'ratio'}
+                      buttonText="Download Ratio CSV"
+                    />
+                  </div>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Factory Code</TableHead>
                         <TableHead>Factory Name</TableHead>
                         {monthColumns.map(month => (
-                          <TableHead key={month}>Month {month}</TableHead>
+                          <TableHead key={month}>{month}</TableHead>
                         ))}
                       </TableRow>
                     </TableHeader>
@@ -131,14 +154,22 @@ export default async function Page({ searchParams }: PageProps) {
               {/* Thinner Table */}
               {showThinner && (
                 <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
-                  <h3 className="px-4 py-2 font-semibold">Thinner Data</h3>
+                  <div className="flex items-center justify-between px-4 py-2">
+                    <h3 className="font-semibold">Thinner Data</h3>
+                    <CSVDownloadButton
+                      data={thinnerPaintRatio.thinner_data}
+                      columns={thinnerColumns}
+                      filename={'thinner'}
+                      buttonText="Download Thinner CSV"
+                    />
+                  </div>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Factory Code</TableHead>
                         <TableHead>Factory Name</TableHead>
                         {monthColumns.map(month => (
-                          <TableHead key={month}>Month {month}</TableHead>
+                          <TableHead key={month}>{month}</TableHead>
                         ))}
                       </TableRow>
                     </TableHeader>
@@ -160,14 +191,22 @@ export default async function Page({ searchParams }: PageProps) {
               {/* Paint Table */}
               {showPaint && (
                 <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
-                  <h3 className="px-4 py-2 font-semibold">Paint Data</h3>
+                  <div className="flex items-center justify-between px-4 py-2">
+                    <h3 className="font-semibold">Paint Data</h3>
+                    <CSVDownloadButton
+                      data={thinnerPaintRatio.paint_data}
+                      columns={paintColumns}
+                      filename={'paint'}
+                      buttonText="Download Paint CSV"
+                    />
+                  </div>
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Factory Code</TableHead>
                         <TableHead>Factory Name</TableHead>
                         {monthColumns.map(month => (
-                          <TableHead key={month}>Month {month}</TableHead>
+                          <TableHead key={month}>{month}</TableHead>
                         ))}
                       </TableRow>
                     </TableHeader>

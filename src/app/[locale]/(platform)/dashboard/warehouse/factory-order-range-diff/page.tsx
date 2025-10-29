@@ -14,6 +14,8 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table"
+import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
+import type { ColumnConfig } from '@/types'
 
 interface PageProps {
   searchParams: Promise<{
@@ -86,6 +88,38 @@ export default async function Page({ searchParams }: PageProps) {
   const dateTargetGteMonth = dateTargetGte.getMonth() + 1
   const dateTargetGteYear = dateTargetGte.getFullYear()
 
+  const factoryOrderRangeDiffColumns: ColumnConfig[] = [
+    { 
+      key: 'factory_code', 
+      header: '客戶代號 / MÃ KHÁCH HÀNG' 
+    },
+    { 
+      key: 'factory_name', 
+      header: '客戶名称 / TÊN KHÁCH HÀNG' 
+    },
+    { 
+      key: 'whole_month_order_quantity', 
+      header: `${dateTargetGteMonth}月訂單總數 / ĐĐH cả tháng ${dateTargetGteMonth}` 
+    },
+    { 
+      key: 'order_quantity_target', 
+      header: `${params.date_target__gte}→${params.date_target__lte} 的訂單 / SỐ LƯỢNG ĐĐH` 
+    },
+    { 
+      key: 'order_quantity', 
+      header: `${params.date__gte}→${params.date__lte} 的訂單 / SỐ LƯỢNG ĐĐH` 
+    },
+    { 
+      key: 'quantity_diff', 
+      header: '数量差异 / SỐ LƯỢNG CHÊNH LỆCH' 
+    },
+    { 
+      key: 'quantity_diff_pct', 
+      header: '% 差異 / % CHÊNH LỆCH',
+
+    }
+  ]
+
   return (
     <RightSidebarProvider>
       <SidebarProvider>
@@ -103,7 +137,12 @@ export default async function Page({ searchParams }: PageProps) {
                   ĐĐH tháng {dateGteMonth}/{dateGteYear} {params.increase} so với {dateTargetGteMonth}/{dateTargetGteYear}
                 </h1>
               </div>
-
+              <CSVDownloadButton
+                data={factoryOrderRangeDiff}
+                columns={factoryOrderRangeDiffColumns}
+                filename={`factory-order-${params.date__gte}-${params.date__lte}`}
+                buttonText="Download CSV"
+              />
               <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
                 <Table>
                   <TableHeader>

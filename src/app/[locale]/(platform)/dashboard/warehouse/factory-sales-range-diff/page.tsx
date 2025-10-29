@@ -14,6 +14,8 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table"
+import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
+import type { ColumnConfig } from '@/types'
 
 interface PageProps {
   searchParams: Promise<{
@@ -86,6 +88,41 @@ export default async function Page({ searchParams }: PageProps) {
   const dateTargetGteMonth = dateTargetGte.getMonth() + 1
   const dateTargetGteYear = dateTargetGte.getFullYear()
 
+  const factorySalesRangeDiffColumns: ColumnConfig[] = [
+    { 
+      key: 'factory_code', 
+      header: '客戶代號 / MÃ KH' 
+    },
+    { 
+      key: 'factory_name', 
+      header: '客戶名称 / TÊN KH' 
+    },
+    { 
+      key: 'whole_month_sales_quantity', 
+      header: `整個月送货數量 / SL GIAO HÀNG CẢ THÁNG` 
+    },
+    { 
+      key: 'sales_quantity_target', 
+      header: `${params.date_target__gte}→${params.date_target__lte} 送货数量 / SL GIAO HÀNG` 
+    },
+    { 
+      key: 'sales_quantity', 
+      header: `${params.date__gte}→${params.date__lte} 送货数量 / SL GIAO HÀNG` 
+    },
+    { 
+      key: 'quantity_diff', 
+      header: '数量差异 / SL CHÊNH LỆCH' 
+    },
+    { 
+      key: 'quantity_diff_pct', 
+      header: '% 差異 / % CHÊNH LỆCH',
+    },
+    { 
+      key: 'planned_deliveries', 
+      header: '訂單未交數量 / SL ĐĐH CHƯA GIAO' 
+    }
+  ]
+
   return (
     <RightSidebarProvider>
       <SidebarProvider>
@@ -103,7 +140,12 @@ export default async function Page({ searchParams }: PageProps) {
                   Giao hàng tháng {dateGteMonth}/{dateGteYear} {params.increase} so với {dateTargetGteMonth}/{dateTargetGteYear}
                 </h1>
               </div>
-
+              <CSVDownloadButton
+                data={factorySalesRangeDiff}
+                columns={factorySalesRangeDiffColumns}
+                filename={`factory-sales-${params.date__gte}-${params.date__lte}`}
+                buttonText="Download CSV"
+              />
               <div className="border bg-white shadow-sm w-full overflow-x-auto">
                 <Table>
                   <TableHeader>

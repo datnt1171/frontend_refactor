@@ -120,7 +120,12 @@ export default async function Page({ searchParams }: PageProps) {
                 <SalesVsTargetChart data={first5AndLast5Sales} />
                 <SalesDiffChart data={first5AndLast5Sales} />
               </div>
-              {showSalesTable && (<ProductSalesRangeDiffTable data={productSalesRangeDiff}/>)}
+              {showSalesTable && (
+                <ProductSalesRangeDiffTable 
+                  data={productSalesRangeDiff} 
+                  dateRange={{ start: params.date__gte, end: params.date__lte }}
+                />
+              )}
               
 
               {/* Order by Product */}
@@ -135,7 +140,12 @@ export default async function Page({ searchParams }: PageProps) {
                 <OrderDiffChart data={first5AndLast5Order}/>
               </div>
 
-              {showOrderTable && (<ProductOrderRangeDiffTable data={productOrderRangeDiff}/>)}
+              {showOrderTable && (
+                <ProductOrderRangeDiffTable 
+                  data={productOrderRangeDiff}
+                  dateRange={{ start: params.date__gte, end: params.date__lte }}
+                />
+              )}
 
             </div>
           </div>
