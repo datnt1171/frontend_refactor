@@ -16,11 +16,14 @@ export default function OverallChart({ data }: OverallChartProps) {
   const targetMonth = searchParams.get('target_month') || '5';
 
   const chartRef = useRef<HTMLDivElement>(null);
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null);
 
   useEffect(() => {
     if (!chartRef.current || !data || data.length === 0) return;
 
     const chart = echarts.init(chartRef.current);
+    chartInstanceRef.current = chart;
+
 
     // Transform API data to chart format
     const months = data.map(item => item.month);
@@ -210,14 +213,26 @@ export default function OverallChart({ data }: OverallChartProps) {
 
     chart.setOption(option);
 
+    // ResizeObserver to detect container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      chart.resize();
+    });
+
+    resizeObserver.observe(chartRef.current);
+
+    // Fallback for window resize
     const handleResize = () => chart.resize();
     window.addEventListener('resize', handleResize);
 
     return () => {
-      chart.dispose();
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
+      chart.dispose();
+      chartInstanceRef.current = null;
     };
-  }, [data]);
+  }, [data, targetYear, targetMonth]);
 
-  return <div ref={chartRef} style={{ width: '100%', height: 500 }} />;
+  return (
+    <div ref={chartRef} className="w-full h-[500px]" />
+  );
 }

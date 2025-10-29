@@ -15,12 +15,16 @@ interface SalesOvertimeChartProps {
 }
 
 export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesOvertimeChartProps) {
+
   const chartRef = useRef<HTMLDivElement>(null)
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null);
+
   const groupBy = group_by.split(',') || ['year', 'month']
   useEffect(() => {
-    if (!chartRef.current || !data.length) return
+    if (!chartRef.current || !data || data.length === 0) return;
 
-    const chart = echarts.init(chartRef.current)
+    const chart = echarts.init(chartRef.current);
+    chartInstanceRef.current = chart;
 
     // Single field case
     if (groupBy.length === 1) {
@@ -192,11 +196,26 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
       }
     }
 
-    // Cleanup
+    // ResizeObserver to detect container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      chart.resize();
+    });
+
+    resizeObserver.observe(chartRef.current);
+
+    // Fallback for window resize
+    const handleResize = () => chart.resize();
+    window.addEventListener('resize', handleResize);
+
     return () => {
-      chart.dispose()
-    }
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+      chart.dispose();
+      chartInstanceRef.current = null;
+    };
   }, [data, groupBy])
 
-  return <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
+  return (
+    <div ref={chartRef} className="w-full h-[500px]" />
+  );
 }

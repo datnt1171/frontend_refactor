@@ -10,14 +10,13 @@ interface ScheduledChartProps {
 
 export default function ScheduledChart({ data }: ScheduledChartProps) {
   const chartRef = useRef<HTMLDivElement>(null);
-  const chartInstance = useRef<echarts.ECharts | null>(null);
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null);
 
   useEffect(() => {
     if (!chartRef.current || !data || data.length === 0) return;
 
-    if (!chartInstance.current) {
-      chartInstance.current = echarts.init(chartRef.current);
-    }
+    const chart = echarts.init(chartRef.current);
+    chartInstanceRef.current = chart;
 
     const months = data.map((item) => `${item.scheduled_month}`);
     const scheduledQuantities = data.map((item) => item.scheduled_quantity);
@@ -125,25 +124,28 @@ export default function ScheduledChart({ data }: ScheduledChartProps) {
       ],
     };
 
-    chartInstance.current.setOption(option);
+    chart.setOption(option);
 
-    const handleResize = () => {
-      chartInstance.current?.resize();
-    };
+    // ResizeObserver to detect container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      chart.resize();
+    });
 
+    resizeObserver.observe(chartRef.current);
+
+    // Fallback for window resize
+    const handleResize = () => chart.resize();
     window.addEventListener('resize', handleResize);
+
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
+      chart.dispose();
+      chartInstanceRef.current = null;
     };
   }, [data]);
 
   return (
-    <div
-      ref={chartRef}
-      style={{
-        width: '100%',
-        height: 500
-      }}
-    />
+    <div ref={chartRef} className="w-full h-[500px]" />
   );
 }

@@ -10,11 +10,13 @@ interface SalesOrderChartProps {
 
 export default function SalesOrderChart({ data }: SalesOrderChartProps) {
   const chartRef = useRef<HTMLDivElement>(null)
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null);
 
   useEffect(() => {
-    if (!chartRef.current || !data.length) return
+    if (!chartRef.current || !data || data.length === 0) return;
 
-    const chart = echarts.init(chartRef.current)
+    const chart = echarts.init(chartRef.current);
+    chartInstanceRef.current = chart;
 
     // Prepare data
     const months = data.map(item => `${item.month}/${item.year}`)
@@ -153,14 +155,26 @@ export default function SalesOrderChart({ data }: SalesOrderChartProps) {
 
     chart.setOption(option);
 
+    // ResizeObserver to detect container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      chart.resize();
+    });
+
+    resizeObserver.observe(chartRef.current);
+
+    // Fallback for window resize
     const handleResize = () => chart.resize();
     window.addEventListener('resize', handleResize);
 
     return () => {
-      chart.dispose();
+      resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
+      chart.dispose();
+      chartInstanceRef.current = null;
     };
   }, [data]);
 
-  return <div ref={chartRef} style={{ width: '100%', height: 400 }} />;
+  return (
+    <div ref={chartRef} className="w-full h-[400px]" />
+  );
 }

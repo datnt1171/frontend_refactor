@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import type { ProductSalesRangeDiff } from '@/types';
 
@@ -9,15 +9,14 @@ interface Props {
 }
 
 export default function SalesDiffChart({ data }: Props) {
-  const chartRef = React.useRef<HTMLDivElement>(null);
-  const chartInstance = React.useRef<echarts.ECharts | null>(null);
+  const chartRef = useRef<HTMLDivElement>(null);
+  const chartInstanceRef = useRef<echarts.ECharts | null>(null);
 
-  React.useEffect(() => {
-    if (!chartRef.current) return;
+  useEffect(() => {
+    if (!chartRef.current || !data || data.length === 0) return;
 
-    if (!chartInstance.current) {
-      chartInstance.current = echarts.init(chartRef.current);
-    }
+    const chart = echarts.init(chartRef.current);
+    chartInstanceRef.current = chart;
 
     const option: echarts.EChartsOption = {
       // legend: {
@@ -82,17 +81,28 @@ export default function SalesDiffChart({ data }: Props) {
       ],
     };
 
-    chartInstance.current.setOption(option);
+    chart.setOption(option);
 
-    const handleResize = () => {
-      chartInstance.current?.resize();
-    };
+    // ResizeObserver to detect container size changes
+    const resizeObserver = new ResizeObserver(() => {
+      chart.resize();
+    });
 
+    resizeObserver.observe(chartRef.current);
+
+    // Fallback for window resize
+    const handleResize = () => chart.resize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', handleResize);
+      chart.dispose();
+      chartInstanceRef.current = null;
+    };
   }, [data]);
 
   return (
-    <div ref={chartRef} style={{ width: '100%', height: '500px' }} />
+    <div ref={chartRef} className="w-full h-[500px]" />
   );
 }
