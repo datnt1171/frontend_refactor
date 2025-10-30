@@ -2,6 +2,7 @@ export type FilterType =
   | 'multiselect'
   | 'combobox' 
   | 'day-range' 
+  | 'month-range' 
   | 'select' 
   | 'sort' 
   | 'date-range' 
@@ -35,6 +36,7 @@ export interface PageFilterConfig {
   filters: FilterConfig[];
   defaultValues?: Record<string, any>;
   showResetButton?: boolean;
+  isPaginated?: boolean;
 }
 
 export interface PaginatedResponse<T = any> {

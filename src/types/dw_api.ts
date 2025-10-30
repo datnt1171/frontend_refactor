@@ -16,3 +16,15 @@ export type Blueprint = components['schemas']['Blueprint']
 export type BlueprintCreate = components['schemas']['BlueprintCreate']
 export type BlueprintUpdate = components['schemas']['BlueprintUpdate']
 export type ProductionLineType = components['schemas']['ProductionLineType']
+
+// Warehouse report
+export type Overall = components['schemas']['Overall']
+export type FactorySalesRangeDiff = components['schemas']['FactorySalesRangeDiff']
+export type FactoryOrderRangeDiff = components['schemas']['FactoryOrderRangeDiff']
+export type ProductSalesRangeDiff = components['schemas']['ProductSalesRangeDiff']
+export type ProductOrderRangeDiff = components['schemas']['ProductOrderRangeDiff']
+export type ScheduledAndActualSales = components['schemas']['ScheduledAndActualSales']
+// export type SalesOverTime = components['schemas']['SalesOverTime'] Dynamic type FIX THIS
+export type IsSameMonth = components['schemas']['IsSameMonth']
+export type SalesOrderPctDiff = components['schemas']['SalesOrderPctDiff']
+export type PivotThinnerPaintRatio = components['schemas']['PivotThinnerPaintRatio']

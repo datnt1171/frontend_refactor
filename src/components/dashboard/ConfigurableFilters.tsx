@@ -37,7 +37,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         } else {
           initialState[filter.id] = urlValue;
         }
-      } else if (filter.type === 'day-range' || filter.type === 'date-range') {
+      } else if (filter.type === 'day-range' || filter.type === 'date-range' || filter.type === 'month-range') {
         // Check for Django-style range params
         const gteValue = searchParams.get(`${filter.id}__gte`);
         const lteValue = searchParams.get(`${filter.id}__lte`);
@@ -116,7 +116,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     config.filters.forEach(filter => {
       if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
         resetState[filter.id] = [];
-      } else if (filter.type === 'day-range' || filter.type === 'date-range') {
+      } else if (filter.type === 'day-range' || filter.type === 'date-range' || filter.type === 'month-range') {
         resetState[filter.id] = { gte: '', lte: '' };
       } else {
         resetState[filter.id] = '';
@@ -126,7 +126,10 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     
     // Create new URL with only page=1 and existing page_size
     const params = new URLSearchParams();
-    params.set('page', '1');
+    if (config.isPaginated) {
+      params.set('page', '1');
+    }
+    
     
     const currentPageSize = searchParams.get('page_size');
     if (currentPageSize) {
@@ -140,7 +143,9 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     const params = new URLSearchParams(searchParams);
     
     // Remove page parameter when applying filters (reset to page 1)
-    params.set('page', '1')
+    if (config.isPaginated) {
+      params.set('page', '1');
+    }
     
     Object.entries(filters).forEach(([key, value]) => {
       if (Array.isArray(value) && value.length > 0) {
@@ -298,6 +303,34 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 type="number"
                 min={filter.min || 1}
                 max={filter.max || 31}
+                placeholder="To"
+                value={filters[filter.id]?.lte || ''}
+                onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
+                className="w-20"
+              />
+            </div>
+          </div>
+        );
+
+      case 'month-range':
+        return (
+          <div key={filter.id} className="space-y-3">
+            <Label className="text-sm font-medium">{filter.label}</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="number"
+                min={filter.min || 1}
+                max={filter.max || 12}
+                placeholder="From"
+                value={filters[filter.id]?.gte || ''}
+                onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
+                className="w-20"
+              />
+              <span className="text-muted-foreground text-sm">to</span>
+              <Input
+                type="number"
+                min={filter.min || 1}
+                max={filter.max || 12}
                 placeholder="To"
                 value={filters[filter.id]?.lte || ''}
                 onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}

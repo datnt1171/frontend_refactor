@@ -145,6 +145,202 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/warehouse/overall": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Overall
+         * @description Get overall warehouse data with sales and order statistics.
+         *     Returns aggregated data by month with target comparisons.
+         */
+        get: operations["get_overall_api_warehouse_overall_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/factory-sales-range-diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Factory Sales Range Diff
+         * @description Get sales by factories for 2 date range, whole month sales and scheduled delivery
+         *     Return the diff of these 2 date range
+         */
+        get: operations["get_factory_sales_range_diff_api_warehouse_factory_sales_range_diff_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/factory-order-range-diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Factory Order Range Diff
+         * @description Get order by factories for 2 date range, whole month order and scheduled delivery
+         *     Return the diff of these 2 date range
+         */
+        get: operations["get_factory_order_range_diff_api_warehouse_factory_order_range_diff_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/product-sales-range-diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Factory Sales Range Diff
+         * @description Get sales by product for 2 date range
+         *     Return the diff of these 2 date range
+         */
+        get: operations["get_factory_sales_range_diff_api_warehouse_product_sales_range_diff_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/product-order-range-diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Factory Order Range Diff
+         * @description Get order by product for 2 date range
+         *     Return the diff of these 2 date range
+         */
+        get: operations["get_factory_order_range_diff_api_warehouse_product_order_range_diff_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/scheduled-and-actual-sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Scheduled And Actual Sales
+         * @description Compare scheduled deriveries and actual sales group by month
+         */
+        get: operations["get_scheduled_and_actual_sales_api_warehouse_scheduled_and_actual_sales_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/sales-overtime": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Sales Pivot
+         * @description Pivot table for sales data with dynamic grouping
+         */
+        get: operations["get_sales_pivot_api_warehouse_sales_overtime_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/is-same-month": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sales Pivot */
+        get: operations["get_sales_pivot_api_warehouse_is_same_month_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/sales-order-pct-diff": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sales Pivot */
+        get: operations["get_sales_pivot_api_warehouse_sales_order_pct_diff_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/thinner-paint-ratio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sales Pivot */
+        get: operations["get_sales_pivot_api_warehouse_thinner_paint_ratio_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -321,6 +517,10 @@ export interface components {
              * @description Factory name
              */
             factory_name: string;
+            /**
+             * Salesman
+             * @description Sales Reps
+             */
             salesman: string;
             /**
              * Is Active
@@ -348,6 +548,10 @@ export interface components {
              * @description Factory name
              */
             factory_name: string;
+            /**
+             * Salesman
+             * @description Sales Reps
+             */
             salesman: string;
             /**
              * Is Active
@@ -359,6 +563,52 @@ export interface components {
              * @description Has onsite facilities
              */
             has_onsite: boolean;
+        };
+        /** FactoryOrderRangeDiff */
+        FactoryOrderRangeDiff: {
+            /** Factory Code */
+            factory_code: string;
+            /** Factory Name */
+            factory_name: string;
+            /** Salesman */
+            salesman: string;
+            /** Order Quantity */
+            order_quantity: number;
+            /** Order Quantity Target */
+            order_quantity_target: number;
+            /** Quantity Diff */
+            quantity_diff: number;
+            /** Quantity Diff Abs */
+            quantity_diff_abs: number;
+            /** Quantity Diff Pct */
+            quantity_diff_pct: number;
+            /** Whole Month Order Quantity */
+            whole_month_order_quantity: number;
+            /** Planned Deliveries */
+            planned_deliveries: number;
+        };
+        /** FactorySalesRangeDiff */
+        FactorySalesRangeDiff: {
+            /** Factory Code */
+            factory_code: string;
+            /** Factory Name */
+            factory_name: string;
+            /** Salesman */
+            salesman: string;
+            /** Sales Quantity */
+            sales_quantity: number;
+            /** Sales Quantity Target */
+            sales_quantity_target: number;
+            /** Quantity Diff */
+            quantity_diff: number;
+            /** Quantity Diff Abs */
+            quantity_diff_abs: number;
+            /** Quantity Diff Pct */
+            quantity_diff_pct: number;
+            /** Whole Month Sales Quantity */
+            whole_month_sales_quantity: number;
+            /** Planned Deliveries */
+            planned_deliveries: number;
         };
         /** FactoryUpdate */
         FactoryUpdate: {
@@ -377,6 +627,76 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** IsSameMonth */
+        IsSameMonth: {
+            /** Year */
+            year: number;
+            /** Month */
+            month: number;
+            /** Same Month Sales */
+            same_month_sales: number;
+            /** Diff Month Sales */
+            diff_month_sales: number;
+            /** Total Sales */
+            total_sales: number;
+            /** Total Order */
+            total_order: number;
+        };
+        /** Overall */
+        Overall: {
+            /** Month */
+            month: number;
+            /**
+             * Sales Quantity
+             * @default 0
+             */
+            sales_quantity: number | null;
+            /**
+             * Exclude Factory Sales Quantity
+             * @default 0
+             */
+            exclude_factory_sales_quantity: number | null;
+            /**
+             * Remain Sales Quantity
+             * @default 0
+             */
+            remain_sales_quantity: number | null;
+            /**
+             * Order Quantity
+             * @default 0
+             */
+            order_quantity: number | null;
+            /**
+             * Exclude Factory Order Quantity
+             * @default 0
+             */
+            exclude_factory_order_quantity: number | null;
+            /**
+             * Remain Order Quantity
+             * @default 0
+             */
+            remain_order_quantity: number | null;
+            /**
+             * Sales Target Value
+             * @default 0
+             */
+            sales_target_value: number | null;
+            /**
+             * Order Target Value
+             * @default 0
+             */
+            order_target_value: number | null;
+            /**
+             * Sales Target Pct
+             * @default 0
+             */
+            sales_target_pct: number | null;
+            /**
+             * Order Target Pct
+             * @default 0
+             */
+            order_target_pct: number | null;
         };
         /** PaginatedResponse[Factory] */
         PaginatedFactoryList: {
@@ -425,6 +745,47 @@ export interface components {
              * @description Array of items
              */
             results: components["schemas"]["Retailer"][];
+        };
+        /** PivotThinnerPaintRatio */
+        PivotThinnerPaintRatio: {
+            /** Thinner Data */
+            thinner_data: {
+                [key: string]: unknown;
+            }[];
+            /** Paint Data */
+            paint_data: {
+                [key: string]: unknown;
+            }[];
+            /** Ratio Data */
+            ratio_data: {
+                [key: string]: unknown;
+            }[];
+        };
+        /** ProductOrderRangeDiff */
+        ProductOrderRangeDiff: {
+            /** Product Name */
+            product_name: string;
+            /** Order Quantity */
+            order_quantity: number;
+            /** Order Quantity Target */
+            order_quantity_target: number;
+            /** Quantity Diff */
+            quantity_diff: number;
+            /** Quantity Diff Abs */
+            quantity_diff_abs: number;
+        };
+        /** ProductSalesRangeDiff */
+        ProductSalesRangeDiff: {
+            /** Product Name */
+            product_name: string;
+            /** Sales Quantity */
+            sales_quantity: number;
+            /** Sales Quantity Target */
+            sales_quantity_target: number;
+            /** Quantity Diff */
+            quantity_diff: number;
+            /** Quantity Diff Abs */
+            quantity_diff_abs: number;
         };
         /**
          * ProductionLineType
@@ -486,6 +847,40 @@ export interface components {
              * @description Retailer name
              */
             name: string;
+        };
+        /** SalesOrderPctDiff */
+        SalesOrderPctDiff: {
+            /** Year */
+            year: number;
+            /** Month */
+            month: number;
+            /** Sales Quantity */
+            sales_quantity: number;
+            /** Sales Pct Diff */
+            sales_pct_diff: number;
+            /** Remain Sales Quantity */
+            remain_sales_quantity: number;
+            /** Remain Sales Pct Diff */
+            remain_sales_pct_diff: number;
+            /** Order Quantity */
+            order_quantity: number;
+            /** Order Pct Diff */
+            order_pct_diff: number;
+            /** Remain Order Quantity */
+            remain_order_quantity: number;
+            /** Remain Order Pct Diff */
+            remain_order_pct_diff: number;
+        };
+        /** ScheduledAndActualSales */
+        ScheduledAndActualSales: {
+            /** Scheduled Month */
+            scheduled_month: number;
+            /** Scheduled Quantity */
+            scheduled_quantity: number;
+            /** Sales Quantity */
+            sales_quantity: number;
+            /** Sales Pct */
+            sales_pct: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -947,6 +1342,369 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_overall_api_warehouse_overall_get: {
+        parameters: {
+            query?: {
+                /** @description Start day */
+                day__gte?: number;
+                /** @description End day */
+                day__lte?: number;
+                /** @description Start month */
+                month__gte?: number;
+                /** @description End month */
+                month__lte?: number;
+                /** @description Year */
+                year?: number;
+                /** @description Target month */
+                target_month?: number;
+                /** @description Target year */
+                target_year?: number;
+                /** @description Factory code to exclude */
+                exclude_factory?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Overall"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_factory_sales_range_diff_api_warehouse_factory_sales_range_diff_get: {
+        parameters: {
+            query?: {
+                threshold?: number;
+                increase?: boolean;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FactorySalesRangeDiff"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_factory_order_range_diff_api_warehouse_factory_order_range_diff_get: {
+        parameters: {
+            query?: {
+                threshold?: number;
+                increase?: boolean;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FactoryOrderRangeDiff"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_factory_sales_range_diff_api_warehouse_product_sales_range_diff_get: {
+        parameters: {
+            query?: {
+                factory?: string | null;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductSalesRangeDiff"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_factory_order_range_diff_api_warehouse_product_order_range_diff_get: {
+        parameters: {
+            query?: {
+                factory?: string | null;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOrderRangeDiff"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_scheduled_and_actual_sales_api_warehouse_scheduled_and_actual_sales_get: {
+        parameters: {
+            query?: {
+                /** @description Year */
+                year?: number;
+                factory?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduledAndActualSales"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_sales_pivot_api_warehouse_sales_overtime_get: {
+        parameters: {
+            query: {
+                /** @description Comma-separated years (e.g., 2023,2024) */
+                years: string;
+                /** @description Comma-separated group by fields (e.g., year,quarter) */
+                group_by: string;
+                factory?: string | null;
+                product?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_sales_pivot_api_warehouse_is_same_month_get: {
+        parameters: {
+            query?: {
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IsSameMonth"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_sales_pivot_api_warehouse_sales_order_pct_diff_get: {
+        parameters: {
+            query?: {
+                /** @description Factory code to exclude */
+                exclude_factory?: string;
+                date__gte?: string;
+                date__lte?: string;
+                date_target__gte?: string;
+                date_target__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesOrderPctDiff"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_sales_pivot_api_warehouse_thinner_paint_ratio_get: {
+        parameters: {
+            query?: {
+                /** @description Year */
+                year?: number;
+                /** @description Thinner product types */
+                thinners?: ("成品溶劑DUNG MOI TP" | "底漆 LOT" | "水性SON NUOC" | "色母SON CAI" | "木調色PM GO" | "補土 BOT TRET" | "半成品BAN THANHPHAM" | "助劑PHU GIA" | "原料溶劑 NL DUNG MOI" | "面漆 BONG" | "色精TINH MAU" | "粉類 BOT" | "硬化劑chat cung" | "烤調色PM HAP")[];
+                /** @description Paint product types */
+                paint?: ("成品溶劑DUNG MOI TP" | "底漆 LOT" | "水性SON NUOC" | "色母SON CAI" | "木調色PM GO" | "補土 BOT TRET" | "半成品BAN THANHPHAM" | "助劑PHU GIA" | "原料溶劑 NL DUNG MOI" | "面漆 BONG" | "色精TINH MAU" | "粉類 BOT" | "硬化劑chat cung" | "烤調色PM HAP")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PivotThinnerPaintRatio"];
+                };
             };
             /** @description Validation Error */
             422: {
