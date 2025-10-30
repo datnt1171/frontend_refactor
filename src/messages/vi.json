@@ -41,6 +41,7 @@
     "fileSize": "Kích thước tệp",
     "preview": "Xem trước",
     "download": "Tải xuống",
+    "downloadSelected": "Tải đã chọn",
     "comment": "Bình luận",
     "addRow": "Thêm dòng",
     "addRowBefore": "Thêm dòng phía trên",
@@ -246,10 +247,11 @@
     "sideBar": {
       "Warehouse": "Kho",
       "overview": "Tổng quan",
-      "perCustomer": "Chi tiết khách hàng",
-      "perProduct": "Chi tiết SP của KH",
-      "plan": "Dự định/Thực tế GH",
-      "compare": "So sánh",
+      "factorySalesRangeDiff": "Biến động giao hàng",
+      "factoryOrderRangeDiff": "Biến động đặt hàng",
+      "productRangeDiff": "Biến động theo SP",
+      "scheduled": "Dự định/Thực tế GH",
+      "compare": "GH/ĐĐH theo thời gian",
       "conclusion": "Kết luận",
       "ratio": "Tỉ lệ",
       "agingProduct": "Hàng tồn kho",
@@ -267,13 +269,35 @@
     },
 
     "warehouse": {
-      "warehouse_t": "warehouse_t"
+      "factorySalesRangeDiff": {
+        "title": "Giao hàng tháng {currentMonth}/{currentYear} {change} so với {targetMonth}/{targetYear}",
+        "increase": "tăng",
+        "decrease": "giảm"
+        },
+      "factoryOrderRangeDiff": {
+        "title": "ĐĐH tháng {currentMonth}/{currentYear} {change} so với {targetMonth}/{targetYear}",
+        "increase": "tăng",
+        "decrease": "giảm"
+      }
+    },
+    "sales": {
+      "quantity": "Số lượng",
+      "sales": "Giao hàng",
+      "salesTarget": "Mục tiêu giao hàng",
+      "diff": "Chênh lệch",
+      "diffAbs": "|Chênh lệch|"
+    },
+
+    "order": {
+      "order": "ĐĐH",
+      "orderTarget": "Mục tiêu ĐĐH"
     },
 
     "task": {
       "task_t": "task_t"
     }
   },
+
   "crm": {
     "appTitle": "CRM",
     "appDescription": "Customer Relationship Management",
@@ -296,6 +320,15 @@
     "retailer": {
       "retailer": "KH đặt hàng"
     }
+  },
+
+  "product": {
+    "product": "Sản phẩm",
+    "productCode": "Mã sản phẩm",
+    "productName": "Tên sản phẩm",
+    "thinner": "Dung môi",
+    "paint": "Sơn",
+    "ratio": "Tỉ lệ"
   },
   
   "sample": {

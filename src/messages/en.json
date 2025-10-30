@@ -41,6 +41,7 @@
     "fileSize": "File Size",
     "preview": "Preview",
     "download": "Download",
+    "downloadSelected": "Download Selected",
     "comment": "Comment",
     "addRow": "Add Row",
     "addRowBefore": "Add Row Before",
@@ -246,10 +247,11 @@
     "sideBar": {
       "Warehouse": "Warehouse",
       "overview": "Overview",
-      "perCustomer": "Order/Sales per Customer",
-      "perProduct": "Order/Sales per Product",
-      "plan": "Planning Vs Actual Sales",
-      "compare": "Order/Sales overtime",
+      "factorySalesRangeDiff": "Factory Sales Diff",
+      "factoryOrderRangeDiff": "Factory Order Diff",
+      "productRangeDiff": "Product Sales/Order Diff",
+      "scheduled": "Scheduled Vs Actual Sales",
+      "compare": "Sales/Order Over Time",
       "conclusion": "Conclusion",
       "ratio": "Ratio",
       "agingProduct": "Aging Product",
@@ -267,7 +269,28 @@
     },
 
     "warehouse": {
-      "warehouse_t": "warehouse_t"
+      "factorySalesRangeDiff": {
+        "title": "Sales in {currentMonth}/{currentYear} {change} compare with {targetMonth}/{targetYear}",
+        "increase": "Increase",
+        "decrease": "Descrease"
+      },
+      "factoryOrderRangeDiff": {
+        "title": "Order in {currentMonth}/{currentYear} {change} compare with {targetMonth}/{targetYear}",
+        "increase": "Increase",
+        "decrease": "Descrease"
+      }
+    },
+    "sales": {
+      "quantity": "Quantity",
+      "sales": "Sales",
+      "salesTarget": "Sales Target",
+      "diff": "Diff",
+      "diffAbs": "Diff ABS"
+    },
+
+    "order": {
+      "order": "Order",
+      "orderTarget": "Order target"
     },
 
     "task": {
@@ -297,6 +320,15 @@
     "retailer": {
       "retailer": "Retailer"
     }
+  },
+
+  "product": {
+    "product": "Product",
+    "productCode": "Product Code",
+    "productName": "Product Name",
+    "thinner": "Thinner",
+    "paint": "Paint",
+    "ratio": "Ratio"
   },
   
   "sample": {

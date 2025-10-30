@@ -20,7 +20,7 @@ export default function SalesVsTargetChart({ data }: Props) {
 
     const option: echarts.EChartsOption = {
       legend: {
-        data: ['Actual Sales', 'Sales Target'],
+        data: ['目標銷售 - Giao hàng mục tiêu', '實際銷售額 - Giao hàng thực tế'],
         top: 0
       },
       grid: {
@@ -30,7 +30,7 @@ export default function SalesVsTargetChart({ data }: Props) {
       },
       xAxis: {
         type: 'value',
-        name: 'Quantity',
+        name: '數量 - Số lượng (kg)',
         position: 'bottom',
         nameLocation: 'middle',
         nameGap: 30,
@@ -53,7 +53,7 @@ export default function SalesVsTargetChart({ data }: Props) {
       },
       series: [
         {
-          name: 'Actual Sales',
+          name: '實際銷售額 - Giao hàng thực tế',
           type: 'bar',
           stack: 'Total',
           label: {
@@ -70,7 +70,7 @@ export default function SalesVsTargetChart({ data }: Props) {
           data: data.map((item) => item.sales_quantity),
         },
         {
-          name: 'Sales Target',
+          name: '目標銷售 - Giao hàng mục tiêu',
           type: 'bar',
           stack: 'Total',
           label: {

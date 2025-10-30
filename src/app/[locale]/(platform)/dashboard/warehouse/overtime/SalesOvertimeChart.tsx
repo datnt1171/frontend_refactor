@@ -53,13 +53,13 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
         },
         yAxis: {
           type: 'value',
-          name: '數量 - Số lượng',
+          name: '數量 - Số lượng (kg)',
           position: 'left',
           nameLocation: 'middle',
           nameGap: 70,
         },
         series: [{
-          name: '數量 - Số lượng',
+          name: '數量 - Số lượng (kg)',
           type: 'line',
           data: seriesData,
           label: {
@@ -106,7 +106,7 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
           },
           yAxis: {
             type: 'value',
-            name: 'Sales Quantity',
+            name: '數量 - Số lượng (kg)',
             position: 'left',
             nameLocation: 'middle',
             nameGap: 70,
@@ -184,7 +184,7 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
           },
           yAxis: {
             type: 'value',
-            name: 'Sales Quantity',
+            name: '數量 - Số lượng (kg)',
             position: 'left',
             nameLocation: 'middle',
             nameGap: 70,

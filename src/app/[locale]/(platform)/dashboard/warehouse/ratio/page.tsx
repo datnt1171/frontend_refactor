@@ -92,8 +92,8 @@ export default async function Page({ searchParams }: PageProps) {
     : []
 
   const createThinnerPaintColumns = (monthColumns: string[]): ColumnConfig[] => [
-    { key: 'factory_code', header: 'Factory Code' },
-    { key: 'factory_name', header: 'Factory Name' },
+    { key: 'factory_code', header: t('crm.factories.factoryId') },
+    { key: 'factory_name', header: t('crm.factories.factoryName') },
     ...monthColumns.map(month => ({
       key: month,
       header: `${month}`
@@ -126,19 +126,19 @@ export default async function Page({ searchParams }: PageProps) {
               {showThinner && (
                 <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
                   <div className="flex items-center justify-between px-4 py-2">
-                    <h3 className="font-semibold">Thinner Data</h3>
+                    <h3 className="font-semibold">{t('product.thinner')}</h3>
                     <CSVDownloadButton
                       data={thinnerPaintRatio.thinner_data}
                       columns={thinnerColumns}
                       filename={'thinner'}
-                      buttonText="Download Thinner CSV"
+                      buttonText={t('common.download')}
                     />
                   </div>
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Factory Code</TableHead>
-                        <TableHead>Factory Name</TableHead>
+                        <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                        <TableHead>{t('crm.factories.factoryName')}</TableHead>
                         {monthColumns.map(month => (
                           <TableHead key={month}>{month}</TableHead>
                         ))}
@@ -163,19 +163,19 @@ export default async function Page({ searchParams }: PageProps) {
               {showPaint && (
                 <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
                   <div className="flex items-center justify-between px-4 py-2">
-                    <h3 className="font-semibold">Paint Data</h3>
+                    <h3 className="font-semibold">{t('product.paint')}</h3>
                     <CSVDownloadButton
                       data={thinnerPaintRatio.paint_data}
                       columns={paintColumns}
                       filename={'paint'}
-                      buttonText="Download Paint CSV"
+                      buttonText={t('common.download')}
                     />
                   </div>
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Factory Code</TableHead>
-                        <TableHead>Factory Name</TableHead>
+                        <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                        <TableHead>{t('crm.factories.factoryName')}</TableHead>
                         {monthColumns.map(month => (
                           <TableHead key={month}>{month}</TableHead>
                         ))}

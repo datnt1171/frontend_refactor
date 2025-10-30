@@ -96,7 +96,7 @@ export default function OverallChart({ data }: OverallChartProps) {
       yAxis: [
         {
           type: 'value',
-          name: 'Số lượng (Kg)',
+          name: '數量 - Số lượng (kg)',
           position: 'left',
           nameLocation: 'middle',
           nameGap: 70,

@@ -89,6 +89,13 @@ export default async function Page({ searchParams }: PageProps) {
   const dateTargetGteMonth = dateTargetGte.getMonth() + 1
   const dateTargetGteYear = dateTargetGte.getFullYear()
 
+  // Get translations for both languages
+  const tZh = await getTranslations({locale: 'zh-hant'})
+  const tVi = await getTranslations({locale: 'vi'})
+  
+  const isIncrease = params.increase === 'true'
+  const increaseKey = isIncrease ? 'increase' : 'decrease'
+
   const factorySalesRangeDiffColumns: ColumnConfig[] = [
     { 
       key: 'factory_code', 
@@ -137,8 +144,20 @@ export default async function Page({ searchParams }: PageProps) {
 
               <div>
                 <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
-                  {dateGteYear}年{dateGteMonth}月比{dateTargetGteYear}年{dateTargetGteMonth}月分客戶{params.increase}与的名单(1000KG 以上) <br />
-                  Giao hàng tháng {dateGteMonth}/{dateGteYear} {params.increase} so với {dateTargetGteMonth}/{dateTargetGteYear}
+                  {tZh('dashboard.warehouse.factorySalesRangeDiff.title', {
+                    currentMonth: dateGteMonth,
+                    currentYear: dateGteYear,
+                    targetMonth: dateTargetGteMonth,
+                    targetYear: dateTargetGteYear,
+                    change: tZh(`dashboard.warehouse.factorySalesRangeDiff.${increaseKey}`)
+                  })} <br />
+                  {tVi('dashboard.warehouse.factorySalesRangeDiff.title', {
+                    currentMonth: dateGteMonth,
+                    currentYear: dateGteYear,
+                    targetMonth: dateTargetGteMonth,
+                    targetYear: dateTargetGteYear,
+                    change: tVi(`dashboard.warehouse.factorySalesRangeDiff.${increaseKey}`)
+                  })}
                 </h1>
               </div>
               <CSVDownloadButton

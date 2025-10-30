@@ -30,7 +30,7 @@ export default function OrderDiffChart({ data }: Props) {
       },
       xAxis: {
         type: 'value',
-        name: 'Diff',
+        name: 'Chênh lệch - 差異',
         position: 'bottom',
         nameLocation: 'middle',
         nameGap: 30,

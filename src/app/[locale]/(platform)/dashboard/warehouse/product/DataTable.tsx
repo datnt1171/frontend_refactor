@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table"
 import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
+import { useTranslations } from "next-intl";
 
 // Sales Table Component
 export const ProductSalesRangeDiffTable = ({ 
@@ -23,12 +24,15 @@ export const ProductSalesRangeDiffTable = ({
   }>;
   dateRange?: { start: string; end: string };
 }) => {
+
+  const t = useTranslations()
+
   const columns: ColumnConfig[] = [
-    { key: 'product_name', header: 'Product' },
-    { key: 'sales_quantity', header: 'Sales Qty' },
-    { key: 'sales_quantity_target', header: 'Target Qty' },
-    { key: 'quantity_diff', header: 'Diff' },
-    { key: 'quantity_diff_abs', header: 'Diff Abs' }
+    { key: 'product_name', header: t('product.productName') },
+    { key: 'sales_quantity', header: t('dashboard.sales.sales') },
+    { key: 'sales_quantity_target', header: t('dashboard.sales.salesTarget') },
+    { key: 'quantity_diff', header: t('dashboard.sales.diff') },
+    { key: 'quantity_diff_abs', header: t('dashboard.sales.diffAbs') }
   ];
 
   return (
@@ -38,18 +42,18 @@ export const ProductSalesRangeDiffTable = ({
           data={data}
           columns={columns}
           filename={`product-sales-${dateRange?.start || 'report'}`}
-          buttonText="Download Sales CSV"
+          buttonText={t('common.download')}
         />
       </div>
       <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead className="text-right">Sales Qty</TableHead>
-              <TableHead className="text-right">Target Qty</TableHead>
-              <TableHead className="text-right">Diff</TableHead>
-              <TableHead className="text-right">Diff Abs</TableHead>
+              <TableHead>{t('product.productName')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.sales.sales')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.sales.salesTarget')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.sales.diff')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.sales.diffAbs')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -93,12 +97,15 @@ export const ProductOrderRangeDiffTable = ({
   }>;
   dateRange?: { start: string; end: string };
 }) => {
+
+  const t = useTranslations()
+
   const columns: ColumnConfig[] = [
-    { key: 'product_name', header: 'Product' },
-    { key: 'order_quantity', header: 'Order Qty' },
-    { key: 'order_quantity_target', header: 'Target Qty' },
-    { key: 'quantity_diff', header: 'Diff' },
-    { key: 'quantity_diff_abs', header: 'Diff Abs' }
+    { key: 'product_name', header: t('product.productName') },
+    { key: 'order_quantity', header: t('dashboard.order.order') },
+    { key: 'order_quantity_target', header: t('dashboard.order.orderTarget') },
+    { key: 'quantity_diff', header: t('dashboard.sales.diff') },
+    { key: 'quantity_diff_abs', header: t('dashboard.sales.diffAbs') }
   ];
 
   return (
@@ -108,18 +115,18 @@ export const ProductOrderRangeDiffTable = ({
           data={data}
           columns={columns}
           filename={`product-orders-${dateRange?.start || 'report'}`}
-          buttonText="Download Orders CSV"
+          buttonText={t('common.download')}
         />
       </div>
       <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead className="text-right">Order Qty</TableHead>
-              <TableHead className="text-right">Target Qty</TableHead>
-              <TableHead className="text-right">Diff</TableHead>
-              <TableHead className="text-right">Diff Abs</TableHead>
+              <TableHead>{t('product.productName')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.order.order')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.order.orderTarget')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.sales.diff')}</TableHead>
+              <TableHead className="text-right">{t('dashboard.sales.diffAbs')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

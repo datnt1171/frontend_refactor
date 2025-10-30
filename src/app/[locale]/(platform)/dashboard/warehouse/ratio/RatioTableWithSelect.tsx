@@ -12,6 +12,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
+import { useTranslations } from 'next-intl'
 
 interface ThinnerPaintRatioData {
   thinner_data: {
@@ -34,6 +35,9 @@ export function RatioTableWithSelect({
   data,
   monthColumns
 }: RatioTableWithSelectProps) {
+
+  const t = useTranslations()
+
   const { thinner_data: thinnerData, paint_data: paintData, ratio_data: ratioData } = data
   const [selectedFactories, setSelectedFactories] = useState<Set<number>>(new Set())
   const [selectedMonths, setSelectedMonths] = useState<Set<string>>(new Set())
@@ -131,13 +135,61 @@ export function RatioTableWithSelect({
     URL.revokeObjectURL(url)
   }
 
+  const downloadAllRatioCSV = () => {
+    // Create columns config
+    const columns = [
+      { key: 'factory_code', header: t('crm.factories.factoryId') },
+      { key: 'factory_name', header: t('crm.factories.factoryName') },
+      ...monthColumns.map(month => ({
+        key: month,
+        header: `${month}`
+      }))
+    ]
+
+    // Extract headers
+    const headers = columns.map(col => col.header)
+
+    // Transform data
+    const csvData = ratioData.map(row => 
+      columns.map(col => row[col.key])
+    )
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(','),
+      ...csvData.map(row => 
+        row.map(field => 
+          typeof field === 'string' && (field.includes(',') || field.includes('"')) 
+            ? `"${field.replace(/"/g, '""')}"` 
+            : field
+        ).join(',')
+      )
+    ].join('\n')
+
+    // Download file
+    const BOM = '\uFEFF'
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    
+    link.setAttribute('href', url)
+    link.setAttribute('download', 'ratio-all.csv')
+    link.style.visibility = 'hidden'
+    
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    
+    URL.revokeObjectURL(url)
+  }
+
   const allFactoriesSelected = selectedFactories.size === ratioData.length && ratioData.length > 0
   const allMonthsSelected = selectedMonths.size === monthColumns.length && monthColumns.length > 0
 
   return (
     <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
       <div className="flex items-center justify-between px-4 py-2">
-        <h3 className="font-semibold">Ratio Data</h3>
+        <h3 className="font-semibold">{t('product.ratio')}</h3>
         <Button 
           onClick={downloadSelectedCSV}
           variant="outline"
@@ -145,7 +197,17 @@ export function RatioTableWithSelect({
           disabled={selectedFactories.size === 0 || selectedMonths.size === 0}
         >
           <Download className="w-4 h-4 mr-2" />
-          Download Selected
+          {t('common.downloadSelected')}
+          
+        </Button>
+
+        <Button 
+          onClick={downloadAllRatioCSV}
+          variant="outline"
+          size="sm"
+        >
+          <Download className="w-4 h-4 mr-2" />
+          {t('common.download')}
         </Button>
       </div>
       
@@ -158,8 +220,8 @@ export function RatioTableWithSelect({
                 onCheckedChange={toggleAllFactories}
               />
             </TableHead>
-            <TableHead>Factory Code</TableHead>
-            <TableHead>Factory Name</TableHead>
+            <TableHead>{t('crm.factories.factoryId')}</TableHead>
+            <TableHead>{t('crm.factories.factoryName')}</TableHead>
             {monthColumns.map(month => (
               <TableHead key={month} className="text-center">
                 <div className="flex flex-col items-center gap-1">

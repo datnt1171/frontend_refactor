@@ -20,7 +20,7 @@ export default function OrderVsTargetChart({ data }: Props) {
 
     const option: echarts.EChartsOption = {
       legend: {
-        data: ['Actual Order', 'Order Target'],
+        data: ['訂單目標 - ĐĐH mục tiêu', '實際訂單 - ĐĐH thực tế'],
         top: 0
       },
       grid: {
@@ -30,7 +30,7 @@ export default function OrderVsTargetChart({ data }: Props) {
       },
       xAxis: {
         type: 'value',
-        name: 'Quantity',
+        name: '數量 - Số lượng (kg)',
         position: 'bottom',
         nameLocation: 'middle',
         nameGap: 30,
@@ -53,7 +53,7 @@ export default function OrderVsTargetChart({ data }: Props) {
       },
       series: [
         {
-          name: 'Actual Order',
+          name: '實際訂單 - ĐĐH thực tế',
           type: 'bar',
           stack: 'Total',
           label: {
@@ -70,7 +70,7 @@ export default function OrderVsTargetChart({ data }: Props) {
           data: data.map((item) => item.order_quantity),
         },
         {
-          name: 'Order Target',
+          name: '訂單目標 - ĐĐH mục tiêu',
           type: 'bar',
           stack: 'Total',
           label: {

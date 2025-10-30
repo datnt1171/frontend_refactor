@@ -41,6 +41,7 @@
     "fileSize": "檔案大小",
     "preview": "預覽",
     "download": "下載",
+    "downloadSelected": "下載所選",
     "comment": "評論",
     "addRow": "新增列",
     "addRowBefore": "在前方新增列",
@@ -246,10 +247,11 @@
     "sideBar": {
       "Warehouse": "倉庫",
       "overview": "總覽",
-      "perCustomer": "客戶詳情",
-      "perProduct": "客戶產品詳情",
-      "plan": "預期交付和實際交付",
-      "compare": "比較",
+      "factorySalesRangeDiff": "出貨變動",
+      "factoryOrderRangeDiff": "訂單變動",
+      "productRangeDiff": "產品變動",
+      "scheduled": "預定/實際出貨",
+      "compare": "出貨/訂單隨時間比較",
       "conclusion": "結論",
       "ratio": "比例",
       "agingProduct": "滯銷產品",
@@ -268,13 +270,35 @@
 
 
     "warehouse": {
-      "warehouse_t": "warehouse_t"
+      "factorySalesRangeDiff": {
+        "title": "{currentYear}年{currentMonth}月比{targetYear}年{targetMonth}月分客戶{change}与的名单(1000KG 以上)",
+        "increase": "送加",
+        "decrease": "送少"
+      },
+      "factoryOrderRangeDiff": {
+        "title": "{currentYear}年{currentMonth}月比{targetYear}年{targetMonth}月分客戶订单{change}的名单(1000KG 以上)",
+        "increase": "增多",
+        "decrease": "减少"
+      }
+    },
+    "sales": {
+      "quantity": "數量",
+      "sales": "銷售額",
+      "salesTarget": "銷售目標",
+      "diff": "差異",
+      "diffAbs": "|差異|"
+    },
+
+    "order": {
+      "order": "訂單",
+      "orderTarget": "訂單目標"
     },
 
     "task": {
       "task_t": "task_t"
     }
   },
+
   "crm": {
     "appTitle": "CRM",
     "appDescription": "Customer Relationship Management",
@@ -297,6 +321,15 @@
     "retailer": {
       "retailer": "零售商"
     }
+  },
+
+  "product": {
+    "product": "產品",
+    "productCode": "產品代碼",
+    "productName": "產品名稱",
+    "thinner": "稀釋劑",
+    "paint": "油漆",
+    "ratio": "比例"
   },
 
   "sample": {

@@ -65,7 +65,7 @@ export default function SalesOrderChart({ data }: SalesOrderChartProps) {
       },
       yAxis: {
         type: 'value',
-        name: '數量 - Số lượng',
+        name: '數量 - Số lượng (kg)',
         position: 'left',
         nameLocation: 'middle',
         nameGap: 70,
