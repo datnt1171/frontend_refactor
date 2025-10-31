@@ -28,6 +28,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     defaultValues: {
@@ -40,12 +42,11 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'date',
         type: 'date-range',
-        label: 'Select Date'
+        label: t('filter.selectDate')
       },
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
   const today = new Date()
   const isSaturday = today.getDay() === 6
@@ -166,7 +167,7 @@ export default async function Page({ searchParams }: PageProps) {
                 
                 {/* Sunday OT */}
                 <div>
-                  <h2 className="text-xl font-semibold mb-4 text-gray-900">Sunday Overtime</h2>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">{t('common.sunday')} {t('user.overtime')}</h2>
                   <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
                     <Table>
                       <TableHeader>

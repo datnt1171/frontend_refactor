@@ -26,6 +26,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
   const firstDateOfMonth = startOfMonth(today);
   // Today - 1 month (same day, previous month)
@@ -50,32 +52,31 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'date_target',
         type: 'date-range',
-        label: 'Target',
+        label: t('filter.targetDate'),
       },
       {
         id: 'date',
         type: 'date-range',
-        label: 'Current',
+        label: t('filter.selectDate'),
       },
       {
         id: 'factory',
         type: 'combobox',
-        label: 'Factory',
+        label: t('filter.selectFactory'),
         options: await getFactoryOptions()
       },
       {
         id: 'table',
         type: 'multiselect',
-        label: "Table",
+        label: t('filter.table'),
         options: [
-          { value: 'sales', label: 'Sales' },
-          { value: 'order', label: 'Order' },
+          { value: 'sales', label: t('dashboard.sales.sales') },
+          { value: 'order', label: t('dashboard.order.order') },
         ]
       }
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
 
   const productSalesRangeDiff = await getProductSalesRangeDiff(params)

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table"
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
-// import { getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
@@ -29,6 +29,8 @@ interface FactoryPageProps {
 
 export default async function UserListPage({ searchParams }: FactoryPageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     defaultValues: {
@@ -40,31 +42,30 @@ export default async function UserListPage({ searchParams }: FactoryPageProps) {
       {
         id: 'is_active',
         type: 'select',
-        label: 'Active',
+        label: t('filter.active'),
         options: [
-          { value: 'true', label: 'Active' },
-          { value: 'false', label: 'Inactive' },
+          { value: 'true', label: t('filter.active') },
+          { value: 'false', label: t('filter.inactive') },
         ]
       },
       {
         id: 'has_onsite',
         type: 'select',
-        label: 'Onsite',
+        label: t('filter.onsite'),
         options: [
-          { value: 'true', label: 'Yes' },
-          { value: 'false', label: 'No' },
+          { value: 'true', label: t('common.yes') },
+          { value: 'false', label: t('common.no') },
         ]
       },
       {
         id: 'search',
         type: 'search',
-        label: 'Search Factory',
-        placeholder: 'Search by Factory code, name'
+        label: t('filter.searchFactory'),
+        placeholder: t('filter.searchFactoryHolder')
       }
     ]
   }
 
-  // const commonT = await getTranslations()
   const params = await searchParams
   
   const response = await getFactories(params)
@@ -85,10 +86,10 @@ export default async function UserListPage({ searchParams }: FactoryPageProps) {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Factory Code</TableHead>
-                      <TableHead>Factory Name</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Onsite</TableHead>
+                      <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                      <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                      <TableHead>{t('crm.factories.status')}</TableHead>
+                      <TableHead>{t('crm.factories.onsite')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -103,10 +104,18 @@ export default async function UserListPage({ searchParams }: FactoryPageProps) {
                           {factory.factory_name}
                         </TableCell>
                         <TableCell>
-                          <StatusBadge isActive={factory.is_active} />
+                          <StatusBadge 
+                            isActive={factory.is_active} 
+                            activeText={t('filter.active')}
+                            inactiveText={t('filter.inactive')}
+                          />
                         </TableCell>
                         <TableCell>
-                          <OnsiteBadge hasOnsite={factory.has_onsite} />
+                          <OnsiteBadge 
+                            hasOnsite={factory.has_onsite}
+                            yesText={t('common.yes')}
+                            noText={t('common.no')}
+                          />
                         </TableCell>
                       </TableRow>
                     ))}

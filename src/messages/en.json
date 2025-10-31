@@ -227,6 +227,18 @@
       "actionBy": "Action by",
       "actionAt": "Action at",
       "duration": "Duration"
+    },
+    "state": {
+      "state": "State",
+      "pendingApprove": "Pending Approve",
+      "analyze": "Analyze",
+      "working": "Working",
+      "pendingReview": "Pending Review",
+      "start": "Start",
+      "denied": "Denied",
+      "canceled": "Canceled",
+      "closed": "Closed",
+      "static": "Static"
     }
   },
   "dashboard": {
@@ -329,6 +341,132 @@
     "thinner": "Thinner",
     "paint": "Paint",
     "ratio": "Ratio"
+  },
+  
+  "filter": {
+    "filter": "Filter",
+
+    "selectDate": "Select Date",
+    "selectDay": "Select Day",
+    "selectWeek": "Select Week",
+    "selectMonth": "Select Month",
+    "selectQuarter": "Select Quarter",
+    "selectYear": "Select Year",
+
+    "targetDate": "Target Date",
+    "targetDay": "Target Day",
+    "targetWeek": "Target Week",
+    "targetMonth": "Target Month",
+    "targetQuarter": "Target Quarter",
+    "targetYear": "Target Year",
+
+    "excludedFactory": "Excluded Factory",
+
+    "active": "Active",
+    "inactive": "Inactive",
+    "onsite": "Onsite",
+
+    "search": "Search",
+    "searchFactory": "Search factory",
+    "searchFactoryHolder": "Search by factory code, name",
+    "selectFactory": "Select factory",
+
+    "searchProduct": "Search Product",
+    "searchProductHolder": "Search by Product code, name",
+    "selectProduct": "Select Product",
+
+    "searchRetailer": "Search Retailer",
+    "searchRetailerHolder": "Search by Retailer code, name",
+    "selectRetailer": "Select Retailer",
+
+    "searchUser": "Search User",
+    "searchUserHolder": "Search by Username, name",
+    "selectUser": "Select User",
+
+    "searchDepartment": "Search Department",
+    "searchDepartmentHolder": "Search by Department code, name",
+    "selectDepartment": "Select Department",
+
+    "searchState": "Search State",
+    "searchStateHolder": "Search by State code, name",
+    "selectState": "Select State",
+
+
+    "increase": "Increase",
+    "descrease": "Descrease",
+
+    "groupBy": "Group By",
+
+    "sortBy": "Sort By",
+
+    "table": "Table"
+  },
+
+  "datetime": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "now": "Now",
+    "year": "Year",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second",
+    "timelineYearQuarter": "Timeline (Year-Quarter)",
+    "timelineYearMonth": "Timeline (Year-Month)",
+    "timelineYearWeek": "Timeline (Year-Week)",
+    "byDate": "By Date",
+    "compareYearsByQuarter": "Compare Years by Quarter",
+    "compareYearsByMonth": "Compare Years by Month",
+    "compareYearsByWeek": "Compare Years by Week",
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "monthsShort": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "daysShort": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
   },
   
   "sample": {

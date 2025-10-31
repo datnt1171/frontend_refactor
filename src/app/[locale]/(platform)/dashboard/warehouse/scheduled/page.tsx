@@ -16,6 +16,9 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
+
+  const t = await getTranslations()
+
   const params = await searchParams
   const factoryOptions = await getFactoryOptions()
   const factoryName = factoryOptions.find(option => option.value === params.factory)?.label || params.factory
@@ -31,19 +34,18 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'factory',
         type: 'combobox',
-        label: 'Factory',
+        label: t('filter.selectFactory'),
         options: factoryOptions
       },
       {
         id: 'year',
         type: 'select',
-        label: 'Year',
+        label: t('filter.selectYear'),
         options: generateYearOptions()
       },
     ]
   }
 
-  const t = await getTranslations()
   const scheduledAndActualSales = await getScheduledAndActualSales(params)
 
   return (

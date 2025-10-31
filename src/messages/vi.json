@@ -21,8 +21,8 @@
     "updatedAt": "Ngày cập nhật",
     "updatedBy": "Người cập nhật",
     "goHome": "Về trang chủ",
-    "active": "Active",
-    "inactive": "Inactive",
+    "active": "Đang hoạt động",
+    "inactive": "Ngừng hoạt động",
     "create": "Tạo",
     "edit": "Sửa",
     "delete": "Xóa",
@@ -227,6 +227,18 @@
       "actionBy": "Thực hiện bởi",
       "actionAt": "Thực hiện lúc",
       "duration": "Thời lượng"
+    },
+    "state": {
+      "state": "Trạng thái",
+      "pendingApprove": "Chờ nhận",
+      "analyze": "Đang kiểm tra",
+      "working": "Đang làm",
+      "pendingReview": "Chờ review",
+      "start": "Bắt đầu",
+      "denied": "Đã từ chối",
+      "canceled": "Đã hủy",
+      "closed": "Đã đóng",
+      "static": "Static"
     }
   },
   "dashboard": {
@@ -329,6 +341,131 @@
     "thinner": "Dung môi",
     "paint": "Sơn",
     "ratio": "Tỉ lệ"
+  },
+  
+  "filter": {
+    "filter": "Bộ lọc",
+
+    "selectDate": "Chọn ngày",
+    "selectDay": "Chọn ngày",
+    "selectWeek": "Chọn tuần",
+    "selectMonth": "Chọn tháng",
+    "selectQuarter": "Chọn quý",
+    "selectYear": "Chọn năm",
+
+    "targetDate": "Ngày mục tiêu",
+    "targetDay": "Ngày mục tiêu",
+    "targetWeek": "Tuần mục tiêu",
+    "targetMonth": "Tháng mục tiêu",
+    "targetQuarter": "Quý mục tiêu",
+    "targetYear": "Năm mục tiêu",
+
+    "excludedFactory": "KH lọc ra",
+
+    "active": "Đang hoạt động",
+    "inactive": "Ngừng hoạt động",
+    "onsite": "Cắm chốt",
+
+    "search": "Tìm kiếm",
+    "searchFactory": "Tìm kiếm nhà máy",
+    "searchFactoryHolder": "Tìm kiếm mã, tên nhà máy",
+    "selectFactory": "Chọn nhà máy",
+
+    "searchProduct": "Tìm kiếm sản phẩm",
+    "searchProductHolder": "Tìm kiếm theo mã, tên sản phẩm",
+    "selectProduct": "Chọn sản phẩm",
+
+    "searchRetailer": "Tìm kiếm KH đặt hàng",
+    "searchRetailerHolder": "Tìm kiếm theo mã, tên KH đặt hàng",
+    "selectRetailer": "Chọn KH đặt hàng",
+
+    "searchUser": "Tìm kiếm người dùng",
+    "searchUserHolder": "Tìm kiếm mã, tên người dùng",
+    "selectUser": "Chọn người dùng",
+
+    "searchDepartment": "Tìm kiếm bộ phận",
+    "searchDepartmentHolder": "Tìm kiếm tên bộ phận",
+    "selectDepartment": "Chọn bộ phận",
+
+    "searchState": "Tìm kiếm trạng thái",
+    "searchStateHolder": "Tìm kiếm theo trạng thái",
+    "selectState": "Chọn trạng thái",
+
+    "increase": "Tăng",
+    "descrease": "Giảm",
+
+    "groupBy": "Nhóm theo",
+
+    "sortBy": "Sắp xếp theo",
+
+    "table": "Bảng"
+  },
+
+  "datetime": {
+    "today": "Hôm nay",
+    "yesterday": "Hôm qua",
+    "tomorrow": "Ngày mai",
+    "now": "Bây giờ",
+    "year": "Năm",
+    "month": "Tháng",
+    "week": "Tuần",
+    "day": "Ngày",
+    "hour": "Giờ",
+    "minute": "Phút",
+    "second": "Giây",
+    "timelineYearQuarter": "Chuỗi thời gian (Năm-Quý)",
+    "timelineYearMonth": "Chuỗi thời gian (Năm-Tháng)",
+    "timelineYearWeek": "Chuỗi thời gian (Năm-Tuần)",
+    "byDate": "Theo ngày",
+    "compareYearsByQuarter": "So sánh các năm theo quý",
+    "compareYearsByMonth": "So sánh các năm theo tháng",
+    "compareYearsByWeek": "So sánh các năm theo tuần",
+    "months": {
+      "january": "Tháng 1",
+      "february": "Tháng 2",
+      "march": "Tháng 3",
+      "april": "Tháng 4",
+      "may": "Tháng 5",
+      "june": "Tháng 6",
+      "july": "Tháng 7",
+      "august": "Tháng 8",
+      "september": "Tháng 9",
+      "october": "Tháng 10",
+      "november": "Tháng 11",
+      "december": "Tháng 12"
+    },
+    "monthsShort": {
+      "jan": "T1",
+      "feb": "T2",
+      "mar": "T3",
+      "apr": "T4",
+      "may": "T5",
+      "jun": "T6",
+      "jul": "T7",
+      "aug": "T8",
+      "sep": "T9",
+      "oct": "T10",
+      "nov": "T11",
+      "dec": "T12"
+    },
+    "days": {
+      "monday": "Thứ hai",
+      "tuesday": "Thứ ba",
+      "wednesday": "Thứ tư",
+      "thursday": "Thứ năm",
+      "friday": "Thứ sáu",
+      "saturday": "Thứ bảy",
+      "sunday": "Chủ nhật"
+    },
+    "daysShort": {
+      "mon": "T2",
+      "tue": "T3",
+      "wed": "T4",
+      "thu": "T5",
+      "fri": "T6",
+      "sat": "T7",
+      "sun": "CN"
+    }
   },
   
   "sample": {

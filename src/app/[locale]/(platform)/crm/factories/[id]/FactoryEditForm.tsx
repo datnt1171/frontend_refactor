@@ -8,28 +8,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { updateFactory } from '@/lib/api/client/api'
 import type { FactoryDetail, FactoryUpdate } from '@/types'
 import { useRouter } from '@/i18n/navigation'
+import { StatusBadge } from "@/components/ui/StatusBadge"
+import { OnsiteBadge } from "@/components/ui/OnsiteBadge"
+import { useTranslations } from 'next-intl'
 
 interface FactoryEditFormProps {
   factory: FactoryDetail
-  translations: {
-    factoryId: string
-    factoryName: string
-    status: string
-    onsite: string
-    active: string
-    inactive: string
-    yes: string
-    no: string
-    edit: string
-    save: string
-    cancel: string
-    processing: string,
-    failedToLoadTaskDetails: string,
-    actionPerformedSuccessfully: string
-  }
 }
 
-export function FactoryEditForm({ factory, translations }: FactoryEditFormProps) {
+export function FactoryEditForm({ factory }: FactoryEditFormProps) {
+  const t = useTranslations()
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -38,6 +26,7 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
   })
 
   const router = useRouter()
+  
   const handleCancel = () => {
     setIsOpen(false)
     setFormData({
@@ -56,12 +45,12 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
       }
 
       await updateFactory(factory.factory_code, updateData)
-      alert(translations.actionPerformedSuccessfully)
+      alert(t('taskManagement.taskDetail.actionPerformedSuccessfully'))
       setIsOpen(false)
       
     } catch (err: any) {
       console.error("Error performing action:", err)
-      alert(err.response?.data?.error || translations.failedToLoadTaskDetails)
+      alert(err.response?.data?.error || t('taskManagement.taskDetail.failedToPerformAction'))
     } finally {
       setIsLoading(false)
       router.push(`/crm/factories/${factory.factory_code}`)
@@ -88,37 +77,41 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
       <div className="space-y-4">
         <div>
           <label className="text-sm font-medium text-muted-foreground">
-            {translations.factoryId}
+            {t('crm.factories.factoryId')}
           </label>
           <p className="mt-1">{factory.factory_code}</p>
         </div>
         
         <div>
           <label className="text-sm font-medium text-muted-foreground">
-            {translations.factoryName}
+            {t('crm.factories.factoryName')}
           </label>
           <p className="mt-1">{factory.factory_name}</p>
         </div>
         
         <div>
           <label className="text-sm font-medium text-muted-foreground">
-            {translations.status}
+            {t('crm.factories.status')}
           </label>
           <div className="mt-1">
-            <Badge variant={factory.is_active ? "default" : "destructive"}>
-              {factory.is_active ? translations.active : translations.inactive}
-            </Badge>
+            <StatusBadge 
+              isActive={factory.is_active} 
+              activeText={t('filter.active')}
+              inactiveText={t('filter.inactive')}
+            />
           </div>
         </div>
         
         <div>
           <label className="text-sm font-medium text-muted-foreground">
-            {translations.onsite}
+            {t('crm.factories.onsite')}
           </label>
           <div className="mt-1">
-            <Badge variant={factory.has_onsite ? "secondary" : "outline"}>
-              {factory.has_onsite ? translations.yes : translations.no}
-            </Badge>
+            <OnsiteBadge 
+              hasOnsite={factory.has_onsite}
+              yesText={t('common.yes')}
+              noText={t('common.no')}
+            />
           </div>
         </div>
       </div>
@@ -128,32 +121,32 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button>
-              {translations.edit}
+              {t('common.edit')}
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Edit Factory</DialogTitle>
+              <DialogTitle>{t('common.edit')}</DialogTitle>
             </DialogHeader>
             
             <div className="space-y-4 py-4">
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
-                  {translations.factoryId}
+                  {t('crm.factories.factoryId')}
                 </label>
                 <p className="mt-1 text-muted-foreground">{factory.factory_code}</p>
               </div>
               
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
-                  {translations.factoryName}
+                  {t('crm.factories.factoryName')}
                 </label>
                 <p className="mt-1 text-muted-foreground">{factory.factory_name}</p>
               </div>
               
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
-                  {translations.status}
+                  {t('crm.factories.status')}
                 </label>
                 <div className="mt-1">
                   <Select 
@@ -168,14 +161,14 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
                       <SelectItem value="true">
                         <div className="flex items-center gap-2">
                           <Badge variant="default" className="text-xs">
-                            {translations.active}
+                            {t('common.active')}
                           </Badge>
                         </div>
                       </SelectItem>
                       <SelectItem value="false">
                         <div className="flex items-center gap-2">
                           <Badge variant="destructive" className="text-xs">
-                            {translations.inactive}
+                            {t('common.inactive')}
                           </Badge>
                         </div>
                       </SelectItem>
@@ -186,7 +179,7 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
               
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
-                  {translations.onsite}
+                  {t('crm.factories.onsite')}
                 </label>
                 <div className="mt-1">
                   <Select 
@@ -200,15 +193,15 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
                     <SelectContent>
                       <SelectItem value="true">
                         <div className="flex items-center gap-2">
-                          <Badge variant="secondary" className="text-xs">
-                            {translations.yes}
+                          <Badge variant="default" className="text-xs">
+                            {t('common.yes')}
                           </Badge>
                         </div>
                       </SelectItem>
                       <SelectItem value="false">
                         <div className="flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">
-                            {translations.no}
+                            {t('common.no')}
                           </Badge>
                         </div>
                       </SelectItem>
@@ -224,7 +217,7 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
                 disabled={isLoading}
                 className="flex-1"
               >
-                {isLoading ? translations.processing : translations.save}
+                {isLoading ? t('common.processing') : t('common.save')}
               </Button>
               <Button 
                 variant="outline" 
@@ -232,7 +225,7 @@ export function FactoryEditForm({ factory, translations }: FactoryEditFormProps)
                 disabled={isLoading}
                 className="flex-1"
               >
-                {translations.cancel}
+                {t('common.cancel')}
               </Button>
             </div>
           </DialogContent>

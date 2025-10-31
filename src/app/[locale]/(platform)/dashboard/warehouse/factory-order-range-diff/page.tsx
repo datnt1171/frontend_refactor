@@ -37,6 +37,8 @@ export default async function Page({ searchParams }: PageProps) {
   // First date of (today - 1 month)
   const firstDateOfLastMonth = startOfMonth(oneMonthAgo);
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
       defaultValues: {
@@ -55,26 +57,25 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'increase',
         type: 'select',
-        label: 'Increase',
+        label: t('filter.increase'),
         options: [
-          { value: 'true', label: 'Increase' },
-          { value: 'false', label: 'Descrease' },
+          { value: 'true', label: t('filter.increase') },
+          { value: 'false', label: t('filter.descrease') },
         ]
       },
       {
         id: 'date_target',
         type: 'date-range',
-        label: 'Target',
+        label: t('filter.targetDate'),
       },
       {
         id: 'date',
         type: 'date-range',
-        label: 'Current',
+        label: t('filter.selectDate'),
       },
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
 
   const factoryOrderRangeDiff = await getFactoryOrderRangeDiff(params)

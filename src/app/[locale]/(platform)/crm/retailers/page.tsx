@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table"
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
-// import { getTranslations } from "next-intl/server"
+import { getTranslations } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
@@ -25,6 +25,8 @@ interface RetailerPageProps {
 
 export default async function UserListPage({ searchParams }: RetailerPageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     
@@ -36,13 +38,12 @@ export default async function UserListPage({ searchParams }: RetailerPageProps) 
       {
         id: 'search',
         type: 'search',
-        label: 'Search Retailer',
-        placeholder: 'Search by Retailer name'
+        label: t('filter.searchRetailer'),
+        placeholder: t('filter.searchRetailerHolder')
       }
     ]
   }
 
-  // const commonT = await getTranslations()
   const params = await searchParams
   
   const response = await getRetailers(params)
@@ -63,7 +64,7 @@ export default async function UserListPage({ searchParams }: RetailerPageProps) 
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
+                      <TableHead>{t('crm.retailer.retailer')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

@@ -5,6 +5,7 @@ import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { generateYearOptions, getCurrentYear } from '@/lib/utils/date';
+import { getTranslations } from 'next-intl/server'
 
 interface PageProps {
   searchParams: Promise<{
@@ -13,6 +14,8 @@ interface PageProps {
 }
 
 export default async function UserFactoryOnsitePage({ searchParams }: PageProps) {
+
+  const t = await getTranslations()
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
@@ -23,7 +26,7 @@ export default async function UserFactoryOnsitePage({ searchParams }: PageProps)
       {
         id: 'year',
         type: 'select',
-        label: 'Select Year',
+        label: t('filter.selectYear'),
         options: generateYearOptions({ yearsBack: 3 })
         
       }

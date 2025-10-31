@@ -31,25 +31,7 @@ export default async function FactoryDetailPage({ params }: FactoryDetailPagePro
             <CardTitle>{t('crm.factories.factories')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <FactoryEditForm 
-              factory={factory}
-              translations={{
-                factoryId: t('crm.factories.factoryId'),
-                factoryName: t('crm.factories.factoryName'),
-                status: t('crm.factories.status'),
-                onsite: t('crm.factories.onsite'),
-                active: t('common.active'),
-                inactive: t('common.inactive'),
-                yes: t('common.yes'),
-                no: t('common.no'),
-                edit: t('common.edit'),
-                save: t('common.save'),
-                cancel: t('common.cancel'),
-                processing: t('common.processing'),
-                failedToLoadTaskDetails: t('taskManagement.taskDetail.failedToPerformAction'),
-                actionPerformedSuccessfully: t('taskManagement.taskDetail.actionPerformedSuccessfully'),
-              }}
-            />
+            <FactoryEditForm factory={factory} />
           </CardContent>
         </Card>
         <Card>

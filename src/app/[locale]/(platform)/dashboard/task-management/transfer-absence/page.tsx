@@ -28,7 +28,9 @@ interface PageProps {
 }
 
 export default async function Page({ searchParams }: PageProps) {
-  
+
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     defaultValues: {
@@ -42,20 +44,18 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'date',
         type: 'date-range',
-        label: 'Select Date'
+        label: t('filter.selectDate')
       },
       {
         id: 'user__department__name',
         type: 'multiselect',
-        label: 'Department Filter',
+        label: t('filter.selectDepartment'),
         options: getDepartmentOptions()
       },
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
-  
   const rows = await getTransferAbsences(params)
 
   return (

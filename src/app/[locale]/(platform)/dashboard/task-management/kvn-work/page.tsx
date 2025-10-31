@@ -26,6 +26,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     defaultValues: {
@@ -35,12 +37,12 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'date',
         type: 'date',
-        label: 'Select Date'
+        label: t('filter.selectDate')
       },
     ]
   }
 
-  const t = await getTranslations()
+  
   const params = await searchParams
   
   const response = await getTechReportWorkYesterday(params)
@@ -285,8 +287,8 @@ export default async function Page({ searchParams }: PageProps) {
 
                           {/* Num of people */}
                           <TableCell className="text-center border-r-2 border-gray-300">
-  {rows.reduce((sum, row) => sum + (+row.overtime.num_of_ppl), 0)}
-</TableCell>
+                            {rows.reduce((sum, row) => sum + (+row.overtime.num_of_ppl), 0)}
+                          </TableCell>
                         </TableRow>
                       </>
                     )}

@@ -25,9 +25,11 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
   const FilterConfig: PageFilterConfig = {
-    showResetButton: true,
+    showResetButton: false,
       defaultValues: {
       day: {
         gte: '1',
@@ -47,41 +49,40 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'day',
         type: 'day-range',
-        label: 'Day Range',
+        label: t('filter.selectDay'),
       },
       {
         id: 'month',
         type: 'month-range',
-        label: 'Month Range',
+        label: t('filter.selectMonth'),
       },
       {
         id: 'year',
         type: 'select',
-        label: 'Year',
+        label: t('filter.selectYear'),
         options: generateYearOptions()
       },
       {
         id: 'target_year',
         type: 'select',
-        label: 'Target Year',
+        label: t('filter.targetYear'),
         options: generateYearOptions()
       },
       {
         id: 'target_month',
         type: 'select',
-        label: 'Target month',
+        label: t('filter.targetMonth'),
         options: MONTH_OPTIONS
       },
       {
         id: 'exclude_factory',
         type: 'select',
-        label: 'Excluded factory',
+        label: t('filter.excludedFactory'),
         options: await getFactoryOptions()
       }
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
   
   const data = await getWarehouseOverall(params)

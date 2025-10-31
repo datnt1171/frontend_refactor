@@ -29,6 +29,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
       defaultValues: {
@@ -42,35 +44,34 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'table',
         type: 'multiselect',
-        label: "Table",
+        label: t('filter.table'),
         options: [
-          { value: 'ratio', label: 'Ratio' },
-          { value: 'thinner', label: 'Thinner' },
-          { value: 'paint', label: 'Paint' },
+          { value: 'ratio', label: t('product.ratio') },
+          { value: 'thinner', label: t('product.thinner') },
+          { value: 'paint', label: t('product.paint') },
         ]
       },
       {
         id: 'year',
         type: 'select',
-        label: 'Year',
+        label: t('filter.selectYear'),
         options: getYearOptions()
       },
       {
         id: 'thinner',
         type: 'multiselect',
-        label: 'Thinner',
+        label: t('product.thinner'),
         options: THINNER_PAINT_OPTIONS
       },
       {
         id: 'paint',
         type: 'multiselect',
-        label: 'Paint',
+        label: t('product.paint'),
         options: THINNER_PAINT_OPTIONS
       },
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
 
   const thinnerPaintRatio = await getThinnerPaintRatio(params)

@@ -19,6 +19,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     defaultValues: {
@@ -30,19 +32,19 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'year',
         type: 'multiselect',
-        label: 'Year',
+        label: t('filter.selectYear'),
         options: getYearOptions()
       },
       {
         id: 'group_by',
         type: 'select',
-        label: 'Group by',
+        label: t('filter.groupBy'),
         options: TIME_SELECT_OPTIONS
       },
       {
         id: 'factory',
         type: 'combobox',
-        label: 'Factory',
+        label: t('filter.selectFactory'),
         options: await getFactoryOptions()
       },
       // { TODO
@@ -54,7 +56,6 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
   const xAxisName = TIME_SELECT_OPTIONS.find(option => option.value === params.group_by)?.label || params.group_by
   const salesOvertime = await getSalesOvertime(params)

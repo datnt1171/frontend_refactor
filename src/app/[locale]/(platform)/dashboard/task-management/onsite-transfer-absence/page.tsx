@@ -25,6 +25,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     defaultValues: {
@@ -34,13 +36,11 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'date',
         type: 'date',
-        label: 'Select Date'
+        label: t('filter.selectDate')
       },
     ]
   }
 
-  const t = await getTranslations()
-  console.log(format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'))
   const params = await searchParams
   
   const response = await getTechReportWorkYesterday(params)

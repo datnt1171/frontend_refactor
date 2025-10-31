@@ -26,6 +26,8 @@ interface UserPageProps {
 
 export default async function UserListPage({ searchParams }: UserPageProps) {
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
     defaultValues: {
@@ -37,26 +39,24 @@ export default async function UserListPage({ searchParams }: UserPageProps) {
       {
         id: 'ordering',
         type: 'sort',
-        label: 'Sort Options',
-        placeholder: 'Select sort order...',
+        label: t('filter.sortBy'),
+        placeholder: t('filter.sortBy'),
         sortFields: [
-          { value: 'username', label: 'Username' },
-          { value: 'first_name', label: 'First name' }
+          { value: 'username', label: t('user.username') },
+          { value: 'first_name', label: t('user.firstName') }
         ]
       },
       {
         id: 'search',
         type: 'search',
-        label: 'Search User',
-        placeholder: 'Search by username, name'
+        label: t('filter.searchUser'),
+        placeholder: t('filter.searchUserHolder')
       }
     ]
   }
 
-  const commonT = await getTranslations("common")
-  const t = await getTranslations("user")
   const params = await searchParams
-  
+
   const response = await getUsers(params)
   const users = response.results
 
@@ -75,16 +75,16 @@ export default async function UserListPage({ searchParams }: UserPageProps) {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{t('username')}</TableHead>
-                      <TableHead>{t('lastName')}</TableHead>
-                      <TableHead>{t('firstName')}</TableHead>
+                      <TableHead>{t('user.username')}</TableHead>
+                      <TableHead>{t('user.lastName')}</TableHead>
+                      <TableHead>{t('user.firstName')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {users.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={3} className="text-center">
-                          {commonT('noDataFound')}
+                          {t('common.noDataFound')}
                         </TableCell>
                       </TableRow>
                     ) : (

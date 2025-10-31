@@ -227,6 +227,18 @@
       "actionBy": "執行者",
       "actionAt": "執行時間",
       "duration": "持續時間"
+    },
+    "state": {
+      "state": "狀態",
+      "pendingApprove": "待審批",
+      "analyze": "分析中",
+      "working": "進行中",
+      "pendingReview": "待審查",
+      "start": "開始",
+      "denied": "已拒絕",
+      "canceled": "已取消",
+      "closed": "已結案",
+      "static": "靜態"
     }
   },
   "dashboard": {
@@ -330,6 +342,131 @@
     "thinner": "稀釋劑",
     "paint": "油漆",
     "ratio": "比例"
+  },
+
+  "filter": {
+    "filter": "篩選器",
+
+    "selectDate": "選擇日期",
+    "selectDay": "選擇天",
+    "selectWeek": "選擇週",
+    "selectMonth": "選擇月",
+    "selectQuarter": "選擇季度",
+    "selectYear": "選擇年份",
+
+    "targetDate": "目標日期",
+    "targetDay": "目標天",
+    "targetWeek": "目標週",
+    "targetMonth": "目標月",
+    "targetQuarter": "目標季度",
+    "targetYear": "目標年份",
+
+    "excludedFactory": "排除的工廠",
+
+    "active": "啟用",
+    "inactive": "停用",
+    "onsite": "現場",
+
+    "search": "搜尋",
+    "searchFactory": "搜尋工廠",
+    "searchFactoryHolder": "依工廠代碼或名稱搜尋",
+    "selectFactory": "選擇工廠",
+
+    "searchProduct": "搜尋產品",
+    "searchProductHolder": "依產品代碼或名稱搜尋",
+    "selectProduct": "選擇產品",
+
+    "searchRetailer": "搜尋零售商",
+    "searchRetailerHolder": "依零售商代碼或名稱搜尋",
+    "selectRetailer": "選擇零售商",
+
+    "searchUser": "搜尋使用者",
+    "searchUserHolder": "依使用者代碼或名稱搜尋",
+    "selectUser": "選擇使用者",
+
+    "searchDepartment": "搜尋部門",
+    "searchDepartmentHolder": "依部門代碼或名稱搜尋",
+    "selectDepartment": "選擇部門",
+
+    "searchState": "搜尋地區",
+    "searchStateHolder": "依地區代碼或名稱搜尋",
+    "selectState": "選擇地區",
+
+    "increase": "增加",
+    "descrease": "減少",
+
+    "groupBy": "分組依據",
+
+    "sortBy": "排序依據",
+
+    "table": "表格"
+  },
+
+  "datetime": {
+    "today": "今天",
+    "yesterday": "昨天",
+    "tomorrow": "明天",
+    "now": "現在",
+    "year": "年",
+    "month": "月",
+    "week": "週",
+    "day": "天",
+    "hour": "小時",
+    "minute": "分鐘",
+    "second": "秒",
+    "timelineYearQuarter": "時間軸（年–季）",
+    "timelineYearMonth": "時間軸（年–月）",
+    "timelineYearWeek": "時間軸（年–週）",
+    "byDate": "按日期",
+    "compareYearsByQuarter": "按季度比較年度",
+    "compareYearsByMonth": "按月份比較年度",
+    "compareYearsByWeek": "按週比較年度",
+    "months": {
+      "january": "一月",
+      "february": "二月",
+      "march": "三月",
+      "april": "四月",
+      "may": "五月",
+      "june": "六月",
+      "july": "七月",
+      "august": "八月",
+      "september": "九月",
+      "october": "十月",
+      "november": "十一月",
+      "december": "十二月"
+    },
+    "monthsShort": {
+      "jan": "1月",
+      "feb": "2月",
+      "mar": "3月",
+      "apr": "4月",
+      "may": "5月",
+      "jun": "6月",
+      "jul": "7月",
+      "aug": "8月",
+      "sep": "9月",
+      "oct": "10月",
+      "nov": "11月",
+      "dec": "12月"
+    },
+    "days": {
+      "monday": "星期一",
+      "tuesday": "星期二",
+      "wednesday": "星期三",
+      "thursday": "星期四",
+      "friday": "星期五",
+      "saturday": "星期六",
+      "sunday": "星期日"
+    },
+    "daysShort": {
+      "mon": "一",
+      "tue": "二",
+      "wed": "三",
+      "thu": "四",
+      "fri": "五",
+      "sat": "六",
+      "sun": "日"
+    }
   },
 
   "sample": {

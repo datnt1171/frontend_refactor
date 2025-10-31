@@ -26,6 +26,8 @@ export default async function Page({ searchParams }: PageProps) {
   // First date of (today - 1 month)
   const firstDateOfLastMonth = startOfMonth(oneMonthAgo);
 
+  const t = await getTranslations()
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
       defaultValues: {
@@ -43,17 +45,16 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'date_target',
         type: 'date-range',
-        label: 'Target',
+        label: t('filter.targetDate'),
       },
       {
         id: 'date',
         type: 'date-range',
-        label: 'Current',
+        label: t('filter.selectDate'),
       },
     ]
   }
 
-  const t = await getTranslations()
   const params = await searchParams
 
   const salesOrderPctDiff = await getSalesOrderPctDiff(params)
