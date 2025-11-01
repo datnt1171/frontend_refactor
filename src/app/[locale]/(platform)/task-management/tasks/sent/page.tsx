@@ -16,30 +16,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getStateTypeOptions, getProcessPrefixOptions } from "@/lib/utils/filter"
 
-const SentTaskFilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  filters: [
-    {
-      id: 'process__prefix',
-      type: 'select',
-      label: 'Loại phiếu',
-      options: getProcessPrefixOptions()
-    },
-    {
-      id: 'state__state_type__in',
-      type: 'select',
-      label: 'State Filter',
-      options: getStateTypeOptions()
-    },
-    {
-      id: 'search',
-      type: 'search',
-      label: 'Search task',
-      placeholder: 'Search by task'
-    }
-  ]
-}
-
 interface SentTaskPageProps {
   searchParams: Promise<{
     search?: string,
@@ -52,6 +28,31 @@ interface SentTaskPageProps {
 export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
   const commonT = await getTranslations('common')
   const t = await getTranslations('taskManagement.sentTask')
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    filters: [
+      {
+        id: 'process__prefix',
+        type: 'select',
+        label: 'Loại phiếu',
+        options: getProcessPrefixOptions()
+      },
+      {
+        id: 'state__state_type__in',
+        type: 'select',
+        label: 'State Filter',
+        options: await getStateTypeOptions()
+      },
+      {
+        id: 'search',
+        type: 'search',
+        label: 'Search task',
+        placeholder: 'Search by task'
+      }
+    ]
+  }
+
   const params = await searchParams
   const response = await getSentTasks(params)
   const tasks = response.results
@@ -146,7 +147,7 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
               />
             </div>
           </div>
-          <SidebarRight filterConfig={SentTaskFilterConfig} />
+          <SidebarRight filterConfig={FilterConfig} />
         </div>
       </SidebarProvider>
     </RightSidebarProvider>

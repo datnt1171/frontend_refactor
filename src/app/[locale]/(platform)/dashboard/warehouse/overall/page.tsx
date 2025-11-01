@@ -8,7 +8,7 @@ import type { PageFilterConfig } from "@/types"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import { generateYearOptions } from '@/lib/utils/date';
-import { getFactoryOptions, MONTH_OPTIONS } from '@/lib/utils/filter';
+import { getFactoryOptions, getMonthOptions } from '@/lib/utils/filter';
 
 interface PageProps {
   searchParams: Promise<{
@@ -26,6 +26,7 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
 
   const t = await getTranslations()
+  const MONTH_OPTIONS = await getMonthOptions()
 
   const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
   const FilterConfig: PageFilterConfig = {

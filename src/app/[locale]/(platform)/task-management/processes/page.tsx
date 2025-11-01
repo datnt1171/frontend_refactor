@@ -11,22 +11,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
 
-const ProcessFilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  defaultValues: {
-    page_size: '15',
-    page: '1'
-  },
-  filters: [
-    {
-      id: 'search',
-      type: 'search',
-      label: 'Search Process',
-      placeholder: 'Search by process name'
-    }
-  ]
-}
-
 interface ProcessPageProps {
   searchParams: Promise<{
     search?: string,
@@ -38,6 +22,23 @@ interface ProcessPageProps {
 
 export default async function ProcessPage({searchParams}: ProcessPageProps) {
   const t = await getTranslations('taskManagement.process')
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    defaultValues: {
+      page_size: '15',
+      page: '1'
+    },
+    filters: [
+      {
+        id: 'search',
+        type: 'search',
+        label: 'Search Process',
+        placeholder: 'Search by process name'
+      }
+    ]
+  }
+
   const params = await searchParams
   const response = await getProcesses(params)
   const processes = response.results
@@ -101,7 +102,7 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
               />
             </div>
           </div>
-          <SidebarRight filterConfig={ProcessFilterConfig} />
+          <SidebarRight filterConfig={FilterConfig} />
         </div>
       </SidebarProvider>
     </RightSidebarProvider>

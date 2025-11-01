@@ -47,7 +47,7 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
         id: 'state_type__in',
         type: 'multiselect',
         label: t('filter.selectState'),
-        options: getStateTypeOptions()
+        options: await getStateTypeOptions()
       },
       {
         id: 'factory_code__in',

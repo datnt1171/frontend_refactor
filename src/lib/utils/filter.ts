@@ -1,4 +1,5 @@
 import { getFactories, getRetailers, getUsers } from "@/lib/api/server";
+import { getTranslations } from "next-intl/server";
 
 export async function getFactoryOptions() {
   const factories = await getFactories({
@@ -40,17 +41,19 @@ export async function getUserOptions() {
   }));
 }
 
-export function getStateTypeOptions() {
+export async function getStateTypeOptions() {
+  const t = await getTranslations();
+
   return [
-    { value: 'pending_approve', label: 'Pending Approve' },
-    { value: 'analyze', label: 'Analyze' },
-    { value: 'working', label: 'Working' },
-    { value: 'pending_review', label: 'Pending Review' },
-    { value: 'start', label: 'Start' },
-    { value: 'denied', label: 'Denied' },
-    { value: 'canceled', label: 'Canceled' },
-    { value: 'closed', label: 'Closed' },
-    { value: 'static', label: 'Static'}
+    { value: 'pending_approve', label: t('taskManagement.state.pendingApprove') },
+    { value: 'analyze', label: t('taskManagement.state.analyze') },
+    { value: 'working', label: t('taskManagement.state.working') },
+    { value: 'pending_review', label: t('taskManagement.state.pendingReview') },
+    { value: 'start', label: t('taskManagement.state.start') },
+    { value: 'denied', label: t('taskManagement.state.denied') },
+    { value: 'canceled', label: t('taskManagement.state.canceled') },
+    { value: 'closed', label: t('taskManagement.state.closed') },
+    { value: 'static', label: t('taskManagement.state.static') },
   ];
 }
 
@@ -62,42 +65,6 @@ export function getDepartmentOptions() {
     { value: 'TT', label: 'TT' },
   ];
 }
-
-export const MONTH_OPTIONS = [
-  { value: '1', label: 'January' },
-  { value: '2', label: 'February' },
-  { value: '3', label: 'March' },
-  { value: '4', label: 'April' },
-  { value: '5', label: 'May' },
-  { value: '6', label: 'June' },
-  { value: '7', label: 'July' },
-  { value: '8', label: 'August' },
-  { value: '9', label: 'September' },
-  { value: '10', label: 'October' },
-  { value: '11', label: 'November' },
-  { value: '12', label: 'December' }
-];
-
-export const TIME_GROUP_BY_OPTIONS = [
-  { value: 'year', label: 'Year' },
-  { value: 'quarter', label: 'Quarter' },
-  { value: 'month', label: 'Month' },
-  { value: 'week_of_year', label: 'Week' },
-  { value: 'day_of_week', label: 'Weekday' },
-  { value: 'date', label: 'Date' },
-  { value: 'day', label: 'Day' },
-];
-
-export const TIME_SELECT_OPTIONS = [
-  { value: 'year', label: 'Year' },
-  { value: 'year,quarter', label: 'Timeline (Year-Quarter)' },
-  { value: 'year,month', label: 'Timeline (Year-Month)' },
-  { value: 'year,week_of_year', label: 'Timeline (Year-Week)' },
-  { value: 'year,date', label: 'By Date' },
-  { value: 'quarter,year', label: 'Compare Years by Quarter' },
-  { value: 'month,year', label: 'Compare Years by Month' },
-  { value: 'week_of_year,year', label: 'Compare Years by Week' },
-];
 
 export function getYearOptions(yearsBack: number = 3): Array<{ value: string; label: string }> {
   const currentYear = new Date().getFullYear();
@@ -129,5 +96,52 @@ export function getProcessPrefixOptions() {
     { value: 'SP', label: 'Báo Mẫu' },
     { value: 'DR', label: 'BC hằng ngày' },
     { value: 'TA', label: 'Điều động' }
+  ];
+}
+
+export async function getTimeGroupByOptions() {
+  const t = await getTranslations();
+
+  return [
+    { value: 'year', label: t('datetime.year') },
+    { value: 'quarter', label: t('datetime.quarter') },
+    { value: 'month', label: t('datetime.month') },
+    { value: 'week_of_year', label: t('datetime.week') },
+    { value: 'day_of_week', label: t('datetime.weekday') },
+    { value: 'date', label: t('datetime.date') },
+    { value: 'day', label: t('datetime.day') },
+  ];
+}
+
+export async function getTimeSelectOptions() {
+  const t = await getTranslations();
+
+  return [
+    { value: 'year', label: t('datetime.year') },
+    { value: 'year,quarter', label: t('datetime.timelineYearQuarter') },
+    { value: 'year,month', label: t('datetime.timelineYearMonth') },
+    { value: 'year,week_of_year', label: t('datetime.timelineYearWeek') },
+    { value: 'year,date', label: t('datetime.byDate') },
+    { value: 'quarter,year', label: t('datetime.compareYearsByQuarter') },
+    { value: 'month,year', label: t('datetime.compareYearsByMonth') },
+    { value: 'week_of_year,year', label: t('datetime.compareYearsByWeek') },
+  ];
+}
+
+export async function getMonthOptions() {
+  const t = await getTranslations();
+  return [
+    { value: '1', label: t('datetime.monthsShort.january') },
+    { value: '2', label: t('datetime.monthsShort.february') },
+    { value: '3', label: t('datetime.monthsShort.march') },
+    { value: '4', label: t('datetime.monthsShort.april') },
+    { value: '5', label: t('datetime.monthsShort.may') },
+    { value: '6', label: t('datetime.monthsShort.june') },
+    { value: '7', label: t('datetime.monthsShort.july') },
+    { value: '8', label: t('datetime.monthsShort.august') },
+    { value: '9', label: t('datetime.monthsShort.september') },
+    { value: '10', label: t('datetime.monthsShort.october') },
+    { value: '11', label: t('datetime.monthsShort.november') },
+    { value: '12', label: t('datetime.monthsShort.december') },
   ];
 }

@@ -5,7 +5,7 @@ import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getCurrentYear, getLastYear } from '@/lib/utils/date'
-import { getFactoryOptions, TIME_SELECT_OPTIONS, getYearOptions } from '@/lib/utils/filter'
+import { getFactoryOptions, getYearOptions, getTimeSelectOptions } from '@/lib/utils/filter'
 import SalesOvertimeChart from './SalesOvertimeChart';
 
 interface PageProps {
@@ -20,6 +20,7 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
 
   const t = await getTranslations()
+  const TIME_SELECT_OPTIONS = await getTimeSelectOptions()
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,

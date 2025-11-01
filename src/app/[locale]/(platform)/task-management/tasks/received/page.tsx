@@ -18,30 +18,6 @@ import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getStateTypeOptions, getProcessPrefixOptions } from "@/lib/utils/filter"
 
-const ReceivedTaskFilterConfig: PageFilterConfig = {
-  showResetButton: true,
-  filters: [
-    {
-      id: 'process__prefix',
-      type: 'select',
-      label: 'Loại phiếu',
-      options: getProcessPrefixOptions()
-    },
-    {
-      id: 'state__state_type__in',
-      type: 'select',
-      label: 'State Filter',
-      options: getStateTypeOptions()
-    },
-    {
-      id: 'search',
-      type: 'search',
-      label: 'Search task',
-      placeholder: 'Search by task'
-    }
-  ]
-}
-
 interface ReceivedTaskPageProps {
   searchParams: Promise<{
     search?: string,
@@ -50,11 +26,35 @@ interface ReceivedTaskPageProps {
   }>
 }
 
-
 export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPageProps) {
   const commonT = await getTranslations('common')
   const commonTaskT = await getTranslations('taskManagement.common')
   const t = await getTranslations('taskManagement.receivedTask')
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: true,
+    filters: [
+      {
+        id: 'process__prefix',
+        type: 'select',
+        label: 'Loại phiếu',
+        options: getProcessPrefixOptions()
+      },
+      {
+        id: 'state__state_type__in',
+        type: 'select',
+        label: 'State Filter',
+        options: await getStateTypeOptions()
+      },
+      {
+        id: 'search',
+        type: 'search',
+        label: 'Search task',
+        placeholder: 'Search by task'
+      }
+    ]
+  }
+
   const params = await searchParams
   const response = await getReceivedTasks(params)
   const tasks = response.results
@@ -141,7 +141,7 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
               />
             </div>
           </div>
-          <SidebarRight filterConfig={ReceivedTaskFilterConfig} />
+          <SidebarRight filterConfig={FilterConfig} />
         </div>
       </SidebarProvider>
     </RightSidebarProvider>
