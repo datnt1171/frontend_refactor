@@ -36,48 +36,16 @@ export const routePermissions: Record<string, RouteConfig> = {
  },
 
  // Task report
- '/dashboard/task-management/sample-request': {
+ '/dashboard/task-management': {
   roles: ['manager', 'admin', 'assistant'],
   departments: ['TT', 'admin']
  },
 
  // Warehouse report
- '/dashboard/warehouse/data': { // warehouse manager only
+ '/dashboard/warehouse': { // warehouse manager only
    roles: ['manager', 'admin'],
    departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/overall': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/customer': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/product': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/plan': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/compare': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/conclusion': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/ratio': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
- '/dashboard/warehouse/aging': {
-   roles: ['manager', 'admin'],
-   departments: ['KHO', 'admin']
- },
+ }
 }
 
 /**
