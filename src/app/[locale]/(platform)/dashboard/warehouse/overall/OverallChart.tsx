@@ -24,7 +24,6 @@ export default function OverallChart({ data }: OverallChartProps) {
     const chart = echarts.init(chartRef.current);
     chartInstanceRef.current = chart;
 
-
     // Transform API data to chart format
     const months = data.map(item => item.month);
     const sales = data.map(item => item.sales_quantity);
@@ -59,6 +58,15 @@ export default function OverallChart({ data }: OverallChartProps) {
       legend: [
         {
           data: [
+            `相較${targetYear}年${targetMonth}月訂單達成% - ĐĐH đạt % so với tháng ${targetMonth}/${targetYear}`,
+            `相較${targetYear}年${targetMonth}月送貨達成% - Giao hàng đạt % so với tháng ${targetMonth}/${targetYear}`
+          ],
+          orient: 'vertical',
+          top: 0,
+          left: 'right'
+        },
+        {
+          data: [
             '年的每月送貨量 - SL giao hàng mỗi tháng',
             'TIMBER每月的大森的送貨量 - SL giao hàng TIMBER',
             '年的每月訂單量 - SL ĐĐH mỗi tháng',
@@ -67,45 +75,47 @@ export default function OverallChart({ data }: OverallChartProps) {
           orient: 'vertical',
           top: 0,
           left: '5%'
-        },
-        {
-          data: [
-            `相較${targetYear}年${targetMonth}月訂單達成% - ĐĐH đạt % so với tháng ${targetMonth}/${targetYear}`,
-            `相較${targetYear}年${targetMonth}月送貨達成% - Giao hàng đạt % so với tháng ${targetMonth}/${targetYear}`
-          ],
-          orient: 'vertical',
-          top: 0,
-          left: 'right'
         }
       ],
-      grid: {
-        top: 100,
-        left: '4%',
-        right: '4%',
-        bottom: '7%',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        name: '月 - Tháng',
-        position: 'bottom',
-        nameLocation: 'middle',
-        nameGap: 30,
-        data: months,
-      },
-      yAxis: [
+      grid: [
         {
-          type: 'value',
-          name: '數量 - Số lượng (kg)',
-          position: 'left',
-          nameLocation: 'middle',
-          nameGap: 70,
+          top: 120,
+          left: '4%',
+          right: '4%',
+          height: '20%',
+          containLabel: true
+        },
+        {
+          top: '38%',
+          left: '4%',
+          right: '4%',
+          bottom: '8%',
+          containLabel: true
+        }
+      ],
+      xAxis: [
+        {
+          type: 'category',
+          gridIndex: 0,
+          data: months,
           axisLabel: {
-            formatter: (value: number) => value.toLocaleString()
+            show: false
           }
         },
         {
+          type: 'category',
+          gridIndex: 1,
+          name: '月 - Tháng',
+          position: 'bottom',
+          nameLocation: 'middle',
+          nameGap: 30,
+          data: months
+        }
+      ],
+      yAxis: [
+        {
           type: 'value',
+          gridIndex: 0,
           name: 'Tỉ lệ %',
           position: 'right',
           nameLocation: 'middle',
@@ -113,67 +123,25 @@ export default function OverallChart({ data }: OverallChartProps) {
           axisLabel: {
             formatter: (value: number) => `${(value * 100).toFixed(0)}%`
           }
+        },
+        {
+          type: 'value',
+          gridIndex: 1,
+          name: '數量 - Số lượng (kg)',
+          position: 'left',
+          nameLocation: 'middle',
+          nameGap: 70,
+          axisLabel: {
+            formatter: (value: number) => value.toLocaleString()
+          }
         }
       ],
       series: [
         {
-          name: '年的每月送貨量 - SL giao hàng mỗi tháng',
-          type: 'bar',
-          stack: 'sales',
-          data: remainSales,
-          itemStyle: {
-            color: '#72BF78'
-          }
-        },
-        {
-          name: 'TIMBER每月的大森的送貨量 - SL giao hàng TIMBER',
-          type: 'bar',
-          stack: 'sales',
-          data: excludeFactorySales,
-          itemStyle: {
-            color: '#C1FFC1'
-          },
-          label: {
-            show: true,
-            position: ['-40%', '0%'],
-            color: 'green',
-            formatter: (params: any) => {
-              const totalIndex = params.dataIndex;
-              return Math.round(sales[totalIndex]!).toLocaleString();
-            }
-          }
-        },
-        {
-          name: '年的每月訂單量 - SL ĐĐH mỗi tháng',
-          type: 'bar',
-          stack: 'orders',
-          data: remainOrders,
-          itemStyle: {
-            color: '#7AB2D3'
-          }
-        },
-        {
-          name: 'TIMBER每月的大森的訂單量 - SL ĐĐH TIMBER',
-          type: 'bar',
-          stack: 'orders',
-          data: excludeFactoryOrders,
-          itemStyle: {
-            color: '#DFF2EB'
-          },
-          label: {
-            show: true,
-            position: ['40%', '0%'],
-            color: 'blue',
-            formatter: (params: any) => {
-              const totalIndex = params.dataIndex;
-              return Math.round(orders[totalIndex]!).toLocaleString();
-            }
-          }
-        },
-        {
           name: `相較${targetYear}年${targetMonth}月訂單達成% - ĐĐH đạt % so với tháng ${targetMonth}/${targetYear}`,
           type: 'line',
-          yAxisIndex: 1,
+          xAxisIndex: 0,
+          yAxisIndex: 0,
           data: salesTargetPct,
           itemStyle: {
             color: 'red'
@@ -185,14 +153,16 @@ export default function OverallChart({ data }: OverallChartProps) {
           symbolSize: 5,
           label: {
             show: true,
-            // color: 'red',
+            position: 'bottom',
+            color: 'red',
             formatter: (params: any) => `${(params.value * 100).toFixed(1)}%`
           }
         },
         {
           name: `相較${targetYear}年${targetMonth}月送貨達成% - Giao hàng đạt % so với tháng ${targetMonth}/${targetYear}`,
           type: 'line',
-          yAxisIndex: 1,
+          xAxisIndex: 0,
+          yAxisIndex: 0,
           data: orderTargetPct,
           itemStyle: {
             color: 'orange'
@@ -204,10 +174,73 @@ export default function OverallChart({ data }: OverallChartProps) {
           symbolSize: 5,
           label: {
             show: true,
+            position: 'top',
             color: 'orange',
             formatter: (params: any) => `${(params.value * 100).toFixed(1)}%`
           }
-        }
+        },
+        {
+          name: '年的每月送貨量 - SL giao hàng mỗi tháng',
+          type: 'bar',
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          stack: 'sales',
+          data: remainSales,
+          itemStyle: {
+            color: '#72BF78'
+          }
+        },
+        {
+          name: 'TIMBER每月的大森的送貨量 - SL giao hàng TIMBER',
+          type: 'bar',
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          stack: 'sales',
+          data: excludeFactorySales,
+          itemStyle: {
+            color: '#C1FFC1'
+          },
+          label: {
+            show: true,
+            position: 'top',
+            color: 'green',
+            formatter: (params: any) => {
+              const totalIndex = params.dataIndex;
+              return Math.round(sales[totalIndex]!).toLocaleString();
+            }
+          }
+        },
+        {
+          name: '年的每月訂單量 - SL ĐĐH mỗi tháng',
+          type: 'bar',
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          stack: 'orders',
+          data: remainOrders,
+          itemStyle: {
+            color: '#7AB2D3'
+          }
+        },
+        {
+          name: 'TIMBER每月的大森的訂單量 - SL ĐĐH TIMBER',
+          type: 'bar',
+          xAxisIndex: 1,
+          yAxisIndex: 1,
+          stack: 'orders',
+          data: excludeFactoryOrders,
+          itemStyle: {
+            color: '#DFF2EB'
+          },
+          label: {
+            show: true,
+            position: 'top',
+            color: 'blue',
+            formatter: (params: any) => {
+              const totalIndex = params.dataIndex;
+              return Math.round(orders[totalIndex]!).toLocaleString();
+            }
+          }
+        },
       ]
     };
 
@@ -233,6 +266,6 @@ export default function OverallChart({ data }: OverallChartProps) {
   }, [data, targetYear, targetMonth]);
 
   return (
-    <div ref={chartRef} className="w-full h-[500px]" />
+    <div ref={chartRef} className="w-full h-[600px]" />
   );
 }
