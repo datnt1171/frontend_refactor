@@ -142,7 +142,7 @@ export default function OverallChart({ data }: OverallChartProps) {
           type: 'line',
           xAxisIndex: 0,
           yAxisIndex: 0,
-          data: salesTargetPct,
+          data: orderTargetPct,
           itemStyle: {
             color: 'red'
           },
@@ -163,7 +163,7 @@ export default function OverallChart({ data }: OverallChartProps) {
           type: 'line',
           xAxisIndex: 0,
           yAxisIndex: 0,
-          data: orderTargetPct,
+          data: salesTargetPct,
           itemStyle: {
             color: 'orange'
           },
