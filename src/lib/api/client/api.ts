@@ -355,3 +355,35 @@ export const createSheetBlueprint = async (
 
     return response.data
 }
+
+export async function uploadSalesFile(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await apiClient('/sales', {
+    method: 'POST',
+    body: formData,
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to upload sales file: ${response.status}`)
+  }
+
+  return response.data
+}
+
+export async function uploadOrderFile(file: File) {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await apiClient('/order', {
+    method: 'POST',
+    body: formData,
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to upload order file: ${response.status}`)
+  }
+
+  return response.data
+}
