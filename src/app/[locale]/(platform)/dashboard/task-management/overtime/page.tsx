@@ -26,6 +26,28 @@ interface PageProps {
   }>
 }
 
+// Helper function to create a unique key from row data
+function getRowKey(row: any) {
+  return `${row.factory_code}`
+}
+
+// Helper function to find duplicates
+function findDuplicates(rows: any[]) {
+  const keyMap = new Map<string, number>()
+  const duplicateKeys = new Set<string>()
+  
+  rows.forEach(row => {
+    const key = getRowKey(row)
+    const count = keyMap.get(key) || 0
+    keyMap.set(key, count + 1)
+    if (count > 0) {
+      duplicateKeys.add(key)
+    }
+  })
+  
+  return duplicateKeys
+}
+
 export default async function Page({ searchParams }: PageProps) {
 
   const t = await getTranslations()
@@ -53,6 +75,9 @@ export default async function Page({ searchParams }: PageProps) {
   
   const response = await getOvertimes(params)
   const rows = response
+
+  // Find duplicate rows
+  const duplicateKeys = findDuplicates(rows)
 
   return (
     <RightSidebarProvider>
@@ -93,29 +118,37 @@ export default async function Page({ searchParams }: PageProps) {
                       <TableBody>
                         {rows.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={3} className="text-center">
+                            <TableCell colSpan={10} className="text-center">
                               {t('common.noDataFound')}
                             </TableCell>
                           </TableRow>
                         ) : (
-                          rows.map((row) => (
-                            <TableRow key={row.task_id}>
-                              <TableCell className="font-bold">
-                                <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
-                                  {formatDateToUTC7(row.created_at,'date')}
-                                </Link>
-                              </TableCell>
-                              <TableCell>{row.factory_code}</TableCell>
-                              <TableCell>{row.factory_name}</TableCell>
-                              <TableCell>{row.weekday_ot_start}</TableCell>
-                              <TableCell>{row.weekday_ot_end}</TableCell>
-                              <TableCell>{row.weekday_ot_num}</TableCell>
-                              <TableCell>{row.pallet_line_today}</TableCell>
-                              <TableCell>{row.hanging_line_today}</TableCell>
-                              <TableCell>{row.others_today}</TableCell>
-                              <TableCell>{timeDiff(row.weekday_ot_start, row.weekday_ot_end) * row.weekday_ot_num}</TableCell>
-                            </TableRow>
-                          ))
+                          rows.map((row) => {
+                            const rowKey = getRowKey(row)
+                            const isDuplicate = duplicateKeys.has(rowKey)
+                            
+                            return (
+                              <TableRow 
+                                key={row.task_id}
+                                className={isDuplicate ? "bg-yellow-50 hover:bg-yellow-100" : ""}
+                              >
+                                <TableCell className="font-bold">
+                                  <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                                    {formatDateToUTC7(row.created_at,'date')}
+                                  </Link>
+                                </TableCell>
+                                <TableCell>{row.factory_code}</TableCell>
+                                <TableCell>{row.factory_name}</TableCell>
+                                <TableCell>{row.weekday_ot_start}</TableCell>
+                                <TableCell>{row.weekday_ot_end}</TableCell>
+                                <TableCell>{row.weekday_ot_num}</TableCell>
+                                <TableCell>{row.pallet_line_today}</TableCell>
+                                <TableCell>{row.hanging_line_today}</TableCell>
+                                <TableCell>{row.others_today}</TableCell>
+                                <TableCell>{timeDiff(row.weekday_ot_start, row.weekday_ot_end) * row.weekday_ot_num}</TableCell>
+                              </TableRow>
+                            )
+                          })
                         )}
                       </TableBody>
                     </Table>

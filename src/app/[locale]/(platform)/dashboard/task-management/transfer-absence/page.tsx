@@ -27,6 +27,28 @@ interface PageProps {
   }>
 }
 
+// Helper function to create a unique key from ALL row data
+function getRowKey(row: any) {
+  return `${row.from_date}|${row.to_date}|${row.department}|${row.username}|${row.last_name}|${row.first_name}|${row.factory_name_onsite}|${row.factory_name}`
+}
+
+// Helper function to find duplicates
+function findDuplicates(rows: any[]) {
+  const keyMap = new Map<string, number>()
+  const duplicateKeys = new Set<string>()
+  
+  rows.forEach(row => {
+    const key = getRowKey(row)
+    const count = keyMap.get(key) || 0
+    keyMap.set(key, count + 1)
+    if (count > 0) {
+      duplicateKeys.add(key)
+    }
+  })
+  
+  return duplicateKeys
+}
+
 export default async function Page({ searchParams }: PageProps) {
 
   const t = await getTranslations()
@@ -57,6 +79,9 @@ export default async function Page({ searchParams }: PageProps) {
 
   const params = await searchParams
   const rows = await getTransferAbsences(params)
+
+  // Find duplicate rows
+  const duplicateKeys = findDuplicates(rows)
 
   return (
     <RightSidebarProvider>
@@ -91,27 +116,35 @@ export default async function Page({ searchParams }: PageProps) {
                   <TableBody>
                     {rows.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={3} className="text-center">
+                        <TableCell colSpan={8} className="text-center">
                           {t('common.noDataFound')}
                         </TableCell>
                       </TableRow>
                     ) : (
-                      rows.map((row) => (
-                        <TableRow key={row.task_id}>
-                          <TableCell className="font-bold">
-                            <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
-                              {formatDateToUTC7(row.from_date, 'date')}
-                            </Link>
-                          </TableCell>
-                          <TableCell>{formatDateToUTC7(row.to_date, 'date')}</TableCell>
-                          <TableCell>{row.department}</TableCell>
-                          <TableCell>{row.username}</TableCell>
-                          <TableCell>{row.last_name + " " + row.first_name}</TableCell>
-                          <TableCell>{row.factory_name_onsite}</TableCell>
-                          <TableCell>{row.factory_name || t('user.absence')}</TableCell>
-                          <TableCell>{daysDiff(row.from_date, row.to_date) + 1}</TableCell>
-                        </TableRow>
-                      ))
+                      rows.map((row) => {
+                        const rowKey = getRowKey(row)
+                        const isDuplicate = duplicateKeys.has(rowKey)
+                        
+                        return (
+                          <TableRow 
+                            key={row.task_id}
+                            className={isDuplicate ? "bg-yellow-50 hover:bg-yellow-100" : ""}
+                          >
+                            <TableCell className="font-bold">
+                              <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                                {formatDateToUTC7(row.from_date, 'date')}
+                              </Link>
+                            </TableCell>
+                            <TableCell>{formatDateToUTC7(row.to_date, 'date')}</TableCell>
+                            <TableCell>{row.department}</TableCell>
+                            <TableCell>{row.username}</TableCell>
+                            <TableCell>{row.last_name + " " + row.first_name}</TableCell>
+                            <TableCell>{row.factory_name_onsite}</TableCell>
+                            <TableCell>{row.factory_name || t('user.absence')}</TableCell>
+                            <TableCell>{daysDiff(row.from_date, row.to_date) + 1}</TableCell>
+                          </TableRow>
+                        )
+                      })
                     )}
                   </TableBody>
                 </Table>
