@@ -4,6 +4,55 @@
  */
 
 export interface paths {
+    "/api/notifications/devices/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_notifications_devices_list"];
+        put?: never;
+        post: operations["api_notifications_devices_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/notifications/devices/{registration_id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_notifications_devices_retrieve"];
+        put: operations["api_notifications_devices_update"];
+        post?: never;
+        delete: operations["api_notifications_devices_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_notifications_devices_partial_update"];
+        trace?: never;
+    };
+    "/api/notifications/send/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Send notification to current user's devices */
+        post: operations["api_notifications_send_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/processes/": {
         parameters: {
             query?: never;
@@ -542,6 +591,26 @@ export interface components {
             readonly id: string;
             name: string;
         };
+        FCMDevice: {
+            readonly id: number;
+            name?: string | null;
+            /** Registration token */
+            registration_id: string;
+            /** @description Unique device identifier */
+            device_id?: string | null;
+            /**
+             * Is active
+             * @description Inactive devices will not be sent notifications
+             * @default true
+             */
+            active: boolean;
+            /**
+             * Creation date
+             * Format: date-time
+             */
+            readonly date_created: string | null;
+            type: components["schemas"]["TypeEnum"];
+        };
         FieldCondition: {
             /** Format: uuid */
             readonly id: string;
@@ -693,6 +762,21 @@ export interface components {
             /** Format: date */
             created_at: string;
         };
+        PaginatedFCMDeviceList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous: string | null;
+            results: components["schemas"]["FCMDevice"][];
+        };
         PaginatedFinishingSheetList: {
             /** @example 123 */
             count: number;
@@ -787,6 +871,26 @@ export interface components {
             current_password?: string;
             new_password?: string;
             re_new_password?: string;
+        };
+        PatchedFCMDevice: {
+            readonly id?: number;
+            name?: string | null;
+            /** Registration token */
+            registration_id?: string;
+            /** @description Unique device identifier */
+            device_id?: string | null;
+            /**
+             * Is active
+             * @description Inactive devices will not be sent notifications
+             * @default true
+             */
+            active: boolean;
+            /**
+             * Creation date
+             * Format: date-time
+             */
+            readonly date_created?: string | null;
+            type?: components["schemas"]["TypeEnum"];
         };
         PatchedFinishingSheet: {
             /** Format: uuid */
@@ -1172,6 +1276,13 @@ export interface components {
             department: string;
             factory_code_onsite: string;
         };
+        /**
+         * @description * `ios` - ios
+         *     * `android` - android
+         *     * `web` - web
+         * @enum {string}
+         */
+        TypeEnum: "ios" | "android" | "web";
         User: {
             /** Format: uuid */
             readonly id: string;
@@ -1196,6 +1307,7 @@ export interface components {
             role: components["schemas"]["Role"];
             readonly supervisor: components["schemas"]["User"];
             is_password_changed: boolean;
+            readonly current_device_id: string;
         };
         UserFactoryOnsite: {
             /** Format: uuid */
@@ -1215,6 +1327,172 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    api_notifications_devices_list: {
+        parameters: {
+            query?: {
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A page number within the paginated result set. */
+                page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+                /** @description A search term. */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedFCMDeviceList"];
+                };
+            };
+        };
+    };
+    api_notifications_devices_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FCMDevice"];
+                "application/x-www-form-urlencoded": components["schemas"]["FCMDevice"];
+                "multipart/form-data": components["schemas"]["FCMDevice"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FCMDevice"];
+                };
+            };
+        };
+    };
+    api_notifications_devices_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                registration_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FCMDevice"];
+                };
+            };
+        };
+    };
+    api_notifications_devices_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                registration_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FCMDevice"];
+                "application/x-www-form-urlencoded": components["schemas"]["FCMDevice"];
+                "multipart/form-data": components["schemas"]["FCMDevice"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FCMDevice"];
+                };
+            };
+        };
+    };
+    api_notifications_devices_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                registration_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_notifications_devices_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                registration_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedFCMDevice"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedFCMDevice"];
+                "multipart/form-data": components["schemas"]["PatchedFCMDevice"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FCMDevice"];
+                };
+            };
+        };
+    };
+    api_notifications_send_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     api_processes_list: {
         parameters: {
             query?: {

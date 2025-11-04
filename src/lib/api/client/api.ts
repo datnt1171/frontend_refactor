@@ -32,7 +32,7 @@ const refreshTokens = async (): Promise<boolean> => {
   }
 }
 
-const apiClient = async <T = any>(
+export const apiClient = async <T = any>(
   endpoint: string, 
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
@@ -62,7 +62,7 @@ const apiClient = async <T = any>(
 
   let data = null
   const contentType = response.headers.get('content-type')
-  
+
   if (contentType && contentType.includes('application/json')) {
     const text = await response.text()
     if (text.trim()) {

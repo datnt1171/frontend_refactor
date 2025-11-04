@@ -1,54 +1,42 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, BellOff, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "@/i18n/navigation";
+import { Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { requestNotificationPermission } from "@/lib/firebase";
-import { registerDevice, getUserDevices, deleteDevice } from "@/lib/api/fcm";
+import { registerDevice, deleteDevice } from "@/lib/api/fcm";
 
-export function NotificationToggle() {
-  const [isEnabled, setIsEnabled] = useState(false);
+interface NotificationToggleProps {
+  currentDeviceId?: string | null;
+}
+
+export function NotificationToggle({ 
+  currentDeviceId: initialDeviceId = null 
+}: NotificationToggleProps) {
+  const router = useRouter();
+  const [isEnabled, setIsEnabled] = useState(!!initialDeviceId);
   const [isLoading, setIsLoading] = useState(false);
-  const [currentDeviceId, setCurrentDeviceId] = useState<string | null>(null);
+  const [currentDeviceId, setCurrentDeviceId] = useState<string | null>(initialDeviceId);
 
-  // Check if notifications are already enabled on mount
+  // Sync with prop changes
   useEffect(() => {
-    checkNotificationStatus();
-  }, []);
+    setIsEnabled(!!initialDeviceId);
+    setCurrentDeviceId(initialDeviceId);
+  }, [initialDeviceId]);
 
-  const checkNotificationStatus = async () => {
-    try {
-      // Check browser permission
-      if (typeof window !== "undefined" && "Notification" in window) {
-        const permission = Notification.permission;
-        
-        if (permission === "granted") {
-          // Check if device is registered in backend
-          const devices = await getUserDevices();
-          const webDevice = devices.find((d: any) => d.type === "web");
-          
-          if (webDevice) {
-            setIsEnabled(true);
-            setCurrentDeviceId(webDevice.id);
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error checking notification status:", error);
-    }
-  };
-
-  const handleToggle = async () => {
+  const handleToggle = async (checked: boolean) => {
     setIsLoading(true);
 
     try {
-      if (isEnabled) {
+      if (!checked) {
         // Disable notifications - delete device registration
         if (currentDeviceId) {
           await deleteDevice(currentDeviceId);
           setIsEnabled(false);
           setCurrentDeviceId(null);
-          alert("Notifications disabled. You won't receive push notifications anymore.");
+          router.refresh(); // Re-fetch server data
         }
       } else {
         // Enable notifications - request permission and register
@@ -69,11 +57,13 @@ export function NotificationToggle() {
 
         setIsEnabled(true);
         setCurrentDeviceId(response.id);
-        alert("Notifications enabled. You'll now receive push notifications.");
+        router.refresh(); // Re-fetch server data
       }
     } catch (error) {
       console.error("Error toggling notifications:", error);
       alert(`Error: ${error instanceof Error ? error.message : "Failed to update notification settings"}`);
+      // Revert the switch state on error
+      setIsEnabled(!checked);
     } finally {
       setIsLoading(false);
     }
@@ -85,29 +75,20 @@ export function NotificationToggle() {
   }
 
   return (
-    <Button
-      onClick={handleToggle}
-      disabled={isLoading}
-      variant={isEnabled ? "default" : "outline"}
-      size="default"
-      className="gap-2"
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Processing...
-        </>
-      ) : isEnabled ? (
-        <>
-          <Bell className="h-4 w-4" />
-          Notifications On
-        </>
-      ) : (
-        <>
-          <BellOff className="h-4 w-4" />
-          Enable Notifications
-        </>
-      )}
-    </Button>
+    <div className="flex items-center space-x-2">
+      <Label 
+        htmlFor="notifications" 
+        className="flex items-center gap-2 cursor-pointer"
+      >
+        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+        Push Notifications
+      </Label>
+      <Switch 
+        id="notifications" 
+        checked={isEnabled}
+        onCheckedChange={handleToggle}
+        disabled={isLoading}
+      />
+    </div>
   );
 }
