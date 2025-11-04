@@ -17,6 +17,7 @@ import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import Image from "next/image"
+import { Link } from "@/i18n/navigation"
 
 interface PageProps {
   searchParams: Promise<{
@@ -179,7 +180,11 @@ export default async function Page({ searchParams }: PageProps) {
                       <>
                         {rows.map((row) => (
                           <TableRow key={row.factory_code}>
-                            <TableCell className="border border-gray-300">{row.factory_code}</TableCell>
+                            <TableCell className="border border-gray-300 font-bold">
+                              <Link href={`/task-management/tasks/${row.overtime.task_id}`} className="hover:underline">
+                                {row.factory_code}
+                              </Link>
+                            </TableCell>
                             <TableCell className="border-r-2 border-gray-300">{row.factory_name}</TableCell>
 
                             {/* Onsite */}

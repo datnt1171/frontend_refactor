@@ -15,6 +15,7 @@ import type { PageFilterConfig } from "@/types"
 import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 import { format, addDays } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
+import { Link } from "@/i18n/navigation"
 
 interface PageProps {
   searchParams: Promise<{
@@ -132,7 +133,11 @@ export default async function Page({ searchParams }: PageProps) {
                       <>
                         {rows.map((row) => (
                           <TableRow key={row.factory_code}>
-                            <TableCell className="border border-gray-300">{row.factory_code}</TableCell>
+                            <TableCell className="border border-gray-300 font-bold">
+                              <Link href={`/task-management/tasks/${row.overtime.task_id}`} className="hover:underline">
+                                {row.factory_code}
+                              </Link>
+                            </TableCell>
                             <TableCell className="border-r-2 border-gray-300">{row.factory_name}</TableCell>
 
                             {/* Overtime */}
@@ -146,13 +151,13 @@ export default async function Page({ searchParams }: PageProps) {
                             <TableCell className={`text-center border-r border-gray-300 ${row.overtime.weekday_ot_num !== 0 && row.overtime.weekday_ot_num ? 'bg-red-100' : ''}`}>
                               {row.overtime.weekday_ot_num == 0 ? '' : row.overtime.weekday_ot_num}
                             </TableCell>
-                            <TableCell className={`border-r border-gray-300 ${row.overtime.pallet_line_today !== '-' && row.overtime.pallet_line_today !== '' ? 'bg-red-100' : ''}`}>
+                            <TableCell className={`border-r border-gray-300 whitespace-normal break-words max-w-[150px] ${row.overtime.pallet_line_today !== '-' && row.overtime.pallet_line_today !== '' ? 'bg-red-100' : ''}`}>
                               {row.overtime.pallet_line_today}
                             </TableCell>
-                            <TableCell className={`border-r border-gray-300 ${row.overtime.hanging_line_today !== '-' && row.overtime.hanging_line_today !== '' ? 'bg-red-100' : ''}`}>
+                            <TableCell className={`border-r border-gray-300 whitespace-normal break-words max-w-[150px] ${row.overtime.hanging_line_today !== '-' && row.overtime.hanging_line_today !== '' ? 'bg-red-100' : ''}`}>
                               {row.overtime.hanging_line_today}
                             </TableCell>
-                            <TableCell className={`border-r border-gray-300 ${row.overtime.others_today !== '-' && row.overtime.others_today !== '' ? 'bg-red-100' : ''}`}>
+                            <TableCell className={`border-r border-gray-300 whitespace-normal break-words max-w-[150px] ${row.overtime.others_today !== '-' && row.overtime.others_today !== '' ? 'bg-red-100' : ''}`}>
                               {row.overtime.others_today}
                             </TableCell>
 
