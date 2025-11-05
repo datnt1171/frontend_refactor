@@ -278,6 +278,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/tasks/daily-movement/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_tasks_daily_movement_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/tasks/data-detail/": {
         parameters: {
             query?: never;
@@ -585,6 +601,19 @@ export interface components {
         CustomTokenObtainPair: {
             username: string;
             password: string;
+        };
+        DailyMovement: {
+            task_id: string;
+            title: string;
+            /** Format: date */
+            created_at: string;
+            created_by: string;
+            state: string;
+            state_type: string;
+            factory_code: string;
+            task_type: string;
+            task_detail: string;
+            result: string;
         };
         Department: {
             /** Format: uuid */
@@ -2084,6 +2113,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TaskActionDetail"][];
+                };
+            };
+        };
+    };
+    api_tasks_daily_movement_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DailyMovement"][];
                 };
             };
         };

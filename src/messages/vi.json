@@ -57,7 +57,10 @@
     "tomorrow": "Ngày mai",
     "sunday": "Chủ Nhật",
     "others": "Khác",
-    "total": "Tổng"
+    "total": "Tổng",
+    "type": "Phân loại",
+    "detail": "Chi tiết",
+    "result": "Kết quả"
   },
   "home": {
   "title": "Trang chủ",
@@ -268,6 +271,7 @@
       "ratio": "Tỉ lệ",
       "agingProduct": "Hàng tồn kho",
       "importData": "Nhập dữ liệu",
+
       "taskAction": "Lịch sử hành động",
       "sample": "Mẫu",
       "onsiteTechnician": "Báo cáo tổng",
@@ -276,6 +280,7 @@
       "KVNWORK": "KVN Báo cáo",
       "transferAbsence": "Điều động nghỉ phép",
       "overtime": "Tăng ca",
+      "dailyMovement": "Lịch trình hằng ngày",
 
       "Task": "Phiếu"
     },

@@ -57,7 +57,10 @@
     "tomorrow": "明天",
     "sunday": "星期日",
     "others": "其他的",
-    "total": "全部的"
+    "total": "全部的",
+    "type": "型別",
+    "detail": "詳細",
+    "result": "結果"
   },
   "home": {
   "title": "首頁",
@@ -268,6 +271,7 @@
       "ratio": "比例",
       "agingProduct": "滯銷產品",
       "importData": "匯入資料",
+
       "taskAction": "任務操作記錄",
       "sample": "樣品",
       "onsiteTechnician": "客戶名單+報告",
@@ -276,6 +280,7 @@
       "KVNWORK": "KVN 報告",
       "transferAbsence": "調動+請假",
       "overtime": "加班V線上",
+      "dailyMovement": "每日運動",
 
       "Task": "任務"
     },

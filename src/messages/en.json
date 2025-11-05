@@ -57,7 +57,10 @@
     "tomorrow": "Tomorrow",
     "sunday": "Sunday",
     "others": "Others",
-    "total": "Total"
+    "total": "Total",
+    "type": "Type",
+    "detail": "Detail",
+    "result": "Result"
   },
   "home": {
     "title": "Home Page",
@@ -268,6 +271,7 @@
       "ratio": "Ratio",
       "agingProduct": "Aging Product",
       "importData": "Import Data",
+
       "taskAction": "Task Action Log",
       "sample": "Sample",
       "onsiteTechnician": "Onsite Technician",
@@ -276,6 +280,7 @@
       "KVNWORK": "KVN Report",
       "transferAbsence": "Transfer Absence",
       "overtime": "Overtime",
+      "dailyMovement": "Daily Movement",
 
       "Task": "Task"
     },

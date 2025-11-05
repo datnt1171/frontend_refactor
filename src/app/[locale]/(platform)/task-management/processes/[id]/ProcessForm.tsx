@@ -117,6 +117,9 @@ export function ProcessFormClient({
       case "TA":
         router.push("/task-management/tasks/sent?page_size=15&page=1&process__prefix=TA");
         break;
+      case "DM":
+        router.push("/dashboard/task-management/daily-movement");
+        break;
       default:
         router.push("/task-management/tasks/sent");
         break;

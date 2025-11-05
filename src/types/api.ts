@@ -69,6 +69,11 @@ export type OnsiteTransferAbsenceWithOvertime = OnsiteTransferAbsence & {
   sample_by_factory: SampleByFactory;
 
 }
+
+export type DailyMovement = components['schemas']['DailyMovement'] & {
+  factory_name: string;
+}
+
 // Finishing sheet
 export type FinishingSheet = components['schemas']['FinishingSheet']
 export type SheetRow = components['schemas']['SheetRow'] 
