@@ -89,6 +89,7 @@
       "Task": "Task",
       "CRM": "CRM",
       "HRM": "HRM",
+      "Fleet": "Fleet",
       "Dashboard": "Dashboard"
     },
     "languages": {
@@ -244,6 +245,17 @@
       "static": "Static"
     }
   },
+
+  "fleet": {
+    "appTitle": "Fleet",
+    "appDescription": "Fleet Management",
+
+    "sideBar": {
+      "car": "Car",
+      "log": "Log"
+    }
+  },
+
   "dashboard": {
     "appTitle": "Dashboard",
     "appDescription": "Reports and Dashboards",

@@ -89,6 +89,7 @@
       "Task": "任務",
       "CRM": "CRM",
       "HRM": "HRM",
+      "Fleet": "艦隊",
       "Dashboard": "儀表板"
     },
     "languages": {
@@ -244,6 +245,17 @@
       "static": "靜態"
     }
   },
+
+  "fleet": {
+    "appTitle": "車隊",
+    "appDescription": "車隊管理",
+
+    "sideBar": {
+      "car": "車輛",
+      "log": "日誌"
+    }
+  },
+
   "dashboard": {
     "appTitle": "儀表板",
     "appDescription": "報表與儀表板",

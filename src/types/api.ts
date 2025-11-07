@@ -87,6 +87,16 @@ export type PaginatedSheetBlueprintList = components['schemas']['PaginatedSheetB
 export type StepTemplate = components['schemas']['StepTemplate']
 export type FormularTemplate = components['schemas']['FormularTemplate']
 
+// Fleet
+export type PaginatedTripList = components['schemas']['PaginatedTripList']
+export type Trip = components['schemas']['Trip']
+export type PatchedTrip = components['schemas']['PatchedTrip']
+
+export type PaginatedStopList = components['schemas']['PaginatedStopList']
+export type Stop = components['schemas']['Stop']
+export type PatchedStop = components['schemas']['PatchedStop']
+
+
 
 // Pagination
 export type PaginatedProcessListList = components['schemas']['PaginatedProcessList']

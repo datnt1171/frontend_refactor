@@ -4,6 +4,99 @@
  */
 
 export interface paths {
+    "/api/fleets/stops/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_fleets_stops_list"];
+        put?: never;
+        /** @description Override create to automatically set order if not provided */
+        post: operations["api_fleets_stops_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/fleets/stops/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_fleets_stops_retrieve"];
+        put: operations["api_fleets_stops_update"];
+        post?: never;
+        delete: operations["api_fleets_stops_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_fleets_stops_partial_update"];
+        trace?: never;
+    };
+    "/api/fleets/stops/reorder/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Bulk reorder stops for a trip
+         *     POST /api/stops/reorder/
+         *
+         *     Body:
+         *     {
+         *         "trip": "trip-uuid",
+         *         "stop_orders": [
+         *             {"id": "stop-1-uuid", "order": 1},
+         *             {"id": "stop-2-uuid", "order": 2},
+         *             {"id": "stop-3-uuid", "order": 3}
+         *         ]
+         *     } */
+        post: operations["api_fleets_stops_reorder_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/fleets/trips/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_fleets_trips_list"];
+        put?: never;
+        post: operations["api_fleets_trips_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/fleets/trips/{id}/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["api_fleets_trips_retrieve"];
+        put: operations["api_fleets_trips_update"];
+        post?: never;
+        delete: operations["api_fleets_trips_destroy"];
+        options?: never;
+        head?: never;
+        patch: operations["api_fleets_trips_partial_update"];
+        trace?: never;
+    };
     "/api/notifications/devices/": {
         parameters: {
             query?: never;
@@ -881,6 +974,36 @@ export interface components {
             previous: string | null;
             results: components["schemas"]["SheetBlueprint"][];
         };
+        PaginatedStopList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous: string | null;
+            results: components["schemas"]["Stop"][];
+        };
+        PaginatedTripList: {
+            /** @example 123 */
+            count: number;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=4
+             */
+            next: string | null;
+            /**
+             * Format: uri
+             * @example http://api.example.org/accounts/?page=2
+             */
+            previous: string | null;
+            results: components["schemas"]["Trip"][];
+        };
         PaginatedUserDetailList: {
             /** @example 123 */
             count: number;
@@ -962,12 +1085,56 @@ export interface components {
             readonly updated_at?: string;
             readonly updated_by?: components["schemas"]["User"];
         };
+        /** @description Serializer for Stop model */
+        PatchedStop: {
+            /** Format: uuid */
+            readonly id?: string;
+            /** Format: uuid */
+            trip?: string;
+            order?: number;
+            location?: string;
+            odometer?: number;
+            toll_station?: string;
+            /** Format: date-time */
+            readonly created_at?: string;
+            /** Format: uuid */
+            readonly created_by?: string;
+            readonly created_by_name?: string;
+            /** Format: date-time */
+            readonly updated_at?: string;
+            /** Format: uuid */
+            readonly updated_by?: string;
+            readonly updated_by_name?: string;
+        };
         PatchedTaskData: {
             readonly field?: components["schemas"]["ProcessField"];
             value?: string | null;
             readonly files?: components["schemas"]["TaskFileData"][];
             files_upload?: string[];
             readonly history?: components["schemas"]["TaskDataHistory"][];
+        };
+        /** @description Serializer for Trip model */
+        PatchedTrip: {
+            /** Format: uuid */
+            readonly id?: string;
+            license_plate?: string;
+            /** Format: uuid */
+            driver?: string;
+            readonly driver_name?: string;
+            /** Format: date */
+            date?: string;
+            readonly stops_count?: number;
+            /** Format: date-time */
+            readonly created_at?: string;
+            /** Format: uuid */
+            readonly created_by?: string;
+            readonly created_by_name?: string;
+            /** Format: date-time */
+            readonly updated_at?: string;
+            /** Format: uuid */
+            readonly updated_by?: string;
+            readonly updated_by_name?: string;
+            readonly stops?: components["schemas"]["Stop"][];
         };
         PatchedUserFactoryOnsite: {
             /** Format: uuid */
@@ -1179,6 +1346,28 @@ export interface components {
             readonly sanding_vi: string;
             readonly sanding_zh_hant: string;
         };
+        /** @description Serializer for Stop model */
+        Stop: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uuid */
+            trip: string;
+            order: number;
+            location: string;
+            odometer: number;
+            toll_station?: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            readonly created_by_name: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+            /** Format: uuid */
+            readonly updated_by: string;
+            readonly updated_by_name: string;
+            factory_name: string;
+        };
         TaskAction: {
             /** Format: uuid */
             action_id: string;
@@ -1305,6 +1494,29 @@ export interface components {
             department: string;
             factory_code_onsite: string;
         };
+        /** @description Serializer for Trip model */
+        Trip: {
+            /** Format: uuid */
+            readonly id: string;
+            license_plate: string;
+            /** Format: uuid */
+            driver: string;
+            readonly driver_name: string;
+            /** Format: date */
+            date: string;
+            readonly stops_count: number;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+            readonly created_by_name: string;
+            /** Format: date-time */
+            readonly updated_at: string;
+            /** Format: uuid */
+            readonly updated_by: string;
+            readonly updated_by_name: string;
+            readonly stops: components["schemas"]["Stop"][];
+        };
         /**
          * @description * `ios` - ios
          *     * `android` - android
@@ -1356,6 +1568,347 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    api_fleets_stops_list: {
+        parameters: {
+            query?: {
+                location?: string;
+                location__icontains?: string;
+                order?: number;
+                order__gte?: number;
+                order__lte?: number;
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A page number within the paginated result set. */
+                page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+                /** @description A search term. */
+                search?: string;
+                trip?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedStopList"];
+                };
+            };
+        };
+    };
+    api_fleets_stops_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Stop"];
+                "application/x-www-form-urlencoded": components["schemas"]["Stop"];
+                "multipart/form-data": components["schemas"]["Stop"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stop"];
+                };
+            };
+        };
+    };
+    api_fleets_stops_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this stop. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stop"];
+                };
+            };
+        };
+    };
+    api_fleets_stops_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this stop. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Stop"];
+                "application/x-www-form-urlencoded": components["schemas"]["Stop"];
+                "multipart/form-data": components["schemas"]["Stop"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stop"];
+                };
+            };
+        };
+    };
+    api_fleets_stops_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this stop. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_fleets_stops_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this stop. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedStop"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedStop"];
+                "multipart/form-data": components["schemas"]["PatchedStop"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stop"];
+                };
+            };
+        };
+    };
+    api_fleets_stops_reorder_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Stop"];
+                "application/x-www-form-urlencoded": components["schemas"]["Stop"];
+                "multipart/form-data": components["schemas"]["Stop"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stop"];
+                };
+            };
+        };
+    };
+    api_fleets_trips_list: {
+        parameters: {
+            query?: {
+                date?: string;
+                date__gte?: string;
+                date__lte?: string;
+                driver?: string;
+                license_plate?: string;
+                license_plate__icontains?: string;
+                /** @description Which field to use when ordering the results. */
+                ordering?: string;
+                /** @description A page number within the paginated result set. */
+                page?: number;
+                /** @description Number of results to return per page. */
+                page_size?: number;
+                /** @description A search term. */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedTripList"];
+                };
+            };
+        };
+    };
+    api_fleets_trips_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Trip"];
+                "application/x-www-form-urlencoded": components["schemas"]["Trip"];
+                "multipart/form-data": components["schemas"]["Trip"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Trip"];
+                };
+            };
+        };
+    };
+    api_fleets_trips_retrieve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this trip. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Trip"];
+                };
+            };
+        };
+    };
+    api_fleets_trips_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this trip. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Trip"];
+                "application/x-www-form-urlencoded": components["schemas"]["Trip"];
+                "multipart/form-data": components["schemas"]["Trip"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Trip"];
+                };
+            };
+        };
+    };
+    api_fleets_trips_destroy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this trip. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No response body */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    api_fleets_trips_partial_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description A UUID string identifying this trip. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["PatchedTrip"];
+                "application/x-www-form-urlencoded": components["schemas"]["PatchedTrip"];
+                "multipart/form-data": components["schemas"]["PatchedTrip"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Trip"];
+                };
+            };
+        };
+    };
     api_notifications_devices_list: {
         parameters: {
             query?: {

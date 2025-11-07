@@ -91,6 +91,21 @@ export const THINNER_PAINT_OPTIONS = [
   { value: '硬化劑chat cung', label: '硬化劑chat cung' },
 ]
 
+export const CAR_LICENSE_PLATE_OPTION = [
+  { value: "61LD04744", label: "61LD-04744" },
+  { value: "61LD06031", label: "61LD-06031" },
+  { value: "50LD17678", label: "50LD-17678" },
+  { value: "61LD06059", label: "61LD-06059" },
+  { value: "61LD06005", label: "61LD-06005" },
+  { value: "61LD04338", label: "61LD-04338" },
+  { value: "61LD05015", label: "61LD-05015" },
+  { value: "61LD06012", label: "61LD-06012" },
+  { value: "61C62833",  label: "61C-62833" },
+  { value: "61LD04751", label: "61LD-04751" },
+  { value: "61K41393",  label: "61K-41393" },
+  { value: "61LD08141", label: "61LD-08141" },
+];
+
 export function getProcessPrefixOptions() {
   return [
     { value: 'SP', label: 'Báo Mẫu' },

@@ -1,5 +1,5 @@
 // lib/api/fcm.ts
-import { apiClient } from '@/lib/api/client/api'; // Adjust the import path as needed
+import { apiClient } from '@/lib/api/client/api';
 
 export interface RegisterDevicePayload {
   registration_id: string;

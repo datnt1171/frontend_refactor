@@ -3,6 +3,7 @@ import {
   BarChart3,
   ListCheck,
   UserSearch,
+  Car,
   Warehouse
 } from "lucide-react"
 
@@ -35,6 +36,13 @@ export const externalApps = [
     appKey: 'user',
     appTitle: 'user.appTitle',
     appDescription: 'user.appDescription', 
+  },
+  { nameKey: 'navBar.externalApps.Fleet', 
+    href: '/fleet', 
+    icon: Car,  
+    appKey: 'fleet',
+    appTitle: 'fleet.appTitle',
+    appDescription: 'fleet.appDescription', 
   },
   { nameKey: 'navBar.externalApps.Dashboard', 
     href: '/dashboard', 
@@ -91,6 +99,15 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
       ],
     }
   ],
+  'fleet': [
+    {
+      title: "fleet.sideBar.car",
+      icon: Car,
+      items: [
+        { title: "fleet.sideBar.log", url: "/fleet/trips" },
+      ],
+    },
+  ],
   'dashboard': [
     {
       title: "dashboard.sideBar.Task",
@@ -132,6 +149,7 @@ export function getCurrentApp(pathname: string): AppType {
   if (pathname.startsWith('/task-management')) return 'task-management'
   if (pathname.startsWith('/crm')) return 'crm'
   if (pathname.startsWith('/user')) return 'user'
+  if (pathname.startsWith('/fleet')) return 'fleet'
   if (pathname.startsWith('/dashboard')) return 'dashboard'
   return 'task-management' // default
 }

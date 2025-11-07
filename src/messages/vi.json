@@ -89,6 +89,7 @@
       "Task": "Phiếu",
       "CRM": "CRM",
       "HRM": "HRM",
+      "Fleet": "Xe",
       "Dashboard": "Báo cáo"
     },
     "languages": {
@@ -244,6 +245,17 @@
       "static": "Static"
     }
   },
+
+  "fleet": {
+    "appTitle": "Xe",
+    "appDescription": "Quản lý xe",
+
+    "sideBar": {
+      "car": "Ô tô",
+      "log": "Lịch trình"
+    }
+  },
+
   "dashboard": {
     "appTitle": "Báo cáo",
     "appDescription": "Báo cáo các bộ phận",
