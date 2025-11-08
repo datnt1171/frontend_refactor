@@ -33,8 +33,12 @@
     "searchFactory": "Tìm nhà máy",
     "selectRetailer": "Chọn KH đặt hàng",
     "searchRetailer": "Tìm KH đặt hàng",
+    "CreateFailed": "Tạo thất bại",
+    "CreateSuccessfully": "Tạo thành công",
     "actionPerformedSuccessfully": "Thao tác đã thực hiện thành công!",
     "failedToPerformAction": "Thao tác thất bại",
+    "EditFailed": "Chỉnh sửa thất bại",
+    "EditSuccessfully": "Chỉnh sửa thành công",
     "deleteAlertTitle": "Bạn có chắc chắn không?",
     "deleteAlertDescription": "Hành động này không thể hoàn tác. Thao tác này sẽ xóa vĩnh viễn tệp \"{name}\" và loại bỏ tất cả dữ liệu liên quan.",
     "file": "Tệp",
@@ -253,6 +257,21 @@
     "sideBar": {
       "car": "Ô tô",
       "log": "Lịch trình"
+    },
+
+    "trip": {
+      "trip": "Chuyến đi",
+      "tripDescription": "Xem và chỉnh sửa chuyến đi",
+      "createTrip": "Tạo chuyến đi",
+      "driver": "Tài xế",
+      "licensePlate": "Biển số xe"
+    },
+
+    "stop": {
+      "stop": "Điểm dừng",
+      "addStop": "Thêm điểm dừng",
+      "tollStation": "Trạm thu phí",
+      "odometer": "Odo"
     }
   },
 
@@ -407,6 +426,16 @@
     "searchState": "Tìm kiếm trạng thái",
     "searchStateHolder": "Tìm kiếm theo trạng thái",
     "selectState": "Chọn trạng thái",
+
+    "searchLicensePlate": "Tìm biển số xe",
+    "searchLicensePlateHolder": "Tìm theo biển số xe",
+    "selectLicensePlate": "Chọn biển số xe",
+
+    "searchLocation": "Tìm vị trí",
+    "searchLocationHolder": "Tìm theo vị trí",
+    "selectLocation": "Chọn vị trí",
+    "otherLocation": "Vị trí khác",
+    "otherLocationHolder": "Nhập vị trí khác",
 
     "increase": "Tăng",
     "descrease": "Giảm",

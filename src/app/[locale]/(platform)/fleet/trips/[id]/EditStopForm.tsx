@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -17,6 +16,7 @@ import { Pencil } from 'lucide-react'
 import type { Stop } from '@/types'
 import { updateStop } from '@/lib/api/client/fleet'
 import ReactSelect from 'react-select';
+import { useTranslations } from 'next-intl'
 
 
 interface EditStopFormProps {
@@ -30,18 +30,27 @@ export function EditStopForm({
   prevStopOdometer,
   factoryOptions,
 }: EditStopFormProps) {
+
+  const t = useTranslations()
   const router = useRouter()
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Check if stop.location is a custom location (not in factoryOptions)
+  const isCustomLocation = !factoryOptions.some(option => option.value === stop.location)
+  
   const [formData, setFormData] = useState({
-    location: stop.location,
+    location: isCustomLocation ? '99999' : stop.location,
+    customLocation: isCustomLocation ? stop.location : '',
     odometer: stop.odometer.toString(),
     toll_station: stop.toll_station || '',
   })
 
   const handleEdit = () => {
+    const isCustom = !factoryOptions.some(option => option.value === stop.location)
     setFormData({
-      location: stop.location,
+      location: isCustom ? '99999' : stop.location,
+      customLocation: isCustom ? stop.location : '',
       odometer: stop.odometer.toString(),
       toll_station: stop.toll_station || '',
     })
@@ -51,7 +60,12 @@ export function EditStopForm({
   const handleUpdate = async () => {
     const odometer = Number(formData.odometer)
     
-    if (!formData.location) {
+    // Determine the final location value
+    const finalLocation = formData.location === '99999' 
+      ? formData.customLocation 
+      : formData.location
+    
+    if (!finalLocation) {
       alert('Location is required')
       return
     }
@@ -62,22 +76,22 @@ export function EditStopForm({
     }
     
     if (prevStopOdometer > 0 && odometer <= prevStopOdometer) {
-      alert(`Odometer must be greater than ${prevStopOdometer}`)
+      alert(`Odo > ${prevStopOdometer}`)
       return
     }
 
     setIsSubmitting(true)
     try {
       await updateStop(stop.id, {
-        location: formData.location,
+        location: finalLocation,
         odometer,
         toll_station: formData.toll_station || undefined,
       })
       setIsEditOpen(false)
-      alert('Stop updated successfully')
+      alert(t('common.EditSuccessfully'))
       router.refresh()
     } catch (error) {
-      alert('Failed to update stop')
+      alert(t('common.EditFailed'))
     } finally {
       setIsSubmitting(false)
     }
@@ -97,28 +111,50 @@ export function EditStopForm({
       <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Stop</DialogTitle>
-            <DialogDescription>
-              Update stop information
-            </DialogDescription>
+            <DialogTitle>{t('common.edit')} {t('fleet.stop.stop')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-location">Location *</Label>
+              <Label htmlFor="edit-location">
+                {t('filter.selectLocation')} <span className="text-red-500">*</span>
+              </Label>
               <ReactSelect
                 options={factoryOptions}
                 value={factoryOptions.find(option => option.value === formData.location) || null}
-                onChange={(selectedOption) => setFormData({ ...formData, location: selectedOption?.value || "" })}
-                placeholder="Select Location"
-                noOptionsMessage={() => "No locations found"}
+                onChange={(selectedOption) => {
+                  const newValue = selectedOption?.value || ''
+                  setFormData({ ...formData, location: newValue, customLocation: '' })
+                }}
+                placeholder={t('filter.searchLocationHolder')}
+                noOptionsMessage={() => t('common.noData')}
                 isDisabled={false}
                 isSearchable={true}
                 isClearable={true}
               />
+              
+              {/* Show input field when "Other" option (99999) is selected */}
+              {formData.location === '99999' && (
+                <div className="mt-2">
+                  <Label htmlFor="custom-location">
+                    {t('filter.otherLocation')} <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="custom-location"
+                    value={formData.customLocation}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      customLocation: e.target.value 
+                    })}
+                    placeholder={t('filter.otherLocationHolder')}
+                  />
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-odometer">
-                Odometer (km) * {prevStopOdometer > 0 && `(must be > ${prevStopOdometer})`}
+                {t('fleet.stop.odometer')} (km) 
+                <span className="text-red-500">*</span>
+                {prevStopOdometer > 0 && ` > ${prevStopOdometer}`}
               </Label>
               <Input
                 id="edit-odometer"
@@ -128,7 +164,7 @@ export function EditStopForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-toll">Toll Station</Label>
+              <Label htmlFor="edit-toll">{t('fleet.stop.tollStation')}</Label>
               <Input
                 id="edit-toll"
                 value={formData.toll_station}
@@ -138,10 +174,10 @@ export function EditStopForm({
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setIsEditOpen(false)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button onClick={handleUpdate} disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Save'}
+              {isSubmitting ? t('common.processing') : t('common.save')}
             </Button>
           </DialogFooter>
         </DialogContent>

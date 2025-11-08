@@ -33,8 +33,12 @@
     "searchFactory": "搜尋工廠",
     "selectRetailer": "選擇零售商",
     "searchRetailer": "搜尋零售商",
+    "CreateFailed": "建立失敗",
+    "CreateSuccessfully": "建立成功！",
     "actionPerformedSuccessfully": "操作已成功完成！",
     "failedToPerformAction": "操作失敗",
+    "EditFailed": "編輯失敗",
+    "EditSuccessfully": "編輯成功！",
     "deleteAlertTitle": "您確定嗎？",
     "deleteAlertDescription": "此操作無法復原。這將永久刪除檔案「{name}」，並移除所有相關資料。",
     "file": "檔案",
@@ -253,6 +257,21 @@
     "sideBar": {
       "car": "車輛",
       "log": "日誌"
+    },
+
+    "trip": {
+      "trip": "Trip",
+      "tripDescription": "View and Edit all trips",
+      "createTrip": "Create Trip",
+      "driver": "Driver",
+      "licensePlate": "License Plate"
+    },
+
+    "stop": {
+      "stop": "Stop",
+      "addStop": "新增停靠點",
+      "tollStation": "收費站",
+      "odometer": "里程表"
     }
   },
 
@@ -408,6 +427,16 @@
     "searchState": "搜尋地區",
     "searchStateHolder": "依地區代碼或名稱搜尋",
     "selectState": "選擇地區",
+
+    "searchLicensePlate": "搜尋車牌",
+    "searchLicensePlateHolder": "依車牌搜尋",
+    "selectLicensePlate": "選擇車牌",
+
+    "searchLocation": "搜尋地點",
+    "searchLocationHolder": "依地點搜尋",
+    "selectLocation": "選擇地點",
+    "otherLocation": "其他地點",
+    "otherLocationHolder": "輸入其他地點",
 
     "increase": "增加",
     "descrease": "減少",

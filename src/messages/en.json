@@ -33,8 +33,12 @@
     "searchFactory": "Search for factory",
     "selectRetailer": "Select Retailer",
     "searchRetailer": "Search for retailer",
+    "CreateFailed": "Failed to create",
+    "CreateSuccessfully": "Create successfully!",
     "actionPerformedSuccessfully": "Action performed successfully!",
     "failedToPerformAction": "Failed to perform action",
+    "EditFailed": "Failed to edit",
+    "EditSuccessfully": "Edit successfully!",
     "deleteAlertTitle": "Are you absolutely sure?",
     "deleteAlertDescription": "This action cannot be undone. This will permanently delete the file \"{name}\" and remove all associated data.",
     "file": "File",
@@ -253,6 +257,21 @@
     "sideBar": {
       "car": "Car",
       "log": "Log"
+    },
+
+    "trip": {
+      "trip": "Trip",
+      "tripDescription": "View and Edit all trips",
+      "createTrip": "Create Trip",
+      "driver": "Driver",
+      "licensePlate": "License Plate"
+    },
+
+    "stop": {
+      "stop": "Stop",
+      "addStop": "Add stop",
+      "tollStation": "Toll Station",
+      "odometer": "Odometer"
     }
   },
 
@@ -408,6 +427,15 @@
     "searchStateHolder": "Search by State code, name",
     "selectState": "Select State",
 
+    "searchLicensePlate": "Search License plate",
+    "searchLicensePlateHolder": "Search by License plate",
+    "selectLicensePlate": "Select License plate",
+
+    "searchLocation": "Search Location",
+    "searchLocationHolder": "Search by Location",
+    "selectLocation": "Select Location",
+    "otherLocation": "Other location",
+    "otherLocationHolder": "Enter other location",
 
     "increase": "Increase",
     "descrease": "Descrease",

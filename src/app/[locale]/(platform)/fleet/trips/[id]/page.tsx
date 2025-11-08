@@ -6,12 +6,14 @@ import { DeleteStopButton } from './DeleteStopButton'
 import { getTrip } from '@/lib/api/server'
 import { formatDateToUTC7 } from '@/lib/utils/date'
 import { getFullFactoryOptions } from '@/lib/utils/filter';
+import { getTranslations } from 'next-intl/server'
 
 interface PageProps {
   params: Promise<{ id: string }>
 }
 
 export default async function Page({ params }: PageProps) {
+  const t = await getTranslations()
   const { id } = await params
   const trip = await getTrip(id)
   const factoryOptions = await getFullFactoryOptions()
@@ -26,7 +28,7 @@ export default async function Page({ params }: PageProps) {
         <div className="container mx-auto px-4 py-4 space-y-2">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold truncate">{trip.driver_name}</h1>
-            <Badge variant="secondary">{trip.stops_count} stops</Badge>
+            <Badge variant="secondary">{trip.stops_count} {t('fleet.stop.stop')}</Badge>
           </div>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="truncate">{trip.license_plate}</span>
@@ -62,7 +64,7 @@ export default async function Page({ params }: PageProps) {
                 </div>
                 {stop.toll_station && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    Trạm {stop.toll_station}
+                    {t('fleet.stop.tollStation')} {stop.toll_station}
                   </p>
                 )}
               </CardHeader>

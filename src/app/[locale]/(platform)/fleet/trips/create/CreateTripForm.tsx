@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import ReactSelect from 'react-select';
-import { Calendar } from 'lucide-react';
 import type { UserDetail, Trip } from '@/types';
 import { createTrip } from '@/lib/api/client/fleet';
 import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 interface CreateTripFormProps {
   currentUser: UserDetail;
@@ -16,6 +16,7 @@ interface CreateTripFormProps {
 }
 
 export default function CreateTripForm({ currentUser, carOptions }: CreateTripFormProps) {
+  const t = useTranslations()
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const today = new Date().toISOString().split('T')[0];
@@ -44,12 +45,12 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
     try {
       await createTrip(formData);
       
-      alert('Trip created successfully!');
+      alert(t('common.CreateSuccessfully'));
       router.push('/fleet/trips')
       
     } catch (error) {
       console.error('Error creating trip:', error);
-      alert('Failed to create trip');
+      alert(t('common.CreateFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -59,15 +60,14 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="mx-auto max-w-md">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Create Trip</h1>
-          <p className="text-sm text-gray-500 mt-1">Fill in the details to create a new trip</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('fleet.trip.createTrip')}</h1>
         </div>
 
         <div className="bg-white rounded-lg shadow p-6 space-y-6">
           {/* Driver Field (Read-only) */}
           <div className="space-y-2">
             <Label htmlFor="driver" className="text-sm font-medium text-gray-700">
-              Driver
+              {t('fleet.trip.driver')}
             </Label>
             <Input
               id="driver"
@@ -81,7 +81,7 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
           {/* Date Field */}
           <div className="space-y-2">
             <Label htmlFor="date" className="text-sm font-medium text-gray-700">
-              Date
+              {t('common.date')}
             </Label>
             <div className="relative">
               <Input
@@ -92,22 +92,21 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
                 required
                 className="pr-10"
               />
-              <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
 
           {/* License Plate Select */}
           <div className="space-y-2">
             <Label htmlFor="license_plate" className="text-sm font-medium text-gray-700">
-              License Plate
+              {t('fleet.trip.licensePlate')}
             </Label>
             <ReactSelect
               inputId="license_plate"
               options={carOptions}
               value={carOptions.find(option => option.value === formData.license_plate) || null}
               onChange={(selectedOption) => setFormData({ ...formData, license_plate: selectedOption?.value || "" })}
-              placeholder="Select a license plate"
-              noOptionsMessage={() => "No license plates found"}
+              placeholder={t('filter.selectLicensePlate')}
+              noOptionsMessage={() => t('common.noData')}
               isSearchable={true}
               isClearable={true}
             />
@@ -120,7 +119,7 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
             disabled={isSubmitting || !formData.license_plate}
             className="w-full"
           >
-            {isSubmitting ? 'Creating...' : 'Create Trip'}
+            {isSubmitting ? t('common.processing') : t('fleet.trip.createTrip')}
           </Button>
         </div>
       </div>

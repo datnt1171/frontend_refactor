@@ -13,6 +13,7 @@ import type { PageFilterConfig } from "@/types"
 
 interface ProcessPageProps {
   searchParams: Promise<{
+    license_plate?: string
     search?: string,
     page?: string
     page_size?: string
@@ -21,7 +22,7 @@ interface ProcessPageProps {
 
 
 export default async function ProcessPage({searchParams}: ProcessPageProps) {
-  const t = await getTranslations('taskManagement.process')
+  const t = await getTranslations()
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
@@ -31,10 +32,16 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
     },
     filters: [
       {
+        id: 'date',
+        type: 'date',
+        label: t('filter.selectDate'),
+        placeholder: t('filter.selectDate')
+      },
+      {
         id: 'search',
         type: 'search',
-        label: 'Search Process',
-        placeholder: 'Search by process name'
+        label: t('filter.searchLicensePlate'),
+        placeholder: t('filter.searchLicensePlateHolder')
       }
     ]
   }
@@ -56,13 +63,13 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
               <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h1 className="text-3xl font-bold tracking-tight">{t('useForm')}</h1>
-                    <p className="text-muted-foreground mt-2">{t('useForm')}</p>
+                    <h1 className="text-3xl font-bold tracking-tight">{t('fleet.trip.trip')}</h1>
+                    <p className="text-muted-foreground mt-2">{t('fleet.trip.tripDescription')}</p>
                   </div>
                   <Link href="/fleet/trips/create">
                     <Button>
                       <Plus className="mr-2 h-4 w-4" />
-                      {t('useForm')}
+                      {t('fleet.trip.createTrip')}
                     </Button>
                   </Link>
                 </div>
@@ -80,15 +87,15 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
                       <CardContent className="space-y-2">
                         <div className="rounded-md bg-muted/40 px-3 py-2 text-sm">
                           <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground">Driver</span>
+                            <span className="text-muted-foreground">{t('fleet.trip.driver')}</span>
                             <span className="font-medium">{trip.driver_name}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground">Plate</span>
+                            <span className="text-muted-foreground">{t('fleet.trip.licensePlate')}</span>
                             <span className="font-medium">{trip.license_plate}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground">Stops</span>
+                            <span className="text-muted-foreground">{t('fleet.stop.stop')}</span>
                             <span className="font-medium">{trip.stops_count}</span>
                           </div>
                         </div>
@@ -97,7 +104,7 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
                       <CardFooter className="bg-muted/50 pt-3">
                         <Link href={`/fleet/trips/${trip.id}`} className="w-full">
                           <Button className="w-full">
-                            {t('useForm')}
+                            {t('common.viewDetails')}
                           </Button>
                         </Link>
                       </CardFooter>
@@ -108,8 +115,7 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
                 {trips.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
                     <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium">{t('noFormFound')}</h3>
-                    <p className="text-muted-foreground mt-2">{t('tryAdjustingSearchOrCreate')}</p>
+                    <h3 className="text-lg font-medium">{t('common.noDataFound')}</h3>
                   </div>
                 )}
               </div>

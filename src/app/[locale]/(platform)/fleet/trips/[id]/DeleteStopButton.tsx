@@ -14,14 +14,16 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Trash2 } from 'lucide-react'
-
 import { deleteStop } from '@/lib/api/client/fleet'
+import { useTranslations } from 'next-intl'
 
 interface DeleteStopButtonProps {
   stopId: string
 }
 
 export function DeleteStopButton({ stopId }: DeleteStopButtonProps) {
+
+  const t = useTranslations()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -31,10 +33,10 @@ export function DeleteStopButton({ stopId }: DeleteStopButtonProps) {
     try {
       await deleteStop(stopId)
       setIsOpen(false)
-      alert('Stop deleted successfully')
+      alert(t('common.actionPerformedSuccessfully'))
       router.refresh()
     } catch (error) {
-      alert('Failed to delete stop')
+      alert(t('common.failedToPerformAction'))
     } finally {
       setIsSubmitting(false)
     }
@@ -54,15 +56,15 @@ export function DeleteStopButton({ stopId }: DeleteStopButtonProps) {
       <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Stop</AlertDialogTitle>
+            <AlertDialogTitle>{t('common.delete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this stop? This action cannot be undone.
+              {t('common.deleteAlertTitle')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} disabled={isSubmitting}>
-              {isSubmitting ? 'Deleting...' : 'Delete'}
+              {isSubmitting ? t('common.processing') : t('common.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

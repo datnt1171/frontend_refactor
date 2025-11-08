@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -15,7 +14,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Plus } from 'lucide-react'
 import { createStop } from '@/lib/api/client/fleet'
-import ReactSelect from 'react-select';
+import ReactSelect from 'react-select'
+import { useTranslations } from 'next-intl'
 
 interface CreateStopFormProps {
   tripId: string
@@ -30,11 +30,14 @@ export function CreateStopForm({
   lastStopOdometer,
   factoryOptions,
 }: CreateStopFormProps) {
+
+  const t = useTranslations()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     location: '',
+    customLocation: '',
     odometer: '',
     toll_station: '',
   })
@@ -42,7 +45,12 @@ export function CreateStopForm({
   const handleSubmit = async () => {
     const odometer = Number(formData.odometer)
     
-    if (!formData.location) {
+    // Determine the final location value
+    const finalLocation = formData.location === '99999' 
+      ? formData.customLocation 
+      : formData.location
+    
+    if (!finalLocation) {
       alert('Location is required')
       return
     }
@@ -53,7 +61,7 @@ export function CreateStopForm({
     }
     
     if (odometer <= lastStopOdometer) {
-      alert(`Odometer must be greater than ${lastStopOdometer}`)
+      alert(`Odo > ${lastStopOdometer}`)
       return
     }
 
@@ -62,16 +70,18 @@ export function CreateStopForm({
       await createStop({
         trip: tripId,
         order: stopsCount + 1,
-        location: formData.location,
+        location: finalLocation,
         odometer,
         toll_station: formData.toll_station || '',
       })
+
       setIsOpen(false)
-      setFormData({ location: '', odometer: '', toll_station: '' })
+      setFormData({ location: '', customLocation: '', odometer: '', toll_station: '' })
+      alert(t('common.CreateSuccessfully'))
+
       router.refresh()
-      alert('Stop created successfully')
     } catch (error) {
-      alert('Failed to create stop')
+      alert(t('common.CreateFailed'))
     } finally {
       setIsSubmitting(false)
     }
@@ -81,34 +91,56 @@ export function CreateStopForm({
     <>
       <Button onClick={() => setIsOpen(true)} className="w-full" size="lg">
         <Plus className="h-5 w-5 mr-2" />
-        Add Stop
+        {t('fleet.stop.addStop')}
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Stop</DialogTitle>
-            <DialogDescription>
-              Create a new stop for this trip
-            </DialogDescription>
+            <DialogTitle>{t('fleet.stop.addStop')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="create-location">Location *</Label>
+              <Label htmlFor="create-location">
+                {t('filter.selectLocation')} <span className="text-red-500">*</span>
+              </Label>
               <ReactSelect
                 options={factoryOptions}
                 value={factoryOptions.find(option => option.value === formData.location) || null}
-                onChange={(selectedOption) => setFormData({ ...formData, location: selectedOption?.value || "" })}
-                placeholder="Select Location"
-                noOptionsMessage={() => "No locations found"}
+                onChange={(selectedOption) => {
+                  const newValue = selectedOption?.value || ''
+                  setFormData({ ...formData, location: newValue, customLocation: '' })
+                }}
+                placeholder={t('filter.searchLocationHolder')}
+                noOptionsMessage={() => t('common.noData')}
                 isDisabled={false}
                 isSearchable={true}
                 isClearable={true}
               />
+              
+              {/* Show input field when "Other" option (99999) is selected */}
+              {formData.location === '99999' && (
+                <div className="space-y-2">
+                  <Label htmlFor="custom-location">
+                    {t('filter.otherLocation')} <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="custom-location"
+                    value={formData.customLocation}
+                    onChange={(e) => setFormData({ 
+                      ...formData, 
+                      customLocation: e.target.value 
+                    })}
+                    placeholder={t('filter.otherLocationHolder')}
+                  />
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="create-odometer">
-                Odometer (km) * {lastStopOdometer > 0 && `(must be > ${lastStopOdometer})`}
+                {t('fleet.stop.odometer')} (km) 
+                <span className="text-red-500">*</span>
+                {lastStopOdometer > 0 && ` > ${lastStopOdometer}`}
               </Label>
               <Input
                 id="create-odometer"
@@ -118,7 +150,7 @@ export function CreateStopForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="create-toll">Toll Station</Label>
+              <Label htmlFor="create-toll">{t('fleet.stop.tollStation')}</Label>
               <Input
                 id="create-toll"
                 value={formData.toll_station}
@@ -128,10 +160,10 @@ export function CreateStopForm({
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create'}
+              {isSubmitting ? t('common.processing') : t('fleet.stop.addStop')}
             </Button>
           </DialogFooter>
         </DialogContent>
