@@ -5,6 +5,7 @@ import { EditStopForm } from './EditStopForm'
 import { DeleteStopButton } from './DeleteStopButton'
 import { getTrip } from '@/lib/api/server'
 import { formatDateToUTC7 } from '@/lib/utils/date'
+import { getFullFactoryOptions } from '@/lib/utils/filter';
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -13,6 +14,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { id } = await params
   const trip = await getTrip(id)
+  const factoryOptions = await getFullFactoryOptions()
   
   const lastStopOdometer = trip.stops.length > 0 
     ? Math.max(...trip.stops.map(s => s.odometer))
@@ -53,6 +55,7 @@ export default async function Page({ params }: PageProps) {
                     <EditStopForm
                       stop={stop}
                       prevStopOdometer={prevStopOdometer}
+                      factoryOptions={factoryOptions}
                     />
                     <DeleteStopButton stopId={stop.id} />
                   </div>
@@ -71,6 +74,7 @@ export default async function Page({ params }: PageProps) {
           tripId={trip.id}
           stopsCount={trip.stops_count}
           lastStopOdometer={lastStopOdometer}
+          factoryOptions={factoryOptions}
         />
       </div>
     </div>

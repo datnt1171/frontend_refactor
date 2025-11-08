@@ -16,16 +16,19 @@ import { Label } from '@/components/ui/label'
 import { Pencil } from 'lucide-react'
 import type { Stop } from '@/types'
 import { updateStop } from '@/lib/api/client/fleet'
+import ReactSelect from 'react-select';
 
 
 interface EditStopFormProps {
   stop: Stop
   prevStopOdometer: number
+  factoryOptions: Array<{ value: string; label: string }>;
 }
 
 export function EditStopForm({
   stop,
   prevStopOdometer,
+  factoryOptions,
 }: EditStopFormProps) {
   const router = useRouter()
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -102,10 +105,15 @@ export function EditStopForm({
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="edit-location">Location *</Label>
-              <Input
-                id="edit-location"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              <ReactSelect
+                options={factoryOptions}
+                value={factoryOptions.find(option => option.value === formData.location) || null}
+                onChange={(selectedOption) => setFormData({ ...formData, location: selectedOption?.value || "" })}
+                placeholder="Select Location"
+                noOptionsMessage={() => "No locations found"}
+                isDisabled={false}
+                isSearchable={true}
+                isClearable={true}
               />
             </div>
             <div className="space-y-2">

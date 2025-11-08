@@ -15,17 +15,20 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Plus } from 'lucide-react'
 import { createStop } from '@/lib/api/client/fleet'
+import ReactSelect from 'react-select';
 
 interface CreateStopFormProps {
   tripId: string
   stopsCount: number
   lastStopOdometer: number
+  factoryOptions: Array<{ value: string; label: string }>
 }
 
 export function CreateStopForm({ 
   tripId, 
   stopsCount, 
   lastStopOdometer,
+  factoryOptions,
 }: CreateStopFormProps) {
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -92,10 +95,15 @@ export function CreateStopForm({
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="create-location">Location *</Label>
-              <Input
-                id="create-location"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              <ReactSelect
+                options={factoryOptions}
+                value={factoryOptions.find(option => option.value === formData.location) || null}
+                onChange={(selectedOption) => setFormData({ ...formData, location: selectedOption?.value || "" })}
+                placeholder="Select Location"
+                noOptionsMessage={() => "No locations found"}
+                isDisabled={false}
+                isSearchable={true}
+                isClearable={true}
               />
             </div>
             <div className="space-y-2">

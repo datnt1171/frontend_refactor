@@ -4,13 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import ReactSelect from 'react-select';
 import { Calendar } from 'lucide-react';
 import type { UserDetail, Trip } from '@/types';
 import { createTrip } from '@/lib/api/client/fleet';
@@ -107,22 +101,16 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
             <Label htmlFor="license_plate" className="text-sm font-medium text-gray-700">
               License Plate
             </Label>
-            <Select
-              value={formData.license_plate}
-              onValueChange={(value) => setFormData({ ...formData, license_plate: value })}
-              required
-            >
-              <SelectTrigger id="license_plate">
-                <SelectValue placeholder="Select a license plate" />
-              </SelectTrigger>
-              <SelectContent>
-                {carOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <ReactSelect
+              inputId="license_plate"
+              options={carOptions}
+              value={carOptions.find(option => option.value === formData.license_plate) || null}
+              onChange={(selectedOption) => setFormData({ ...formData, license_plate: selectedOption?.value || "" })}
+              placeholder="Select a license plate"
+              noOptionsMessage={() => "No license plates found"}
+              isSearchable={true}
+              isClearable={true}
+            />
           </div>
 
           {/* Submit Button */}

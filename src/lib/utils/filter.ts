@@ -15,6 +15,18 @@ export async function getFactoryOptions() {
   }));
 }
 
+export async function getFullFactoryOptions() {
+  const factories = await getFactories({
+    'page_size': '999999',
+    'page': '1'
+  });
+  
+  return factories.results.map(factory => ({
+    value: factory.factory_code,
+    label: `${factory.factory_name} (${factory.factory_code})`
+  }));
+}
+
 export async function getRetailerOptions() {
   const retailers = await getRetailers({
     'page_size': '999999',
