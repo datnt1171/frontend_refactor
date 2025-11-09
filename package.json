@@ -7,8 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate:types": "openapi-typescript http://localhost:8000/api/schema/ --output src/types/openapi.d.ts && node src/lib/utils/schemas.js",
-    "generate:types_dw": "openapi-typescript http://localhost:8001/openapi.json --output src/types/openapi_dw.d.ts"
+    "generate:types": "openapi-typescript http://localhost:7000/api/schema/ --output src/types/openapi.d.ts && node src/lib/utils/schemas.js",
+    "generate:types_dw": "openapi-typescript http://localhost:7001/openapi.json --output src/types/openapi_dw.d.ts"
   },
   "dependencies": {
     "@handsontable/react-wrapper": "^16.1.0",

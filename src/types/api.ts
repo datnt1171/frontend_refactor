@@ -91,6 +91,10 @@ export type FormularTemplate = components['schemas']['FormularTemplate']
 export type PaginatedTripList = components['schemas']['PaginatedTripList']
 export type Trip = components['schemas']['Trip']
 export type PatchedTrip = components['schemas']['PatchedTrip']
+export type TripLog = components['schemas']['TripLog'] & {
+  start_loc_factory_name: string;
+  end_loc_factory_name: string;
+}
 
 export type PaginatedStopList = components['schemas']['PaginatedStopList']
 export type Stop = components['schemas']['Stop']

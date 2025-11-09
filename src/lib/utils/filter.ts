@@ -116,6 +116,8 @@ export const CAR_LICENSE_PLATE_OPTION = [
   { value: "61LD04751", label: "61LD-04751" },
   { value: "61K41393",  label: "61K-41393" },
   { value: "61LD08141", label: "61LD-08141" },
+  { value: "50LD04904", label: "50LD-04904" },
+  { value: "51M44894", label: "51M-44894" },
 ];
 
 export function getProcessPrefixOptions() {

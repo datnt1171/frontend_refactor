@@ -37,28 +37,16 @@ export interface paths {
         patch: operations["api_fleets_stops_partial_update"];
         trace?: never;
     };
-    "/api/fleets/stops/reorder/": {
+    "/api/fleets/trip-log/": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["api_fleets_trip_log_list"];
         put?: never;
-        /** @description Bulk reorder stops for a trip
-         *     POST /api/stops/reorder/
-         *
-         *     Body:
-         *     {
-         *         "trip": "trip-uuid",
-         *         "stop_orders": [
-         *             {"id": "stop-1-uuid", "order": 1},
-         *             {"id": "stop-2-uuid", "order": 2},
-         *             {"id": "stop-3-uuid", "order": 3}
-         *         ]
-         *     } */
-        post: operations["api_fleets_stops_reorder_create"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1517,6 +1505,26 @@ export interface components {
             readonly updated_by_name: string;
             readonly stops: components["schemas"]["Stop"][];
         };
+        TripLog: {
+            /** Format: uuid */
+            trip_id: string;
+            /** Format: date */
+            date: string;
+            license_plate: string;
+            start_loc: string;
+            end_loc: string;
+            start_odometer: number;
+            end_odometer: number;
+            /** Format: date-time */
+            start_time: string;
+            /** Format: date-time */
+            end_time: string;
+            toll_station: string;
+            username: string;
+            distance: number;
+            /** Format: double */
+            duration: number;
+        };
         /**
          * @description * `ios` - ios
          *     * `android` - android
@@ -1726,27 +1734,21 @@ export interface operations {
             };
         };
     };
-    api_fleets_stops_reorder_create: {
+    api_fleets_trip_log_list: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["Stop"];
-                "application/x-www-form-urlencoded": components["schemas"]["Stop"];
-                "multipart/form-data": components["schemas"]["Stop"];
-            };
-        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Stop"];
+                    "application/json": components["schemas"]["TripLog"][];
                 };
             };
         };
