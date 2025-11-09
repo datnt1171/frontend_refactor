@@ -106,7 +106,7 @@ export default function CreateTripForm({ currentUser, carOptions }: CreateTripFo
               value={carOptions.find(option => option.value === formData.license_plate) || null}
               onChange={(selectedOption) => setFormData({ ...formData, license_plate: selectedOption?.value || "" })}
               placeholder={t('filter.selectLicensePlate')}
-              noOptionsMessage={() => t('common.noData')}
+              noOptionsMessage={() => t('common.noDataFound')}
               isSearchable={true}
               isClearable={true}
             />

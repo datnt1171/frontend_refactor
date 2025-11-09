@@ -105,6 +105,7 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
       icon: Car,
       items: [
         { title: "fleet.sideBar.log", url: "/fleet/trips" },
+        { title: "fleet.sideBar.tripLog", url: "/fleet/trip-logs" },
       ],
     },
   ],

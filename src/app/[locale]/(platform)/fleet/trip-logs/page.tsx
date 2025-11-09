@@ -22,9 +22,9 @@ export default async function TaskActionDetailPage() {
     <div className="container mx-auto py-6">
       <Card>
         <CardHeader>
-          <CardTitle>Trip Logs</CardTitle>
+          <CardTitle>{t('fleet.trip.tripLog')}</CardTitle>
           <CardDescription className="flex items-center justify-between">
-            <span>Trip Logs by Car</span>
+            <span>{t('fleet.trip.tripLogDescription')}</span>
             <TripLogCSVButton data={data} />
           </CardDescription>
         </CardHeader>
@@ -33,18 +33,18 @@ export default async function TaskActionDetailPage() {
             <Table className="border border-r">
                 <TableHeader>
                     <TableRow className="border-b">
-                        <TableHead className="border-r">Date</TableHead>
-                        <TableHead className="border-r">License Plate</TableHead>
-                        <TableHead className="border-r">Driver</TableHead>
-                        <TableHead className="border-r">Start Location</TableHead>
-                        <TableHead className="border-r">End Location</TableHead>
-                        <TableHead className="border-r">Start Odometer</TableHead>
-                        <TableHead className="border-r">End Odometer</TableHead>
-                        <TableHead className="border-r">Distance</TableHead>
-                        <TableHead className="border-r">Start Time</TableHead>
-                        <TableHead className="border-r">End Time</TableHead>
-                        <TableHead className="border-r">Duration</TableHead>
-                        <TableHead className="border-r">Toll Station</TableHead>
+                        <TableHead className="border-r">{t('common.date')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.licensePlate')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.driver')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.startLocation')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.endLocation')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.startOdometer')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.endOdometer')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.distance')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.startTime')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.trip.endTime')}</TableHead>
+                        <TableHead className="border-r">{t('taskManagement.action.duration')}</TableHead>
+                        <TableHead className="border-r">{t('fleet.stop.tollStation')}</TableHead>
                     </TableRow>
                 </TableHeader>
 

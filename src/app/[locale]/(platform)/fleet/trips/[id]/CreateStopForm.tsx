@@ -112,7 +112,7 @@ export function CreateStopForm({
                   setFormData({ ...formData, location: newValue, customLocation: '' })
                 }}
                 placeholder={t('filter.searchLocationHolder')}
-                noOptionsMessage={() => t('common.noData')}
+                noOptionsMessage={() => t('common.noDataFound')}
                 isDisabled={false}
                 isSearchable={true}
                 isClearable={true}

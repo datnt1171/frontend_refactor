@@ -256,7 +256,8 @@
 
     "sideBar": {
       "car": "Ô tô",
-      "log": "Lịch trình"
+      "log": "Lịch trình",
+      "tripLog": "Nhật ký chuyến đi"
     },
 
     "trip": {
@@ -264,7 +265,16 @@
       "tripDescription": "Xem và chỉnh sửa chuyến đi",
       "createTrip": "Tạo chuyến đi",
       "driver": "Tài xế",
-      "licensePlate": "Biển số xe"
+      "licensePlate": "Biển số xe",
+      "tripLog": "Nhật ký chuyến đi",
+      "tripLogDescription": "Nhật ký theo từng xe",
+      "startLocation": "Điểm bắt đầu",
+      "endLocation": "Điểm kết thúc",
+      "startOdometer": "Số km đầu",
+      "endOdometer": "Số km cuối",
+      "distance": "Quãng đường",
+      "startTime": "Giờ bắt đầu",
+      "endTime": "Giờ kết thúc"
     },
 
     "stop": {

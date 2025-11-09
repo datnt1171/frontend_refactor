@@ -256,15 +256,25 @@
 
     "sideBar": {
       "car": "車輛",
-      "log": "日誌"
+      "log": "日誌",
+      "tripLog": "行程記錄"
     },
 
     "trip": {
-      "trip": "Trip",
-      "tripDescription": "View and Edit all trips",
-      "createTrip": "Create Trip",
-      "driver": "Driver",
-      "licensePlate": "License Plate"
+      "trip": "行程",
+      "tripDescription": "查看與編輯所有行程",
+      "createTrip": "建立行程",
+      "driver": "司機",
+      "licensePlate": "車牌號碼",
+      "tripLog": "行程記錄",
+      "tripLogDescription": "依車輛分類的行程記錄",
+      "startLocation": "起點",
+      "endLocation": "終點",
+      "startOdometer": "起始里程",
+      "endOdometer": "結束里程",
+      "distance": "行駛距離",
+      "startTime": "開始時間",
+      "endTime": "結束時間"
     },
 
     "stop": {

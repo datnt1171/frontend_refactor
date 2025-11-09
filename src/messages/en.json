@@ -256,7 +256,8 @@
 
     "sideBar": {
       "car": "Car",
-      "log": "Log"
+      "log": "Log",
+      "tripLog": "Trip Log"
     },
 
     "trip": {
@@ -264,7 +265,16 @@
       "tripDescription": "View and Edit all trips",
       "createTrip": "Create Trip",
       "driver": "Driver",
-      "licensePlate": "License Plate"
+      "licensePlate": "License Plate",
+      "tripLog": "Trip Log",
+      "tripLogDescription": "Trip Logs by Car",
+      "startLocation": "Start Location",
+      "endLocation": "End Location",
+      "startOdometer": "Start Odometer",
+      "endOdometer": "End Odometer",
+      "distance": "Distance",
+      "startTime": "Start Time",
+      "endTime": "End Time"
     },
 
     "stop": {
