@@ -11,9 +11,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Combobox } from '@/components/ui/combobox';
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { SortSelect } from '@/components/ui/SortFilter';
 import type { PageFilterConfig, FilterConfig } from '@/types';
 import { useTranslations } from 'next-intl';
+import { formatDateToUTC7 } from '@/lib/utils/date';
 
 interface ConfigurableFiltersProps {
   config: PageFilterConfig;
@@ -353,28 +358,64 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
-            <div className="space-y-2">
-              <div className="relative">
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="date"
-                  value={filters[filter.id]?.gte || ''}
-                  onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
-                  className="pl-9"
-                  placeholder="From date"
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !filters[filter.id]?.gte && !filters[filter.id]?.lte && "text-muted-foreground"
+                  )}
+                >
+                  <Calendar className="h-2 w-2" />
+                  {filters[filter.id]?.gte && filters[filter.id]?.lte ? (
+                    <>
+                      {formatDateToUTC7(filters[filter.id].gte, 'date')}
+                      →
+                      {formatDateToUTC7(filters[filter.id].lte, 'date')}
+                    </>
+                  ) : (
+                    <span>Pick a date range</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="center" side='left'>
+                <CalendarComponent
+                  mode="range"
+                  defaultMonth={filters[filter.id]?.gte ? new Date(filters[filter.id].gte) : new Date()}
+                  selected={{
+                    from: filters[filter.id]?.gte ? new Date(filters[filter.id].gte) : undefined,
+                    to: filters[filter.id]?.lte ? new Date(filters[filter.id].lte) : undefined,
+                  }}
+                  onDayClick={(day) => {
+                    const currentRange = {
+                      from: filters[filter.id]?.gte ? new Date(filters[filter.id].gte) : undefined,
+                      to: filters[filter.id]?.lte ? new Date(filters[filter.id].lte) : undefined,
+                    };
+
+                    if (currentRange.to) {
+                      // If both dates are set, start a new selection
+                      handleRangeChange(filter.id, 'gte', format(day, 'yyyy-MM-dd'));
+                      handleRangeChange(filter.id, 'lte', '');
+                    } else if (currentRange.from) {
+                      // If only 'from' is set
+                      if (day < currentRange.from) {
+                        // If new day is before 'from', reset and start new selection
+                        handleRangeChange(filter.id, 'gte', format(day, 'yyyy-MM-dd'));
+                        handleRangeChange(filter.id, 'lte', '');
+                      } else {
+                        // Otherwise set as 'to' date
+                        handleRangeChange(filter.id, 'lte', format(day, 'yyyy-MM-dd'));
+                      }
+                    } else {
+                      // Neither is set, set 'from'
+                      handleRangeChange(filter.id, 'gte', format(day, 'yyyy-MM-dd'));
+                    }
+                  }}
+                  numberOfMonths={1}
                 />
-              </div>
-              <div className="relative">
-                <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="date"
-                  value={filters[filter.id]?.lte || ''}
-                  onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
-                  className="pl-9"
-                  placeholder="To date"
-                />
-              </div>
-            </div>
+              </PopoverContent>
+            </Popover>
           </div>
         );
 
