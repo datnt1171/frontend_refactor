@@ -41,7 +41,7 @@ export default function ScheduledChart({ data }: ScheduledChartProps) {
         top: 0,
       },
       grid: {
-        top: 30,
+        top: 50,
         left: '4%',
         right: '4%',
         bottom: '7%',
@@ -61,7 +61,7 @@ export default function ScheduledChart({ data }: ScheduledChartProps) {
           name: '數量 - Số lượng (kg)',
           position: 'left',
           nameLocation: 'middle',
-          nameGap: 70,
+          nameGap: 50,
         },
         {
           type: 'value',

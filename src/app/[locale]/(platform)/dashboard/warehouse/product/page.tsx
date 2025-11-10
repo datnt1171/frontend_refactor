@@ -35,6 +35,10 @@ export default async function Page({ searchParams }: PageProps) {
   // First date of (today - 1 month)
   const firstDateOfLastMonth = startOfMonth(oneMonthAgo);
 
+  const params = await searchParams
+  const factoryOptions = await getFactoryOptions()
+  const factoryName = factoryOptions.find(option => option.value === params.factory)?.label || t('crm.factories.allFactory')
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
       defaultValues: {
@@ -77,7 +81,7 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const params = await searchParams
+  
 
   const productSalesRangeDiff = await getProductSalesRangeDiff(params)
   const productOrderRangeDiff = await getProductOrderRangeDiff(params)
@@ -113,6 +117,7 @@ export default async function Page({ searchParams }: PageProps) {
               {/* Sales by Product */}
               <div>
                 <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  {factoryName} <br />
                   Giao hàng theo SP - 按產品分列的銷售額 <br />
                   {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
                 </h1>
@@ -132,6 +137,7 @@ export default async function Page({ searchParams }: PageProps) {
               {/* Order by Product */}
               <div>
                 <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                  {factoryName} <br />
                   Đơn đặt hàng theo SP - 按產品排序 <br />
                   {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
                 </h1>

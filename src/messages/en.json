@@ -376,7 +376,8 @@
       "status": "Status",
       "onsite": "Onsite",
       "work": "Work",
-      "support": "SP"
+      "support": "SP",
+      "allFactory": "All Factory"
 
     },
     "retailer": {

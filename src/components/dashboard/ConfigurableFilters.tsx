@@ -119,11 +119,30 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   };
 
   const handleRangeChange = (filterId: string, field: 'gte' | 'lte', value: string) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterId]: { ...prev[filterId], [field]: value }
-    }));
-  };
+  setFilters(prev => {
+    const newFilters = { ...prev };
+    
+    if (value === '' || value === null || value === undefined) {
+      // Remove the field entirely if value is empty
+      if (newFilters[filterId]) {
+        const { [field]: _, ...rest } = newFilters[filterId];
+        if (Object.keys(rest).length === 0) {
+          delete newFilters[filterId];
+        } else {
+          newFilters[filterId] = rest;
+        }
+      }
+    } else {
+      // Set the value
+      newFilters[filterId] = { 
+        ...newFilters[filterId], 
+        [field]: value 
+      };
+    }
+    
+    return newFilters;
+  });
+};
 
   const resetFilters = () => {
     const resetState: Record<string, any> = {};
@@ -381,6 +400,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="center" side='left'>
                 <CalendarComponent
+                  key={`${filters[filter.id]?.gte}-${filters[filter.id]?.lte}`}
                   mode="range"
                   defaultMonth={filters[filter.id]?.gte ? new Date(filters[filter.id].gte) : new Date()}
                   selected={{
@@ -392,24 +412,29 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                       from: filters[filter.id]?.gte ? new Date(filters[filter.id].gte) : undefined,
                       to: filters[filter.id]?.lte ? new Date(filters[filter.id].lte) : undefined,
                     };
+                    console.log(currentRange)
 
-                    if (currentRange.to) {
-                      // If both dates are set, start a new selection
+                    // If both dates are already set, start a new selection
+                    if (currentRange.from && currentRange.to) {
                       handleRangeChange(filter.id, 'gte', format(day, 'yyyy-MM-dd'));
                       handleRangeChange(filter.id, 'lte', '');
-                    } else if (currentRange.from) {
-                      // If only 'from' is set
+                    } 
+                    // If only 'from' is set
+                    else if (currentRange.from && !currentRange.to) {
+                      // If clicking a date before 'from', reset to new start date
                       if (day < currentRange.from) {
-                        // If new day is before 'from', reset and start new selection
                         handleRangeChange(filter.id, 'gte', format(day, 'yyyy-MM-dd'));
                         handleRangeChange(filter.id, 'lte', '');
-                      } else {
-                        // Otherwise set as 'to' date
+                      } 
+                      // If clicking 'from' date or after, set as 'to' date
+                      else {
                         handleRangeChange(filter.id, 'lte', format(day, 'yyyy-MM-dd'));
                       }
-                    } else {
-                      // Neither is set, set 'from'
+                    } 
+                    // If neither is set, set 'from'
+                    else {
                       handleRangeChange(filter.id, 'gte', format(day, 'yyyy-MM-dd'));
+                      handleRangeChange(filter.id, 'lte', '');
                     }
                   }}
                   numberOfMonths={1}

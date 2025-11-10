@@ -59,7 +59,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <span className="text-sm font-medium">Filter</span>
               </div>
               <div>
-                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                <h1 className="pb-4 text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
                   計劃及實際銷售 - {factoryName} <br />
                   Dự định GH và GH thực tế - {factoryName}
                 </h1>
