@@ -36,25 +36,6 @@ export default function OverallChart({ data }: OverallChartProps) {
     const orderTargetPct = data.map(item => item.order_target_pct);
 
     const option = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'cross',
-          crossStyle: {
-            color: '#999'
-          }
-        },
-        formatter: (params: any) => {
-          let result = `<strong>${params[0].axisValue}</strong><br/>`;
-          params.forEach((param: any) => {
-            const value = param.seriesName.includes('%') 
-              ? `${(param.value * 100).toFixed(2)}%`
-              : param.value.toLocaleString();
-            result += `${param.marker} ${param.seriesName}: ${value}<br/>`;
-          });
-          return result;
-        }
-      },
       legend: [
         {
           data: [

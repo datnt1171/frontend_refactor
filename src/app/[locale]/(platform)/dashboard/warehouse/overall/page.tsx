@@ -31,6 +31,7 @@ export default async function Page({ searchParams }: PageProps) {
   const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
+    autoApplyFilters: true,
       defaultValues: {
       day: {
         gte: '1',
@@ -48,6 +49,18 @@ export default async function Page({ searchParams }: PageProps) {
     isPaginated: false,
     filters: [
       {
+        id: 'target_year',
+        type: 'select',
+        label: t('filter.targetYear'),
+        options: generateYearOptions()
+      },
+      {
+        id: 'target_month',
+        type: 'select',
+        label: t('filter.targetMonth'),
+        options: MONTH_OPTIONS
+      },
+      {
         id: 'day',
         type: 'day-range',
         label: t('filter.selectDay'),
@@ -62,18 +75,6 @@ export default async function Page({ searchParams }: PageProps) {
         type: 'select',
         label: t('filter.selectYear'),
         options: generateYearOptions()
-      },
-      {
-        id: 'target_year',
-        type: 'select',
-        label: t('filter.targetYear'),
-        options: generateYearOptions()
-      },
-      {
-        id: 'target_month',
-        type: 'select',
-        label: t('filter.targetMonth'),
-        options: MONTH_OPTIONS
       },
       {
         id: 'exclude_factory',
@@ -100,7 +101,7 @@ export default async function Page({ searchParams }: PageProps) {
               </div>
 
               <div>
-                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words pb-2">
                   {params.year}年每月送貨比较与{params.target_year}年{params.target_month}月相比 
                   (每月{params.day__gte}日~{params.day__lte}日)<br />
                   SO SÁNH SỐ LƯỢNG GIAO HÀNG MỖI THÁNG SO VỚI THÁNG {params.target_month} NĂM {params.target_year}

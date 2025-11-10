@@ -64,7 +64,11 @@
     "total": "Total",
     "type": "Type",
     "detail": "Detail",
-    "result": "Result"
+    "result": "Result",
+    "reset": "Reset",
+    "apply": "Apply",
+    "from": "From",
+    "to": "To"
   },
   "home": {
     "title": "Home Page",

@@ -64,7 +64,11 @@
     "total": "Tổng",
     "type": "Phân loại",
     "detail": "Chi tiết",
-    "result": "Kết quả"
+    "result": "Kết quả",
+    "reset": "Đặt lại",
+    "apply": "Áp dụng",
+    "from": "Từ",
+    "to": "Đến"
   },
   "home": {
   "title": "Trang chủ",

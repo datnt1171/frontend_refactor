@@ -11,8 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Combobox } from '@/components/ui/combobox';
-import { SortSelect } from '../ui/SortFilter';
+import { SortSelect } from '@/components/ui/SortFilter';
 import type { PageFilterConfig, FilterConfig } from '@/types';
+import { useTranslations } from 'next-intl';
 
 interface ConfigurableFiltersProps {
   config: PageFilterConfig;
@@ -23,6 +24,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations()
 
   // Initialize filter state from URL params or defaults
   const [filters, setFilters] = useState(() => {
@@ -100,6 +102,13 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     }
   }, []);
 
+  // Auto-apply filters when autoApplyFilters is enabled
+  useEffect(() => {
+    if (config.autoApplyFilters) {
+      applyFilters();
+    }
+  }, [filters, config.autoApplyFilters]);
+
   const handleFilterChange = (filterId: string, value: any) => {
     setFilters(prev => ({ ...prev, [filterId]: value }));
   };
@@ -137,7 +146,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     }
     
     router.replace(`${pathname}?${params.toString()}`);
-    };
+  };
 
   const applyFilters = () => {
     const params = new URLSearchParams(searchParams);
@@ -298,7 +307,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
                 className="w-20"
               />
-              <span className="text-muted-foreground text-sm">to</span>
+              <span className="text-muted-foreground text-sm">{t('common.to')}</span>
               <Input
                 type="number"
                 min={filter.min || 1}
@@ -419,7 +428,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
             className="text-xs"
           >
             <RotateCcw className="w-3 h-3 mr-1" />
-            Reset
+            {t('common.reset')}
           </Button>
         )}
       </div>
@@ -427,16 +436,18 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       <div className="space-y-4">
         {config.filters.map(renderFilter)}
       </div>
-
+      
+      {!config.autoApplyFilters && (
       <div className="pt-4 border-t space-y-2">
         <Button
           onClick={applyFilters}
           className="w-full"
           size="sm"
         >
-          Apply Filters
+          {t('common.apply')}
         </Button>
       </div>
+      )}
     </div>
   );
 }

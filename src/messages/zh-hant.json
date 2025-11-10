@@ -64,7 +64,11 @@
     "total": "全部的",
     "type": "型別",
     "detail": "詳細",
-    "result": "結果"
+    "result": "結果",
+    "reset": "重置",
+    "apply": "申請",
+    "from": "從",
+    "to": "到"
   },
   "home": {
   "title": "首頁",

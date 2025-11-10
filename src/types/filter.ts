@@ -37,6 +37,7 @@ export interface PageFilterConfig {
   defaultValues?: Record<string, any>;
   showResetButton?: boolean;
   isPaginated?: boolean;
+  autoApplyFilters?: boolean;
 }
 
 export interface PaginatedResponse<T = any> {
