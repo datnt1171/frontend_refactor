@@ -33,6 +33,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
+    autoApplyFilters: true,
       defaultValues: {
       table: ['ratio'],
       year: getCurrentYear(),

@@ -1,4 +1,4 @@
-import { getFactoryOrderRangeDiff } from '@/lib/api/server';
+import { getFactoryOrderRangeDiff, getMaxSalesDate } from '@/lib/api/server';
 import { getTranslations } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -30,7 +30,9 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
-  const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
+  const maxSalesDate = await getMaxSalesDate()
+  const today = new Date(maxSalesDate)
+
   const firstDateOfMonth = startOfMonth(today);
   // Today - 1 month (same day, previous month)
   const oneMonthAgo = subMonths(today, 1);
@@ -41,6 +43,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
+    autoApplyFilters: true,
       defaultValues: {
       date: {
         gte: format(firstDateOfMonth,'yyyy-MM-dd'),

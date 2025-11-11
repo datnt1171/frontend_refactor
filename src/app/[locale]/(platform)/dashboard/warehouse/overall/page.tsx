@@ -1,4 +1,4 @@
-import { getWarehouseOverall } from '@/lib/api/server';
+import { getWarehouseOverall, getMaxSalesDate } from '@/lib/api/server';
 import OverallChart from './OverallChart';
 import { getTranslations } from "next-intl/server"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
@@ -28,7 +28,9 @@ export default async function Page({ searchParams }: PageProps) {
   const t = await getTranslations()
   const MONTH_OPTIONS = await getMonthOptions()
 
-  const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
+  const maxSalesDate = await getMaxSalesDate()
+  const today = new Date(maxSalesDate)
+  
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,

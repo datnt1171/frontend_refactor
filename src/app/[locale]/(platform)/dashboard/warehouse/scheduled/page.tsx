@@ -25,6 +25,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
+    autoApplyFilters: true,
       defaultValues: {
       year: getCurrentYear(),
       factory: '30673'

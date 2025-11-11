@@ -210,3 +210,11 @@ export const getThinnerPaintRatio = async (searchParams?: Record<string, string>
   if (!res.ok) throw new Error(`Failed to fetch Warehouse ThinnerPaintRatio: ${res.status}`)
   return res.json()
 }
+
+
+export const getMaxSalesDate = async (): Promise<string> => {
+  
+  const res = await api('/warehouse/max-sales-date')
+  if (!res.ok) throw new Error(`Failed to fetch max-sales-date: ${res.status}`)
+  return res.json()
+}
