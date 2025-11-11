@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { routing } from '@/i18n/routing';
 import { authPaths, hasPermission } from '@/config/permissions';
+import { getDefaultRoute, DEFAULT_ROUTE } from '@/config/defaultRoute';
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -45,7 +46,12 @@ export async function middleware(request: NextRequest) {
 
   // Handle authenticated users accessing public paths
   if (refreshToken && isPublicPath) {
-    return NextResponse.redirect(new URL(`/${locale}${DEFAULT_REDIRECT_PATH}`, request.url));
+    // Redirect to their default route based on role + department
+    const defaultRoute = userRole && userDept 
+      ? getDefaultRoute(userDept, userRole)
+      : DEFAULT_ROUTE;
+    
+    return NextResponse.redirect(new URL(`/${locale}${defaultRoute}`, request.url));
   }
 
   // Skip auth checks for public paths

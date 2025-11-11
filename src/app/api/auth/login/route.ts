@@ -87,7 +87,9 @@ export async function POST(request: Request): Promise<NextResponse<LoginSuccessR
     })
     return NextResponse.json<LoginSuccessResponse>({
       success: true,
-      requiresPasswordChange: !user.is_password_changed
+      requiresPasswordChange: !user.is_password_changed,
+      department: user.department.name,
+      role: user.role.name
     })
     }
     return NextResponse.json<ApiErrorResponse>(

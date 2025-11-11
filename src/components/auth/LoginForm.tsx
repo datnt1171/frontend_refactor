@@ -8,37 +8,25 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { getDefaultRoute } from "@/config/defaultRoute"
+import { useTranslations } from 'next-intl'
 
-interface LoginFormClientProps {
-  translations: {
-    Login: string;
-    username: string;
-    password: string;
-    usernamePlaceholder: string;
-    passwordPlaceholder: string;
-    loginButton: string;
-    loggingIn: string;
-    authError: string;
-    footerText: string;
-    noAuthInput: string;
-  };
-}
-
-export function LoginFormClient({ translations }: LoginFormClientProps) {
+export function LoginForm() {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const t = useTranslations('login')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
     if (!username.trim() || !password.trim()) {
-      setError(translations.noAuthInput);
-       return;
+      setError(t('noAuthInput'))
+      return;
     }
 
     setIsLoading(true)
@@ -50,14 +38,19 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
         if (response.data.requiresPasswordChange) {
           router.push("/me/change-password")
         } else {
-          router.push("/task-management/processes")
+          // Get default route based on department and role
+          const defaultRoute = getDefaultRoute(
+            response.data.department,
+            response.data.role
+          )
+          router.push(defaultRoute)
         }
       } else {
         setError(response.data.error)
       }
     } catch (err: unknown) {
       console.error("Login error:", err)
-      setError(translations.authError)
+      setError(t('authError'))
     } finally {
       setIsLoading(false)
     }
@@ -66,30 +59,30 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{translations.Login}</CardTitle>
+        <CardTitle>{t('login')}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">{translations.username}</Label>
+            <Label htmlFor="username">{t('username')}</Label>
             <Input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder={translations.usernamePlaceholder}
+              placeholder={t('usernamePlaceholder')}
               disabled={isLoading}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">{translations.password}</Label>
+            <Label htmlFor="password">{t('password')}</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={translations.passwordPlaceholder}
+                placeholder={t('passwordPlaceholder')}
                 disabled={isLoading}
               />
               <button
@@ -107,16 +100,16 @@ export function LoginFormClient({ translations }: LoginFormClientProps) {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {translations.loggingIn}
+                {t('loggingIn')}
               </>
             ) : (
-              translations.loginButton
+              t('loginButton')
             )}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <p className="text-sm text-gray-500">{translations.footerText}</p>
+        <p className="text-sm text-gray-500">{t('footerText')}</p>
       </CardFooter>
     </Card>
   )

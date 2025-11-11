@@ -6,6 +6,8 @@ export interface LoginRequest {
 export interface LoginSuccessResponse {
   success: true;
   requiresPasswordChange: boolean;
+  department: string;
+  role: string;
 }
 
 export interface LoginErrorResponse {
