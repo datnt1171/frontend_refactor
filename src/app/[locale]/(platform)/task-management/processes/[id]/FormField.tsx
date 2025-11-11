@@ -269,7 +269,7 @@ export function FormField({
           disabled={disabled}
           responsive={true}
           modalPopover={true}
-          closeOnSelect={true}
+          closeOnSelect={false}
         />
       )
 
