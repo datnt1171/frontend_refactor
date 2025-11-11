@@ -152,7 +152,7 @@ export default async function Page({ searchParams }: PageProps) {
                       </TableHead>
                       <TableHead 
                         rowSpan={2} 
-                        className="text-center text-sm bg-blue-50 border-r border-gray-300 screenshot-hide">
+                        className="text-center text-sm bg-blue-50 border-r border-gray-300">
                         {t('crm.factories.work')}
                       </TableHead>
                     </TableRow>
@@ -221,7 +221,7 @@ export default async function Page({ searchParams }: PageProps) {
                             </TableCell>
 
                             {/* Sample */}
-                            <TableCell className="border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
+                            <TableCell className="text-center border-r border-gray-300">{row.sample_by_factory.quantity_requirement}</TableCell>
                             <TableCell className="border-r border-gray-300 screenshot-hide">
                               {row.overtime.files.length === 0 ? (
                                 <span className="text-gray-400"></span>
@@ -247,10 +247,10 @@ export default async function Page({ searchParams }: PageProps) {
                                 </div>
                               )}
                             </TableCell>
-                            <TableCell className="text-right border-r border-gray-300 whitespace-normal break-words max-w-[150px] screenshot-hide">
+                            <TableCell className="text-left border-r border-gray-300 whitespace-normal break-words max-w-[150px] screenshot-hide">
                               {row.overtime.name_of_ppl}
                             </TableCell>
-                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px] screenshot-hide">
+                            <TableCell className="text-center border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
                               {row.overtime.num_of_ppl}
                             </TableCell>
                           </TableRow>
@@ -287,8 +287,8 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell className="text-center border-r border-gray-200">{rows.reduce((sum, row) => sum + row.sample_by_factory.quantity_requirement, 0)}</TableCell>
                           
                           {/* Other columns */}
-                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
-                          <TableCell className="text-center border-r border-gray-200">-</TableCell>
+                          <TableCell className="text-center border-r border-gray-200 screenshot-hide">-</TableCell>
+                          <TableCell className="text-center border-r border-gray-200 screenshot-hide">-</TableCell>
 
                           {/* Num of people */}
                           <TableCell className="text-center border-r-2 border-gray-300">

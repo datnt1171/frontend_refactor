@@ -29,7 +29,12 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
   imageTitle,
   hideScreenshotClass = true,
 }) => {
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const handleScreenshot = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     try {
       const element = document.getElementById(targetId);
       if (!element) {
@@ -162,12 +167,14 @@ export const ScreenshotButton: React.FC<ScreenshotButtonProps> = ({
       link.click();
     } catch (error) {
       console.error('Screenshot failed:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <Button onClick={handleScreenshot} className={className}>
-      {children}
+    <Button onClick={handleScreenshot} className={className} disabled={isLoading}>
+      {isLoading ? 'Processing...' : children}
     </Button>
   );
 };
