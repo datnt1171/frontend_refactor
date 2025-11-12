@@ -28,3 +28,5 @@ export type ScheduledAndActualSales = components['schemas']['ScheduledAndActualS
 export type IsSameMonth = components['schemas']['IsSameMonth']
 export type SalesOrderPctDiff = components['schemas']['SalesOrderPctDiff']
 export type PivotThinnerPaintRatio = components['schemas']['PivotThinnerPaintRatio']
+export type FactOrder = components['schemas']['FactOrder']
+export type FactSales = components['schemas']['FactSales']

@@ -10,6 +10,8 @@ import type {
     IsSameMonth,
     SalesOrderPctDiff,
     PivotThinnerPaintRatio,
+    FactOrder,
+    FactSales,
 } from '@/types'
 
 export const getWarehouseOverall = async (searchParams?: Record<string, string>): Promise<Overall[]> => {
@@ -216,5 +218,45 @@ export const getMaxSalesDate = async (): Promise<string> => {
   
   const res = await api('/warehouse/max-sales-date')
   if (!res.ok) throw new Error(`Failed to fetch max-sales-date: ${res.status}`)
+  return res.json()
+}
+
+
+export const getFactOrder = async (searchParams?: Record<string, string>): Promise<FactOrder[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/warehouse/fact-order?${queryString}` : '/warehouse/fact-order'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Warehouse fact order: ${res.status}`)
+  return res.json()
+}
+
+
+export const getFactSales = async (searchParams?: Record<string, string>): Promise<FactSales[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/warehouse/fact-sales?${queryString}` : '/warehouse/fact-sales'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Warehouse fact sales: ${res.status}`)
   return res.json()
 }

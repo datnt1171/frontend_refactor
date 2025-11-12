@@ -250,7 +250,7 @@ export default function ExcelDashboard() {
 
           {/* Line Chart */}
           {monthlyData.length > 0 && (
-            <div className=''>
+            <div>
               <h3 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words pb-2">
                 每月數量 ĐĐH chờ báo theo từng tháng
               </h3>

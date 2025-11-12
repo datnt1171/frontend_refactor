@@ -145,6 +145,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/warehouse/max-sales-date": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Max Sales Date
+         * @description Get the maximum sales date from fact_sales
+         */
+        get: operations["get_max_sales_date_api_warehouse_max_sales_date_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/warehouse/overall": {
         parameters: {
             query?: never;
@@ -341,6 +361,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/warehouse/fact-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Fact Order
+         * @description All column from fact order
+         */
+        get: operations["get_fact_order_api_warehouse_fact_order_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/fact-sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Fact Sales
+         * @description All column from fact sales
+         */
+        get: operations["get_fact_sales_api_warehouse_fact_sales_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/etl/sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Sales File
+         * @description Upload and process sales Excel file for ETL
+         *
+         *     - **file**: Excel file (.xlsx or .xls) containing sales data
+         *
+         *     Returns processing results including rows inserted
+         */
+        post: operations["upload_sales_file_api_etl_sales_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/etl/order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Order File
+         * @description Upload and process order Excel file for ETL
+         *
+         *     - **file**: Excel file (.xlsx or .xls) containing order data
+         *
+         *     Returns processing results including rows inserted
+         */
+        post: operations["upload_order_file_api_etl_order_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -501,6 +609,149 @@ export interface components {
              * Format: binary
              */
             file: File
+        };
+        /** Body_upload_order_file_api_etl_order_post */
+        Body_upload_order_file_api_etl_order_post: {
+            /**
+             * File
+             * Format: binary
+             * @description Order Excel file to upload
+             */
+            file: string;
+        };
+        /** Body_upload_sales_file_api_etl_sales_post */
+        Body_upload_sales_file_api_etl_sales_post: {
+            /**
+             * File
+             * Format: binary
+             * @description Sales Excel file to upload
+             */
+            file: string;
+        };
+        /** FactOrder */
+        FactOrder: {
+            /** Order Date */
+            order_date?: string | null;
+            /** Order Code */
+            order_code?: string | null;
+            /** Ct Date */
+            ct_date?: string | null;
+            /** Factory Code */
+            factory_code?: string | null;
+            /** Factory Order Code */
+            factory_order_code?: string | null;
+            /** Tax Type */
+            tax_type?: string | null;
+            /** Department */
+            department?: string | null;
+            /** Salesman */
+            salesman?: string | null;
+            /**
+             * Deposit Rate
+             * @default 0
+             */
+            deposit_rate: number | null;
+            /** Payment Registration Code */
+            payment_registration_code?: string | null;
+            /** Payment Registration Name */
+            payment_registration_name?: string | null;
+            /** Delivery Address */
+            delivery_address?: string | null;
+            /** Product Code */
+            product_code?: string | null;
+            /** Product Name */
+            product_name?: string | null;
+            /** Qc */
+            qc?: string | null;
+            /** Warehouse Type */
+            warehouse_type?: string | null;
+            /**
+             * Order Quantity
+             * @default 0
+             */
+            order_quantity: number | null;
+            /**
+             * Delivered Quantity
+             * @default 0
+             */
+            delivered_quantity: number | null;
+            /**
+             * Package Order Quantity
+             * @default 0
+             */
+            package_order_quantity: number | null;
+            /**
+             * Delivered Package Order Quantity
+             * @default 0
+             */
+            delivered_package_order_quantity: number | null;
+            /** Unit */
+            unit?: string | null;
+            /** Package Unit */
+            package_unit?: string | null;
+            /** Estimated Delivery Date */
+            estimated_delivery_date?: string | null;
+            /** Original Estimated Delivery Date */
+            original_estimated_delivery_date?: string | null;
+            /** Pre Ct */
+            pre_ct?: string | null;
+            /** Finish Code */
+            finish_code?: string | null;
+            /** Import Timestamp */
+            import_timestamp?: string | null;
+            /** Import Wh Timestamp */
+            import_wh_timestamp?: string | null;
+            /** Factory Name */
+            factory_name?: string | null;
+        };
+        /** FactSales */
+        FactSales: {
+            /** Product Code */
+            product_code?: string | null;
+            /** Product Name */
+            product_name?: string | null;
+            /** Qc */
+            qc?: string | null;
+            /** Factory Code */
+            factory_code?: string | null;
+            /** Sales Date */
+            sales_date?: string | null;
+            /** Sales Code */
+            sales_code?: string | null;
+            /** Order Code */
+            order_code?: string | null;
+            /**
+             * Sales Quantity
+             * @default 0
+             */
+            sales_quantity: number | null;
+            /** Unit */
+            unit?: string | null;
+            /**
+             * Package Sales Quantity
+             * @default 0
+             */
+            package_sales_quantity: number | null;
+            /** Package Unit */
+            package_unit?: string | null;
+            /** Department */
+            department?: string | null;
+            /** Salesman */
+            salesman?: string | null;
+            /** Warehouse Code */
+            warehouse_code?: string | null;
+            /** Warehouse Type */
+            warehouse_type?: string | null;
+            /** Import Code */
+            import_code?: string | null;
+            /** Factory Order Code */
+            factory_order_code?: string | null;
+            /** Import Timestamp */
+            import_timestamp?: string | null;
+            /** Import Wh Timestamp */
+            import_wh_timestamp?: string | null;
+            /** Factory Name */
+            factory_name?: string | null;
         };
         /**
          * Factory
@@ -1354,6 +1605,26 @@ export interface operations {
             };
         };
     };
+    get_max_sales_date_api_warehouse_max_sales_date_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string;
+                };
+            };
+        };
+    };
     get_overall_api_warehouse_overall_get: {
         parameters: {
             query?: {
@@ -1577,11 +1848,10 @@ export interface operations {
     };
     get_sales_pivot_api_warehouse_sales_overtime_get: {
         parameters: {
-            query: {
-                /** @description Comma-separated years (e.g., 2023,2024) */
-                years: string;
+            query?: {
+                year?: string;
                 /** @description Comma-separated group by fields (e.g., year,quarter) */
-                group_by: string;
+                group_by?: string;
                 factory?: string | null;
                 product?: string | null;
             };
@@ -1686,10 +1956,10 @@ export interface operations {
             query?: {
                 /** @description Year */
                 year?: number;
-                /** @description Thinner product types */
-                thinners?: ("成品溶劑DUNG MOI TP" | "底漆 LOT" | "水性SON NUOC" | "色母SON CAI" | "木調色PM GO" | "補土 BOT TRET" | "半成品BAN THANHPHAM" | "助劑PHU GIA" | "原料溶劑 NL DUNG MOI" | "面漆 BONG" | "色精TINH MAU" | "粉類 BOT" | "硬化劑chat cung" | "烤調色PM HAP")[];
-                /** @description Paint product types */
-                paint?: ("成品溶劑DUNG MOI TP" | "底漆 LOT" | "水性SON NUOC" | "色母SON CAI" | "木調色PM GO" | "補土 BOT TRET" | "半成品BAN THANHPHAM" | "助劑PHU GIA" | "原料溶劑 NL DUNG MOI" | "面漆 BONG" | "色精TINH MAU" | "粉類 BOT" | "硬化劑chat cung" | "烤調色PM HAP")[];
+                /** @description Comma-separated thinner product types */
+                thinner?: string;
+                /** @description Comma-separated paint product types */
+                paint?: string;
             };
             header?: never;
             path?: never;
@@ -1704,6 +1974,140 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PivotThinnerPaintRatio"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_fact_order_api_warehouse_fact_order_get: {
+        parameters: {
+            query?: {
+                date__gte?: string;
+                date__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FactOrder"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_fact_sales_api_warehouse_fact_sales_get: {
+        parameters: {
+            query?: {
+                date__gte?: string;
+                date__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FactSales"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_sales_file_api_etl_sales_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_sales_file_api_etl_sales_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_order_file_api_etl_order_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_order_file_api_etl_order_post"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
             /** @description Validation Error */
