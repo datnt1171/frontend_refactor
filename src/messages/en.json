@@ -314,6 +314,7 @@
       "compare": "Sales/Order Over Time",
       "conclusion": "Conclusion",
       "ratio": "Ratio",
+      "pendingDelivery": "Pending Delivery",
       "agingProduct": "Aging Product",
       "importData": "Import Data",
 

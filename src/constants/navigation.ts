@@ -136,6 +136,7 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
         { title: "dashboard.sideBar.scheduled", url: "/dashboard/warehouse/scheduled" },
         { title: "dashboard.sideBar.compare", url: "/dashboard/warehouse/overtime" },
         { title: "dashboard.sideBar.conclusion", url: "/dashboard/warehouse/conclusion" },
+        { title: "dashboard.sideBar.pendingDelivery", url: "/dashboard/warehouse/pending-delivery" },
         { title: "dashboard.sideBar.ratio", url: "/dashboard/warehouse/ratio" },
         { title: "dashboard.sideBar.agingProduct", url: "/dashboard/warehouse/aging" },
         { title: "dashboard.sideBar.importData", url: "/dashboard/warehouse/data" },

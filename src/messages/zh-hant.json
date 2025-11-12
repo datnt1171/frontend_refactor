@@ -314,6 +314,7 @@
       "compare": "出貨/訂單隨時間比較",
       "conclusion": "結論",
       "ratio": "比例",
+      "pendingDelivery": "待交付",
       "agingProduct": "滯銷產品",
       "importData": "匯入資料",
 
