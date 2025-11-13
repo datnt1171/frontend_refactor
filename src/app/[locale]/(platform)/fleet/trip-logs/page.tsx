@@ -141,10 +141,10 @@ export default async function TaskActionDetailPage() {
                                 )}
 
                                 <TableCell className="border-r">
-                                    {row.start_loc_factory_name || row.start_loc}
+                                    {row.start_loc_factory_name}
                                 </TableCell>
                                 <TableCell className="border-r">
-                                    {row.end_loc_factory_name || row.end_loc}
+                                    {row.end_loc_factory_name}
                                 </TableCell>
                                 <TableCell className="text-right border-r">{row.start_odometer}</TableCell>
                                 <TableCell className="text-right border-r">{row.end_odometer}</TableCell>

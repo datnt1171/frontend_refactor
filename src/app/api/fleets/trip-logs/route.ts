@@ -44,8 +44,8 @@ export async function GET(request: NextRequest) {
     // Add factory_name field while keeping factory_code
     const updatedtripLogs = tripLogs.map((item: TripLog) => ({
       ...item,
-      start_loc_factory_name: factoryMap[item.start_loc] || "",
-      end_loc_factory_name: factoryMap[item.end_loc] || ""
+      start_loc_factory_name: factoryMap[item.start_loc] || item.start_loc,
+      end_loc_factory_name: factoryMap[item.end_loc] || item.end_loc
     }))
 
     
