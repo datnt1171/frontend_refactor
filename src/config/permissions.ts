@@ -45,6 +45,12 @@ export const routePermissions: Record<string, RouteConfig> = {
  '/dashboard/warehouse': { // warehouse manager only
    roles: ['manager', 'admin'],
    departments: ['KHO', 'admin']
+ },
+
+ // Warehouse report
+ '/fleet/trip-logs': { // 
+   roles: ['assistant', 'admin'],
+   departments: ['TV', 'admin']
  }
 }
 
