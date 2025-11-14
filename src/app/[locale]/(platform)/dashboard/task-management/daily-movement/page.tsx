@@ -10,9 +10,9 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { getStatusColor } from "@/lib/utils/format"
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { format } from 'date-fns'
@@ -85,87 +85,80 @@ export default async function Page({ searchParams }: PageProps) {
   const duplicateKeys = findDuplicates(rows)
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              <div className="pb-2">
-                <Link href={`/task-management/processes/${process.env.DAILY_MOVEMENT_PROCESS_ID}`}>
-                    <Button>
-                      <Plus className="mr-2 h-4 w-4" />
-                      {t('taskManagement.sentTask.createNewTask')}
-                    </Button>
-                  </Link>
-              </div>
-              
-              <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('common.createdAt')}</TableHead>
-                      <TableHead>{t('common.createdBy')}</TableHead>
-                      <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                      <TableHead>{t('common.type')}</TableHead>
-                      <TableHead>{t('common.detail')}</TableHead>
-                      <TableHead>{t('common.result')}</TableHead>
-                      <TableHead>{t('taskManagement.common.status')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {rows.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={8} className="text-center">
-                          {t('common.noDataFound')}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      rows.map((row) => {
-                        const rowKey = getRowKey(row)
-                        const isDuplicate = duplicateKeys.has(rowKey)
-                        
-                        return (
-                          <TableRow 
-                            key={row.task_id}
-                            className={isDuplicate ? "bg-yellow-50 hover:bg-yellow-100" : ""}
-                          >
-                            <TableCell className="font-bold">
-                              <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
-                                {formatDateToUTC7(row.created_at, 'date')}
-                              </Link>
-                            </TableCell>
-                            <TableCell>{row.created_by}</TableCell>
-                            <TableCell>{row.factory_name}</TableCell>
-                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
-                                {row.task_type}
-                            </TableCell>
-                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
-                                {row.task_detail}
-                            </TableCell>
-                            <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
-                                {row.result}
-                                </TableCell>
-                            <TableCell>
-                                <Badge variant="outline" className={getStatusColor(row.state_type)}>
-                                  {row.state}
-                                </Badge>
-                              </TableCell>
-                          </TableRow>
-                        )
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </div>
-          <SidebarRight filterConfig={FilterConfig} />
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <div className="pb-2">
+          <Link href={`/task-management/processes/${process.env.DAILY_MOVEMENT_PROCESS_ID}`}>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              {t('taskManagement.sentTask.createNewTask')}
+            </Button>
+          </Link>
         </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+        
+        <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('common.createdAt')}</TableHead>
+                <TableHead>{t('common.createdBy')}</TableHead>
+                <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                <TableHead>{t('common.type')}</TableHead>
+                <TableHead>{t('common.detail')}</TableHead>
+                <TableHead>{t('common.result')}</TableHead>
+                <TableHead>{t('taskManagement.common.status')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center">
+                    {t('common.noDataFound')}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                rows.map((row) => {
+                  const rowKey = getRowKey(row)
+                  const isDuplicate = duplicateKeys.has(rowKey)
+                  
+                  return (
+                    <TableRow 
+                      key={row.task_id}
+                      className={isDuplicate ? "bg-yellow-50 hover:bg-yellow-100" : ""}
+                    >
+                      <TableCell className="font-bold">
+                        <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                          {formatDateToUTC7(row.created_at, 'date')}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{row.created_by}</TableCell>
+                      <TableCell>{row.factory_name}</TableCell>
+                      <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                        {row.task_type}
+                      </TableCell>
+                      <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                        {row.task_detail}
+                      </TableCell>
+                      <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
+                        {row.result}
+                        </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={getStatusColor(row.state_type)}>
+                          {row.state}
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

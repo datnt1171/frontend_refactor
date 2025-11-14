@@ -1,8 +1,8 @@
 import { getProductSalesRangeDiff, getProductOrderRangeDiff, getMaxSalesDate } from '@/lib/api/server';
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { format, startOfMonth, subMonths } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
@@ -107,61 +107,50 @@ export default async function Page({ searchParams }: PageProps) {
   const showOrderTable = selectedTables.includes('order')
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-
-              {/* Sales by Product */}
-              <div>
-                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
-                  {factoryName} <br />
-                  Giao hàng theo SP - 按產品分列的銷售額 <br />
-                  {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
-                </h1>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <SalesVsTargetChart data={first5AndLast5Sales} />
-                <SalesDiffChart data={first5AndLast5Sales} />
-              </div>
-              {showSalesTable && (
-                <ProductSalesRangeDiffTable 
-                  data={productSalesRangeDiff} 
-                  dateRange={{ start: params.date__gte, end: params.date__lte }}
-                />
-              )}
-              
-
-              {/* Order by Product */}
-              <div>
-                <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
-                  {factoryName} <br />
-                  Đơn đặt hàng theo SP - 按產品排序 <br />
-                  {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
-                </h1>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2">
-                <OrderVsTargetChart data={first5AndLast5Order}/>
-                <OrderDiffChart data={first5AndLast5Order}/>
-              </div>
-
-              {showOrderTable && (
-                <ProductOrderRangeDiffTable 
-                  data={productOrderRangeDiff}
-                  dateRange={{ start: params.date__gte, end: params.date__lte }}
-                />
-              )}
-
-            </div>
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+        {/* Sales by Product */}
+          <div>
+            <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+              {factoryName} <br />
+              Giao hàng theo SP - 按產品分列的銷售額 <br />
+              {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
+            </h1>
           </div>
-          <SidebarRight filterConfig={FilterConfig} />
-        </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            <SalesVsTargetChart data={first5AndLast5Sales} />
+            <SalesDiffChart data={first5AndLast5Sales} />
+          </div>
+          {showSalesTable && (
+            <ProductSalesRangeDiffTable 
+              data={productSalesRangeDiff} 
+              dateRange={{ start: params.date__gte, end: params.date__lte }}
+            />
+          )}
+
+          {/* Order by Product */}
+          <div>
+            <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+              {factoryName} <br />
+              Đơn đặt hàng theo SP - 按產品排序 <br />
+              {params.date_target__gte}→{params.date_target__lte} ~ {params.date__gte}→{params.date__lte}
+            </h1>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            <OrderVsTargetChart data={first5AndLast5Order}/>
+            <OrderDiffChart data={first5AndLast5Order}/>
+          </div>
+
+          {showOrderTable && (
+            <ProductOrderRangeDiffTable 
+              data={productOrderRangeDiff}
+              dateRange={{ start: params.date__gte, end: params.date__lte }}
+            />
+          )}
+
+      </SidebarInset>
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

@@ -1,11 +1,10 @@
 import { getSalesOrderPctDiff, getIsSameMonth, getMaxSalesDate } from '@/lib/api/server';
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { format, startOfMonth, subMonths } from 'date-fns'
-import { toZonedTime } from 'date-fns-tz'
 import SalesOrderChart from './stackedchart'
 
 interface PageProps {
@@ -77,69 +76,68 @@ export default async function Page({ searchParams }: PageProps) {
   // Get day range
   const startDay = currentStart.getDate()
   const endDay = currentEnd.getDate()
+
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              <div className="space-y-1">
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
-                  {currentMonth}月分的订单量与{targetYear}年{targetMonth}月相比 
-                  ĐĐH THÁNG {currentMonth} SO VỚI THÁNG {targetMonth}/{targetYear} 
-                  ({startDay}日~{endDay}日):
-                </h1>
-                
-                <div className="space-y-2 text-sm sm:text-base">
-                  <div className="flex flex-wrap items-center gap-x-2">
-                    <span>• 沒有包含大森 KHÔNG BAO GỒM TIMBER:</span>
-                    <span className={salesOrderPctDiff.remain_order_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
-                      {salesOrderPctDiff.remain_order_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.remain_order_pct_diff * 100).toFixed(2)}%
-                    </span>
-                  </div>
-                  
-                  <div className="flex flex-wrap items-center gap-x-2">
-                    <span>• 有包含大森 BAO GỒM CẢ TIMBER:</span>
-                    <span className={salesOrderPctDiff.order_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
-                      {salesOrderPctDiff.order_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.order_pct_diff * 100).toFixed(2)}%
-                    </span>
-                  </div>
-                </div>
-                
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
-                  {currentMonth}月分的送货量与{targetYear}年{targetMonth}月相比 
-                  GH THÁNG {currentMonth} SO VỚI THÁNG {targetMonth}/{targetYear} 
-                  ({startDay}日~{endDay}日)
-                </h1>
-                
-                <div className="space-y-2 text-sm sm:text-base">
-                  <div className="flex flex-wrap items-center gap-x-2">
-                    <span>• 沒有包含大森 KHÔNG BAO GỒM TIMBER:</span>
-                    <span className={salesOrderPctDiff.remain_sales_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
-                      {salesOrderPctDiff.remain_sales_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.remain_sales_pct_diff * 100).toFixed(2)}%
-                    </span>
-                  </div>
-                  
-                  <div className="flex flex-wrap items-center gap-x-2">
-                    <span>• 有包含大森 BAO GỒM CẢ TIMBER:</span>
-                    <span className={salesOrderPctDiff.sales_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
-                      {salesOrderPctDiff.sales_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.sales_pct_diff * 100).toFixed(2)}%
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="w-full flex justify-center">
-                <SalesOrderChart data={isSameMonth} />
-              </div>
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <div className="space-y-1">
+
+          {/* Title */}
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+            {currentMonth}月分的订单量与{targetYear}年{targetMonth}月相比 
+            ĐĐH THÁNG {currentMonth} SO VỚI THÁNG {targetMonth}/{targetYear} 
+            ({startDay}日~{endDay}日):
+          </h1>
+          
+          {/* Conclusion */}
+          <div className="space-y-2 text-sm sm:text-base">
+            <div className="flex flex-wrap items-center gap-x-2">
+              <span>• 沒有包含大森 KHÔNG BAO GỒM TIMBER:</span>
+              <span className={salesOrderPctDiff.remain_order_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+                {salesOrderPctDiff.remain_order_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.remain_order_pct_diff * 100).toFixed(2)}%
+              </span>
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-x-2">
+              <span>• 有包含大森 BAO GỒM CẢ TIMBER:</span>
+              <span className={salesOrderPctDiff.order_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+                {salesOrderPctDiff.order_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.order_pct_diff * 100).toFixed(2)}%
+              </span>
             </div>
           </div>
-          <SidebarRight filterConfig={FilterConfig} />
+          
+          <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+            {currentMonth}月分的送货量与{targetYear}年{targetMonth}月相比 
+            GH THÁNG {currentMonth} SO VỚI THÁNG {targetMonth}/{targetYear} 
+            ({startDay}日~{endDay}日)
+          </h1>
+          
+          <div className="space-y-2 text-sm sm:text-base">
+            <div className="flex flex-wrap items-center gap-x-2">
+              <span>• 沒有包含大森 KHÔNG BAO GỒM TIMBER:</span>
+              <span className={salesOrderPctDiff.remain_sales_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+                {salesOrderPctDiff.remain_sales_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.remain_sales_pct_diff * 100).toFixed(2)}%
+              </span>
+            </div>
+            
+            <div className="flex flex-wrap items-center gap-x-2">
+              <span>• 有包含大森 BAO GỒM CẢ TIMBER:</span>
+              <span className={salesOrderPctDiff.sales_pct_diff >= 0 ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'}>
+                {salesOrderPctDiff.sales_pct_diff >= 0 ? '增加TĂNG' : '減少GIẢM'} {(salesOrderPctDiff.sales_pct_diff * 100).toFixed(2)}%
+              </span>
+            </div>
+
+            {/* Chart */}
+            <div className="w-full flex justify-center">
+              <SalesOrderChart data={isSameMonth} />
+            </div>
+          </div>
         </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

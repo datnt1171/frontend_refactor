@@ -10,9 +10,9 @@ import {
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import { StatusBadge } from "@/components/ui/StatusBadge"
 import { OnsiteBadge } from "@/components/ui/OnsiteBadge"
 import type { PageFilterConfig } from "@/types"
@@ -72,64 +72,56 @@ export default async function UserListPage({ searchParams }: FactoryPageProps) {
   const factories = response.results
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              
-              <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('crm.factories.factoryId')}</TableHead>
-                      <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                      <TableHead>{t('crm.factories.status')}</TableHead>
-                      <TableHead>{t('crm.factories.onsite')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {factories.map((factory) => (
-                      <TableRow key={factory.factory_code}>
-                        <TableCell className="font-bold text-sm">
-                          <Link href={`/crm/factories/${factory.factory_code}`} className="hover:underline">
-                            {factory.factory_code}
-                          </Link>
-                        </TableCell>
-                        <TableCell>
-                          {factory.factory_name}
-                        </TableCell>
-                        <TableCell>
-                          <StatusBadge 
-                            isActive={factory.is_active} 
-                            activeText={t('filter.active')}
-                            inactiveText={t('filter.inactive')}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <OnsiteBadge 
-                            hasOnsite={factory.has_onsite}
-                            yesText={t('common.yes')}
-                            noText={t('common.no')}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-              <DataPagination
-                totalCount={response.count}
-              />
-            </div>
-          </div>
-          <SidebarRight filterConfig={FilterConfig} />
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                <TableHead>{t('crm.factories.status')}</TableHead>
+                <TableHead>{t('crm.factories.onsite')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {factories.map((factory) => (
+                <TableRow key={factory.factory_code}>
+                  <TableCell className="font-bold text-sm">
+                    <Link href={`/crm/factories/${factory.factory_code}`} className="hover:underline">
+                      {factory.factory_code}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {factory.factory_name}
+                  </TableCell>
+                  <TableCell>
+                    <StatusBadge 
+                      isActive={factory.is_active} 
+                      activeText={t('filter.active')}
+                      inactiveText={t('filter.inactive')}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <OnsiteBadge 
+                      hasOnsite={factory.has_onsite}
+                      yesText={t('common.yes')}
+                      noText={t('common.no')}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+        <DataPagination
+          totalCount={response.count}
+        />
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

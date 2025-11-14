@@ -1,10 +1,9 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
-const warehouseAgingFilterConfig: PageFilterConfig = {
+const FilterConfig: PageFilterConfig = {
   showResetButton: true,
   filters: [
     {
@@ -42,23 +41,19 @@ const warehouseAgingFilterConfig: PageFilterConfig = {
 }
 
 export default function WarehouseAgingPage() {
+
   return (
     <SidebarProvider>
-      <RightSidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex items-center gap-2 lg:hidden p-4">
-            <SidebarTrigger />
-            <Separator orientation="vertical" className="h-4" />
-          </div>
-          
-          <div className="flex-1 min-w-0 p-6">
-            <h1 className="text-2xl font-bold mb-6">Warehouse Aging Report</h1>
-            {/* Your page content */}
-          </div>
-          
-          <SidebarRight filterConfig={warehouseAgingFilterConfig} />
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <div className="flex-1 min-w-0 p-6">
+          <h1 className="text-2xl font-bold mb-6">Warehouse Aging Report</h1>
+          {/* Your page content */}
         </div>
-      </RightSidebarProvider>
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
     </SidebarProvider>
   )
 }

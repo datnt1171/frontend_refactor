@@ -8,9 +8,9 @@ import {
   TableCell,
 } from "@/components/ui/table"
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { daysDiff } from "@/lib/utils/date"
@@ -84,76 +84,67 @@ export default async function Page({ searchParams }: PageProps) {
   const duplicateKeys = findDuplicates(rows)
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              
-              
-              <div className="flex justify-end mb-4">
-                <TransferAbsenceCSVButtons data={rows} />
-              </div>
-              
-              <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('common.startDate')}</TableHead>
-                      <TableHead>{t('common.endDate')}</TableHead>
-                      <TableHead>{t('user.department')}</TableHead>
-                      <TableHead>{t('user.username')}</TableHead>
-                      <TableHead>{t('user.fullName')}</TableHead>
-                      <TableHead>{t('crm.factories.onsite')}</TableHead>
-                      <TableHead>{t('crm.factories.support')}</TableHead>
-                      <TableHead>{t('common.numOfDays')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {rows.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={8} className="text-center">
-                          {t('common.noDataFound')}
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      rows.map((row) => {
-                        const rowKey = getRowKey(row)
-                        const isDuplicate = duplicateKeys.has(rowKey)
-                        
-                        return (
-                          <TableRow 
-                            key={row.task_id}
-                            className={isDuplicate ? "bg-yellow-50 hover:bg-yellow-100" : ""}
-                          >
-                            <TableCell className="font-bold">
-                              <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
-                                {formatDateToUTC7(row.from_date, 'date')}
-                              </Link>
-                            </TableCell>
-                            <TableCell>{formatDateToUTC7(row.to_date, 'date')}</TableCell>
-                            <TableCell>{row.department}</TableCell>
-                            <TableCell>{row.username}</TableCell>
-                            <TableCell>{row.last_name + " " + row.first_name}</TableCell>
-                            <TableCell>{row.factory_name_onsite}</TableCell>
-                            <TableCell>{row.factory_name || t('user.absence')}</TableCell>
-                            <TableCell>{daysDiff(row.from_date, row.to_date) + 1}</TableCell>
-                          </TableRow>
-                        )
-                      })
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </div>
-          <SidebarRight filterConfig={FilterConfig} />
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <div className="flex justify-end mb-4">
+          <TransferAbsenceCSVButtons data={rows} />
         </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+        
+        <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('common.startDate')}</TableHead>
+                <TableHead>{t('common.endDate')}</TableHead>
+                <TableHead>{t('user.department')}</TableHead>
+                <TableHead>{t('user.username')}</TableHead>
+                <TableHead>{t('user.fullName')}</TableHead>
+                <TableHead>{t('crm.factories.onsite')}</TableHead>
+                <TableHead>{t('crm.factories.support')}</TableHead>
+                <TableHead>{t('common.numOfDays')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {rows.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center">
+                    {t('common.noDataFound')}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                rows.map((row) => {
+                  const rowKey = getRowKey(row)
+                  const isDuplicate = duplicateKeys.has(rowKey)
+                  
+                  return (
+                    <TableRow 
+                      key={row.task_id}
+                      className={isDuplicate ? "bg-yellow-50 hover:bg-yellow-100" : ""}
+                    >
+                      <TableCell className="font-bold">
+                        <Link href={`/task-management/tasks/${row.task_id}`} className="hover:underline">
+                          {formatDateToUTC7(row.from_date, 'date')}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{formatDateToUTC7(row.to_date, 'date')}</TableCell>
+                      <TableCell>{row.department}</TableCell>
+                      <TableCell>{row.username}</TableCell>
+                      <TableCell>{row.last_name + " " + row.first_name}</TableCell>
+                      <TableCell>{row.factory_name_onsite}</TableCell>
+                      <TableCell>{row.factory_name || t('user.absence')}</TableCell>
+                      <TableCell>{daysDiff(row.from_date, row.to_date) + 1}</TableCell>
+                    </TableRow>
+                  )
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

@@ -1,8 +1,8 @@
 import { getUsers, getUserFactoryOnsite, getFactories } from '@/lib/api/server'
 import { UserFactoryOnsiteMatrix } from './components/UserFactoryOnsiteMatrix'
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { generateYearOptions, getCurrentYear } from '@/lib/utils/date';
 import { getTranslations } from 'next-intl/server'
@@ -53,25 +53,18 @@ export default async function UserFactoryOnsitePage({ searchParams }: PageProps)
   ])
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              <UserFactoryOnsiteMatrix 
-                users={users.results}
-                onsiteData={onsiteData}
-                factories={factories.results}
-              />
-            </div>
-          </div>
-          <SidebarRight filterConfig={FilterConfig} />
-        </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <UserFactoryOnsiteMatrix 
+          users={users.results}
+          onsiteData={onsiteData}
+          factories={factories.results}
+        />
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

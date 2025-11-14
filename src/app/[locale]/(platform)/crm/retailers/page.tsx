@@ -10,9 +10,9 @@ import {
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 
 interface RetailerPageProps {
@@ -50,44 +50,36 @@ export default async function UserListPage({ searchParams }: RetailerPageProps) 
   const retailers = response.results
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              
-              <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t('crm.retailer.retailer')}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {retailers.map((retailer) => (
-                      <TableRow key={retailer.id}>
-                        <TableCell className="font-bold text-sm">
-                          <Link href={`/crm/retailers/${retailer.id}`} className="hover:underline">
-                            {retailer.name}
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-              <DataPagination
-                totalCount={response.count}
-              />
-            </div>
-          </div>
-          <SidebarRight filterConfig={FilterConfig} />
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
+
+        <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{t('crm.retailer.retailer')}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {retailers.map((retailer) => (
+                <TableRow key={retailer.id}>
+                  <TableCell className="font-bold text-sm">
+                    <Link href={`/crm/retailers/${retailer.id}`} className="hover:underline">
+                      {retailer.name}
+                    </Link>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+        <DataPagination
+          totalCount={response.count}
+        />
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

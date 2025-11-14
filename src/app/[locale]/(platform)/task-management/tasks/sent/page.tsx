@@ -10,9 +10,9 @@ import { getStatusColor } from "@/lib/utils/format"
 import { getTranslations } from "next-intl/server"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { DataPagination } from "@/components/dashboard/Pagination"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getStateTypeOptions, getProcessPrefixOptions } from "@/lib/utils/filter"
 
@@ -58,99 +58,91 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
   const tasks = response.results
 
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div>
-                    <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-                    <p className="text-muted-foreground mt-2">{t('description')}</p>
-                  </div>
-                  <Link href="/task-management/processes">
-                    <Button>
-                      <Plus className="mr-2 h-4 w-4" />
-                      {t('createNewTask')}
-                    </Button>
-                  </Link>
-                </div>
-                  <Card>
-                    <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>{commonT('id')}</TableHead>
-                            <TableHead>{t('status')}</TableHead>
-                            <TableHead>{t('formType')}</TableHead>
-                            <TableHead>{t('recipient')}</TableHead>
-                            <TableHead>{t('sentDate')}</TableHead>
-                            <TableHead className="w-[50px]"></TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {tasks.map((task) => (
-                            <TableRow key={task.id}>
-                             <TableCell className="font-bold">
-                                <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
-                                  {task.title.startsWith('SP')
-                                    ? `${task.finishing_code}${task.customer_color_name ? ` - ${task.customer_color_name}` : ''}`
-                                    : task.title
-                                  }
-                                </Link>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant="outline" className={getStatusColor(task.state_type)}>
-                                  {task.state}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{task.title}</TableCell>
-                              <TableCell>{task.recipient}</TableCell>
-                              <TableCell>{ formatDateToUTC7(task.created_at) }</TableCell>
-                              <TableCell>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon">
-                                      <MoreHorizontal className="h-4 w-4" />
-                                      <span className="sr-only">{commonT('openMenu')}</span>
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem>
-                                      <Link href={`/task-management/tasks/${task.id}`}>{commonT('viewDetails')}</Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>{t('sendReminder')}</DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
 
-                      {tasks.length === 0 && (
-                        <div className="flex flex-col items-center justify-center py-12 text-center">
-                          <h3 className="text-lg font-medium">{commonT('noDataFound')}</h3>
-                          <p className="text-muted-foreground mt-2">{t('tryAdjustingSearchOrCreateTask')}</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-              </div>
-              <DataPagination
-                totalCount={response.count}
-              />
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
+              <p className="text-muted-foreground mt-2">{t('description')}</p>
             </div>
+            <Link href="/task-management/processes">
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                {t('createNewTask')}
+              </Button>
+            </Link>
           </div>
-          <SidebarRight filterConfig={FilterConfig} />
+            <Card>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{commonT('id')}</TableHead>
+                      <TableHead>{t('status')}</TableHead>
+                      <TableHead>{t('formType')}</TableHead>
+                      <TableHead>{t('recipient')}</TableHead>
+                      <TableHead>{t('sentDate')}</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {tasks.map((task) => (
+                      <TableRow key={task.id}>
+                        <TableCell className="font-bold">
+                          <Link href={`/task-management/tasks/${task.id}`} className="hover:underline">
+                            {task.title.startsWith('SP')
+                              ? `${task.finishing_code}${task.customer_color_name ? ` - ${task.customer_color_name}` : ''}`
+                              : task.title
+                            }
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className={getStatusColor(task.state_type)}>
+                            {task.state}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{task.title}</TableCell>
+                        <TableCell>{task.recipient}</TableCell>
+                        <TableCell>{ formatDateToUTC7(task.created_at) }</TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                                <span className="sr-only">{commonT('openMenu')}</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Link href={`/task-management/tasks/${task.id}`}>{commonT('viewDetails')}</Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>{t('sendReminder')}</DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {tasks.length === 0 && (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <h3 className="text-lg font-medium">{commonT('noDataFound')}</h3>
+                    <p className="text-muted-foreground mt-2">{t('tryAdjustingSearchOrCreateTask')}</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
         </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
-    
+        <DataPagination
+          totalCount={response.count}
+        />
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }

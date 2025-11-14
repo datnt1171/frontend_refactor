@@ -1,8 +1,8 @@
 import { getThinnerPaintRatio } from '@/lib/api/server';
 import { getTranslations } from "next-intl/server"
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
-import { RightSidebarProvider } from "@/contexts/FilterContext"
 import type { PageFilterConfig } from "@/types"
 import { getCurrentYear } from '@/lib/utils/date'
 import { getYearOptions, THINNER_PAINT_OPTIONS } from '@/lib/utils/filter'
@@ -105,103 +105,96 @@ export default async function Page({ searchParams }: PageProps) {
   const thinnerColumns = createThinnerPaintColumns(monthColumns)
   const paintColumns = createThinnerPaintColumns(monthColumns)
 
+
   return (
-    <RightSidebarProvider>
-      <SidebarProvider>
-        <div className="flex flex-1 min-w-0">
-          <div className="flex-1 min-w-0">
-            <div className="sticky top-14 z-10 bg-background px-2">
-              <div className="flex items-center gap-2 lg:hidden">
-                <SidebarTrigger />
-                <span className="text-sm font-medium">Filter</span>
-              </div>
-              
-              {/* Ratio Table */}
-              {showRatio && (
-                <RatioTableWithSelect
-                  data={thinnerPaintRatio}
-                  monthColumns={monthColumns}
-                />
-              )}
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
 
-              {/* Thinner Table */}
-              {showThinner && (
-                <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
-                  <div className="flex items-center justify-between px-4 py-2">
-                    <h3 className="font-semibold">{t('product.thinner')}</h3>
-                    <CSVDownloadButton
-                      data={thinnerPaintRatio.thinner_data}
-                      columns={thinnerColumns}
-                      filename={'thinner'}
-                      buttonText={t('common.download')}
-                    />
-                  </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>{t('crm.factories.factoryId')}</TableHead>
-                        <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                        {monthColumns.map(month => (
-                          <TableHead key={month}>{month}</TableHead>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {thinnerPaintRatio.thinner_data.map((row, idx) => (
-                        <TableRow key={idx}>
-                          <TableCell>{String(row.factory_code ?? '')}</TableCell>
-                          <TableCell>{String(row.factory_name ?? '')}</TableCell>
-                          {monthColumns.map(month => (
-                            <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
+        {/* Ratio Table */}
+        {showRatio && (
+          <RatioTableWithSelect
+            data={thinnerPaintRatio}
+            monthColumns={monthColumns}
+          />
+        )}
 
-              {/* Paint Table */}
-              {showPaint && (
-                <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
-                  <div className="flex items-center justify-between px-4 py-2">
-                    <h3 className="font-semibold">{t('product.paint')}</h3>
-                    <CSVDownloadButton
-                      data={thinnerPaintRatio.paint_data}
-                      columns={paintColumns}
-                      filename={'paint'}
-                      buttonText={t('common.download')}
-                    />
-                  </div>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>{t('crm.factories.factoryId')}</TableHead>
-                        <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                        {monthColumns.map(month => (
-                          <TableHead key={month}>{month}</TableHead>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {thinnerPaintRatio.paint_data.map((row, idx) => (
-                        <TableRow key={idx}>
-                          <TableCell>{String(row.factory_code ?? '')}</TableCell>
-                          <TableCell>{String(row.factory_name ?? '')}</TableCell>
-                          {monthColumns.map(month => (
-                            <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              )}
+        {/* Thinner Table */}
+        {showThinner && (
+          <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
+            <div className="flex items-center justify-between px-4 py-2">
+              <h3 className="font-semibold">{t('product.thinner')}</h3>
+              <CSVDownloadButton
+                data={thinnerPaintRatio.thinner_data}
+                columns={thinnerColumns}
+                filename={'thinner'}
+                buttonText={t('common.download')}
+              />
             </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                  <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                  {monthColumns.map(month => (
+                    <TableHead key={month}>{month}</TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {thinnerPaintRatio.thinner_data.map((row, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{String(row.factory_code ?? '')}</TableCell>
+                    <TableCell>{String(row.factory_name ?? '')}</TableCell>
+                    {monthColumns.map(month => (
+                      <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
-          <SidebarRight filterConfig={FilterConfig} />
-        </div>
-      </SidebarProvider>
-    </RightSidebarProvider>
+        )}
+
+        {/* Paint Table */}
+        {showPaint && (
+          <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
+            <div className="flex items-center justify-between px-4 py-2">
+              <h3 className="font-semibold">{t('product.paint')}</h3>
+              <CSVDownloadButton
+                data={thinnerPaintRatio.paint_data}
+                columns={paintColumns}
+                filename={'paint'}
+                buttonText={t('common.download')}
+              />
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                  <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                  {monthColumns.map(month => (
+                    <TableHead key={month}>{month}</TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {thinnerPaintRatio.paint_data.map((row, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{String(row.factory_code ?? '')}</TableCell>
+                    <TableCell>{String(row.factory_name ?? '')}</TableCell>
+                    {monthColumns.map(month => (
+                      <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }
