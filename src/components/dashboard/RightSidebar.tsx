@@ -14,8 +14,12 @@ export function SidebarRight({ filterConfig, ...props }: SidebarRightProps) {
   const t = useTranslations()
 
   return (
-    <Sidebar side="right" className="top-16" {...props}>
-      <SidebarContent>
+    <Sidebar 
+      side="right" 
+      className="top-16 bottom-0 h-auto max-h-screen" 
+      {...props}
+    >
+      <SidebarContent className="overflow-y-auto">
         {filterConfig ? (
           <ConfigurableFilters config={filterConfig} />
         ) : (
