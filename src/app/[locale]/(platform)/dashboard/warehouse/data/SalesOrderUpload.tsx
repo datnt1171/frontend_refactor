@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { uploadSalesFile, uploadOrderFile } from '@/lib/api/client/api'
+import { useTranslations } from 'next-intl'
 
 type UploadStatus = 'idle' | 'uploading' | 'success' | 'error'
 
@@ -16,11 +17,13 @@ interface UploadState {
 }
 
 export function SalesFileUpload() {
+  const t = useTranslations()
+
   const [file, setFile] = useState<File | null>(null)
   const [uploadState, setUploadState] = useState<UploadState>({ status: 'idle', message: '' })
+  const [isDragging, setIsDragging] = useState(false)
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0]
+  const validateAndSetFile = (selectedFile: File | null) => {
     if (!selectedFile) return
 
     const fileExtension = selectedFile.name.toLowerCase().slice(selectedFile.name.lastIndexOf('.'))
@@ -28,7 +31,7 @@ export function SalesFileUpload() {
     if (!['.xlsx', '.xls'].includes(fileExtension)) {
       setUploadState({
         status: 'error',
-        message: 'Please select an Excel file (.xlsx or .xls)'
+        message: t('common.invalidFile')
       })
       return
     }
@@ -37,28 +40,59 @@ export function SalesFileUpload() {
     setUploadState({ status: 'idle', message: '' })
   }
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0]
+    validateAndSetFile(selectedFile || null)
+  }
+
+  const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
+  const handleDragEnter = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIsDragging(false)
+    
+    const droppedFile = event.dataTransfer.files?.[0]
+    validateAndSetFile(droppedFile || null)
+  }
+
   const handleUpload = async () => {
     if (!file) {
       setUploadState({
         status: 'error',
-        message: 'Please select a file first'
+        message: t('common.noFileProvided')
       })
       return
     }
 
-    setUploadState({ status: 'uploading', message: 'Uploading...' })
+    setUploadState({ status: 'uploading', message: t('common.processing') })
 
     try {
       const response = await uploadSalesFile(file)
       setUploadState({
         status: 'success',
-        message: `File uploaded successfully: ${response.data.filename}`,
+        message: t('common.UploadSuccessfully', { filename: response.data.filename }),
         data: response.data
       })
     } catch (error) {
       setUploadState({
         status: 'error',
-        message: error instanceof Error ? error.message : 'Upload failed'
+        message: error instanceof Error ? error.message : t('common.UploadFailed')
       })
     }
   }
@@ -68,15 +102,23 @@ export function SalesFileUpload() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileSpreadsheet className="h-5 w-5" />
-          Dữ liệu giao hàng
+          {t('dashboard.sales.salesData')}
         </CardTitle>
-        <CardDescription>Upload sales transaction Excel file</CardDescription>
+        <CardDescription>{t('dashboard.sales.salesDataUploadDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <label
             htmlFor="sales-file-upload"
-            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+            className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+              isDragging 
+                ? 'bg-muted border-primary' 
+                : 'hover:bg-muted/50'
+            }`}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
@@ -85,12 +127,13 @@ export function SalesFileUpload() {
                   <span className="font-medium text-foreground">{file.name}</span>
                 ) : (
                   <>
-                    <span className="font-semibold">Click to upload</span> or drag and drop
+                    <span className="font-semibold">{t('common.clickToUpload')}
+                    </span> {t('common.or')} {t('common.dragAndDrop')}
                   </>
                 )}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Excel files only (.xlsx, .xls)
+                Excel (.xlsx, .xls)
               </p>
             </div>
             <input
@@ -106,8 +149,8 @@ export function SalesFileUpload() {
 
         {file && (
           <div className="text-sm text-muted-foreground space-y-1">
-            <p>Size: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
-            <p>Type: {file.type || 'application/vnd.ms-excel'}</p>
+            <p>{t('common.fileSize')}: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            <p>{t('common.type')}: {file.type || 'application/vnd.ms-excel'}</p>
           </div>
         )}
 
@@ -119,12 +162,12 @@ export function SalesFileUpload() {
           {uploadState.status === 'uploading' ? (
             <>
               <div className="h-4 w-4 mr-2 border-2 border-background border-t-transparent rounded-full animate-spin" />
-              Uploading...
+              {t('common.processing')}
             </>
           ) : (
             <>
               <Upload className="h-4 w-4 mr-2" />
-              Upload Sales Data
+              {t('dashboard.sales.salesDataUpload')}
             </>
           )}
         </Button>
@@ -136,8 +179,8 @@ export function SalesFileUpload() {
               {uploadState.message}
               {uploadState.data && (
                 <div className="mt-2 text-xs space-y-1">
-                  <p>File size: {uploadState.data.file_size_mb} MB</p>
-                  <p>Uploaded at: {new Date(uploadState.data.uploaded_at).toLocaleString()}</p>
+                  <p>{t('common.type')}: {uploadState.data.file_size_mb} MB</p>
+                  <p>{t('common.createdAt')}: {new Date(uploadState.data.uploaded_at).toLocaleString()}</p>
                 </div>
               )}
             </AlertDescription>
@@ -156,11 +199,13 @@ export function SalesFileUpload() {
 }
 
 export function OrderFileUpload() {
+  const t = useTranslations()
+
   const [file, setFile] = useState<File | null>(null)
   const [uploadState, setUploadState] = useState<UploadState>({ status: 'idle', message: '' })
+  const [isDragging, setIsDragging] = useState(false)
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0]
+  const validateAndSetFile = (selectedFile: File | null) => {
     if (!selectedFile) return
 
     const fileExtension = selectedFile.name.toLowerCase().slice(selectedFile.name.lastIndexOf('.'))
@@ -168,7 +213,7 @@ export function OrderFileUpload() {
     if (!['.xlsx', '.xls'].includes(fileExtension)) {
       setUploadState({
         status: 'error',
-        message: 'Please select an Excel file (.xlsx or .xls)'
+        message: t('common.invalidFile')
       })
       return
     }
@@ -177,28 +222,59 @@ export function OrderFileUpload() {
     setUploadState({ status: 'idle', message: '' })
   }
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0]
+    validateAndSetFile(selectedFile || null)
+  }
+
+  const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
+  const handleDragEnter = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    setIsDragging(false)
+    
+    const droppedFile = event.dataTransfer.files?.[0]
+    validateAndSetFile(droppedFile || null)
+  }
+
   const handleUpload = async () => {
     if (!file) {
       setUploadState({
         status: 'error',
-        message: 'Please select a file first'
+        message: t('common.noFileProvided')
       })
       return
     }
 
-    setUploadState({ status: 'uploading', message: 'Uploading...' })
+    setUploadState({ status: 'uploading', message: t('common.processing') })
 
     try {
       const response = await uploadOrderFile(file)
       setUploadState({
         status: 'success',
-        message: `File uploaded successfully: ${response.data.filename}`,
+        message: t('common.UploadSuccessfully', { filename: response.data.filename }),
         data: response.data
       })
     } catch (error) {
       setUploadState({
         status: 'error',
-        message: error instanceof Error ? error.message : 'Upload failed'
+        message: error instanceof Error ? error.message : t('common.UploadFailed')
       })
     }
   }
@@ -208,15 +284,23 @@ export function OrderFileUpload() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileSpreadsheet className="h-5 w-5" />
-          Dữ liệu Đơn đặt hàng
+          {t('dashboard.order.orderData')}
         </CardTitle>
-        <CardDescription>Upload order Excel file</CardDescription>
+        <CardDescription>{t('dashboard.order.orderDataUploadDescription')}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <label
             htmlFor="order-file-upload"
-            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors"
+            className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+              isDragging 
+                ? 'bg-muted border-primary' 
+                : 'hover:bg-muted/50'
+            }`}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
@@ -225,12 +309,13 @@ export function OrderFileUpload() {
                   <span className="font-medium text-foreground">{file.name}</span>
                 ) : (
                   <>
-                    <span className="font-semibold">Click to upload</span> or drag and drop
+                    <span className="font-semibold">{t('common.clickToUpload')}
+                    </span> {t('common.or')} {t('common.dragAndDrop')}
                   </>
                 )}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                Excel files only (.xlsx, .xls)
+                Excel (.xlsx, .xls)
               </p>
             </div>
             <input
@@ -246,8 +331,8 @@ export function OrderFileUpload() {
 
         {file && (
           <div className="text-sm text-muted-foreground space-y-1">
-            <p>Size: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
-            <p>Type: {file.type || 'application/vnd.ms-excel'}</p>
+            <p>{t('common.fileSize')}: {(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            <p>{t('common.type')}: {file.type || 'application/vnd.ms-excel'}</p>
           </div>
         )}
 
@@ -259,12 +344,12 @@ export function OrderFileUpload() {
           {uploadState.status === 'uploading' ? (
             <>
               <div className="h-4 w-4 mr-2 border-2 border-background border-t-transparent rounded-full animate-spin" />
-              Uploading...
+              {t('common.processing')}
             </>
           ) : (
             <>
               <Upload className="h-4 w-4 mr-2" />
-              Upload Order Data
+              {t('dashboard.order.orderDataUpload')}
             </>
           )}
         </Button>
@@ -276,8 +361,8 @@ export function OrderFileUpload() {
               {uploadState.message}
               {uploadState.data && (
                 <div className="mt-2 text-xs space-y-1">
-                  <p>File size: {uploadState.data.file_size_mb} MB</p>
-                  <p>Uploaded at: {new Date(uploadState.data.uploaded_at).toLocaleString()}</p>
+                  <p>{t('common.type')}: {uploadState.data.file_size_mb} MB</p>
+                  <p>{t('common.createdAt')}: {new Date(uploadState.data.uploaded_at).toLocaleString()}</p>
                 </div>
               )}
             </AlertDescription>

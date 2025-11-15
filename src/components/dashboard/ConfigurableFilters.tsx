@@ -238,7 +238,12 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
               options={filter.options || []}
               onValueChange={(values) => handleFilterChange(filter.id, values)}
               defaultValue={filters[filter.id] || []}
-              placeholder={filter.placeholder || `Select ${filter.label.toLowerCase()}...`}
+              placeholder={filter.placeholder || t('filter.selectField', { field: filter.label.toLowerCase() })}
+              searchPlaceholder={t('filter.searchField', { field: filter.label.toLowerCase() })}
+              selectAllPlaceholder={t('filter.selectAll')}
+              emptyIndicator={t('common.noDataFound')}
+              closePlaceholder={t('common.close')}
+              clearPlaceholder={t('common.clear')}
             />
             {renderSelectedBadges(filter.id, filters[filter.id], filter.options || [])}
           </div>
@@ -256,9 +261,9 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
               })) || []}
               value={filters[filter.id]}
               onValueChange={(value) => handleFilterChange(filter.id, value)}
-              placeholder={filter.placeholder || `Select ${filter.label.toLowerCase()}...`}
-              searchPlaceholder={`Search ${filter.label.toLowerCase()}...`}
-              emptyMessage={`No ${filter.label.toLowerCase()} found.`}
+              placeholder={filter.placeholder || t('filter.selectField', { field: filter.label.toLowerCase() })}
+              searchPlaceholder={t('filter.searchField', { field: filter.label.toLowerCase() })}
+              emptyMessage={t('common.noDataFound')}
             />
           </div>
         );
@@ -271,9 +276,9 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
               fields={filter.sortFields || []}
               value={filters[filter.id] || []}
               onValueChange={(values) => handleFilterChange(filter.id, values)}
-              placeholder={filter.placeholder || "Select sort options..."}
-              searchPlaceholder={`Search ${filter.label.toLowerCase()}...`}
-              emptyMessage={`No ${filter.label.toLowerCase()} found.`}
+              placeholder={filter.placeholder || t('filter.selectField', { field: filter.label.toLowerCase() })}
+              searchPlaceholder={t('filter.searchField', { field: filter.label.toLowerCase() })}
+              emptyMessage={t('common.noDataFound')}
             />
           </div>
         );
@@ -287,7 +292,9 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
               onValueChange={(value) => handleFilterChange(filter.id, value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder={filter.placeholder || `Select ${filter.label.toLowerCase()}...`} />
+                <SelectValue 
+                  placeholder={filter.placeholder || t('filter.selectField', { field: filter.label.toLowerCase() })} 
+                />
               </SelectTrigger>
               <SelectContent>
                 {filter.options?.map(option => (
@@ -304,16 +311,33 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
-            <div className="relative">
-              <Calendar className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="date"
-                value={filters[filter.id] || ''}
-                onChange={(e) => handleFilterChange(filter.id, e.target.value)}
-                className="pl-9"
-                placeholder={filter.placeholder || "Select date"}
-              />
-            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !filters[filter.id] && "text-muted-foreground"
+                  )}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  {filters[filter.id] ? (
+                    formatDateToUTC7(filters[filter.id], 'date')
+                  ) : (
+                    <span>{filter.placeholder || t('filter.selectDate')}</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="center" side="left">
+                <CalendarComponent
+                  mode="single"
+                  selected={filters[filter.id] ? new Date(filters[filter.id]) : undefined}
+                  onSelect={(date) => {
+                    handleFilterChange(filter.id, date ? format(date, 'yyyy-MM-dd') : '');
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         );
 
@@ -326,7 +350,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 type="number"
                 min={filter.min || 1}
                 max={filter.max || 31}
-                placeholder="From"
+                placeholder={t('common.from')}
                 value={filters[filter.id]?.gte || ''}
                 onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
                 className="w-20"
@@ -336,7 +360,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 type="number"
                 min={filter.min || 1}
                 max={filter.max || 31}
-                placeholder="To"
+                placeholder={t('common.to')}
                 value={filters[filter.id]?.lte || ''}
                 onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
                 className="w-20"
@@ -354,17 +378,17 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 type="number"
                 min={filter.min || 1}
                 max={filter.max || 12}
-                placeholder="From"
+                placeholder={t('common.from')}
                 value={filters[filter.id]?.gte || ''}
                 onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
                 className="w-20"
               />
-              <span className="text-muted-foreground text-sm">to</span>
+              <span className="text-muted-foreground text-sm">{t('common.to')}</span>
               <Input
                 type="number"
                 min={filter.min || 1}
                 max={filter.max || 12}
-                placeholder="To"
+                placeholder={t('common.to')}
                 value={filters[filter.id]?.lte || ''}
                 onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
                 className="w-20"
@@ -394,7 +418,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                       {formatDateToUTC7(filters[filter.id].lte, 'date')}
                     </>
                   ) : (
-                    <span>Pick a date range</span>
+                    <span>{t('filter.selectDate')}</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -457,7 +481,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
               <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder={filter.placeholder || 'Search...'}
+                placeholder={filter.placeholder || t('filter.searchField', { field: filter.label.toLowerCase() })}
                 value={filters[filter.id]}
                 onChange={(e) => handleFilterChange(filter.id, e.target.value)}
                 className="pl-9"
@@ -484,10 +508,10 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-muted-foreground" />
-          <h3 className="font-medium">Filters</h3>
+          <h3 className="font-medium">{t('filter.filter')}</h3>
           {hasActiveFilters && (
             <Badge variant="secondary" className="text-xs">
-              {getActiveFilterCount()} active
+              {t('common.active')}: {getActiveFilterCount()} 
             </Badge>
           )}
         </div>

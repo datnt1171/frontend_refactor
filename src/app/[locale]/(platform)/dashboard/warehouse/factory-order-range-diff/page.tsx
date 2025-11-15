@@ -43,6 +43,8 @@ export default async function Page({ searchParams }: PageProps) {
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
+    isPaginated: false,
+
       defaultValues: {
       date: {
         gte: format(firstDateOfMonth,'yyyy-MM-dd'),
@@ -54,7 +56,7 @@ export default async function Page({ searchParams }: PageProps) {
       },
       increase: 'false'
     },
-    isPaginated: false,
+    
     filters: [
       {
         id: 'increase',
@@ -69,11 +71,13 @@ export default async function Page({ searchParams }: PageProps) {
         id: 'date_target',
         type: 'date-range',
         label: t('filter.targetDate'),
+        placeholder: t('filter.targetDate'),
       },
       {
         id: 'date',
         type: 'date-range',
         label: t('filter.selectDate'),
+        placeholder: t('filter.selectDate'),
       },
     ]
   }

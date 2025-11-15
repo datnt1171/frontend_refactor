@@ -5,7 +5,6 @@ import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMo
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { format, startOfMonth, subMonths } from 'date-fns'
-import { toZonedTime } from 'date-fns-tz'
 import SalesVsTargetChart from './SalesVsTarget'
 import SalesDiffChart from './SalesDiff'
 import OrderVsTargetChart from './OrderVsTarget';
@@ -60,22 +59,26 @@ export default async function Page({ searchParams }: PageProps) {
         id: 'date_target',
         type: 'date-range',
         label: t('filter.targetDate'),
+        placeholder: t('filter.targetDate'),
       },
       {
         id: 'date',
         type: 'date-range',
         label: t('filter.selectDate'),
+        placeholder: t('filter.selectDate'),
       },
       {
         id: 'factory',
         type: 'combobox',
         label: t('filter.selectFactory'),
+        placeholder: t('filter.selectFactory'),
         options: await getFactoryOptions()
       },
       {
         id: 'table',
         type: 'multiselect',
         label: t('filter.table'),
+        placeholder: t('filter.selectTable'),
         options: [
           { value: 'sales', label: t('dashboard.sales.sales') },
           { value: 'order', label: t('dashboard.order.order') },

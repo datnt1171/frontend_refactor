@@ -33,7 +33,9 @@ export default async function Page({ searchParams }: PageProps) {
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
-      defaultValues: {
+    isPaginated: false,
+
+    defaultValues: {
       day: {
         gte: '1',
         lte: format(today, 'd')
@@ -47,40 +49,46 @@ export default async function Page({ searchParams }: PageProps) {
       target_year: '2022',
       exclude_factory: '30673'
     },
-    isPaginated: false,
+
     filters: [
       {
         id: 'target_year',
         type: 'select',
         label: t('filter.targetYear'),
+        placeholder: t('filter.selectYear'),
         options: generateYearOptions()
       },
       {
         id: 'target_month',
         type: 'select',
         label: t('filter.targetMonth'),
+        placeholder: t('filter.selectMonth'),
         options: MONTH_OPTIONS
       },
       {
         id: 'day',
         type: 'day-range',
         label: t('filter.selectDay'),
+        placeholder: t('filter.selectDay'),
       },
       {
         id: 'month',
         type: 'month-range',
         label: t('filter.selectMonth'),
+        placeholder: t('filter.selectDate'),
       },
       {
         id: 'year',
         type: 'select',
         label: t('filter.selectYear'),
+        placeholder: t('filter.selectYear'),
         options: generateYearOptions()
       },
       {
         id: 'exclude_factory',
-        type: 'select',
+        type: 'combobox',
         label: t('filter.excludedFactory'),
+        placeholder: t('filter.selectFactory'),
         options: await getFactoryOptions()
       }
     ]

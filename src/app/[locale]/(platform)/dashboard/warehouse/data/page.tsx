@@ -49,8 +49,8 @@ export default async function Page({ searchParams }: PageProps) {
 
         {/* File upload */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-4">
-          <SalesFileUpload />
           <OrderFileUpload />
+          <SalesFileUpload />
         </div>
 
         {/* Data download */}

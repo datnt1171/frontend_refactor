@@ -128,7 +128,10 @@ interface MultiSelectProps
 	 * Optional, defaults to "Select options".
 	 */
 	placeholder?: string;
-
+	searchPlaceholder?: string;
+	selectAllPlaceholder?: string;
+	closePlaceholder?: string;
+	clearPlaceholder?: string;
 	/**
 	 * Animation duration in seconds for the visual effects (e.g., bouncing badges).
 	 * Optional, defaults to 0 (no animation).
@@ -308,6 +311,10 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 			variant,
 			defaultValue = [],
 			placeholder = "Select options",
+			searchPlaceholder = "Search options...",
+			selectAllPlaceholder = "Select all",
+			closePlaceholder = "Close",
+			clearPlaceholder = "Clear",
 			animation = 0,
 			animationConfig,
 			maxCount = 3,
@@ -1018,7 +1025,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 						<Command>
 							{searchable && (
 								<CommandInput
-									placeholder="Search options..."
+									placeholder={searchPlaceholder}
 									onKeyDown={handleInputKeyDown}
 									value={searchValue}
 									onValueChange={setSearchValue}
@@ -1067,7 +1074,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 												<CheckIcon className="h-4 w-4" />
 											</div>
 											<span>
-												(Select All
+												({selectAllPlaceholder}
 												{getAllOptions().length > 20
 													? ` - ${getAllOptions().length} options`
 													: ""}
@@ -1169,7 +1176,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 												<CommandItem
 													onSelect={handleClear}
 													className="flex-1 justify-center cursor-pointer">
-													Clear
+													{clearPlaceholder}
 												</CommandItem>
 												<Separator
 													orientation="vertical"
@@ -1180,7 +1187,7 @@ export const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 										<CommandItem
 											onSelect={() => setIsPopoverOpen(false)}
 											className="flex-1 justify-center cursor-pointer max-w-full">
-											Close
+											{closePlaceholder}
 										</CommandItem>
 									</div>
 								</CommandGroup>

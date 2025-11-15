@@ -33,6 +33,7 @@
     "searchFactory": "Search for factory",
     "selectRetailer": "Select Retailer",
     "searchRetailer": "Search for retailer",
+
     "CreateFailed": "Failed to create",
     "CreateSuccessfully": "Create successfully!",
     "actionPerformedSuccessfully": "Action performed successfully!",
@@ -41,8 +42,15 @@
     "EditSuccessfully": "Edit successfully!",
     "deleteAlertTitle": "Are you absolutely sure?",
     "deleteAlertDescription": "This action cannot be undone. This will permanently delete the file \"{name}\" and remove all associated data.",
+    "UploadFailed": "Failed to upload",
+    "UploadSuccessfully": "File uploaded successfully: {filename}",
+
     "file": "File",
     "fileSize": "File Size",
+    "clickToUpload": "Click to upload",
+    "or": "or",
+    "dragAndDrop": "Drag and Drop",
+
     "preview": "Preview",
     "download": "Download",
     "downloadSelected": "Download Selected",
@@ -67,6 +75,8 @@
     "result": "Result",
     "reset": "Reset",
     "apply": "Apply",
+    "close": "Close",
+    "clear": "Clear",
     "from": "From",
     "to": "To"
   },
@@ -346,6 +356,9 @@
     "sales": {
       "quantity": "Quantity",
       "sales": "Sales",
+      "salesData": "Sales data",
+      "salesDataUpload": "Upload Sales Data",
+      "salesDataUploadDescription": "Upload sales transaction Excel file",
       "salesTarget": "Sales Target",
       "diff": "Diff",
       "diffAbs": "Diff ABS",
@@ -374,6 +387,9 @@
 
     "order": {
       "order": "Order",
+      "orderData": "Order data",
+      "orderDataUpload": "Upload Order Data",
+      "orderDataUploadDescription": "Upload Order transaction Excel file",
       "orderTarget": "Order target",
       "downloadOrderData": "Download Order Data",
       "orderDate": "Order Date",
@@ -448,7 +464,11 @@
   
   "filter": {
     "filter": "Filter",
+    "selectField": "Select {field}...",
+    "searchField": "Search {field}...",
 
+    "select": "Select",
+    "selectAll": "Select All",
     "selectDate": "Select Date",
     "selectDay": "Select Day",
     "selectWeek": "Select Week",
@@ -511,7 +531,8 @@
 
     "sortBy": "Sort By",
 
-    "table": "Table"
+    "table": "Table",
+    "selectTable": "Select Table"
   },
 
   "datetime": {

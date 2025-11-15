@@ -33,6 +33,7 @@
     "searchFactory": "Tìm nhà máy",
     "selectRetailer": "Chọn KH đặt hàng",
     "searchRetailer": "Tìm KH đặt hàng",
+
     "CreateFailed": "Tạo thất bại",
     "CreateSuccessfully": "Tạo thành công",
     "actionPerformedSuccessfully": "Thao tác đã thực hiện thành công!",
@@ -41,8 +42,15 @@
     "EditSuccessfully": "Chỉnh sửa thành công",
     "deleteAlertTitle": "Bạn có chắc chắn không?",
     "deleteAlertDescription": "Hành động này không thể hoàn tác. Thao tác này sẽ xóa vĩnh viễn tệp \"{name}\" và loại bỏ tất cả dữ liệu liên quan.",
+    "UploadFailed": "Tải lên thất bại",
+    "UploadSuccessfully": "Tải tệp lên thành công: {filename}",
+
     "file": "Tệp",
     "fileSize": "Kích thước tệp",
+    "clickToUpload": "Nhấn để tải lên",
+    "or": "hoặc",
+    "dragAndDrop": "Kéo và Thả",
+
     "preview": "Xem trước",
     "download": "Tải xuống",
     "downloadSelected": "Tải đã chọn",
@@ -67,6 +75,8 @@
     "result": "Kết quả",
     "reset": "Đặt lại",
     "apply": "Áp dụng",
+    "close": "Đóng",
+    "clear": "Bỏ chọn",
     "from": "Từ",
     "to": "Đến"
   },
@@ -311,7 +321,7 @@
       "factoryOrderRangeDiff": "Biến động đặt hàng",
       "productRangeDiff": "Biến động theo SP",
       "scheduled": "Dự định/Thực tế GH",
-      "compare": "GH/ĐĐH theo thời gian",
+      "compare": "So sánh",
       "conclusion": "Kết luận",
       "ratio": "Tỉ lệ",
       "pendingDelivery": "Đơn đặt hàng chờ báo",
@@ -346,10 +356,13 @@
     "sales": {
       "quantity": "Số lượng",
       "sales": "Giao hàng",
+      "salesData": "Dữ liệu bán hàng",
+      "salesDataUpload": "Tải dữ liệu bán hàng lên",
+      "salesDataUploadDescription": "Tải lên tệp Excel giao hàng",
       "salesTarget": "Mục tiêu giao hàng",
       "diff": "Chênh lệch",
       "diffAbs": "|Chênh lệch|",
-      "downloadSalesData": "Download Sales Data",
+      "downloadSalesData": "Tải dữ liệu giao hàng xuống",
       "salesDate": "Ngày GH",
       "salesCode": "Mã GH",
       "orderCode": "Mã ĐĐH",
@@ -374,8 +387,11 @@
 
     "order": {
       "order": "ĐĐH",
+      "orderData": "Dữ liệu đơn hàng",
+      "orderDataUpload": "Tải dữ liệu đơn hàng lên",
+      "orderDataUploadDescription": "Tải lên tệp Excel đơn đặt hàng",
       "orderTarget": "Mục tiêu ĐĐH",
-      "downloadOrderData": "Download Order Data",
+      "downloadOrderData": "Tải dữ liệu đơn đặt hàng xuống",
       "orderDate": "Ngày ĐĐH",
       "orderCode": "Mã ĐĐH",
       "ctDate": "Ngày CT",
@@ -448,7 +464,11 @@
   
   "filter": {
     "filter": "Bộ lọc",
+    "selectField": "Chọn {field}...",
+    "searchField": "Tìm {field}...",
 
+    "select": "Chọn",
+    "selectAll": "Chọn tất cả",
     "selectDate": "Chọn ngày",
     "selectDay": "Chọn ngày",
     "selectWeek": "Chọn tuần",
@@ -511,7 +531,8 @@
 
     "sortBy": "Sắp xếp theo",
 
-    "table": "Bảng"
+    "table": "Bảng",
+    "selectTable": "Chọn bảng"
   },
 
   "datetime": {
