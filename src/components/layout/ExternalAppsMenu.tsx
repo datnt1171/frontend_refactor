@@ -11,9 +11,12 @@ import {
 import { ChevronDown } from "lucide-react"
 import { externalApps } from "@/constants/navigation"
 import Link from "next/link"
+import { usePathname } from "@/i18n/navigation"
+import { cn } from "@/lib/utils"
 
 export function ExternalAppsMenu() {
   const t = useTranslations()
+  const pathname = usePathname()
 
   return (
     <>
@@ -21,11 +24,18 @@ export function ExternalAppsMenu() {
       <div className="hidden lg:flex items-center space-x-2">
         {externalApps.map((app) => {
           const IconComponent = app.icon
+          const isActive = pathname.startsWith(app.href)
           return (
             <Link
               key={app.nameKey}
               href={app.href}
-              className="flex items-center px-3 py-1.5 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+                className={cn(
+                  "flex items-center px-3 py-1.5 text-sm transition-colors relative",
+                  "after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:h-0.5 after:transition-all",
+                  isActive 
+                    ? "text-black after:w-2/3 after:bg-black" 
+                    : "text-gray-600 after:w-0 hover:text-black hover:after:w-1/2 hover:after:bg-gray-400"
+                )}
             >
               <IconComponent className="mr-2 h-4 w-4" />
               {t(app.nameKey)}

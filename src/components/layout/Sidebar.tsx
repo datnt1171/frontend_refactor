@@ -21,6 +21,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { useTranslations } from "next-intl"
+import { Link } from "@/i18n/navigation"
 
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -74,8 +75,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <SidebarMenu>
                     {item.items.map((subItem) => (
                       <SidebarMenuItem key={subItem.title}>
-                        <SidebarMenuButton asChild isActive={pathname === subItem.url}>
-                          <a href={subItem.url}>{t(subItem.title)}</a>
+                        <SidebarMenuButton 
+                          asChild 
+                          isActive={pathname === subItem.url}
+                          className="data-[active=true]:bg-black data-[active=true]:text-white data-[active=true]:hover:bg-gray-900 hover:bg-black hover:text-white"
+                        >
+                          <Link href={subItem.url}>{t(subItem.title)}</Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
                     ))}
