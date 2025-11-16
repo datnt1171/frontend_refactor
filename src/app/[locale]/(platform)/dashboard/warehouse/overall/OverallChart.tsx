@@ -35,6 +35,21 @@ export default function OverallChart({ data }: OverallChartProps) {
     const salesTargetPct = data.map(item => item.sales_target_pct);
     const orderTargetPct = data.map(item => item.order_target_pct);
 
+    // Create data with dynamic label positions
+    const orderTargetData = orderTargetPct.map((value, index) => ({
+      value,
+      label: {
+        position: (value ?? 0) >= (salesTargetPct[index] ?? 0) ? 'top' : 'bottom'
+      }
+    }));
+
+    const salesTargetData = salesTargetPct.map((value, index) => ({
+      value,
+      label: {
+        position: (value ?? 0) > (orderTargetPct[index] ?? 0) ? 'top' : 'bottom'
+      }
+    }));
+
     const option = {
       legend: [
         {
@@ -123,7 +138,7 @@ export default function OverallChart({ data }: OverallChartProps) {
           type: 'line',
           xAxisIndex: 0,
           yAxisIndex: 0,
-          data: orderTargetPct,
+          data: orderTargetData,
           itemStyle: {
             color: 'red'
           },
@@ -134,7 +149,6 @@ export default function OverallChart({ data }: OverallChartProps) {
           symbolSize: 5,
           label: {
             show: true,
-            position: 'bottom',
             color: 'red',
             formatter: (params: any) => `${(params.value * 100).toFixed(1)}%`
           }
@@ -144,7 +158,7 @@ export default function OverallChart({ data }: OverallChartProps) {
           type: 'line',
           xAxisIndex: 0,
           yAxisIndex: 0,
-          data: salesTargetPct,
+          data: salesTargetData,
           itemStyle: {
             color: 'orange'
           },
@@ -155,7 +169,6 @@ export default function OverallChart({ data }: OverallChartProps) {
           symbolSize: 5,
           label: {
             show: true,
-            position: 'top',
             color: 'orange',
             formatter: (params: any) => `${(params.value * 100).toFixed(1)}%`
           }
