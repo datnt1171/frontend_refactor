@@ -24,28 +24,34 @@ export default async function Page({ searchParams }: PageProps) {
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
+    autoApplyFilters: true,
+    isPaginated: false,
+
     defaultValues: {
       year: [getCurrentYear(), getLastYear()],
       group_by: 'month,year'
     },
-    isPaginated: false,
+    
     filters: [
       {
         id: 'year',
         type: 'multiselect',
         label: t('filter.selectYear'),
+        placeholder: t('filter.selectYear'),
         options: getYearOptions()
       },
       {
         id: 'group_by',
         type: 'select',
         label: t('filter.groupBy'),
+        placeholder: t('filter.groupBy'),
         options: TIME_SELECT_OPTIONS
       },
       {
         id: 'factory',
         type: 'combobox',
         label: t('filter.selectFactory'),
+        placeholder: t('filter.selectFactory'),
         options: await getFactoryOptions()
       },
       // { TODO

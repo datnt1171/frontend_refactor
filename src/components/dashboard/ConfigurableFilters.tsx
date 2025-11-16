@@ -509,11 +509,11 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-muted-foreground" />
           <h3 className="font-medium">{t('filter.filter')}</h3>
-          {hasActiveFilters && (
+          {/* {hasActiveFilters && (
             <Badge variant="secondary" className="text-xs">
               {t('common.active')}: {getActiveFilterCount()} 
             </Badge>
-          )}
+          )} */}
         </div>
         {config.showResetButton !== false && (
           <Button

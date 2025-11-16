@@ -34,18 +34,21 @@ export default async function Page({ searchParams }: PageProps) {
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
-      defaultValues: {
+    isPaginated: false,
+
+    defaultValues: {
       table: ['ratio'],
       year: getCurrentYear(),
       thinner: ['原料溶劑 NL DUNG MOI', '成品溶劑DUNG MOI TP'],
       paint: ['烤調色PM HAP', '木調色PM GO', '底漆 LOT', '面漆 BONG'],
     },
-    isPaginated: false,
+    
     filters: [
       {
         id: 'table',
         type: 'multiselect',
         label: t('filter.table'),
+        placeholder: t('filter.selectTable'),
         options: [
           { value: 'ratio', label: t('product.ratio') },
           { value: 'thinner', label: t('product.thinner') },
@@ -56,18 +59,21 @@ export default async function Page({ searchParams }: PageProps) {
         id: 'year',
         type: 'select',
         label: t('filter.selectYear'),
+        placeholder: t('filter.selectYear'),
         options: getYearOptions()
       },
       {
         id: 'thinner',
         type: 'multiselect',
         label: t('product.thinner'),
+        placeholder: t('product.thinner'),
         options: THINNER_PAINT_OPTIONS
       },
       {
         id: 'paint',
         type: 'multiselect',
         label: t('product.paint'),
+        placeholder: t('product.paint'),
         options: THINNER_PAINT_OPTIONS
       },
     ]

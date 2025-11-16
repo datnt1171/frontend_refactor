@@ -26,22 +26,26 @@ export default async function Page({ searchParams }: PageProps) {
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
-      defaultValues: {
+    isPaginated: false,
+
+    defaultValues: {
       year: getCurrentYear(),
       factory: '30673'
     },
-    isPaginated: false,
+
     filters: [
       {
         id: 'factory',
         type: 'combobox',
         label: t('filter.selectFactory'),
+        placeholder: t('filter.selectFactory'),
         options: factoryOptions
       },
       {
         id: 'year',
         type: 'select',
         label: t('filter.selectYear'),
+        placeholder: t('filter.selectFactory'),
         options: generateYearOptions()
       },
     ]

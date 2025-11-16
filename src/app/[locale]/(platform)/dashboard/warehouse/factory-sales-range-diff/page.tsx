@@ -61,7 +61,8 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'increase',
         type: 'select',
-        label: t('filter.increase'),
+        label: t('filter.sortBy'),
+        placeholder: t('filter.sortBy'),
         options: [
           { value: 'true', label: t('filter.increase') },
           { value: 'false', label: t('filter.descrease') },

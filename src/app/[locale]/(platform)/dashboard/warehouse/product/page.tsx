@@ -43,7 +43,9 @@ export default async function Page({ searchParams }: PageProps) {
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
-      defaultValues: {
+    isPaginated: false,
+
+    defaultValues: {
       date: {
         gte: format(firstDateOfMonth,'yyyy-MM-dd'),
         lte: format(today,'yyyy-MM-dd')
@@ -53,7 +55,7 @@ export default async function Page({ searchParams }: PageProps) {
         lte: format(oneMonthAgo,'yyyy-MM-dd')
       }
     },
-    isPaginated: false,
+
     filters: [
       {
         id: 'date_target',

@@ -28,6 +28,7 @@ export default async function Page({ searchParams }: PageProps) {
         id: 'date',
         type: 'date-range',
         label: t('filter.selectDate'),
+        placeholder: t('filter.selectDate'),
       },
     ]
   }
