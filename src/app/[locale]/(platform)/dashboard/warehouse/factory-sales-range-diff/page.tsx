@@ -238,7 +238,7 @@ export default async function Page({ searchParams }: PageProps) {
                     <TableCell className={`text-right border-r ${data.sales_quantity === 0 ? 'bg-red-300' : ''}`}>
                       {Math.round(data.sales_quantity).toLocaleString()}
                     </TableCell>
-                    <TableCell className={`text-right border-r ${data.quantity_diff < 0 ? 'bg-red-300' : 'bg-green-200'}`}>
+                    <TableCell className={`text-right border-r ${data.quantity_diff < 0 ? 'bg-yellow-300' : 'bg-green-200'}`}>
                       {Math.round(data.quantity_diff).toLocaleString()}
                     </TableCell>
                     <TableCell className="text-right">
