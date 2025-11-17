@@ -71,16 +71,21 @@ export default function ExcelDashboard() {
         }
         const jsonData = XLSX.utils.sheet_to_json<ExcelRow>(worksheet)
         
+        // Filter out row not include 'CHO BAO' or 'CHỜ BÁO'
+        const filteredData = jsonData.filter(row => {
+          const note = row['Ghi chú']?.toUpperCase() || ''
+          return note.includes('CHO BAO') || note.includes('CHỜ BÁO')
+        })
         // Process monthly data
-        const monthly = processMonthlyData(jsonData)
+        const monthly = processMonthlyData(filteredData)
         setMonthlyData(monthly)
         
         // Process customer data
-        const customer = processCustomerData(jsonData)
+        const customer = processCustomerData(filteredData)
         setCustomerData(customer)
 
          // Process stacked chart data
-        const stacked = processMonthCustomerData(jsonData)
+        const stacked = processMonthCustomerData(filteredData)
         setStackedData(stacked)
         
       } catch (err) {
