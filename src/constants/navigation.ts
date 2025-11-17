@@ -17,7 +17,7 @@ export const languages = [
 // External apps with translation keys
 export const externalApps = [
   { nameKey: 'navBar.externalApps.Task', 
-    href: '/task-management/dashboard', 
+    href: '/task-management', 
     icon: ListCheck, 
     appKey: 'task-management' ,
     appTitle: 'taskManagement.appTitle',
