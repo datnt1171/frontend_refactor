@@ -39,7 +39,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
       const urlValue = searchParams.get(filter.id);
       
       if (urlValue) {
-        if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
+        if (filter.type === 'multiselect' || filter.type === 'sort') {
           initialState[filter.id] = urlValue.split(',');
         } else {
           initialState[filter.id] = urlValue;
@@ -59,7 +59,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         initialState[filter.id] = config.defaultValues[filter.id];
       } else {
         // Set default empty values based on filter type
-        if (filter.type === 'multiselect' || filter.type === 'combobox' || filter.type === 'sort') {
+        if (filter.type === 'multiselect' || filter.type === 'sort') {
           initialState[filter.id] = [];
         } else {
           initialState[filter.id] = '';
@@ -181,7 +181,10 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
     }
     
     Object.entries(filters).forEach(([key, value]) => {
-      if (Array.isArray(value) && value.length > 0) {
+      const filterConfig = config.filters.find(f => f.id === key);
+      const isArrayType = filterConfig?.type === 'multiselect' || filterConfig?.type === 'sort';
+      
+      if (Array.isArray(value) && value.length > 0 && isArrayType) {
         params.set(key, value.join(','));
       } else if (typeof value === 'object' && value !== null && (value.gte || value.lte)) {
         // Handle range filters with Django convention
