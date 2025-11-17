@@ -84,33 +84,47 @@ export function RatioTableWithSelect({
       return
     }
 
-    // Build CSV data
-    const csvRows: any[] = []
-    
     // Sort factories and months
     const sortedFactories = Array.from(selectedFactories).sort((a, b) => a - b)
     const sortedMonths = Array.from(selectedMonths).sort((a, b) => Number(a) - Number(b))
     
-    sortedFactories.forEach(factoryIdx => {
-      sortedMonths.forEach(month => {
-        csvRows.push({
-          factory_code: ratioData[factoryIdx]!.factory_code,
-          factory_name: ratioData[factoryIdx]!.factory_name,
-          month: month,
-          thinner: thinnerData[factoryIdx]![month] ?? 0,
-          paint: paintData[factoryIdx]![month] ?? 0,
-          ratio: ratioData[factoryIdx]![month] ?? 0
-        })
-      })
+    // Build headers with translations
+    const headerKeys = ['factory_code', 'factory_name']
+    const headerLabels = [t('crm.factories.factoryId'), t('crm.factories.factoryName')]
+    
+    sortedMonths.forEach(month => {
+      headerKeys.push(`${month}_thinner`, `${month}_paint`, `${month}_ratio`)
+      headerLabels.push(
+        `${month}_${t('product.thinner')}`,
+        `${month}_${t('product.paint')}`,
+        `${month}_${t('product.ratio')}`
+      )
     })
 
-    // Create CSV content
-    const headers = ['factory_code', 'factory_name', 'month', 'thinner', 'paint', 'ratio']
+    // Build rows
+    const csvRows = sortedFactories.map(factoryIdx => {
+      const row: any = {
+        factory_code: ratioData[factoryIdx]!.factory_code,
+        factory_name: ratioData[factoryIdx]!.factory_name
+      }
+      
+      sortedMonths.forEach(month => {
+        row[`${month}_thinner`] = thinnerData[factoryIdx]![month] ?? 0
+        row[`${month}_paint`] = paintData[factoryIdx]![month] ?? 0
+        // Prefix ratio with single quote to prevent Excel from converting to time
+        const ratioValue = ratioData[factoryIdx]![month] ?? 0
+        row[`${month}_ratio`] = ratioValue === 0 || ratioValue === '0' ? 0 : `'${ratioValue}`
+      })
+      
+      return row
+    })
+
+    // Create CSV content using translated headers
     const csvContent = [
-      headers.join(','),
+      headerLabels.join(','),
       ...csvRows.map(row => 
-        headers.map(header => {
-          const value = row[header]
+        headerKeys.map(key => {
+          const value = row[key]
           return typeof value === 'string' && (value.includes(',') || value.includes('"'))
             ? `"${value.replace(/"/g, '""')}"`
             : value
