@@ -93,6 +93,57 @@ export interface paths {
         patch: operations["update_retailer_api_crm_retailers__id__patch"];
         trace?: never;
     };
+    "/api/crm/products": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Products */
+        get: operations["get_products_api_crm_products_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/crm/materials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Materials */
+        get: operations["get_materials_api_crm_materials_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/crm/formulars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Formulars */
+        get: operations["get_formulars_api_crm_formulars_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/crm/blueprints": {
         parameters: {
             query?: never;
@@ -393,6 +444,46 @@ export interface paths {
          * @description All column from fact sales
          */
         get: operations["get_fact_sales_api_warehouse_fact_sales_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/sales-bom": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Sales Bom
+         * @description Get sales quantity in a time period and calculate its BOM
+         */
+        get: operations["get_sales_bom_api_warehouse_sales_bom_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/warehouse/order-bom": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Order Bom
+         * @description Get order quantity in a time period and calculate its BOM
+         */
+        get: operations["get_order_bom_api_warehouse_order_bom_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -874,6 +965,45 @@ export interface components {
              */
             has_onsite?: boolean | null;
         };
+        /** Formular */
+        Formular: {
+            /**
+             * Product Name
+             * @description Product name
+             */
+            product_name: string;
+            /**
+             * Material Name
+             * @description Material name
+             */
+            material_name: string;
+            /**
+             * Ratio
+             * @description Ratio
+             */
+            ratio: string;
+            /**
+             * Version Number
+             * @description Formular version
+             */
+            version_number: number;
+            /**
+             * Effective Date
+             * Format: date
+             * @description Start effective date
+             */
+            effective_date: string;
+            /**
+             * End Date
+             * @description End effective date
+             */
+            end_date?: string | null;
+            /**
+             * Is Current
+             * @description Formular version
+             */
+            is_current: boolean;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -893,6 +1023,39 @@ export interface components {
             total_sales: number;
             /** Total Order */
             total_order: number;
+        };
+        /** Material */
+        Material: {
+            /** Id */
+            id: number;
+            /**
+             * Name
+             * @description Material name
+             */
+            name: string;
+            /**
+             * Qc
+             * @default
+             */
+            qc: string | null;
+            /**
+             * Unit
+             * @default
+             */
+            unit: string | null;
+        };
+        /** OrderBOM */
+        OrderBOM: {
+            /** Product Name */
+            product_name: string;
+            /** Order Quantity */
+            order_quantity: string;
+            /** Material Name */
+            material_name: string;
+            /** Ratio */
+            ratio: string;
+            /** Material Quantity */
+            material_quantity: string;
         };
         /** Overall */
         Overall: {
@@ -973,6 +1136,78 @@ export interface components {
              */
             results: components["schemas"]["Factory"][];
         };
+        /** PaginatedResponse[Formular] */
+        PaginatedFormularList: {
+            /**
+             * Count
+             * @description Total number of items
+             * @example 123
+             */
+            count: number;
+            /**
+             * Next
+             * @example http://api.example.org/factories/?offset=50&limit=50
+             */
+            next?: string | null;
+            /**
+             * Previous
+             * @example http://api.example.org/factories/?offset=0&limit=50
+             */
+            previous?: string | null;
+            /**
+             * Results
+             * @description Array of items
+             */
+            results: components["schemas"]["Formular"][];
+        };
+        /** PaginatedResponse[Material] */
+        PaginatedMaterialList: {
+            /**
+             * Count
+             * @description Total number of items
+             * @example 123
+             */
+            count: number;
+            /**
+             * Next
+             * @example http://api.example.org/factories/?offset=50&limit=50
+             */
+            next?: string | null;
+            /**
+             * Previous
+             * @example http://api.example.org/factories/?offset=0&limit=50
+             */
+            previous?: string | null;
+            /**
+             * Results
+             * @description Array of items
+             */
+            results: components["schemas"]["Material"][];
+        };
+        /** PaginatedResponse[Product] */
+        PaginatedProductList: {
+            /**
+             * Count
+             * @description Total number of items
+             * @example 123
+             */
+            count: number;
+            /**
+             * Next
+             * @example http://api.example.org/factories/?offset=50&limit=50
+             */
+            next?: string | null;
+            /**
+             * Previous
+             * @example http://api.example.org/factories/?offset=0&limit=50
+             */
+            previous?: string | null;
+            /**
+             * Results
+             * @description Array of items
+             */
+            results: components["schemas"]["Product"][];
+        };
         /** PaginatedResponse[Retailer] */
         PaginatedRetailerList: {
             /**
@@ -1011,6 +1246,23 @@ export interface components {
             ratio_data: {
                 [key: string]: unknown;
             }[];
+        };
+        /** Product */
+        Product: {
+            /** Id */
+            id: number;
+            /** Product Name */
+            product_name: string;
+            /**
+             * Product Type
+             * @default
+             */
+            product_type: string | null;
+            /**
+             * Qc
+             * @default
+             */
+            qc: string | null;
         };
         /** ProductOrderRangeDiff */
         ProductOrderRangeDiff: {
@@ -1098,6 +1350,19 @@ export interface components {
              * @description Retailer name
              */
             name: string;
+        };
+        /** SalesBOM */
+        SalesBOM: {
+            /** Product Name */
+            product_name: string;
+            /** Sales Quantity */
+            sales_quantity: string;
+            /** Material Name */
+            material_name: string;
+            /** Ratio */
+            ratio: string;
+            /** Material Quantity */
+            material_quantity: string;
         };
         /** SalesOrderPctDiff */
         SalesOrderPctDiff: {
@@ -1433,6 +1698,108 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RetailerDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_products_api_crm_products_get: {
+        parameters: {
+            query?: {
+                product_type?: string | null;
+                search?: string | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponse_Product_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_materials_api_crm_materials_get: {
+        parameters: {
+            query?: {
+                search?: string | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponse_Material_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_formulars_api_crm_formulars_get: {
+        parameters: {
+            query?: {
+                product_name?: string | null;
+                material_name?: string | null;
+                is_current?: boolean;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginatedResponse_Formular_"];
                 };
             };
             /** @description Validation Error */
@@ -2038,6 +2405,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["FactSales"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_sales_bom_api_warehouse_sales_bom_get: {
+        parameters: {
+            query?: {
+                factory?: string | null;
+                date__gte?: string;
+                date__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalesBOM"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_order_bom_api_warehouse_order_bom_get: {
+        parameters: {
+            query?: {
+                factory?: string | null;
+                date__gte?: string;
+                date__lte?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderBOM"][];
                 };
             };
             /** @description Validation Error */

@@ -12,6 +12,8 @@ import type {
     PivotThinnerPaintRatio,
     FactOrder,
     FactSales,
+    SalesBOM,
+    OrderBOM,
 } from '@/types'
 
 export const getWarehouseOverall = async (searchParams?: Record<string, string>): Promise<Overall[]> => {
@@ -258,5 +260,45 @@ export const getFactSales = async (searchParams?: Record<string, string>): Promi
   
   const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch Warehouse fact sales: ${res.status}`)
+  return res.json()
+}
+
+
+export const getSalesBOM = async (searchParams?: Record<string, string>): Promise<SalesBOM[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/warehouse/sales-bom?${queryString}` : '/warehouse/sales-bom'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Warehouse Sales BOM: ${res.status}`)
+  return res.json()
+}
+
+
+export const getOrderBOM = async (searchParams?: Record<string, string>): Promise<OrderBOM[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/warehouse/order-bom?${queryString}` : '/warehouse/order-bom'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Warehouse Order BOM: ${res.status}`)
   return res.json()
 }

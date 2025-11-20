@@ -30,3 +30,15 @@ export type SalesOrderPctDiff = components['schemas']['SalesOrderPctDiff']
 export type PivotThinnerPaintRatio = components['schemas']['PivotThinnerPaintRatio']
 export type FactOrder = components['schemas']['FactOrder']
 export type FactSales = components['schemas']['FactSales']
+
+export type OrderBOM = components['schemas']['OrderBOM']
+export type SalesBOM = components['schemas']['SalesBOM']
+
+
+// Product, material, formular
+export type Product = components['schemas']['Product']
+export type Material = components['schemas']['Material']
+export type Formular = components['schemas']['Formular']
+export type PaginatedProductList = components['schemas']['PaginatedProductList']
+export type PaginatedMaterialList = components['schemas']['PaginatedMaterialList']
+export type PaginatedFormularList = components['schemas']['PaginatedFormularList']
