@@ -6,6 +6,7 @@ import MonthlyLineChart from './charts/pendingByMonthChart'
 import CustomerBarChart from './charts/pendingByFactoryChart'
 import MonthCustomerStackedChart from './charts/pendingStackedChart'
 import { useTranslations } from 'next-intl'
+import { getMonthKey } from  '@/lib/utils/date'
 
 interface ExcelRow {
   'Ngày ĐĐH': string
@@ -105,27 +106,20 @@ export default function ExcelDashboard() {
   }
 
   const processMonthlyData = (data: ExcelRow[]): MonthlyData[] => {
-    const monthlyMap = new Map<string, number>()
+  const monthlyMap = new Map<string, number>()
+  
+  data.forEach(row => {
+    const month = getMonthKey(row['Ngày ĐĐH'])
+    if (!month) return
     
-    data.forEach(row => {
-      // Parse date format "15/09/2025" (DD/MM/YYYY)
-      const dateStr = row['Ngày ĐĐH']
-      if (!dateStr) return
-      
-      const parts = dateStr.split('/')
-      if (parts.length !== 3) return
-      
-      const month = `${parts[2]}-${parts[1]}` // Format: "2025-09"
-      const qty = Number(row['SL chưa giao']) || 0
-      
-      monthlyMap.set(month, (monthlyMap.get(month) || 0) + qty)
-    })
-    
-    // Sort by month
-    return Array.from(monthlyMap.entries())
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([month, total]) => ({ month, total }))
-  }
+    const qty = Number(row['SL chưa giao']) || 0
+    monthlyMap.set(month, (monthlyMap.get(month) || 0) + qty)
+  })
+  
+  return Array.from(monthlyMap.entries())
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([month, total]) => ({ month, total }))
+}
 
   const processCustomerData = (data: ExcelRow[]): CustomerData[] => {
     const customerMap = new Map<string, number>()
@@ -145,67 +139,55 @@ export default function ExcelDashboard() {
   }
 
   const processMonthCustomerData = (data: ExcelRow[]): {
-    months: string[]
-    customers: string[]
-    series: { name: string; data: number[] }[]
-  } => {
-    const monthCustomerMap = new Map<string, Map<string, number>>()
-    const allCustomers = new Set<string>()
+  months: string[]
+  customers: string[]
+  series: { name: string; data: number[] }[]
+} => {
+  const monthCustomerMap = new Map<string, Map<string, number>>()
+  const allCustomers = new Set<string>()
+  
+  data.forEach(row => {
+    const month = getMonthKey(row['Ngày ĐĐH'])
+    const customer = row['KH Tên gọi tắt']
+    if (!month || !customer) return
     
-    data.forEach(row => {
-      // Parse date format "15/09/2025" (DD/MM/YYYY)
-      const dateStr = row['Ngày ĐĐH']
-      const customer = row['KH Tên gọi tắt']
-      if (!dateStr || !customer) return
-      
-      const parts = dateStr.split('/')
-      if (parts.length !== 3) return
-      
-      const month = `${parts[2]}-${parts[1]}` // Format: "2025-09"
-      const qty = Number(row['SL chưa giao']) || 0
-      
-      if (!monthCustomerMap.has(month)) {
-        monthCustomerMap.set(month, new Map())
-      }
-      
-      const customerMap = monthCustomerMap.get(month)!
-      customerMap.set(customer, (customerMap.get(customer) || 0) + qty)
-      allCustomers.add(customer)
+    const qty = Number(row['SL chưa giao']) || 0
+    
+    if (!monthCustomerMap.has(month)) {
+      monthCustomerMap.set(month, new Map())
+    }
+    
+    const customerMap = monthCustomerMap.get(month)!
+    customerMap.set(customer, (customerMap.get(customer) || 0) + qty)
+    allCustomers.add(customer)
+  })
+  
+  const months = Array.from(monthCustomerMap.keys()).sort()
+  
+  const customerTotals = new Map<string, number>()
+  allCustomers.forEach(customer => {
+    let total = 0
+    months.forEach(month => {
+      const customerMap = monthCustomerMap.get(month)
+      total += customerMap?.get(customer) || 0
     })
-    
-    // Sort months
-    const months = Array.from(monthCustomerMap.keys()).sort()
-    
-    // Calculate total for each customer across all months
-    const customerTotals = new Map<string, number>()
-    allCustomers.forEach(customer => {
-      let total = 0
-      months.forEach(month => {
-        const customerMap = monthCustomerMap.get(month)
-        total += customerMap?.get(customer) || 0
-      })
-      customerTotals.set(customer, total)
+    customerTotals.set(customer, total)
+  })
+  
+  const customers = Array.from(allCustomers).sort((a, b) => {
+    return (customerTotals.get(b) || 0) - (customerTotals.get(a) || 0)
+  })
+  
+  const series = customers.map(customer => ({
+    name: customer,
+    data: months.map(month => {
+      const customerMap = monthCustomerMap.get(month)
+      return customerMap?.get(customer) || 0
     })
-    
-    // Sort customers by total (descending - largest first)
-    // This will put largest values at the BOTTOM of the stack
-    const customers = Array.from(allCustomers).sort((a, b) => {
-      const totalA = customerTotals.get(a) || 0
-      const totalB = customerTotals.get(b) || 0
-      return totalB - totalA // Descending order
-    })
-    
-    // Build series data for each customer
-    const series = customers.map(customer => ({
-      name: customer,
-      data: months.map(month => {
-        const customerMap = monthCustomerMap.get(month)
-        return customerMap?.get(customer) || 0
-      })
-    }))
-    
-    return { months, customers, series }
-  }
+  }))
+  
+  return { months, customers, series }
+}
   
 
   return (

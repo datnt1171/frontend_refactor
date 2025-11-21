@@ -1,3 +1,4 @@
+import { parse, format, isValid } from 'date-fns'
 export type DateFormat = "full" | "date" | "year-month" | "year";
 
 export function formatDateToUTC7(
@@ -132,3 +133,35 @@ export const formatDate = (dateString: string): string => {
     const date = new Date(dateString)
     return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
   }
+
+
+// Helper function to parse dates in multiple formats
+export const parseFlexibleDate = (dateStr: string): Date | null => {
+  if (!dateStr) return null
+  
+  // Try common formats
+  const formats = [
+    'dd/MM/yyyy',  // 15/09/2025
+    'yyyy/MM/dd',  // 2025/09/15
+    'yyyy-MM-dd',  // 2025-09-15
+    'dd-MM-yyyy',  // 15-09-2025
+    'MM/dd/yyyy',  // 09/15/2025
+  ]
+  
+  for (const fmt of formats) {
+    const parsed = parse(dateStr, fmt, new Date())
+    if (isValid(parsed)) {
+      return parsed
+    }
+  }
+  
+  return null
+}
+
+
+// Helper to get month string (YYYY-MM)
+export const getMonthKey = (dateStr: string): string | null => {
+  const date = parseFlexibleDate(dateStr)
+  if (!date) return null
+  return format(date, 'yyyy-MM')
+}
