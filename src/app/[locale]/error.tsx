@@ -5,15 +5,12 @@ import { useTranslations } from 'next-intl';
 
 export default function Error({
   error,
-  reset
 }: {
   error: Error & { digest?: string };
-  reset: () => void;
 }) {
   const t = useTranslations('common');
 
   useEffect(() => {
-    // Log error with more context for debugging
     console.error('Error boundary caught:', {
       message: error.message,
       stack: error.stack,
@@ -21,6 +18,10 @@ export default function Error({
       timestamp: new Date().toISOString()
     });
   }, [error]);
+
+  const handleRetry = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -35,7 +36,6 @@ export default function Error({
               : t('errorDescription')}
           </p>
           
-          {/* Show error digest in development for debugging */}
           {process.env.NODE_ENV === 'development' && error.digest && (
             <p className="text-xs text-gray-400 mt-2">
               Error ID: {error.digest}
@@ -45,7 +45,7 @@ export default function Error({
 
         <div className="space-y-3">
           <button
-            onClick={reset}
+            onClick={handleRetry}
             className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
           >
             {t('tryAgain')}
@@ -59,7 +59,6 @@ export default function Error({
           </button>
         </div>
 
-        {/* Only show in development */}
         {process.env.NODE_ENV === 'development' && error.stack && (
           <details className="mt-6 text-left">
             <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
