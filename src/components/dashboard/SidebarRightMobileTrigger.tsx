@@ -7,7 +7,7 @@ export function SidebarRightMobileTrigger() {
   const t = useTranslations()
   
   return (
-    <div className="sticky top-16 z-10 bg-background border-b lg:hidden">
+    <div className="z-10 bg-background border-b lg:hidden">
       <div className="flex h-12 items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <span className="text-sm font-medium">{t('filter.filter')}</span>
