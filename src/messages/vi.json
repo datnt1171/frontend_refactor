@@ -325,6 +325,7 @@
       "conclusion": "Kết luận",
       "ratio": "Tỉ lệ",
       "pendingDelivery": "Đơn đặt hàng chờ báo",
+      "productBOM": "BOM của sản phẩm",
       "agingProduct": "Hàng tồn kho",
       "importData": "Nhập dữ liệu",
 
@@ -460,6 +461,13 @@
     "thinner": "Dung môi",
     "paint": "Sơn",
     "ratio": "Tỉ lệ"
+  },
+
+  "material": {
+    "material": "Nguyên liệu",
+    "materialCode": "Mã nguyên liệu",
+    "materialName": "Tên nguyên liệu",
+    "materialQuantity": "Số lượng nguyên liệu"
   },
   
   "filter": {

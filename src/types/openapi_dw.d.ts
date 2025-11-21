@@ -1046,16 +1046,20 @@ export interface components {
         };
         /** OrderBOM */
         OrderBOM: {
+            /** Factory Code */
+            factory_code?: string | null;
+            /** Factory Name */
+            factory_name?: string | null;
             /** Product Name */
-            product_name: string;
+            product_name?: string | null;
             /** Order Quantity */
-            order_quantity: string;
+            order_quantity?: number | null;
             /** Material Name */
-            material_name: string;
+            material_name?: string | null;
             /** Ratio */
-            ratio: string;
+            ratio?: number | null;
             /** Material Quantity */
-            material_quantity: string;
+            material_quantity: number;
         };
         /** Overall */
         Overall: {
@@ -1353,16 +1357,20 @@ export interface components {
         };
         /** SalesBOM */
         SalesBOM: {
+            /** Factory Code */
+            factory_code?: string | null;
+            /** Factory Name */
+            factory_name?: string | null;
             /** Product Name */
-            product_name: string;
+            product_name?: string | null;
             /** Sales Quantity */
-            sales_quantity: string;
+            sales_quantity?: number | null;
             /** Material Name */
-            material_name: string;
+            material_name?: string | null;
             /** Ratio */
-            ratio: string;
+            ratio?: number | null;
             /** Material Quantity */
-            material_quantity: string;
+            material_quantity: number;
         };
         /** SalesOrderPctDiff */
         SalesOrderPctDiff: {
@@ -2422,6 +2430,7 @@ export interface operations {
         parameters: {
             query?: {
                 factory?: string | null;
+                group_by?: string | null;
                 date__gte?: string;
                 date__lte?: string;
             };
@@ -2455,6 +2464,7 @@ export interface operations {
         parameters: {
             query?: {
                 factory?: string | null;
+                group_by?: string | null;
                 date__gte?: string;
                 date__lte?: string;
             };

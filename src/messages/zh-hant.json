@@ -325,6 +325,7 @@
       "conclusion": "結論",
       "ratio": "比例",
       "pendingDelivery": "待交付",
+      "productBOM": "產品物料清單",
       "agingProduct": "滯銷產品",
       "importData": "匯入資料",
 
@@ -461,6 +462,13 @@
     "thinner": "稀釋劑",
     "paint": "油漆",
     "ratio": "比例"
+  },
+
+  "material": {
+    "material": "材料",
+    "materialCode": "材料代碼",
+    "materialName": "材料名稱",
+    "materialQuantity": "材料數量"
   },
 
   "filter": {

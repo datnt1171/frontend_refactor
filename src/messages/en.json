@@ -325,6 +325,7 @@
       "conclusion": "Conclusion",
       "ratio": "Ratio",
       "pendingDelivery": "Pending Delivery",
+      "productBOM": "Product BOM",
       "agingProduct": "Aging Product",
       "importData": "Import Data",
 
@@ -460,6 +461,13 @@
     "thinner": "Thinner",
     "paint": "Paint",
     "ratio": "Ratio"
+  },
+
+  "material": {
+    "material": "Material",
+    "materialCode": "Material Code",
+    "materialName": "Material Name",
+    "materialQuantity": "Material Quantity"
   },
   
   "filter": {
