@@ -426,6 +426,12 @@
       "importWhTimestamp": "import_wh_timestamp"
     },
 
+    "dailyMovement": {
+      "byfactory": "Số lần công tác hằng ngày nhóm theo khách hàng",
+      "byTaskType": "Số lần công tác nhóm theo loại công việc",
+      "byDate": "Số lần công tác nhóm theo ngày"
+    },
+
     "task": {
       "task_t": "task_t"
     }

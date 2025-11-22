@@ -53,6 +53,19 @@ export async function getUserOptions() {
   }));
 }
 
+export async function getTTVNOptions() {
+  const users = await getUsers({
+    'username__in': 'VL0793,VL0792,VL0876',
+    'page_size': '999999',
+    'page': '1'
+  });
+  
+  return users.results.map(user => ({
+    value: user.id,
+    label: user.username
+  }));
+}
+
 export async function getStateTypeOptions() {
   const t = await getTranslations();
 

@@ -426,6 +426,12 @@
       "importWhTimestamp": "Import WH Timestamp"
     },
 
+    "dailyMovement": {
+      "byfactory": "Daily Movement By Factory",
+      "byTaskType": "Daily Movement By Task Type",
+      "byDate": "Daily Movement By Date"
+    },
+
     "task": {
       "task_t": "task_t"
     }
