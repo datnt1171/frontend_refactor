@@ -302,6 +302,8 @@
   "dashboard": {
     "appTitle": "Báo cáo",
     "appDescription": "Báo cáo các bộ phận",
+    "latestData": "Dữ liệu cập nhật đến ngày",
+
     "filter": {
       "filter": "Bộ lọc",
       "noFilter": "Không có bộ lọc nào cho trang này",

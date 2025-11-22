@@ -302,6 +302,8 @@
   "dashboard": {
     "appTitle": "Dashboard",
     "appDescription": "Reports and Dashboards",
+    "latestData": "Latest data",
+    
     "filter": {
       "filter": "Filter",
       "noFilter": "No filters configured for this page",

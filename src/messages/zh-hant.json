@@ -302,6 +302,8 @@
   "dashboard": {
     "appTitle": "儀表板",
     "appDescription": "報表與儀表板",
+    "latestData": "最新數據",
+
     "filter": {
       "filter": "篩選",
       "noFilter": "此頁面尚未設定篩選條件",
