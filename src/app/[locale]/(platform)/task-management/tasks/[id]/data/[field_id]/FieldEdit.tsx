@@ -33,7 +33,17 @@ export function TaskDataEditor({
   const t = useTranslations('taskManagement.taskDetail')
   const commonT = useTranslations('common')
   
-  const [value, setValue] = useState(taskData.value)
+  const [value, setValue] = useState(() => {
+    // Parse multiselect string to array
+    if (field.field_type === 'multiselect' && typeof taskData.value === 'string') {
+      try {
+        return JSON.parse(taskData.value)
+      } catch {
+        return []
+      }
+    }
+    return taskData.value
+  })
   const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -62,19 +72,19 @@ export function TaskDataEditor({
         files.forEach((file) => {
           updateData.append('files', file)
         })
-        
         if (value) {
           updateData.append('value', value)
         }
       } else {
-        // Other field types
-        updateData = { value }
+        // Convert array to comma-separated string for multiselect
+        const submitValue = field.field_type === 'multiselect' && Array.isArray(value)
+          ? value.join(',')
+          : value
+        updateData = { value: submitValue }
       }
 
       await updateTaskData(taskId, fieldId, updateData)
-      
       alert(t('EditSuccessfully'))
-      
       router.push(`/task-management/tasks/${taskId}`)
     } catch (error) {
       alert(t('EditFailed'))
