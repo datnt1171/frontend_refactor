@@ -166,7 +166,8 @@
     "common": {
       "id": "ID",
       "formType": "表單類型",
-      "status": "狀態"
+      "status": "狀態",
+      "estimatedCompletionDate": "預計完工日期"
     },
     "dashboard": {
       "title": "儀表板",

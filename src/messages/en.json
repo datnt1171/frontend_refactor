@@ -166,7 +166,8 @@
     "common": {
       "id": "ID",
       "formType": "Form type",
-      "status": "Status"
+      "status": "Status",
+      "estimatedCompletionDate": "Estimated completion date"
     },
     "dashboard": {
       "title": "Dashboard",

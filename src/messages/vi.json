@@ -166,7 +166,8 @@
     "common": {
       "id": "ID",
       "formType": "Loại phiếu",
-      "status": "Trạng thái"
+      "status": "Trạng thái",
+      "estimatedCompletionDate": "Ngày dự tính hoàn thành"
     },
     "dashboard": {
       "title": "Bảng tổng quan",

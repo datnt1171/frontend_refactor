@@ -143,6 +143,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <TableHead>{t('crm.factories.factoryName')}</TableHead>
                 <TableHead>{t('common.type')}</TableHead>
                 <TableHead>{t('common.detail')}</TableHead>
+                <TableHead>{t('taskManagement.common.estimatedCompletionDate')}</TableHead>
                 <TableHead>{t('common.result')}</TableHead>
                 <TableHead>{t('taskManagement.common.status')}</TableHead>
               </TableRow>
@@ -179,7 +180,31 @@ export default async function Page({ searchParams }: PageProps) {
                       </TableCell>
                       <TableCell className="border-r border-gray-300 whitespace-normal break-words max-w-[150px]">
                         {row.result}
-                        </TableCell>
+                      </TableCell>
+                      <TableCell className={`border-r border-gray-300 ${
+                        (() => {
+                          // Check if empty or state is closed
+                          if (!row.estimated_completion_date || row.state_type === "closed") {
+                            return '';
+                          }
+                          
+                          const today = new Date();
+                          today.setHours(0, 0, 0, 0);
+                          
+                          const estimatedDate = new Date(row.estimated_completion_date);
+                          estimatedDate.setHours(0, 0, 0, 0);
+                          
+                          if (estimatedDate < today) {
+                            return 'bg-red-200'; // Past due - red
+                          } else if (estimatedDate.getTime() === today.getTime()) {
+                            return 'bg-yellow-200'; // Due today - yellow
+                          }
+                          return ''; // Future dates - no highlight
+                        })()
+                      }`}
+                      >
+                        {row.estimated_completion_date || "-"}
+                      </TableCell>
                       <TableCell>
                         <Badge variant="outline" className={getStatusColor(row.state_type)}>
                           {row.state}

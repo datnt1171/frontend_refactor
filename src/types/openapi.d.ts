@@ -697,6 +697,8 @@ export interface components {
             factory_code: string;
             task_type: string;
             task_detail: string;
+            /** Format: date */
+            estimated_completion_date: string;
             result: string;
         };
         Department: {
