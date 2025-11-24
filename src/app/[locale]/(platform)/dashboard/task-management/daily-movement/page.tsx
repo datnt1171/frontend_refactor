@@ -18,10 +18,12 @@ import { formatDateToUTC7 } from "@/lib/utils/date"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import { Link } from "@/i18n/navigation"
-import { getYearOptions, getMonthOptions } from "@/lib/utils/filter"
+import { getYearOptions, getMonthOptions, getTTVNOptions } from "@/lib/utils/filter"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-
+import FactoryBarChart from "./FactoryBarChart"
+import TaskTypeBarChart from "./TaskTypeBarChart"
+import DateLineChart from "./DateLineChart"
 
 interface PageProps {
   searchParams: Promise<{
@@ -76,11 +78,45 @@ export default async function Page({ searchParams }: PageProps) {
         label: t('filter.selectMonth'),
         options: await getMonthOptions()
       },
+      {
+        id: 'created_by_id',
+        type: 'multiselect',
+        label: t('filter.selectUser'),
+        placeholder: t('filter.selectUser'),
+        options: await getTTVNOptions()
+      }
     ]
   }
 
   const params = await searchParams
   const rows = await getDailyMovement(params)
+
+  const countByFactory = Object.entries(
+    rows.reduce((acc, row) => {
+      acc[row.factory_name] = (acc[row.factory_name] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  )
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
+
+  const countByTaskType = Object.entries(
+    rows.reduce((acc, row) => {
+      acc[row.task_type] = (acc[row.task_type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  )
+    .map(([name, value]) => ({ name, value }))
+    .sort((a, b) => b.value - a.value);
+
+  const countByDate = Object.entries(
+    rows.reduce((acc, row) => {
+      const date = row.created_at;
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>)
+  ).map(([date, value]) => ({ date, value }))
+  .sort((a, b) => a.date.localeCompare(b.date));
   // Find duplicate rows
   const duplicateKeys = findDuplicates(rows)
 
@@ -98,7 +134,7 @@ export default async function Page({ searchParams }: PageProps) {
           </Link>
         </div>
         
-        <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto">
+        <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-8">
           <Table>
             <TableHeader>
               <TableRow>
@@ -156,6 +192,25 @@ export default async function Page({ searchParams }: PageProps) {
             </TableBody>
           </Table>
         </div>
+        <div>
+          <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+            {t('dashboard.dailyMovement.byfactory')}
+          </h1>
+          <FactoryBarChart data={countByFactory} />
+        </div>
+        <div>
+          <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+            {t('dashboard.dailyMovement.byTaskType')}
+          </h1>
+          <TaskTypeBarChart data={countByTaskType} />
+        </div>
+        <div>
+          <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
+            {t('dashboard.dailyMovement.byDate')}
+          </h1>
+          <DateLineChart data={countByDate} />
+        </div>
+  
       </SidebarInset>
       
       <SidebarRight filterConfig={FilterConfig} />

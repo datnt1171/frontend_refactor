@@ -427,6 +427,12 @@
       "importWhTimestamp": "倉庫匯入時間"
     },
 
+    "dailyMovement": {
+      "byfactory": "按工廠的每日流動",
+      "byTaskType": "按任務類型的每日流動",
+      "byDate": "按日期的每日流動"
+    },
+
     "task": {
       "task_t": "task_t"
     }

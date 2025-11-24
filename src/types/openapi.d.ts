@@ -684,10 +684,13 @@ export interface components {
             password: string;
         };
         DailyMovement: {
+            /** Format: uuid */
             task_id: string;
             title: string;
             /** Format: date */
             created_at: string;
+            /** Format: uuid */
+            created_by_id: string;
             created_by: string;
             state: string;
             state_type: string;
