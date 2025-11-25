@@ -50,6 +50,12 @@ export default function OverallChart({ data }: OverallChartProps) {
       }
     }));
 
+    const allPercentages = [...salesTargetPct, ...orderTargetPct].filter(val => val != null) as number[];
+    const maxPct = Math.max(...allPercentages);
+    const minPct = Math.min(...allPercentages);
+    const yAxisMax = maxPct + 0.05; // Add 5% buffer
+    const yAxisMin = Math.max(minPct - 0.05, 0); // Subtract 5% but floor at 0%
+
     const option = {
       legend: [
         {
@@ -78,11 +84,11 @@ export default function OverallChart({ data }: OverallChartProps) {
           top: 120,
           left: '4%',
           right: '4%',
-          height: '20%',
+          height: '30%',
           containLabel: true
         },
         {
-          top: '38%',
+          top: '55%',
           left: '4%',
           right: '4%',
           bottom: '8%',
@@ -111,6 +117,8 @@ export default function OverallChart({ data }: OverallChartProps) {
       yAxis: [
         {
           type: 'value',
+          min: yAxisMin,
+          max: yAxisMax,
           gridIndex: 0,
           name: 'Tỉ lệ %',
           position: 'right',
