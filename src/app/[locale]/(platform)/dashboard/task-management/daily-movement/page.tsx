@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { getStatusColor } from "@/lib/utils/format"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -18,7 +18,7 @@ import { formatDateToUTC7 } from "@/lib/utils/date"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import { Link } from "@/i18n/navigation"
-import { getYearOptions, getMonthOptions, getTTVNOptions } from "@/lib/utils/filter"
+import { getYearOptions, getMonthOptions, getTTVNOptions, redirectWithDefaults } from "@/lib/utils/filter"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import FactoryBarChart from "./FactoryBarChart"
@@ -27,8 +27,9 @@ import DateLineChart from "./DateLineChart"
 
 interface PageProps {
   searchParams: Promise<{
-    date_gte: string
-    date_lte: string
+    month: string
+    year: string
+    created_by_id: string
   }>
 }
 
@@ -56,15 +57,27 @@ function findDuplicates(rows: any[]) {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
   const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
 
+  const defaultParams = {
+    year: format(today, 'yyyy'),
+    month: format(today, 'M')
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/task-management/daily-movement',
+    locale
+  });
+
   const FilterConfig: PageFilterConfig = {
-    showResetButton: true,
-    defaultValues: {
-      year: format(today, 'yyyy'),
-      month: format(today, 'M')
-    },
+    showResetButton: false,
+    autoApplyFilters: true,
+
     filters: [
       {
         id: 'year',
@@ -88,7 +101,6 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const params = await searchParams
   const rows = await getDailyMovement(params)
 
   const countByFactory = Object.entries(

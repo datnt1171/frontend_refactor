@@ -1,5 +1,6 @@
 import { getFactories, getRetailers, getUsers } from "@/lib/api/server";
 import { getTranslations } from "next-intl/server";
+import { redirect } from '@/i18n/navigation';
 
 export async function getFactoryOptions() {
   const factories = await getFactories({
@@ -186,4 +187,38 @@ export async function getMonthOptions() {
     { value: '11', label: t('datetime.monthsShort.november') },
     { value: '12', label: t('datetime.monthsShort.december') },
   ];
+}
+
+
+interface RedirectWithDefaultsParams {
+  currentParams: Record<string, any>;
+  defaultParams: Record<string, any>;
+  pathname: string;
+  locale: string;
+}
+
+export function redirectWithDefaults({
+  currentParams,
+  defaultParams,
+  pathname,
+  locale
+}: RedirectWithDefaultsParams): void {
+  const missingParams = Object.keys(defaultParams).some(
+    key => !currentParams[key as keyof typeof currentParams]
+  );
+  
+  if (missingParams) {
+    const mergedParams = {
+      ...defaultParams,
+      ...currentParams
+    };
+    
+    redirect({
+      href: {
+        pathname,
+        query: mergedParams
+      },
+      locale
+    });
+  }
 }

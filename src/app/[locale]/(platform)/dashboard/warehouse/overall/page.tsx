@@ -1,13 +1,13 @@
 import { getWarehouseOverall, getMaxSalesDate } from '@/lib/api/server';
 import OverallChart from './OverallChart';
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { format } from 'date-fns'
 import { generateYearOptions } from '@/lib/utils/date';
-import { getFactoryOptions, getMonthOptions } from '@/lib/utils/filter';
+import { getFactoryOptions, getMonthOptions, redirectWithDefaults } from '@/lib/utils/filter';
 
 interface PageProps {
   searchParams: Promise<{
@@ -24,31 +24,36 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
   const MONTH_OPTIONS = await getMonthOptions()
 
   const maxSalesDate = await getMaxSalesDate()
   const today = new Date(maxSalesDate)
+
+  const defaultParams = {
+    day__gte: '1',
+    day__lte: format(today, 'd'),
+    month__gte: '1',
+    month__lte: format(today, 'M'),
+    year: format(today, 'yyyy'),
+    target_month: '5',
+    target_year: '2022',
+    exclude_factory: '30673'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/warehouse/overall',
+    locale
+  });
   
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
     isPaginated: false,
-
-    defaultValues: {
-      day: {
-        gte: '1',
-        lte: format(today, 'd')
-      },
-      month: {
-        gte: '1',
-        lte: format(today, 'M')
-      },
-      year: format(today, 'yyyy'),
-      target_month: '5',
-      target_year: '2022',
-      exclude_factory: '30673'
-    },
 
     filters: [
       {
@@ -93,8 +98,6 @@ export default async function Page({ searchParams }: PageProps) {
       }
     ]
   }
-
-  const params = await searchParams
   
   const data = await getWarehouseOverall(params)
 

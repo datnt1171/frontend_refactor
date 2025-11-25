@@ -7,7 +7,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -18,6 +18,7 @@ import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import Image from "next/image"
 import { Link } from "@/i18n/navigation"
+import { redirectWithDefaults } from "@/lib/utils/filter"
 
 interface PageProps {
   searchParams: Promise<{
@@ -27,13 +28,25 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
 
+  const defaultParams = {
+    date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/task-management/kvn-work',
+    locale
+  });
+
   const FilterConfig: PageFilterConfig = {
-    showResetButton: true,
-    defaultValues: {
-      date: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
-    },
+    showResetButton: false,
+    autoApplyFilters: true,
+
     filters: [
       {
         id: 'date',
@@ -42,9 +55,6 @@ export default async function Page({ searchParams }: PageProps) {
       },
     ]
   }
-
-  
-  const params = await searchParams
   
   const response = await getTechReportWorkYesterday(params)
   const rows = response.filter(row => row.salesman === "陳國勇")

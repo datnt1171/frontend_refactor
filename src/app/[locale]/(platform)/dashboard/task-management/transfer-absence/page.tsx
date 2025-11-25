@@ -7,7 +7,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -18,12 +18,13 @@ import { TransferAbsenceCSVButtons } from "./TransferAbsenceCSVButton"
 import { format, endOfMonth } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import { Link } from "@/i18n/navigation"
-import { getDepartmentOptions } from "@/lib/utils/filter"
+import { getDepartmentOptions, redirectWithDefaults } from "@/lib/utils/filter"
 
 interface PageProps {
   searchParams: Promise<{
-    date_gte: string
-    date_lte: string
+    date__gte: string
+    date__lte: string
+    user__department__name: string
   }>
 }
 
@@ -51,17 +52,26 @@ function findDuplicates(rows: any[]) {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
 
+  const defaultParams = {
+    date__gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+    date__lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd'),
+    user__department__name: ['KTW', 'KTC', 'TT'].join(',')
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/task-management/transfer-absence',
+    locale
+  });
+
   const FilterConfig: PageFilterConfig = {
-    showResetButton: true,
-    defaultValues: {
-      date: {
-        gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
-        lte: format(endOfMonth(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh')), 'yyyy-MM-dd')
-      },
-      user__department__name: ['KTW', 'KTC', 'TT']
-    },
+    showResetButton: false,
+
     filters: [
       {
         id: 'date',
@@ -77,7 +87,6 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const params = await searchParams
   const rows = await getTransferAbsences(params)
 
   // Find duplicate rows

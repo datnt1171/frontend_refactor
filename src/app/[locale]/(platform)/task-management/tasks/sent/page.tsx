@@ -7,14 +7,14 @@ import { Badge } from "@/components/ui/badge"
 import { MoreHorizontal, Plus } from "lucide-react"
 import { getSentTasks } from "@/lib/api/server"
 import { getStatusColor } from "@/lib/utils/format"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
-import { getStateTypeOptions, getProcessPrefixOptions } from "@/lib/utils/filter"
+import { getStateTypeOptions, getProcessPrefixOptions, redirectWithDefaults } from "@/lib/utils/filter"
 
 interface SentTaskPageProps {
   searchParams: Promise<{
@@ -26,11 +26,28 @@ interface SentTaskPageProps {
 
 
 export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
+
+  const params = await searchParams
+  const locale = await getLocale()
   const commonT = await getTranslations('common')
   const t = await getTranslations('taskManagement.sentTask')
 
+  const defaultParams = {
+    page_size: '50',
+    page: '1'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/task-management/tasks/sent',
+    locale
+  });
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
+    isPaginated: true,
+
     filters: [
       {
         id: 'process__prefix',
@@ -53,7 +70,6 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
     ]
   }
 
-  const params = await searchParams
   const response = await getSentTasks(params)
   const tasks = response.results
 

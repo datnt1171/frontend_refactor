@@ -34,7 +34,7 @@ export interface FilterConfig {
 
 export interface PageFilterConfig {
   filters: FilterConfig[];
-  defaultValues?: Record<string, any>;
+  // defaultValues?: Record<string, any>;
   showResetButton?: boolean;
   isPaginated?: boolean;
   autoApplyFilters?: boolean;

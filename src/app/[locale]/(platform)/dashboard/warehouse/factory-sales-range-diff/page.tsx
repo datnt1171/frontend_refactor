@@ -1,5 +1,5 @@
 import { getFactorySalesRangeDiff, getMaxSalesDate } from '@/lib/api/server';
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -16,6 +16,7 @@ import {
 import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
 import { Link } from '@/i18n/navigation'
+import { redirectWithDefaults } from '@/lib/utils/filter';
 
 interface PageProps {
   searchParams: Promise<{
@@ -29,6 +30,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
 
   const maxSalesDate = await getMaxSalesDate()
@@ -40,22 +43,25 @@ export default async function Page({ searchParams }: PageProps) {
   // First date of (today - 1 month)
   const firstDateOfLastMonth = startOfMonth(oneMonthAgo);
 
+  const defaultParams = {
+    date__gte: format(firstDateOfMonth,'yyyy-MM-dd'),
+    date__lte: format(today,'yyyy-MM-dd'),
+    date_target__gte: format(firstDateOfLastMonth,'yyyy-MM-dd'),
+    date_target__lte: format(oneMonthAgo,'yyyy-MM-dd'),
+    increase: 'false',
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/warehouse/factory-sales-range-diff',
+    locale
+  });
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
     isPaginated: false,
-
-    defaultValues: {
-      date: {
-        gte: format(firstDateOfMonth,'yyyy-MM-dd'),
-        lte: format(today,'yyyy-MM-dd')
-      },
-      date_target: {
-        gte: format(firstDateOfLastMonth,'yyyy-MM-dd'),
-        lte: format(oneMonthAgo,'yyyy-MM-dd')
-      },
-      increase: 'false'
-    },
     
     filters: [
       {
@@ -82,8 +88,6 @@ export default async function Page({ searchParams }: PageProps) {
       },
     ]
   }
-
-  const params = await searchParams
 
   const factorySalesRangeDiff = await getFactorySalesRangeDiff(params)
 

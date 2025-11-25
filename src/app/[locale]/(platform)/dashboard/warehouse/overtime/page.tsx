@@ -1,11 +1,11 @@
 import { getSalesOvertime } from '@/lib/api/server';
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { getCurrentYear, getLastYear } from '@/lib/utils/date'
-import { getFactoryOptions, getYearOptions, getTimeSelectOptions } from '@/lib/utils/filter'
+import { getFactoryOptions, getYearOptions, getTimeSelectOptions, redirectWithDefaults } from '@/lib/utils/filter'
 import SalesOvertimeChart from './SalesOvertimeChart';
 
 interface PageProps {
@@ -19,18 +19,28 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
   const TIME_SELECT_OPTIONS = await getTimeSelectOptions()
+
+  const defaultParams = {
+    year: [getCurrentYear(), getLastYear()].join(','),
+    group_by: 'month,year',
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/warehouse/overtime',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
     isPaginated: false,
-
-    defaultValues: {
-      year: [getCurrentYear(), getLastYear()],
-      group_by: 'month,year'
-    },
     
     filters: [
       {
@@ -63,7 +73,6 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const params = await searchParams
   const xAxisName = TIME_SELECT_OPTIONS.find(option => option.value === params.group_by)?.label || params.group_by
   const salesOvertime = await getSalesOvertime(params)
 
