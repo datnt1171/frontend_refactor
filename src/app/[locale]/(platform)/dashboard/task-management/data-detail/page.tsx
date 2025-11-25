@@ -8,40 +8,53 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TaskDataDetail } from "@/types"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { getStatusColor } from "@/lib/utils/format"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
-import { getFactoryOptions, getStateTypeOptions, getRetailerOptions, getUserOptions } from "@/lib/utils/filter"
+import { getFactoryOptions, getStateTypeOptions, getRetailerOptions, getUserOptions, redirectWithDefaults } from "@/lib/utils/filter"
 import { ScreenshotButton } from "@/components/ui/ScreenshotButton"
 
-interface PageProps {
+interface TaskDataDetailPageProps {
   searchParams: Promise<{
-    search?: string,
-    page?: string
-    page_size?: string
+    state_type__in?: string,
+    factory_code__in?: string,
+    retailer_id__in?: string,
+    sampler__in?: string,
   }>
 }
 
-export default async function TaskDataDetailPage({searchParams}: PageProps) {
+export default async function Page({searchParams}: TaskDataDetailPageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    state_type__in: [
+      'pending_approve', 'analyze', 'working',
+      'pending_review', 'start'
+    ].join(','),
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/task-management/data-detail',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
-    defaultValues: {
-      state_type__in: [
-        'pending_approve', 'analyze', 'working',
-        'pending_review', 'start'
-      ]
-    },
+    isPaginated: false,
+    
     filters: [
       {
         id: 'state_type__in',
@@ -70,7 +83,6 @@ export default async function TaskDataDetailPage({searchParams}: PageProps) {
     ]
   }
   
-  const params = await searchParams
   const data = await getDataDetails(params)
 
   const groupedData = data

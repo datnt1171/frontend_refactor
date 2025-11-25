@@ -1,11 +1,11 @@
 import { getScheduledAndActualSales } from '@/lib/api/server';
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { getCurrentYear, generateYearOptions } from '@/lib/utils/date'
-import { getFactoryOptions } from '@/lib/utils/filter'
+import { getFactoryOptions, redirectWithDefaults } from '@/lib/utils/filter'
 import ScheduledChart from './cheduled_chart';
 
 interface PageProps {
@@ -17,21 +17,29 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
 
-  const params = await searchParams
   const factoryOptions = await getFactoryOptions()
   const factoryName = factoryOptions.find(option => option.value === params.factory)?.label || params.factory
+
+  const defaultParams = {
+    year: getCurrentYear(),
+    factory: '30673',
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/warehouse/scheduled',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
     isPaginated: false,
-
-    defaultValues: {
-      year: getCurrentYear(),
-      factory: '30673'
-    },
 
     filters: [
       {

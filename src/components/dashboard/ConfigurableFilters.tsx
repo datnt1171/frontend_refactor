@@ -48,15 +48,7 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         // Check for Django-style range params
         const gteValue = searchParams.get(`${filter.id}__gte`);
         const lteValue = searchParams.get(`${filter.id}__lte`);
-        if (gteValue || lteValue) {
-          initialState[filter.id] = { gte: gteValue || '', lte: lteValue || '' };
-        } else if (config.defaultValues?.[filter.id]) {
-          initialState[filter.id] = config.defaultValues[filter.id];
-        } else {
-          initialState[filter.id] = { gte: '', lte: '' };
-        }
-      } else if (config.defaultValues?.[filter.id]) {
-        initialState[filter.id] = config.defaultValues[filter.id];
+        initialState[filter.id] = { gte: gteValue || '', lte: lteValue || '' };
       } else {
         // Set default empty values based on filter type
         if (filter.type === 'multiselect' || filter.type === 'sort') {
@@ -71,41 +63,41 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   });
 
   // Apply default values to URL on mount if they don't exist
-  useEffect(() => {
-    if (config.defaultValues) {
-      const params = new URLSearchParams(searchParams);
-      let hasChanges = false;
+  // useEffect(() => {
+  //   if (config.defaultValues) {
+  //     const params = new URLSearchParams(searchParams);
+  //     let hasChanges = false;
       
-      Object.entries(config.defaultValues).forEach(([key, value]) => {
-        // Check if this is a range object with gte/lte
-        if (value && typeof value === 'object' && !Array.isArray(value) && (value.gte || value.lte)) {
-          // Handle range objects - check if either __gte or __lte exists in URL
-          if (!searchParams.has(`${key}__gte`) && !searchParams.has(`${key}__lte`)) {
-            if (value.gte) {
-              params.set(`${key}__gte`, value.gte);
-              hasChanges = true;
-            }
-            if (value.lte) {
-              params.set(`${key}__lte`, value.lte);
-              hasChanges = true;
-            }
-          }
-        } else if (!searchParams.has(key)) {
-          if (Array.isArray(value) && value.length > 0) {
-            params.set(key, value.join(','));
-            hasChanges = true;
-          } else if (value && typeof value === 'string') {
-            params.set(key, value);
-            hasChanges = true;
-          }
-        }
-      });
+  //     Object.entries(config.defaultValues).forEach(([key, value]) => {
+  //       // Check if this is a range object with gte/lte
+  //       if (value && typeof value === 'object' && !Array.isArray(value) && (value.gte || value.lte)) {
+  //         // Handle range objects - check if either __gte or __lte exists in URL
+  //         if (!searchParams.has(`${key}__gte`) && !searchParams.has(`${key}__lte`)) {
+  //           if (value.gte) {
+  //             params.set(`${key}__gte`, value.gte);
+  //             hasChanges = true;
+  //           }
+  //           if (value.lte) {
+  //             params.set(`${key}__lte`, value.lte);
+  //             hasChanges = true;
+  //           }
+  //         }
+  //       } else if (!searchParams.has(key)) {
+  //         if (Array.isArray(value) && value.length > 0) {
+  //           params.set(key, value.join(','));
+  //           hasChanges = true;
+  //         } else if (value && typeof value === 'string') {
+  //           params.set(key, value);
+  //           hasChanges = true;
+  //         }
+  //       }
+  //     });
       
-      if (hasChanges) {
-        router.replace(`${pathname}?${params.toString()}`);
-      }
-    }
-  }, []);
+  //     if (hasChanges) {
+  //       router.replace(`${pathname}?${params.toString()}`);
+  //     }
+  //   }
+  // }, []);
 
   // Auto-apply filters when autoApplyFilters is enabled
   useEffect(() => {

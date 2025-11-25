@@ -1,5 +1,5 @@
 import { getTrips } from '@/lib/api/server'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from "next-intl/server"
 import { Link } from "@/i18n/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,6 +9,7 @@ import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
+import { redirectWithDefaults } from "@/lib/utils/filter"
 
 
 interface ProcessPageProps {
@@ -22,14 +23,27 @@ interface ProcessPageProps {
 
 
 export default async function ProcessPage({searchParams}: ProcessPageProps) {
+
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    page_size: '15',
+    page: '1'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/fleet/trips',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
-    defaultValues: {
-      page_size: '15',
-      page: '1'
-    },
+    isPaginated: true,
+
     filters: [
       {
         id: 'date',
@@ -46,7 +60,6 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
     ]
   }
 
-  const params = await searchParams
   const response = await getTrips(params)
   const trips = response.results
 

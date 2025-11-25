@@ -10,13 +10,13 @@ import { MoreHorizontal } from "lucide-react"
 import { getStatusColor } from "@/lib/utils/format"
 import { formatDateToUTC7 } from "@/lib/utils/date"
 import { getReceivedTasks } from "@/lib/api/server"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
-import { getStateTypeOptions, getProcessPrefixOptions } from "@/lib/utils/filter"
+import { getStateTypeOptions, getProcessPrefixOptions, redirectWithDefaults } from "@/lib/utils/filter"
 
 interface ReceivedTaskPageProps {
   searchParams: Promise<{
@@ -27,12 +27,29 @@ interface ReceivedTaskPageProps {
 }
 
 export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPageProps) {
+
   const commonT = await getTranslations('common')
   const commonTaskT = await getTranslations('taskManagement.common')
   const t = await getTranslations('taskManagement.receivedTask')
+  const params = await searchParams
+  const locale = await getLocale()
+
+  const defaultParams = {
+    page_size: '50',
+    page: '1'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/task-management/tasks/received',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
+    isPaginated: true,
+
     filters: [
       {
         id: 'process__prefix',
@@ -55,7 +72,6 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
     ]
   }
 
-  const params = await searchParams
   const response = await getReceivedTasks(params)
   const tasks = response.results
 

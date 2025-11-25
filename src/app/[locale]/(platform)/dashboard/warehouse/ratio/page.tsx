@@ -1,11 +1,11 @@
 import { getThinnerPaintRatio } from '@/lib/api/server';
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { getCurrentYear } from '@/lib/utils/date'
-import { getYearOptions, THINNER_PAINT_OPTIONS } from '@/lib/utils/filter'
+import { getYearOptions, THINNER_PAINT_OPTIONS, redirectWithDefaults } from '@/lib/utils/filter'
 import {
   Table,
   TableHeader,
@@ -29,19 +29,28 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    table: ['ratio'].join(','),
+    year: getCurrentYear(),
+    thinner: ['原料溶劑 NL DUNG MOI', '成品溶劑DUNG MOI TP'].join(','),
+    paint: ['烤調色PM HAP', '木調色PM GO', '底漆 LOT', '面漆 BONG'].join(','),
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/warehouse/ratio',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     autoApplyFilters: true,
     isPaginated: false,
-
-    defaultValues: {
-      table: ['ratio'],
-      year: getCurrentYear(),
-      thinner: ['原料溶劑 NL DUNG MOI', '成品溶劑DUNG MOI TP'],
-      paint: ['烤調色PM HAP', '木調色PM GO', '底漆 LOT', '面漆 BONG'],
-    },
     
     filters: [
       {
@@ -78,8 +87,6 @@ export default async function Page({ searchParams }: PageProps) {
       },
     ]
   }
-
-  const params = await searchParams
 
   const thinnerPaintRatio = await getThinnerPaintRatio(params)
 

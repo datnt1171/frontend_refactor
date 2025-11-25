@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/table"
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
+import { redirectWithDefaults } from "@/lib/utils/filter"
 
 interface UserPageProps {
   searchParams: Promise<{
@@ -26,15 +27,27 @@ interface UserPageProps {
 
 export default async function UserListPage({ searchParams }: UserPageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    ordering: 'username',
+    page_size: '15',
+    page: '1'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/user',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
-    defaultValues: {
-      ordering: 'username',
-      page_size: '15',
-      page: '1'
-    },
+    isPaginated: true,
+
     filters: [
       {
         id: 'ordering',
@@ -55,7 +68,6 @@ export default async function UserListPage({ searchParams }: UserPageProps) {
     ]
   }
 
-  const params = await searchParams
 
   const response = await getUsers(params)
   const users = response.results

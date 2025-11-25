@@ -9,13 +9,14 @@ import {
 } from "@/components/ui/table"
 import { DataPagination } from "@/components/dashboard/Pagination"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import { StatusBadge } from "@/components/ui/StatusBadge"
 import { OnsiteBadge } from "@/components/ui/OnsiteBadge"
 import type { PageFilterConfig } from "@/types"
+import { redirectWithDefaults } from "@/lib/utils/filter"
 
 interface FactoryPageProps {
   searchParams: Promise<{
@@ -27,17 +28,29 @@ interface FactoryPageProps {
   }>
 }
 
-export default async function UserListPage({ searchParams }: FactoryPageProps) {
+export default async function Page({ searchParams }: FactoryPageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    is_active: 'true',
+    page_size: '15',
+    page: '1'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/crm/factories',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
-    defaultValues: {
-      is_active: 'true',
-      page_size: '15',
-      page: '1'
-    },
+    isPaginated: true,
+
     filters: [
       {
         id: 'is_active',
@@ -66,7 +79,6 @@ export default async function UserListPage({ searchParams }: FactoryPageProps) {
     ]
   }
 
-  const params = await searchParams
   
   const response = await getFactories(params)
   const factories = response.results

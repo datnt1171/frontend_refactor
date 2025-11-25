@@ -5,7 +5,8 @@ import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMo
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { generateYearOptions, getCurrentYear } from '@/lib/utils/date';
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from "next-intl/server"
+import { redirectWithDefaults } from "@/lib/utils/filter"
 
 interface PageProps {
   searchParams: Promise<{
@@ -13,15 +14,26 @@ interface PageProps {
   }>
 }
 
-export default async function UserFactoryOnsitePage({ searchParams }: PageProps) {
+export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    year: getCurrentYear()
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/user/onsite',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
-    defaultValues: {
-      year: getCurrentYear()
-    },
+
     filters: [
       {
         id: 'year',
@@ -33,7 +45,7 @@ export default async function UserFactoryOnsitePage({ searchParams }: PageProps)
     ]
   }
 
-  const params = await searchParams
+
   // Fetch users and onsite data in parallel
   const [users, onsiteData, factories] = await Promise.all([
     getUsers({

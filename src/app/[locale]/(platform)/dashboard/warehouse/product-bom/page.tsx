@@ -1,6 +1,6 @@
 import { getSalesBOM, getOrderBOM, getMaxSalesDate } from '@/lib/api/server';
-import { getFactoryOptions } from '@/lib/utils/filter';
-import { getTranslations } from "next-intl/server"
+import { getFactoryOptions, redirectWithDefaults } from '@/lib/utils/filter';
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -20,6 +20,8 @@ interface PageProps {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
 
   const maxSalesDate = await getMaxSalesDate()
@@ -27,17 +29,23 @@ export default async function Page({ searchParams }: PageProps) {
 
   const firstDateOfMonth = startOfMonth(today);
 
+  const defaultParams = {
+    date__gte: format(firstDateOfMonth,'yyyy-MM-dd'),
+    date__lte: format(today,'yyyy-MM-dd'),
+    group_by: 'material_name'
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/warehouse/product-bom',
+    locale
+  });
+
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
-    autoApplyFilters: false,
+    autoApplyFilters: true,
     isPaginated: false,
-
-    defaultValues: {
-      date: {
-        gte: format(firstDateOfMonth,'yyyy-MM-dd'),
-        lte: format(today,'yyyy-MM-dd')
-      }
-    },
     
     filters: [
       {
@@ -68,7 +76,6 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const params = await searchParams
 
   const salesBOM = await getSalesBOM(params)
   const orderBOM = await getOrderBOM(params)

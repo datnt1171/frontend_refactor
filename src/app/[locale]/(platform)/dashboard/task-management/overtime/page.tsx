@@ -7,7 +7,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
@@ -18,11 +18,12 @@ import { OvertimeCSVButtons } from "./OvertimeCSVButtons"
 import { format } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
 import { Link } from "@/i18n/navigation"
+import { redirectWithDefaults } from "@/lib/utils/filter"
 
 interface PageProps {
   searchParams: Promise<{
-    date_gte: string
-    date_lte: string
+    date__gte: string
+    date__lte: string
   }>
 }
 
@@ -50,16 +51,25 @@ function findDuplicates(rows: any[]) {
 
 export default async function Page({ searchParams }: PageProps) {
 
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
+
+  const defaultParams = {
+    date__gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+    date__lte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/dashboard/task-management/overtime',
+    locale
+  });
 
   const FilterConfig: PageFilterConfig = {
     showResetButton: true,
-    defaultValues: {
-      date: {
-        gte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd'),
-        lte: format(toZonedTime(new Date(), 'Asia/Ho_Chi_Minh'), 'yyyy-MM-dd')
-      },
-    },
+
     filters: [
       {
         id: 'date',
@@ -69,7 +79,6 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
-  const params = await searchParams
   const today = new Date()
   const isSaturday = today.getDay() === 6
   
