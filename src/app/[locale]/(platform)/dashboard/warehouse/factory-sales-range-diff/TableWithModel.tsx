@@ -4,10 +4,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/table";
 import { ProductModal } from './ProductModal';
 import { useTranslations } from 'next-intl';
+import type { FactorySalesRangeDiff, ProductSalesRangeDiff } from '@/types';
 
 interface FactoryTableWithModalProps {
-  factorySalesRangeDiff: any[];
-  productSalesRangeDiff: any[] | null;
+  factorySalesRangeDiff: FactorySalesRangeDiff[];
+  productSalesRangeDiff: ProductSalesRangeDiff[] | null;
   params: {
     date__gte: string;
     date__lte: string;
@@ -139,13 +140,13 @@ export function FactoryTableWithModal({
         </Table>
       </div>
 
-      {/* Product Modal - Reuses your existing /product page components */}
       {selectedFactoryData && (
         <ProductModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           factoryName={selectedFactoryData.factory_name}
           factoryCode={selectedFactoryData.factory_code}
+          quantityDiff={selectedFactoryData.quantity_diff}
           productData={productSalesRangeDiff || []}
           dateRange={{
             date__gte: params.date__gte,

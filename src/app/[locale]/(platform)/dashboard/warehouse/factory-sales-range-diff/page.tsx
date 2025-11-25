@@ -86,7 +86,6 @@ export default async function Page({ searchParams }: PageProps) {
   const factorySalesRangeDiff = await getFactorySalesRangeDiff(params)
 
   // Fetch product data ONLY if factory param exists
-  // Note: We swap the date ranges to match your original /product page logic
   const productSalesRangeDiff = params.factory 
     ? await getProductSalesRangeDiff(params)
     : null;
