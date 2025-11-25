@@ -17,6 +17,7 @@ import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
 import { Link } from '@/i18n/navigation'
 import { redirectWithDefaults } from '@/lib/utils/filter';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -146,6 +147,8 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
 
+        <DataStatusBadge date={maxSalesDate} />
+        
         <div>
           <div>
             <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">

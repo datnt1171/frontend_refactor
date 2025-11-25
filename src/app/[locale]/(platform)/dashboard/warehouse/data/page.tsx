@@ -4,10 +4,11 @@ import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMo
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { SalesFileUpload, OrderFileUpload } from './SalesOrderUpload';
-import { getFactOrder, getFactSales } from "@/lib/api/server"
+import { getFactOrder, getFactSales, getMaxSalesDate } from "@/lib/api/server"
 import type { FactOrder, FactSales } from "@/types"
 import { FactOrderCSVButtons } from "./OrderCSVButton"
 import { FactSalesCSVButtons } from "./SalesCSVButton"
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -36,6 +37,7 @@ export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams
   let factOrder: FactOrder[] = []
   let factSales: FactSales[] = []
+  const maxSalesDate = await getMaxSalesDate()
 
   if (params.date__gte && params.date__lte) {
     factOrder = await getFactOrder(params)
@@ -48,6 +50,7 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
 
+        <DataStatusBadge date={maxSalesDate} />
         {/* File upload */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-4">
           <OrderFileUpload />

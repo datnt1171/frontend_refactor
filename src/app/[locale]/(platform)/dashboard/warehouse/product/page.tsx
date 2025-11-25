@@ -11,6 +11,7 @@ import OrderVsTargetChart from './OrderVsTarget';
 import OrderDiffChart from './OrderDiff';
 import { ProductSalesRangeDiffTable, ProductOrderRangeDiffTable} from './DataTable';
 import { getFactoryOptions, redirectWithDefaults } from '@/lib/utils/filter';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -119,6 +120,8 @@ export default async function Page({ searchParams }: PageProps) {
     <SidebarProvider>
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
+
+        <DataStatusBadge date={maxSalesDate} />
         {/* Sales by Product */}
           <div>
             <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">

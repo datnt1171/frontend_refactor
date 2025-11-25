@@ -1,4 +1,4 @@
-import { getSalesOvertime } from '@/lib/api/server';
+import { getSalesOvertime, getMaxSalesDate } from '@/lib/api/server';
 import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
@@ -7,6 +7,7 @@ import type { PageFilterConfig } from "@/types"
 import { getCurrentYear, getLastYear } from '@/lib/utils/date'
 import { getFactoryOptions, getYearOptions, getTimeSelectOptions, redirectWithDefaults } from '@/lib/utils/filter'
 import SalesOvertimeChart from './SalesOvertimeChart';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -74,6 +75,8 @@ export default async function Page({ searchParams }: PageProps) {
   }
 
   const xAxisName = TIME_SELECT_OPTIONS.find(option => option.value === params.group_by)?.label || params.group_by
+
+  const maxSalesDate = await getMaxSalesDate()
   const salesOvertime = await getSalesOvertime(params)
 
   return (
@@ -81,6 +84,7 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
 
+        <DataStatusBadge date={maxSalesDate} />
         <div>
           <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
             銷售額隨時間變化 - Giao hàng theo thời gian

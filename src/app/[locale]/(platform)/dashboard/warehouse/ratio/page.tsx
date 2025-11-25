@@ -1,4 +1,4 @@
-import { getThinnerPaintRatio } from '@/lib/api/server';
+import { getThinnerPaintRatio, getMaxSalesDate } from '@/lib/api/server';
 import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
@@ -17,6 +17,7 @@ import {
 import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
 import { RatioTableWithSelect } from './RatioTableWithSelect';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -88,6 +89,7 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
+  const maxSalesDate = await getMaxSalesDate()
   const thinnerPaintRatio = await getThinnerPaintRatio(params)
 
   // Parse multiselect table parameter
@@ -124,6 +126,7 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
 
+        <DataStatusBadge date={maxSalesDate} />
         {/* Ratio Table */}
         {showRatio && (
           <RatioTableWithSelect

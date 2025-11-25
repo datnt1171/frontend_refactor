@@ -8,6 +8,7 @@ import type { PageFilterConfig } from "@/types"
 import { format } from 'date-fns'
 import { generateYearOptions } from '@/lib/utils/date';
 import { getFactoryOptions, getMonthOptions, redirectWithDefaults } from '@/lib/utils/filter';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -106,6 +107,7 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
 
+        <DataStatusBadge date={maxSalesDate} />
         <div>
           <h1 className="text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words pb-2">
             {params.year}年每月送貨比较与{params.target_year}年{params.target_month}月相比 

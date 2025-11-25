@@ -7,6 +7,7 @@ import type { PageFilterConfig } from "@/types"
 import { format, startOfMonth, subMonths } from 'date-fns'
 import SalesOrderChart from './stackedchart'
 import { redirectWithDefaults } from '@/lib/utils/filter';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -90,8 +91,8 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
 
+        <DataStatusBadge date={maxSalesDate} />
         <div className="space-y-1">
-
           {/* Title */}
           <h1 className="text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
             {currentMonth}月分的订单量与{targetYear}年{targetMonth}月相比 

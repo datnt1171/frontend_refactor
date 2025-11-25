@@ -1,4 +1,4 @@
-import { getScheduledAndActualSales } from '@/lib/api/server';
+import { getScheduledAndActualSales, getMaxSalesDate } from '@/lib/api/server';
 import { getTranslations, getLocale } from "next-intl/server"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
@@ -7,6 +7,7 @@ import type { PageFilterConfig } from "@/types"
 import { getCurrentYear, generateYearOptions } from '@/lib/utils/date'
 import { getFactoryOptions, redirectWithDefaults } from '@/lib/utils/filter'
 import ScheduledChart from './cheduled_chart';
+import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
 
 interface PageProps {
   searchParams: Promise<{
@@ -59,6 +60,7 @@ export default async function Page({ searchParams }: PageProps) {
     ]
   }
 
+  const maxSalesDate = await getMaxSalesDate()
   const scheduledAndActualSales = await getScheduledAndActualSales(params)
 
   return (
@@ -66,6 +68,8 @@ export default async function Page({ searchParams }: PageProps) {
       <SidebarInset className="flex flex-col min-w-0">
 
         <SidebarRightMobileTrigger />
+
+        <DataStatusBadge date={maxSalesDate} />
         <div>
           <h1 className="pb-4 text-center text-lg sm:text-xl md:text-2xl lg:text-2xl font-bold break-words">
             計劃及實際銷售 - {factoryName} <br />
