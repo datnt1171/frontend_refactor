@@ -64,7 +64,8 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
           data: seriesData,
           label: {
             show: true,
-            formatter: (params: any) => Math.round(params.value).toLocaleString()
+            formatter: (params: any) => Math.round(params.value).toLocaleString(),
+            color: 'inherit',
           }
         }]
       }
@@ -117,7 +118,8 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
             data: seriesData,
             label: {
               show: true,
-              formatter: (params: any) => Math.round(params.value).toLocaleString()
+              formatter: (params: any) => Math.round(params.value).toLocaleString(),
+              color: 'inherit',
             }
           }]
         }
@@ -155,7 +157,8 @@ export default function SalesOvertimeChart({ data, group_by, xAxisName }: SalesO
             connectNulls: false,
             label: {
               show: true,
-              formatter: (params: any) => Math.round(params.value).toLocaleString()
+              formatter: (params: any) => Math.round(params.value).toLocaleString(),
+              color: 'inherit',
             }
           }
         })

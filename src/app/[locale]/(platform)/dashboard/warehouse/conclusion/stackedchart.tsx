@@ -25,6 +25,21 @@ export default function SalesOrderChart({ data }: SalesOrderChartProps) {
     const totalSales = data.map(item => item.total_sales)
     const totalOrder = data.map(item => item.total_order)
 
+    // Create data with dynamic label positions
+    const totalOrderData = totalOrder.map((value, index) => ({
+      value,
+      label: {
+        position: (value ?? 0) >= (totalSales[index] ?? 0) ? 'top' : 'bottom'
+      }
+    }));
+
+    const totalSalesData = totalSales.map((value, index) => ({
+      value,
+      label: {
+        position: (value ?? 0) > (totalOrder[index] ?? 0) ? 'top' : 'bottom'
+      }
+    }));
+
     const option = {
       tooltip: {
         trigger: 'axis',
@@ -115,16 +130,12 @@ export default function SalesOrderChart({ data }: SalesOrderChartProps) {
           },
           symbol: 'circle',
           symbolSize: 5,
-          data: totalSales.map((value: number, index: number) => ({
-            value,
-            label: {
-              show: true,
-              position: index === 0 ? 'top' : 'right',
-              color: 'green',
-              fontSize: 14,
-              formatter: Math.round(value).toLocaleString()
-            }
-          }))
+          data: totalSalesData,
+          label: {
+            show: true,
+            formatter: (params: any) => Math.round(params.value).toLocaleString(),
+            color: 'inherit',
+          },
         },
         {
           name: '總訂單 - Tổng SL ĐĐH',
@@ -139,16 +150,12 @@ export default function SalesOrderChart({ data }: SalesOrderChartProps) {
           },
           symbol: 'diamond',
           symbolSize: 5,
-          data: totalOrder.map((value: number, index: number) => ({
-            value,
-            label: {
-              show: true,
-              position: index === 0 ? 'left' : 'right',
-              color: 'blue',
-              fontSize: 14,
-              formatter: Math.round(value).toLocaleString()
-            }
-          }))
+          data: totalOrderData,
+          label: {
+            show: true,
+            formatter: (params: any) => Math.round(params.value).toLocaleString(),
+            color: 'inherit',
+          },
         }
       ]
     }
