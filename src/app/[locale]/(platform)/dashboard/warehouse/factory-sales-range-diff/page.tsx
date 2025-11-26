@@ -9,7 +9,7 @@ import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
 import { redirectWithDefaults } from '@/lib/utils/filter';
 import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
-import { FactoryTableWithModal } from './TableWithModel';
+import { FactoryTableWithModal } from './TableWithModal';
 
 interface PageProps {
   searchParams: Promise<{
@@ -152,7 +152,6 @@ export default async function Page({ searchParams }: PageProps) {
           <FactoryTableWithModal 
             factorySalesRangeDiff={factorySalesRangeDiff}
             productSalesRangeDiff={productSalesRangeDiff}
-            params={params}
             dateTargetGteMonth={dateTargetGteMonth}
           />
         </div>

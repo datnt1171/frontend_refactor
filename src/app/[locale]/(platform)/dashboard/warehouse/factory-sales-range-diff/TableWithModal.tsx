@@ -9,26 +9,26 @@ import type { FactorySalesRangeDiff, ProductSalesRangeDiff } from '@/types';
 interface FactoryTableWithModalProps {
   factorySalesRangeDiff: FactorySalesRangeDiff[];
   productSalesRangeDiff: ProductSalesRangeDiff[] | null;
-  params: {
-    date__gte: string;
-    date__lte: string;
-    date_target__gte: string;
-    date_target__lte: string;
-    factory?: string;
-  };
   dateTargetGteMonth: number;
 }
 
 export function FactoryTableWithModal({ 
   factorySalesRangeDiff, 
   productSalesRangeDiff,
-  params,
   dateTargetGteMonth,
 }: FactoryTableWithModalProps) {
 
   const t = useTranslations()
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const params = {
+    date__gte: searchParams.get('date__gte') || '',
+    date__lte: searchParams.get('date__lte') || '',
+    date_target__gte: searchParams.get('date_target__gte') || '',
+    date_target__lte: searchParams.get('date_target__lte') || '',
+    factory: searchParams.get('factory') || undefined,
+  };
   
   const selectedFactory = params.factory;
   const isModalOpen = !!selectedFactory;
@@ -144,9 +144,7 @@ export function FactoryTableWithModal({
         <ProductModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          factoryName={selectedFactoryData.factory_name}
-          factoryCode={selectedFactoryData.factory_code}
-          quantityDiff={selectedFactoryData.quantity_diff}
+          selectedFactoryData={selectedFactoryData}
           productData={productSalesRangeDiff || []}
           dateRange={{
             date__gte: params.date__gte,

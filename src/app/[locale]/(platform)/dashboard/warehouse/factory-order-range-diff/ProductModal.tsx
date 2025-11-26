@@ -4,17 +4,17 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Eye, EyeOff } from 'lucide-react';
-import SalesVsTargetChart from '../product/SalesVsTarget';
-import SalesDiffChart from '../product/SalesDiff';
-import { ProductSalesRangeDiffTable } from '../product/DataTable';
-import type { FactorySalesRangeDiff, ProductSalesRangeDiff } from '@/types';
+import OrderVsTargetChart from '../product/OrderVsTarget';
+import OrderDiffChart from '../product/OrderDiff';
+import { ProductOrderRangeDiffTable } from '../product/DataTable';
+import type { FactoryOrderRangeDiff, ProductOrderRangeDiff } from '@/types';
 import { useTranslations } from 'next-intl';
 
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
-  selectedFactoryData: FactorySalesRangeDiff;
-  productData: ProductSalesRangeDiff[];
+  selectedFactoryData: FactoryOrderRangeDiff;
+  productData: ProductOrderRangeDiff[];
   dateRange: {
     date__gte: string;
     date__lte: string;
@@ -54,12 +54,12 @@ export function ProductModal({
               <div className="font-bold">
                 {selectedFactoryData.factory_name} ({selectedFactoryData.factory_code}):{' '}
                 <span className={selectedFactoryData.quantity_diff >= 0 ? "text-green-600" : "text-red-600"}>
-                   {t(`dashboard.warehouse.factorySalesRangeDiff.${selectedFactoryData.quantity_diff >= 0 ? 'increase' : 'decrease'}`)} 
+                   {t(`dashboard.warehouse.factoryOrderRangeDiff.${selectedFactoryData.quantity_diff >= 0 ? 'increase' : 'decrease'}`)} 
                    {selectedFactoryData.quantity_diff.toLocaleString()}
                 </span>
               </div>
               <div className="text-sm font-normal text-gray-600 mt-1">
-                Giao hàng theo SP - 按產品分列的銷售額
+                Đơn đặt hàng theo SP - 按產品排序
               </div>
               <div className="text-sm font-normal text-gray-600">
                 {dateRange.date_target__gte}→{dateRange.date_target__lte} ~ {dateRange.date__gte}→{dateRange.date__lte}
@@ -69,7 +69,7 @@ export function ProductModal({
             {/* Filter Input - Right side */}
             <div className="flex items-center gap-3 shrink-0">
               <label className="text-sm font-medium whitespace-nowrap">
-                {t('dashboard.sales.sales')} ≥
+                 {t('dashboard.order.order')} ≥
               </label>
               <input
                 type="number"
@@ -90,8 +90,8 @@ export function ProductModal({
           <div className="space-y-6 mt-4">
             {/* Charts Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <SalesDiffChart data={filteredProducts} />
-              <SalesVsTargetChart data={filteredProducts} />
+              <OrderDiffChart data={filteredProducts} />
+              <OrderVsTargetChart data={filteredProducts} />
             </div>
 
             {/* Product Table Toggle & Content */}
@@ -115,7 +115,7 @@ export function ProductModal({
               </Button>
 
               {showProductTable && (
-                <ProductSalesRangeDiffTable 
+                <ProductOrderRangeDiffTable 
                   data={productData} 
                   dateRange={{ 
                     start: dateRange.date__gte, 
