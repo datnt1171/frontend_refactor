@@ -21,11 +21,11 @@ interface ProcessPageProps {
 }
 
 
-export default async function ProcessPage({searchParams}: ProcessPageProps) {
+export default async function Page({searchParams}: ProcessPageProps) {
 
   const params = await searchParams
   const locale = await getLocale()
-  const t = await getTranslations('taskManagement.process')
+  const t = await getTranslations()
 
   const defaultParams = {
     page_size: '15',
@@ -64,8 +64,8 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">{t('formTemplates')}</h1>
-              <p className="text-muted-foreground mt-2">{t('browseTemplatesDescription')}</p>
+              <h1 className="text-3xl font-bold tracking-tight">{t('taskManagement.process.formTemplates')}</h1>
+              <p className="text-muted-foreground mt-2">{t('taskManagement.process.browseTemplatesDescription')}</p>
             </div>
           </div>
 
@@ -80,16 +80,16 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-muted-foreground">
-                    {process.description || t('formDescriptionFallback', { name: process.name })}
+                    {process.description || t('taskManagement.process.formDescriptionFallback', { name: process.name })}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {t('version') + ': ' + process.version}
+                    {t('taskManagement.process.version') + ': ' + process.version}
                   </p>
                 </CardContent>
                 <CardFooter className="bg-muted/50 pt-3">
                   <Link href={`/task-management/processes/${process.id}`} className="w-full">
                     <Button className="w-full">
-                      {t('useForm')}
+                      {t('taskManagement.process.useForm')}
                     </Button>
                   </Link>
                 </CardFooter>
@@ -100,8 +100,8 @@ export default async function ProcessPage({searchParams}: ProcessPageProps) {
           {processes.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">{t('noFormFound')}</h3>
-              <p className="text-muted-foreground mt-2">{t('tryAdjustingSearchOrCreate')}</p>
+              <h3 className="text-lg font-medium">{t('taskManagement.process.noFormFound')}</h3>
+              <p className="text-muted-foreground mt-2">{t('taskManagement.process.tryAdjustingSearchOrCreate')}</p>
             </div>
           )}
         </div>

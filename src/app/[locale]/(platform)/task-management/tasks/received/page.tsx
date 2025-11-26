@@ -28,9 +28,7 @@ interface ReceivedTaskPageProps {
 
 export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPageProps) {
 
-  const commonT = await getTranslations('common')
-  const commonTaskT = await getTranslations('taskManagement.common')
-  const t = await getTranslations('taskManagement.receivedTask')
+  const t = await getTranslations()
   const params = await searchParams
   const locale = await getLocale()
 
@@ -83,19 +81,19 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
 
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-            <p className="text-muted-foreground mt-2">{t('description')}</p>
+            <h1 className="text-3xl font-bold tracking-tight">{t('taskManagement.receivedTask.title')}</h1>
+            <p className="text-muted-foreground mt-2">{t('taskManagement.receivedTask.description')}</p>
           </div>
             <Card>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{commonT('id')}</TableHead>
-                      <TableHead>{commonTaskT('status')}</TableHead>
-                      <TableHead>{t('from')}</TableHead>
-                      <TableHead>{commonTaskT('formType')}</TableHead>
-                      <TableHead>{commonT('createdAt')}</TableHead>
+                      <TableHead>{t('common.id')}</TableHead>
+                      <TableHead>{t('taskManagement.common.status')}</TableHead>
+                      <TableHead>{t('taskManagement.receivedTask.from')}</TableHead>
+                      <TableHead>{t('taskManagement.common.formType')}</TableHead>
+                      <TableHead>{t('common.createdAt')}</TableHead>
                       <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -123,12 +121,12 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon">
                                 <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">{commonT('openMenu')}</span>
+                                <span className="sr-only">{t('common.openMenu')}</span>
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem>
-                                <Link href={`/task-management/tasks/${task.id}`}>{commonT('viewDetails')}</Link>
+                                <Link href={`/task-management/tasks/${task.id}`}>{t('common.viewDetails')}</Link>
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -140,8 +138,8 @@ export default async function ReceivedTasksPage({searchParams}: ReceivedTaskPage
 
                 {tasks.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <h3 className="text-lg font-medium">{commonT('noDataFound')}</h3>
-                    <p className="text-muted-foreground mt-2">{t('noAssignedTasks')}</p>
+                    <h3 className="text-lg font-medium">{t('common.noDataFound')}</h3>
+                    <p className="text-muted-foreground mt-2">{t('taskManagement.receivedTask.noAssignedTasks')}</p>
                   </div>
                 )}
               </CardContent>

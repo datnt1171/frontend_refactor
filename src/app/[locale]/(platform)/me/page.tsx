@@ -8,9 +8,9 @@ import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/api/server";
 import { NotificationToggle } from "@/components/ui/NotificationToggle";
 
-export default async function UserProfilePage() {
+export default async function Page() {
   const user = await getCurrentUser()
-  const t = await getTranslations("user");
+  const t = await getTranslations()
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
@@ -19,7 +19,7 @@ export default async function UserProfilePage() {
         <div className="flex gap-2">
           <Button asChild variant="outline">
             <Link href="/me/change-password">
-              {t('changePassword.changePassword')}
+              {t('user.changePassword.changePassword')}
             </Link>
           </Button>
         </div>
@@ -48,21 +48,21 @@ export default async function UserProfilePage() {
             <div className="flex items-center gap-3">
               <Briefcase className="w-5 h-5 text-gray-500" />
               <div className="flex items-center gap-2">
-                <span>{t('department')}:</span>
+                <span>{t('user.department')}:</span>
                 <Badge variant="secondary">{user.department.name}</Badge>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Users className="w-5 h-5 text-gray-500" />
               <div className="flex items-center gap-2">
-                <span>{t('role')}:</span>
+                <span>{t('user.role')}:</span>
                 <Badge variant="secondary">{user.role.name}</Badge>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <User className="w-5 h-5 text-gray-500" />
               <span>
-                {t('supervisor')}: {user.supervisor.last_name} {user.supervisor.first_name}
+                {t('user.supervisor')}: {user.supervisor.last_name} {user.supervisor.first_name}
               </span>
             </div>
             <div className="flex items-center gap-3">

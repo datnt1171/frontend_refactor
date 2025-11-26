@@ -25,12 +25,11 @@ interface SentTaskPageProps {
 }
 
 
-export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
+export default async function Page({searchParams}: SentTaskPageProps) {
 
   const params = await searchParams
   const locale = await getLocale()
-  const commonT = await getTranslations('common')
-  const t = await getTranslations('taskManagement.sentTask')
+  const t = await getTranslations()
 
   const defaultParams = {
     page_size: '50',
@@ -81,13 +80,13 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-              <p className="text-muted-foreground mt-2">{t('description')}</p>
+              <h1 className="text-3xl font-bold tracking-tight">{t('taskManagement.sentTask.title')}</h1>
+              <p className="text-muted-foreground mt-2">{t('taskManagement.sentTask.description')}</p>
             </div>
             <Link href="/task-management/processes">
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                {t('createNewTask')}
+                {t('taskManagement.sentTask.createNewTask')}
               </Button>
             </Link>
           </div>
@@ -96,11 +95,11 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{commonT('id')}</TableHead>
-                      <TableHead>{t('status')}</TableHead>
-                      <TableHead>{t('formType')}</TableHead>
-                      <TableHead>{t('recipient')}</TableHead>
-                      <TableHead>{t('sentDate')}</TableHead>
+                      <TableHead>{t('common.id')}</TableHead>
+                      <TableHead>{t('taskManagement.sentTask.status')}</TableHead>
+                      <TableHead>{t('taskManagement.sentTask.formType')}</TableHead>
+                      <TableHead>{t('taskManagement.sentTask.recipient')}</TableHead>
+                      <TableHead>{t('taskManagement.sentTask.sentDate')}</TableHead>
                       <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -128,14 +127,14 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon">
                                 <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">{commonT('openMenu')}</span>
+                                <span className="sr-only">{t('common.openMenu')}</span>
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem>
-                                <Link href={`/task-management/tasks/${task.id}`}>{commonT('viewDetails')}</Link>
+                                <Link href={`/task-management/tasks/${task.id}`}>{t('common.viewDetails')}</Link>
                               </DropdownMenuItem>
-                              <DropdownMenuItem>{t('sendReminder')}</DropdownMenuItem>
+                              <DropdownMenuItem>{t('taskManagement.sentTask.sendReminder')}</DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
@@ -146,8 +145,8 @@ export default async function SentTasksPage({searchParams}: SentTaskPageProps) {
 
                 {tasks.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <h3 className="text-lg font-medium">{commonT('noDataFound')}</h3>
-                    <p className="text-muted-foreground mt-2">{t('tryAdjustingSearchOrCreateTask')}</p>
+                    <h3 className="text-lg font-medium">{t('common.noDataFound')}</h3>
+                    <p className="text-muted-foreground mt-2">{t('taskManagement.sentTask.tryAdjustingSearchOrCreateTask')}</p>
                   </div>
                 )}
               </CardContent>

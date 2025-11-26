@@ -29,8 +29,7 @@ export function FormField({
   onChange, 
   disabled
 }: FormFieldProps) {
-  const t = useTranslations('taskManagement.createTask')
-  const commonT = useTranslations('common')
+  const t = useTranslations()
   
   
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,8 +133,8 @@ export function FormField({
           options={userOptions}
           value={userOptions.find(option => option.value === value) || null}
           onChange={(selectedOption) => onChange(selectedOption?.value || "")}
-          placeholder={t('selectUser')}
-          noOptionsMessage={() => commonT('noDataFound')}
+          placeholder={t('taskManagement.createTask.selectUser')}
+          noOptionsMessage={() => t('common.noDataFound')}
           isDisabled={disabled}
           isSearchable={true}
           isClearable={true}
@@ -154,8 +153,8 @@ export function FormField({
           options={factoryOptions}
           value={factoryOptions.find(option => option.value === value) || null}
           onChange={(selectedOption) => onChange(selectedOption?.value || "")}
-          placeholder={commonT('selectFactory')}
-          noOptionsMessage={() => commonT('noDataFound')}
+          placeholder={t('common.selectFactory')}
+          noOptionsMessage={() => t('common.noDataFound')}
           isDisabled={disabled}
           isSearchable={true}
           isClearable={true}
@@ -174,8 +173,8 @@ export function FormField({
           options={retailerOptions}
           value={retailerOptions.find(option => option.value === value) || null}
           onChange={(selectedOption) => onChange(selectedOption?.value || "")}
-          placeholder={commonT('selectRetailer')}
-          noOptionsMessage={() => commonT('noDataFound')}
+          placeholder={t('common.selectRetailer')}
+          noOptionsMessage={() => t('common.noDataFound')}
           isDisabled={disabled}
           isSearchable={true}
           isClearable={true}

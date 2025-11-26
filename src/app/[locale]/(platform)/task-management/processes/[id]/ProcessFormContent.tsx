@@ -31,7 +31,7 @@ export function ProcessFormContent({
   onInputChange,
   onReview
 }: ProcessFormContentProps) {
-  const t = useTranslations('taskManagement.createTask')
+  const t = useTranslations()
   
   // Memoize visible fields to prevent unnecessary re-renders
   const visibleFields = useMemo(() => {
@@ -41,7 +41,7 @@ export function ProcessFormContent({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('createTask')}</CardTitle>
+        <CardTitle>{t('taskManagement.createTask.createTask')}</CardTitle>
       </CardHeader>
       <form onSubmit={onReview}>
         <CardContent className="space-y-4">
@@ -69,7 +69,7 @@ export function ProcessFormContent({
         <CardFooter className="pt-4">
           <Button type="submit">
             <Eye className="mr-2 h-4 w-4" />
-            {t('review')}
+            {t('taskManagement.createTask.review')}
           </Button>
         </CardFooter>
       </form>

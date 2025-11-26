@@ -11,7 +11,7 @@ import BackButton from "@/components/ui/BackButton"
 import { Link } from "@/i18n/navigation"
 import { cookies } from 'next/headers'
 
-export default async function TaskDetailPage({ 
+export default async function Page({ 
   params 
 }: { 
   params: Promise<{ id: string }> 
@@ -19,9 +19,8 @@ export default async function TaskDetailPage({
   const { id } = await params
   
 
-  const [task, t, commonT, currentUser] = await Promise.all([
+  const [task, t, currentUser] = await Promise.all([
     getTask(id),
-    getTranslations('taskManagement.taskDetail'),
     getTranslations(),
     getCurrentUser()
   ])
@@ -49,7 +48,7 @@ export default async function TaskDetailPage({
         <div className="md:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t('title')}</CardTitle>
+              <CardTitle>{t('taskManagement.taskDetail.title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {task.data.map((data) => (
@@ -65,7 +64,7 @@ export default async function TaskDetailPage({
                       >
                         <Link href={`/task-management/tasks/${id}/data/${data.field.id}`}>
                           <Edit className="h-3 w-3 mr-1" />
-                          {commonT('common.edit')}
+                          {t('common.edit')}
                         </Link>
                       </Button>
                     )}
@@ -84,10 +83,10 @@ export default async function TaskDetailPage({
                         </a>
                       </p>
                     ) : (
-                        <span className="text-muted-foreground italic">{t('noFileUploaded')}</span>
+                        <span className="text-muted-foreground italic">{t('taskManagement.taskDetail.noFileUploaded')}</span>
                       )
                     ) : (
-                      data.value || <span className="text-muted-foreground italic">{t('noResponseProvided')}</span>
+                      data.value || <span className="text-muted-foreground italic">{t('taskManagement.taskDetail.noResponseProvided')}</span>
                     )}
                   </div>
                 </div>
@@ -97,7 +96,7 @@ export default async function TaskDetailPage({
 
           <Card>
             <CardHeader>
-              <CardTitle>{t('activityHistory')}</CardTitle>
+              <CardTitle>{t('taskManagement.taskDetail.activityHistory')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -112,7 +111,7 @@ export default async function TaskDetailPage({
                         <span className="text-muted-foreground">{log.action.description || log.action.name}</span>
                       </p>
                       {log.comment && (
-                        <p className="text-xs text-muted-foreground">{t('comment')}: {log.comment}</p>
+                        <p className="text-xs text-muted-foreground">{t('taskManagement.taskDetail.comment')}: {log.comment}</p>
                       )}
                       {log.file && (
                         <p className="text-xs text-blue-600 mt-1">
@@ -128,7 +127,7 @@ export default async function TaskDetailPage({
 
                 {(!task.action_logs || task.action_logs.length === 0) && (
                   <div className="text-center text-muted-foreground">
-                    <p>{t('noActivityRecorded')}</p>
+                    <p>{t('taskManagement.taskDetail.noActivityRecorded')}</p>
                   </div>
                 )}
               </div>
@@ -139,13 +138,13 @@ export default async function TaskDetailPage({
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t('taskInformation')}</CardTitle>
+              <CardTitle>{t('taskManagement.taskDetail.taskInformation')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">{commonT('common.createdAt')}</p>
+                  <p className="text-sm font-medium">{t('common.createdAt')}</p>
                   <p className="text-sm text-muted-foreground">{formatDateToUTC7(task.created_at)}</p>
                 </div>
               </div>
@@ -153,14 +152,14 @@ export default async function TaskDetailPage({
               <div className="flex items-center">
                 <User className="h-4 w-4 mr-2 text-muted-foreground" />
                 <div>
-                  <p className="text-sm font-medium">{commonT('common.createdBy')}</p>
+                  <p className="text-sm font-medium">{t('common.createdBy')}</p>
                   <p className="text-sm text-muted-foreground">{task.created_by.username}</p>
                 </div>
               </div>
               <Button asChild>
                 <Link href={`/task-management/tasks/${id}/sheets`}>
                   <FileSpreadsheet className="h-4 w-4 mr-2" />
-                  {commonT('finishingSheet.finishingSheet')}
+                  {t('finishingSheet.finishingSheet')}
                 </Link>
               </Button>
             </CardContent>

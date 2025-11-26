@@ -28,7 +28,7 @@ export function FormReview({
   onBack,
   onSubmit
 }: FormReviewProps) {
-  const t = useTranslations('taskManagement.createTask')
+  const t = useTranslations()
 
   const displayFieldValue = (field: ProcessField) => {
     const value = formValues[field.id]
@@ -36,7 +36,7 @@ export function FormReview({
     if (!value) {
       return (
         <span className="text-muted-foreground italic">
-          {t('noValueProvided')}
+          {t('taskManagement.createTask.noValueProvided')}
         </span>
       )
     }
@@ -80,7 +80,7 @@ export function FormReview({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('reviewTask')}</CardTitle>
+        <CardTitle>{t('taskManagement.createTask.reviewTask')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {process.fields.map(field => (
@@ -102,18 +102,18 @@ export function FormReview({
           disabled={isSubmitting}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          {t('backToEdit')}
+          {t('taskManagement.createTask.backToEdit')}
         </Button>
         <Button onClick={onSubmit} disabled={isSubmitting}>
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('submitting')}
+              {t('taskManagement.createTask.submitting')}
             </>
           ) : (
             <>
               <Send className="mr-2 h-4 w-4" />
-              {t('submitTask')}
+              {t('taskManagement.createTask.submitTask')}
             </>
           )}
         </Button>

@@ -8,7 +8,7 @@ export default function Error({
 }: {
   error: Error & { digest?: string };
 }) {
-  const t = useTranslations('common');
+  const t = useTranslations();
 
   useEffect(() => {
     console.error('Error boundary caught:', {
@@ -28,12 +28,12 @@ export default function Error({
       <div className="max-w-md w-full text-center">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-red-600 mb-2">
-            {t('errorTitle')}
+            {t('common.errorTitle')}
           </h1>
           <p className="text-gray-600">
             {process.env.NODE_ENV === 'development'
               ? error.message
-              : t('errorDescription')}
+              : t('common.errorDescription')}
           </p>
           
           {process.env.NODE_ENV === 'development' && error.digest && (
@@ -48,14 +48,14 @@ export default function Error({
             onClick={handleRetry}
             className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
           >
-            {t('tryAgain')}
+            {t('common.tryAgain')}
           </button>
           
           <button
             onClick={() => window.location.href = '/'}
             className="w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg transition-colors"
           >
-            {t('goHome')}
+            {t('common.goHome')}
           </button>
         </div>
 

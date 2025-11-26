@@ -31,8 +31,7 @@ export default function BlueprintEditButton({
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const t = useTranslations('blueprint')
-  const commonT = useTranslations('common')
+  const t = useTranslations()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -47,10 +46,10 @@ export default function BlueprintEditButton({
 
     try {
       await updateBlueprint(factoryId, blueprintId, blueprintData)
-      alert(commonT('actionPerformedSuccessfully'))
+      alert(t('common.actionPerformedSuccessfully'))
       setOpen(false)
     } catch (error) {
-      alert(commonT('failedToPerformAction'))
+      alert(t('common.failedToPerformAction'))
     } finally {
       setIsLoading(false)
       setOpen(false)
@@ -63,18 +62,18 @@ export default function BlueprintEditButton({
       <DialogTrigger asChild>
         <Button variant="outline">
           <Edit className="h-4 w-4 mr-2" />
-          {commonT('edit')}
+          {t('common.edit')}
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{commonT('edit')}</DialogTitle>
+          <DialogTitle>{t('common.edit')}</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Name */}
           <div className="space-y-2">
-            <Label htmlFor="name">{t('name')} <span className="text-red-500">*</span></Label>
+            <Label htmlFor="name">{t('blueprint.name')} <span className="text-red-500">*</span></Label>
             <Input 
               id="name" 
               name="name"
@@ -86,22 +85,22 @@ export default function BlueprintEditButton({
 
           {/* Type */}
           <div className="space-y-2">
-            <Label htmlFor="type">{t('type')} <span className="text-red-500">*</span></Label>
+            <Label htmlFor="type">{t('blueprint.type')} <span className="text-red-500">*</span></Label>
             <Select name="type" required disabled={isLoading} defaultValue={blueprint.type}>
               <SelectTrigger>
                 <SelectValue placeholder="Select blueprint type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="PALLET">{t('pallet')}</SelectItem>
-                <SelectItem value="HANGING">{t('hanging')}</SelectItem>
-                <SelectItem value="ROLLER">{t('roller')}</SelectItem>
+                <SelectItem value="PALLET">{t('blueprint.pallet')}</SelectItem>
+                <SelectItem value="HANGING">{t('blueprint.hanging')}</SelectItem>
+                <SelectItem value="ROLLER">{t('blueprint.roller')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">{commonT('description')}</Label>
+            <Label htmlFor="description">{t('common.description')}</Label>
             <Textarea 
               id="description"
               name="description"
@@ -119,16 +118,16 @@ export default function BlueprintEditButton({
               onClick={() => setOpen(false)}
               disabled={isLoading}
             >
-              {commonT('cancel')}
+              {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {commonT('processing')}
+                  {t('common.processing')}
                 </>
               ) : (
-                commonT('save')
+                t('common.save')
               )}
             </Button>
           </div>

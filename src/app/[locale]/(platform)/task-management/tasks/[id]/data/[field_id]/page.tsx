@@ -20,7 +20,7 @@ export default async function TaskDataPage({ params }: PageProps) {
   const { id: taskId, field_id: fieldId } = await params
 
     const taskData = await getTaskData(taskId, fieldId)
-    const t = await getTranslations('taskManagement.taskDetail')
+    const t = await getTranslations()
     const field = taskData.field
 
     // Check what data we need based on field type
@@ -105,7 +105,7 @@ export default async function TaskDataPage({ params }: PageProps) {
         <Card>
           <CardHeader>
             <CardTitle>
-              {field.field_type === 'file' || field.field_type === 'multifile' ? 'Files' : 'History'}
+              {field.field_type === 'file' || field.field_type === 'multifile' ? 'Files' : t('taskManagement.taskDetail.activityHistory')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -139,7 +139,7 @@ export default async function TaskDataPage({ params }: PageProps) {
                   ))
                 ) : (
                   <div className="text-center text-muted-foreground">
-                    <p>{t('noActivityRecorded')}</p>
+                    <p>{t('taskManagement.taskDetail.noActivityRecorded')}</p>
                   </div>
                 )
               ) : (
@@ -161,7 +161,7 @@ export default async function TaskDataPage({ params }: PageProps) {
                   ))
                 ) : (
                   <div className="text-center text-muted-foreground">
-                     <p>{t('noActivityRecorded')}</p>
+                     <p>{t('taskManagement.taskDetail.noActivityRecorded')}</p>
                   </div>
                 )
               )}

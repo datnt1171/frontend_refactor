@@ -23,8 +23,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [actionFile, setActionFile] = useState<File | null>(null)
   const [fileProcessing, setFileProcessing] = useState(false)
-  const commonT = useTranslations('common')
-  const t = useTranslations('taskManagement.taskDetail')
+  const t = useTranslations()
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
@@ -63,7 +62,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
         file: actionFile || undefined,
       }
       await performTaskAction(task.id, payload)
-      alert(t('actionPerformedSuccessfully'))
+      alert(t('taskManagement.taskDetail.actionPerformedSuccessfully'))
       setActionComment("")
       setActionFile(null)
       // Reset file input
@@ -73,7 +72,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
       router.refresh() // Refresh the page to show updated data
     } catch (err: any) {
       console.error("Error performing action:", err)
-      alert(err.response?.data?.error || t('failedToPerformAction'))
+      alert(err.response?.data?.error || t('taskManagement.taskDetail.failedToPerformAction'))
     } finally {
       setActionLoading(null)
     }
@@ -84,7 +83,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('availableActions')}</CardTitle>
+        <CardTitle>{t('taskManagement.taskDetail.availableActions')}</CardTitle>
       </CardHeader>
       <CardContent>
         {task.available_actions.length > 0 ? (
@@ -100,7 +99,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
             </div>
             <textarea
               className="w-full p-2 border rounded-md mb-2"
-              placeholder={t('addCommentOptional')}
+              placeholder={t('taskManagement.taskDetail.addCommentOptional')}
               value={actionComment}
               onChange={(e) => setActionComment(e.target.value)}
               disabled={isDisabled}
@@ -116,7 +115,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
                 {actionLoading === action.id ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    {commonT('processing')}
+                    {t('common.processing')}
                   </>
                 ) : (
                   action.name
@@ -125,7 +124,7 @@ export default function TaskActions({ task }: TaskActionsProps) {
             ))}
           </>
         ) : (
-          <p className="text-sm text-muted-foreground">{t('noActionsAvailable')}</p>
+          <p className="text-sm text-muted-foreground">{t('taskManagement.taskDetail.noActionsAvailable')}</p>
         )}
       </CardContent>
     </Card>

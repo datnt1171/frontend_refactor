@@ -30,8 +30,7 @@ export function TaskDataEditor({
   fieldId
 }: TaskDataEditorProps) {
   const router = useRouter()
-  const t = useTranslations('taskManagement.taskDetail')
-  const commonT = useTranslations('common')
+  const t = useTranslations()
   
   const [value, setValue] = useState(() => {
     // Parse multiselect string to array
@@ -84,10 +83,10 @@ export function TaskDataEditor({
       }
 
       await updateTaskData(taskId, fieldId, updateData)
-      alert(t('EditSuccessfully'))
+      alert(t('taskManagement.taskDetail.EditSuccessfully'))
       router.push(`/task-management/tasks/${taskId}`)
     } catch (error) {
-      alert(t('EditFailed'))
+      alert(t('taskManagement.taskDetail.EditFailed'))
     } finally {
       setIsSubmitting(false)
     }
@@ -103,7 +102,7 @@ export function TaskDataEditor({
         <CardHeader>
           <CardTitle>
             <BackButton />
-            {commonT('edit')}: {field.name}
+            {t('common.edit')}: {field.name}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -130,7 +129,7 @@ export function TaskDataEditor({
               {/* Show newly selected files */}
               {(field.field_type === 'file' || field.field_type === 'multifile') && files.length > 0 && (
                 <div className="mt-2 space-y-1">
-                  <p className="text-sm font-medium text-gray-700">{t('newFilesSelected')}:</p>
+                  <p className="text-sm font-medium text-gray-700">{t('taskManagement.taskDetail.newFilesSelected')}:</p>
                   {files.map((file, index) => (
                     <div 
                       key={index} 
@@ -156,7 +155,7 @@ export function TaskDataEditor({
                 type="submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? commonT('processing') : commonT('save')}
+                {isSubmitting ? t('common.processing') : t('common.save')}
               </Button>
             </div>
           </form>

@@ -10,7 +10,7 @@ import { useTranslations } from 'next-intl'
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import { Link } from "@/i18n/navigation";
 
-export default function ChangePasswordPage() {
+export default function Page() {
   const [current_password, setCurrentPassword] = useState("");
   const [new_password, setNewPassword] = useState("");
   const [re_new_password, setReNewPassword] = useState("");
@@ -21,7 +21,7 @@ export default function ChangePasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  const t = useTranslations('user.changePassword')
+  const t = useTranslations()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,10 +33,10 @@ export default function ChangePasswordPage() {
       if (!response.ok) {
         setError(
         response.data.error ||
-        t('passwordChangeFailed')
+        t('user.changePassword.passwordChangeFailed')
       );
       } else {
-      setSuccess(t('passwordChangedSuccess'));
+      setSuccess(t('user.changePassword.passwordChangedSuccess'));
       setCurrentPassword("");
       setNewPassword("");
       setReNewPassword("");
@@ -47,7 +47,7 @@ export default function ChangePasswordPage() {
       
     } catch (err: any) {
       setError(
-        t('passwordChangeFailed')
+        t('user.changePassword.passwordChangeFailed')
       );
     } finally {
       setLoading(false);
@@ -66,10 +66,10 @@ export default function ChangePasswordPage() {
           </Button>
         </Link>
       </div>
-      <h1 className="text-2xl font-bold mb-6">{t('changePassword')}</h1>
+      <h1 className="text-2xl font-bold mb-6">{t('user.changePassword.changePassword')}</h1>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div>
-          <Label htmlFor="current_password">{t('currentPassword')}</Label>
+          <Label htmlFor="current_password">{t('user.changePassword.currentPassword')}</Label>
           <div className="relative">
             <Input
               id="current_password"
@@ -89,7 +89,7 @@ export default function ChangePasswordPage() {
           </div>
         </div>
         <div>
-          <Label htmlFor="new_password">{t('newPassword')}</Label>
+          <Label htmlFor="new_password">{t('user.changePassword.newPassword')}</Label>
           <div className="relative">
             <Input
               id="new_password"
@@ -110,16 +110,16 @@ export default function ChangePasswordPage() {
           {new_password && (
             <div className="text-xs mt-1 space-y-1">
               <p className={isMinLength ? 'text-green-600' : 'text-red-500'}>
-                • {t('passwordMinLength')}
+                • {t('user.changePassword.passwordMinLength')}
               </p>
               <p className={isNotNumeric ? 'text-green-600' : 'text-red-500'}>
-                • {t('passwordNotNumeric')}
+                • {t('user.changePassword.passwordNotNumeric')}
               </p>
             </div>
           )}
         </div>
         <div>
-          <Label htmlFor="re_new_password">{t('confirmNewPassword')}</Label>
+          <Label htmlFor="re_new_password">{t('user.changePassword.confirmNewPassword')}</Label>
           <div className="relative">
             <Input
               id="re_new_password"
@@ -141,7 +141,7 @@ export default function ChangePasswordPage() {
         {error && <div className="text-red-500 text-sm">{error}</div>}
         {success && <div className="text-green-600 text-sm">{success}</div>}
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? t('changing') : t('changePassword')}
+          {loading ? t('user.changePassword.changing') : t('user.changePassword.changePassword')}
         </Button>
       </form>
     </div>

@@ -22,17 +22,17 @@ export default function BlueprintDeleteButton({
   const [open, setOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const commonT = useTranslations('common')
+  const t = useTranslations()
 
   const handleDelete = async () => {
     setIsLoading(true)
 
     try {
       await deleteBlueprint(factoryId, blueprintId)
-      alert(commonT('actionPerformedSuccessfully'))
+      alert(t('common.actionPerformedSuccessfully'))
       setOpen(false)
     } catch (error) {
-      alert(commonT('failedToPerformAction'))
+      alert(t('common.failedToPerformAction'))
     } finally {
       setIsLoading(false)
       router.push(`/crm/factories/${factoryId}/blueprints/`)
@@ -44,18 +44,18 @@ export default function BlueprintDeleteButton({
       <AlertDialogTrigger asChild>
         <Button variant="outline">
           <Trash2 className="h-4 w-4 mr-2" />
-          {commonT('delete')}
+          {t('common.delete')}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{commonT('deleteAlertTitle')}</AlertDialogTitle>
+          <AlertDialogTitle>{t('common.deleteAlertTitle')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {commonT('deleteAlertDescription', { name: blueprintName })}
+            {t('common.deleteAlertDescription', { name: blueprintName })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>{commonT('cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{t('common.cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isLoading}
@@ -64,10 +64,10 @@ export default function BlueprintDeleteButton({
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {commonT('processing')}
+                {t('common.processing')}
               </>
             ) : (
-              commonT('delete')
+              t('common.delete')
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

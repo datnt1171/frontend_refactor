@@ -18,14 +18,14 @@ export function LoginForm() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const t = useTranslations('login')
+  const t = useTranslations()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
 
     if (!username.trim() || !password.trim()) {
-      setError(t('noAuthInput'))
+      setError(t('login.noAuthInput'))
       return;
     }
 
@@ -50,7 +50,7 @@ export function LoginForm() {
       }
     } catch (err: unknown) {
       console.error("Login error:", err)
-      setError(t('authError'))
+      setError(t('login.authError'))
     } finally {
       setIsLoading(false)
     }
@@ -59,30 +59,30 @@ export function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('login')}</CardTitle>
+        <CardTitle>{t('login.login')}</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">{t('username')}</Label>
+            <Label htmlFor="username">{t('login.username')}</Label>
             <Input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder={t('usernamePlaceholder')}
+              placeholder={t('login.usernamePlaceholder')}
               disabled={isLoading}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">{t('password')}</Label>
+            <Label htmlFor="password">{t('login.password')}</Label>
             <div className="relative">
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={t('passwordPlaceholder')}
+                placeholder={t('login.passwordPlaceholder')}
                 disabled={isLoading}
               />
               <button
@@ -100,16 +100,16 @@ export function LoginForm() {
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('loggingIn')}
+                {t('login.loggingIn')}
               </>
             ) : (
-              t('loginButton')
+              t('login.loginButton')
             )}
           </Button>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <p className="text-sm text-gray-500">{t('footerText')}</p>
+        <p className="text-sm text-gray-500">{t('login.footerText')}</p>
       </CardFooter>
     </Card>
   )
