@@ -102,7 +102,19 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   // Auto-apply filters when autoApplyFilters is enabled
   useEffect(() => {
     if (config.autoApplyFilters) {
-      applyFilters();
+      // Check if any date-range filter is incomplete
+      const hasIncompleteRange = config.filters.some(filter => {
+        if (filter.type === 'date-range') {
+          const value = filters[filter.id];
+          return value && typeof value === 'object' && (value.gte || value.lte) && !(value.gte && value.lte);
+        }
+        return false;
+      });
+      
+      // Only apply if no incomplete ranges
+      if (!hasIncompleteRange) {
+        applyFilters();
+      }
     }
   }, [filters, config.autoApplyFilters]);
 

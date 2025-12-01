@@ -24,6 +24,8 @@ export default async function Page({ searchParams }: PageProps) {
   const FilterConfig: PageFilterConfig = {
     showResetButton: false,
     isPaginated: false,
+    autoApplyFilters: true,
+
     filters: [
       {
         id: 'date',
