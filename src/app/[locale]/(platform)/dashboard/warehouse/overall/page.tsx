@@ -76,12 +76,14 @@ export default async function Page({ searchParams }: PageProps) {
         type: 'day-range',
         label: t('filter.selectDay'),
         placeholder: t('filter.selectDay'),
+        highlightThreshold: today.getDate()
       },
       {
         id: 'month',
         type: 'month-range',
         label: t('filter.selectMonth'),
         placeholder: t('filter.selectDate'),
+        highlightThreshold: today.getMonth() + 1
       },
       {
         id: 'year',

@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { Combobox } from '@/components/ui/combobox';
+import { NumberRangePicker } from '@/components/ui/NumberRangePicker';
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -102,9 +103,9 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
   // Auto-apply filters when autoApplyFilters is enabled
   useEffect(() => {
     if (config.autoApplyFilters) {
-      // Check if any date-range filter is incomplete
+      // Check if any range filter is incomplete
       const hasIncompleteRange = config.filters.some(filter => {
-        if (filter.type === 'date-range') {
+        if (filter.type === 'date-range' || filter.type === 'day-range' || filter.type === 'month-range') {
           const value = filters[filter.id];
           return value && typeof value === 'object' && (value.gte || value.lte) && !(value.gte && value.lte);
         }
@@ -120,32 +121,6 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
 
   const handleFilterChange = (filterId: string, value: any) => {
     setFilters(prev => ({ ...prev, [filterId]: value }));
-  };
-
-  const handleRangeChange = (filterId: string, field: 'gte' | 'lte', value: string) => {
-    setFilters(prev => {
-      const newFilters = { ...prev };
-      
-      if (value === '' || value === null || value === undefined) {
-        // Remove the field entirely if value is empty
-        if (newFilters[filterId]) {
-          const { [field]: _, ...rest } = newFilters[filterId];
-          if (Object.keys(rest).length === 0) {
-            delete newFilters[filterId];
-          } else {
-            newFilters[filterId] = rest;
-          }
-        }
-      } else {
-        // Set the value
-        newFilters[filterId] = { 
-          ...newFilters[filterId], 
-          [field]: value 
-        };
-      }
-      
-      return newFilters;
-    });
   };
 
   const resetFilters = () => {
@@ -352,27 +327,15 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                min={filter.min || 1}
-                max={filter.max || 31}
-                placeholder={t('common.from')}
-                value={filters[filter.id]?.gte || ''}
-                onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
-                className="w-20"
-              />
-              <span className="text-muted-foreground text-sm">{t('common.to')}</span>
-              <Input
-                type="number"
-                min={filter.min || 1}
-                max={filter.max || 31}
-                placeholder={t('common.to')}
-                value={filters[filter.id]?.lte || ''}
-                onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
-                className="w-20"
-              />
-            </div>
+            <NumberRangePicker
+              min={filter.min || 1}
+              max={filter.max || 31}
+              value={filters[filter.id] || {}}
+              onChange={(value) => handleFilterChange(filter.id, value)}
+              label={t('filter.selectDay')}
+              highlightThreshold={filter.highlightThreshold}
+              columns={7}
+            />
           </div>
         );
 
@@ -380,27 +343,15 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                type="number"
-                min={filter.min || 1}
-                max={filter.max || 12}
-                placeholder={t('common.from')}
-                value={filters[filter.id]?.gte || ''}
-                onChange={(e) => handleRangeChange(filter.id, 'gte', e.target.value)}
-                className="w-20"
-              />
-              <span className="text-muted-foreground text-sm">{t('common.to')}</span>
-              <Input
-                type="number"
-                min={filter.min || 1}
-                max={filter.max || 12}
-                placeholder={t('common.to')}
-                value={filters[filter.id]?.lte || ''}
-                onChange={(e) => handleRangeChange(filter.id, 'lte', e.target.value)}
-                className="w-20"
-              />
-            </div>
+            <NumberRangePicker
+              min={filter.min || 1}
+              max={filter.max || 12}
+              value={filters[filter.id] || {}}
+              onChange={(value) => handleFilterChange(filter.id, value)}
+              label={t('filter.selectMonth')}
+              highlightThreshold={filter.highlightThreshold}
+              columns={4}
+            />
           </div>
         );
 
@@ -449,28 +400,26 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                     
                     // If both are set, start new selection
                     if (currentRange.from && currentRange.to) {
-                      handleRangeChange(filter.id, 'gte', clickedDate);
-                      handleRangeChange(filter.id, 'lte', '');
+                      handleFilterChange(filter.id, { gte: clickedDate });
                     }
                     // If only 'from' is set
                     else if (currentRange.from && !currentRange.to) {
                       // Clicking same date as 'from' - set as 'to' (allows same-day range)
                       if (clickedDate === fromDate) {
-                        handleRangeChange(filter.id, 'lte', clickedDate);
+                        handleFilterChange(filter.id, { gte: clickedDate, lte: clickedDate });
                       }
                       // Clicking before 'from' - reset
                       else if (day < currentRange.from) {
-                        handleRangeChange(filter.id, 'gte', clickedDate);
-                        handleRangeChange(filter.id, 'lte', '');
+                        handleFilterChange(filter.id, { gte: clickedDate });
                       }
                       // Clicking after 'from' - set as 'to'
                       else {
-                        handleRangeChange(filter.id, 'lte', clickedDate);
+                        handleFilterChange(filter.id, { gte: fromDate, lte: clickedDate });
                       }
                     }
                     // Neither set - set 'from'
                     else {
-                      handleRangeChange(filter.id, 'gte', clickedDate);
+                      handleFilterChange(filter.id, { gte: clickedDate });
                     }
                   }}
                   numberOfMonths={1}

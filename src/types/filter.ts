@@ -30,6 +30,7 @@ export interface FilterConfig {
   searchable?: boolean;
   min?: number;
   max?: number;
+  highlightThreshold?: number;
 }
 
 export interface PageFilterConfig {
