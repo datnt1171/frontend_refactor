@@ -155,8 +155,8 @@ export default async function Page({ searchParams }: PageProps) {
                 <TableHead>{t('crm.factories.factoryName')}</TableHead>
                 <TableHead>{t('common.type')}</TableHead>
                 <TableHead>{t('common.detail')}</TableHead>
-                <TableHead>{t('taskManagement.common.estimatedCompletionDate')}</TableHead>
                 <TableHead>{t('common.result')}</TableHead>
+                <TableHead>{t('taskManagement.common.estimatedCompletionDate')}</TableHead>
                 <TableHead>{t('taskManagement.common.status')}</TableHead>
               </TableRow>
             </TableHeader>
