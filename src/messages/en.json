@@ -78,7 +78,8 @@
     "close": "Close",
     "clear": "Clear",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "estimatedArriveTime": "Estimated Arrive Time"
   },
   "home": {
     "title": "Home Page",
@@ -341,6 +342,7 @@
       "transferAbsence": "Transfer Absence",
       "overtime": "Overtime",
       "dailyMovement": "Daily Movement",
+      "customerEntry": "Customer Entry",
 
       "Task": "Task"
     },

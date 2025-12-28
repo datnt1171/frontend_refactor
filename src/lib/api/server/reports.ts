@@ -7,6 +7,7 @@ import type {
   Overtime,
   OnsiteTransferAbsenceWithOvertime,
   DailyMovement,
+  CustomerEntry,
  } from '@/types/api'
 
 export const getDataDetails = async (searchParams?: Record<string, string>): Promise<TaskDataDetail[]> => {
@@ -167,5 +168,25 @@ export const getDailyMovement = async (searchParams?: Record<string, string>): P
   
   const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch Daily Movement: ${res.status}`)
+  return res.json()
+}
+
+
+export const getCustomerEntry = async (searchParams?: Record<string, string>): Promise<CustomerEntry[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/tasks/customer-entry?${queryString}` : '/tasks/customer-entry'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Customer Entry: ${res.status}`)
   return res.json()
 }

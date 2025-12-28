@@ -123,6 +123,7 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
         { title: "dashboard.sideBar.transferAbsence", url: "/dashboard/task-management/transfer-absence" },
         { title: "dashboard.sideBar.overtime", url: "/dashboard/task-management/overtime" },
         { title: "dashboard.sideBar.dailyMovement", url: "/dashboard/task-management/daily-movement" },
+        { title: "dashboard.sideBar.customerEntry", url: "/dashboard/task-management/customer-entry" },
       ],
     },
     {

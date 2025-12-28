@@ -683,6 +683,27 @@ export interface components {
             username: string;
             password: string;
         };
+        CustomerEntry: {
+            /** Format: uuid */
+            task_id: string;
+            title: string;
+            /** Format: date */
+            created_at: string;
+            /** Format: uuid */
+            created_by_id: string;
+            created_by: string;
+            state: string;
+            state_type: string;
+            customer_of_boss: string;
+            factory_code: string;
+            note: string;
+            license_plate: string;
+            drive_name: string;
+            /** Format: date */
+            scheduled_date: string;
+            /** Format: time */
+            scheduled_time: string;
+        };
         DailyMovement: {
             /** Format: uuid */
             task_id: string;

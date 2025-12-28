@@ -78,7 +78,8 @@
     "close": "Đóng",
     "clear": "Bỏ chọn",
     "from": "Từ",
-    "to": "Đến"
+    "to": "Đến",
+    "estimatedArriveTime": "Thời gian dự kiến đến"
   },
   "home": {
   "title": "Trang chủ",
@@ -341,6 +342,7 @@
       "transferAbsence": "Điều động nghỉ phép",
       "overtime": "Tăng ca",
       "dailyMovement": "Lịch trình hằng ngày",
+      "customerEntry": "Khách hàng vào cổng",
 
       "Task": "Phiếu"
     },

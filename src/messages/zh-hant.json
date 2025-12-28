@@ -78,7 +78,8 @@
     "close": "關閉",
     "clear": "清除",
     "from": "從",
-    "to": "到"
+    "to": "到",
+    "estimatedArriveTime": "預計到達時間"
   },
   "home": {
   "title": "首頁",
@@ -341,6 +342,7 @@
       "transferAbsence": "調動+請假",
       "overtime": "加班V線上",
       "dailyMovement": "每日運動",
+      "customerEntry": "顧客入口",
 
       "Task": "任務"
     },

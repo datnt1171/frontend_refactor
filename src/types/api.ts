@@ -74,6 +74,10 @@ export type DailyMovement = components['schemas']['DailyMovement'] & {
   factory_name: string;
 }
 
+export type CustomerEntry = components['schemas']['CustomerEntry'] & {
+  factory_name: string;
+}
+
 // Finishing sheet
 export type FinishingSheet = components['schemas']['FinishingSheet']
 export type SheetRow = components['schemas']['SheetRow'] 
