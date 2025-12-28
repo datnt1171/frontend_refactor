@@ -47,8 +47,8 @@ export default async function Page({ searchParams }: PageProps) {
                 <TableHead>{t('common.createdAt')}</TableHead>
                 <TableHead>{t('common.createdBy')}</TableHead>
                 <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                <TableHead>{t('taskManagement.common.status')}</TableHead>
                 <TableHead>{t('common.detail')}</TableHead>
+                <TableHead>{t('taskManagement.common.status')}</TableHead>
                 <TableHead>{t('fleet.trip.licensePlate')}</TableHead>
                 <TableHead>{t('fleet.trip.driver')}</TableHead>
                 <TableHead>{t('common.estimatedArriveTime')}</TableHead>
