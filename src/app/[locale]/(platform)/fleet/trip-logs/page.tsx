@@ -11,14 +11,86 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatDuration, formatDateToUTC7 } from "@/lib/utils/date"
 import { Link } from "@/i18n/navigation"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, getLocale } from "next-intl/server"
+import { format } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMobileTrigger';
+import { SidebarRight } from "@/components/dashboard/RightSidebar"
+import { getYearOptions, getMonthOptions, redirectWithDefaults } from "@/lib/utils/filter"
+import { CAR_LICENSE_PLATE_OPTION } from '@/lib/utils/filter';
+import type { PageFilterConfig } from "@/types"
 import { TripLogCSVButton } from "./TripLogCSVButton"
 
-export default async function TaskActionDetailPage() {
+
+interface TripLogPageProps {
+  searchParams: Promise<{
+    month?: string,
+    year?: string,
+    license_plate?: string,
+    driver?: string,
+  }>
+}
+
+export default async function Page({searchParams}: TripLogPageProps) {
+  const params = await searchParams
+  const locale = await getLocale()
   const t = await getTranslations()
-  const data = await getTripLogs()
+  const today = toZonedTime(new Date(), 'Asia/Ho_Chi_Minh');
+
+  const defaultParams = {
+    year: format(today, 'yyyy'),
+    month: format(today, 'M')
+  }
+
+  redirectWithDefaults({
+    currentParams: params,
+    defaultParams,
+    pathname: '/fleet/trip-logs',
+    locale
+  });
+
+  const FilterConfig: PageFilterConfig = {
+    showResetButton: false,
+    autoApplyFilters: true,
+    isPaginated: false,
+    
+    filters: [
+      {
+        id: 'year',
+        type: 'select',
+        label: t('filter.selectYear'),
+        options: getYearOptions()
+      },
+      {
+        id: 'month',
+        type: 'select',
+        label: t('filter.selectMonth'),
+        options: await getMonthOptions()
+      },
+      {
+        id: 'license_plate',
+        type: 'multiselect',
+        label: t('fleet.trip.licensePlate'),
+        placeholder: t('filter.selectLicensePlate'),
+        options: CAR_LICENSE_PLATE_OPTION
+      },
+    //   {
+    //     id: 'driver',
+    //     type: 'multiselect',
+    //     label: t('filter.selectUser'),
+    //     placeholder: t('filter.selectUser'),
+    //     options: await getTTVNOptions()
+    //   }
+    ]
+  }
+  
+  const data = await getTripLogs(params)
 
   return (
+    <SidebarProvider>
+      <SidebarInset className="flex flex-col min-w-0">
+        <SidebarRightMobileTrigger />
     <div className="container mx-auto py-6">
       <Card>
         <CardHeader>
@@ -170,5 +242,9 @@ export default async function TaskActionDetailPage() {
         </CardContent>
       </Card>
     </div>
+    </SidebarInset>
+      
+      <SidebarRight filterConfig={FilterConfig} />
+    </SidebarProvider>
   )
 }
