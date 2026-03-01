@@ -887,6 +887,7 @@ export interface components {
             sunday_ot_num: number;
             hanging_line_sunday: string;
             pallet_line_sunday: string;
+            others_sunday: string;
             num_of_ppl: number;
             name_of_ppl: string;
             files: {

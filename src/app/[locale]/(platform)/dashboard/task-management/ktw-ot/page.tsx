@@ -245,6 +245,11 @@ export default async function Page({ searchParams }: PageProps) {
                     <TableHead 
                       rowSpan={2} 
                       className="text-center text-sm bg-blue-50 border-r border-gray-300">
+                      {t('common.others')}
+                    </TableHead>
+                    <TableHead 
+                      rowSpan={2} 
+                      className="text-center text-sm bg-blue-50 border-r border-gray-300">
                       {t('sample.sample')}
                     </TableHead>
                   </TableRow>
@@ -281,6 +286,9 @@ export default async function Page({ searchParams }: PageProps) {
                           <TableCell className={`border-r border-gray-300 ${row.overtime.hanging_line_sunday !== '-' && row.overtime.hanging_line_sunday !== '' ? 'bg-red-100' : ''}`}>
                             {row.overtime.hanging_line_sunday}
                           </TableCell>
+                          <TableCell className={`border-r border-gray-300 ${row.overtime.others_sunday !== '-' && row.overtime.others_sunday !== '' ? 'bg-red-100' : ''}`}>
+                            {row.overtime.others_sunday}
+                          </TableCell>
 
                           {/* Sample */}
                           <TableCell className={`text-center border-r border-gray-300 ${row.sample_by_factory.quantity_requirement !== 0 && row.sample_by_factory.quantity_requirement ? 'bg-red-100' : ''}`}>
@@ -295,7 +303,7 @@ export default async function Page({ searchParams }: PageProps) {
                         
                         <TableCell className="text-center border-r border-gray-200">-</TableCell>
                         <TableCell className="text-center border-r border-gray-200">
-                          {rows.reduce((sum, row) => sum + Number(row.overtime.weekday_ot_num), 0)}
+                          {rows.reduce((sum, row) => sum + Number(row.overtime.sunday_ot_num), 0)}
                         </TableCell>
 
                         {/* Other columns */}
