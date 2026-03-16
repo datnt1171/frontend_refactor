@@ -14,6 +14,7 @@ import type {
     FactSales,
     SalesBOM,
     OrderBOM,
+    PivotProductOrder,
 } from '@/types'
 
 export const getWarehouseOverall = async (searchParams?: Record<string, string>): Promise<Overall[]> => {
@@ -299,5 +300,25 @@ export const getOrderBOM = async (searchParams?: Record<string, string>): Promis
   
   const res = await api(endpoint)
   if (!res.ok) throw new Error(`Failed to fetch Warehouse Order BOM: ${res.status}`)
+  return res.json()
+}
+
+
+export const getPivotProductOrder = async (searchParams?: Record<string, string>): Promise<PivotProductOrder[]> => {
+  const queryParams = new URLSearchParams()
+  
+  if (searchParams) {
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value && value.trim() !== '') {
+        queryParams.append(key, value)
+      }
+    })
+  }
+  
+  const queryString = queryParams.toString()
+  const endpoint = queryString ? `/warehouse/pivot-product-order?${queryString}` : '/warehouse/pivot-product-order'
+  
+  const res = await api(endpoint)
+  if (!res.ok) throw new Error(`Failed to fetch Pivot Product Order: ${res.status}`)
   return res.json()
 }

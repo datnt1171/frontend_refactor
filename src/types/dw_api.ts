@@ -42,3 +42,13 @@ export type Formular = components['schemas']['Formular']
 export type PaginatedProductList = components['schemas']['PaginatedProductList']
 export type PaginatedMaterialList = components['schemas']['PaginatedMaterialList']
 export type PaginatedFormularList = components['schemas']['PaginatedFormularList']
+
+export type PivotProductOrder = {
+  product_code: string
+  product_name: string
+  factory_code: string
+  factory_name: string
+  total_order: number
+  avg_order: number
+  [key: string]: string | number  // dynamic year-month columns
+}

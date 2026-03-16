@@ -134,6 +134,7 @@ export const appNavConfigs: Record<AppType, NavItem[]> = {
         { title: "dashboard.sideBar.factorySalesRangeDiff", url: "/dashboard/warehouse/factory-sales-range-diff" },
         { title: "dashboard.sideBar.factoryOrderRangeDiff", url: "/dashboard/warehouse/factory-order-range-diff" },
         { title: "dashboard.sideBar.productRangeDiff", url: "/dashboard/warehouse/product" },
+        { title: "dashboard.sideBar.unsualOrder", url: "/dashboard/warehouse/pivot-product-order" },
         { title: "dashboard.sideBar.scheduled", url: "/dashboard/warehouse/scheduled" },
         { title: "dashboard.sideBar.compare", url: "/dashboard/warehouse/overtime" },
         { title: "dashboard.sideBar.conclusion", url: "/dashboard/warehouse/conclusion" },

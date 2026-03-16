@@ -492,6 +492,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/warehouse/pivot-product-order": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Pivot Product Order */
+        get: operations["get_pivot_product_order_api_warehouse_pivot_product_order_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/etl/sales": {
         parameters: {
             query?: never;
@@ -2481,6 +2498,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["OrderBOM"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_pivot_product_order_api_warehouse_pivot_product_order_get: {
+        parameters: {
+            query: {
+                factory?: string | null;
+                increase?: boolean;
+                day__gte: number;
+                day__lte: number;
+                month: string;
+                year: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */
