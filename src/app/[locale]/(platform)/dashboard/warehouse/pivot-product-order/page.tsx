@@ -1,3 +1,4 @@
+import React from 'react';
 import { getPivotProductOrder, getMaxSalesDate } from '@/lib/api/server';
 import {
   Table,
@@ -131,12 +132,44 @@ export default async function Page({ searchParams }: PageProps) {
     { key: 'factory_name', header: t('crm.factories.factoryName') },
     { key: 'product_code', header: t('product.productCode') },
     { key: 'product_name', header: t('product.productName') },
-    { key: 'total_order', header: t('common.total') },
-    { key: 'avg_order', header: t('common.average') },
+    { key: 'total_sales', header: t('common.total') },
+    { key: 'avg_sales', header: t('common.average') },
     { key: 'selected_month_sales', header: t('dashboard.sales.sales') },
     { key: 'planned_deliveries', header: t('dashboard.sideBar.pendingDelivery') },
     ...ymCols.map(col => ({ key: col, header: col })),
   ]
+
+  // Group data by factory_code
+  const factoryGroups = data.reduce((acc, row) => {
+    if (!acc[row.factory_code]) acc[row.factory_code] = []
+    acc[row.factory_code]!.push(row)
+    return acc
+  }, {} as Record<string, typeof data>)
+
+  const pct = (val: number, avg: number) =>
+    avg > 0 ? ` (${((val / avg) * 100).toFixed(1)}%)` : ''
+
+  const csvData = Object.entries(factoryGroups).flatMap(([factoryCode, rows]) => {
+  const sumTotal = rows.reduce((s, r) => s + r.total_sales, 0)
+  const sumAvg = rows.reduce((s, r) => s + r.avg_sales, 0)
+  const sumSelected = rows.reduce((s, r) => s + r.selected_month_sales, 0)
+  const sumPlanned = rows.reduce((s, r) => s + r.planned_deliveries, 0)
+
+  const summaryRow = {
+      factory_code: factoryCode,
+      factory_name: rows[0]!.factory_name,
+      product_code: t('common.total'),
+      product_name: '',
+      total_sales: sumTotal,
+      avg_sales: Math.round(sumAvg),
+      selected_month_sales: sumSelected,
+      planned_deliveries: sumPlanned,
+      ...Object.fromEntries(
+        ymCols.map(col => [col, rows.reduce((s, r) => s + (Number(r[col]) || 0), 0)])
+      ),
+    }
+    return [...rows, summaryRow]
+  })
 
   return (
     <SidebarProvider>
@@ -147,7 +180,7 @@ export default async function Page({ searchParams }: PageProps) {
 
         <div className="flex justify-end">
           <CSVDownloadButton
-            data={data}
+            data={csvData}
             columns={pivotProductOrderColumns}
             filename={"ĐĐH bất thường"}
             buttonText={t('common.download')}
@@ -196,65 +229,93 @@ export default async function Page({ searchParams }: PageProps) {
             </TableHeader>
 
             <TableBody>
-              {data.map((row, idx) => (
-                <TableRow key={`${row.product_code}-${row.factory_code}-${idx}`}>
-                  <TableCell className="border-r border-gray-300 text-center">
-                    {row.factory_code}
-                  </TableCell>
-                  <TableCell className="border-r-2 border-gray-300">
-                    {row.factory_name}
-                  </TableCell>
-                  <TableCell className="border-r border-gray-300 font-mono text-sm sticky left-0 bg-white z-10">
-                    {row.product_code}
-                  </TableCell>
-                  <TableCell className="border-r border-gray-300 sticky left-[120px] bg-white z-10">
-                    {row.product_name}
-                  </TableCell>
+              {Object.entries(factoryGroups).map(([factoryCode, rows]) => (
+                <React.Fragment key={factoryCode}>
+                  {rows.map((row, idx) => (
+                    <TableRow key={`${row.product_code}-${row.factory_code}-${idx}`}>
+                      <TableCell className="border-r border-gray-300 text-center">
+                        {row.factory_code}
+                      </TableCell>
+                      <TableCell className="border-r-2 border-gray-300">
+                        {row.factory_name}
+                      </TableCell>
+                      <TableCell className="border-r border-gray-300 font-mono text-sm sticky left-0 bg-white z-10">
+                        {row.product_code}
+                      </TableCell>
+                      <TableCell className="border-r border-gray-300 sticky left-[120px] bg-white z-10">
+                        {row.product_name}
+                      </TableCell>
 
-                  <TableCell className="border-r border-gray-300 border-l-2 text-right font-semibold tabular-nums bg-green-50">
-                    {row.total_sales.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
-                    {row.avg_sales.toLocaleString()}
-                  </TableCell>
+                      <TableCell className="border-r border-gray-300 border-l-2 text-right font-semibold tabular-nums bg-green-50">
+                        {row.total_sales.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
+                        {Math.round(row.avg_sales).toLocaleString()}
+                      </TableCell>
 
-                  <TableCell className="border-r border-gray-300 border-l-2 text-right font-semibold tabular-nums bg-green-50">
-                    {row.selected_month_sales.toLocaleString()}
-                  </TableCell>
-                  <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
-                    {row.planned_deliveries.toLocaleString()}
-                  </TableCell>
+                      <TableCell className="border-r border-gray-300 border-l-2 text-right font-semibold tabular-nums bg-green-50">
+                        {row.selected_month_sales.toLocaleString()}
+                      </TableCell>
+                      <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
+                        {row.planned_deliveries.toLocaleString()}
+                      </TableCell>
 
-                  {/* Dynamic year-month values */}
-                  {ymCols.map(col => (
-                    <TableCell key={col} className="border-r border-gray-200 text-right tabular-nums">
-                      {row[col] === 0
-                        ? <span className="text-gray-300">—</span>
-                        : row[col]!.toLocaleString()
-                      }
-                    </TableCell>
+                      {ymCols.map(col => (
+                        <TableCell key={col} className="border-r border-gray-200 text-right tabular-nums">
+                          {row[col] === 0
+                            ? <span className="text-gray-300">—</span>
+                            : row[col]!.toLocaleString()
+                          }
+                        </TableCell>
+                      ))}
+                    </TableRow>
                   ))}
 
-                </TableRow>
-              ))}
+                  {/* Factory summary row */}
+                  {(() => {
+                    const sumTotal = rows.reduce((s, r) => s + r.total_sales, 0)
+                    const sumAvg = rows.reduce((s, r) => s + r.avg_sales, 0)
+                    const sumSelected = rows.reduce((s, r) => s + r.selected_month_sales, 0)
+                    const sumPlanned = rows.reduce((s, r) => s + r.planned_deliveries, 0)
 
-              {/* Summary row */}
-              {/* <TableRow className="font-bold border-t-2 border-gray-300 bg-gray-50">
-                <TableCell colSpan={4} className="text-center border-r-2 border-gray-300 sticky left-0 bg-gray-50">
-                  {t('common.total')}
-                </TableCell>
-                {ymCols.map(col => (
-                  <TableCell key={col} className="border-r border-gray-200 text-right tabular-nums">
-                    {data.reduce((sum, row) => sum + (Number(row[col]) || 0), 0).toLocaleString()}
-                  </TableCell>
-                ))}
-                <TableCell className="border-r border-gray-300 border-l-2 text-right tabular-nums bg-green-50">
-                  {data.reduce((sum, row) => sum + row.total_order, 0).toLocaleString()}
-                </TableCell>
-                <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
-                  —
-                </TableCell>
-              </TableRow> */}
+                    return (
+                      <TableRow className="font-bold bg-gray-100 border-t-2 border-b-2 border-gray-400">
+                        <TableCell className="border-r border-gray-300 text-center">
+                          {factoryCode}
+                        </TableCell>
+                        <TableCell className="border-r-2 border-gray-300">
+                          {rows[0]!.factory_name}
+                        </TableCell>
+                        <TableCell colSpan={2} className="border-r border-gray-300 text-center sticky left-0 bg-gray-100 z-10">
+                          {t('common.total')}
+                        </TableCell>
+
+                        <TableCell className="border-r border-gray-300 border-l-2 text-right tabular-nums bg-green-100">
+                          {sumTotal.toLocaleString()}
+                        </TableCell>
+                        <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-100">
+                          {Math.round(sumAvg).toLocaleString()}
+                        </TableCell>
+
+                        <TableCell className="border-r border-gray-300 border-l-2 text-right tabular-nums bg-green-100">
+                          {sumSelected.toLocaleString()}
+                          <span className="text-gray-500 text-xs">{pct(sumSelected, sumAvg)}</span>
+                        </TableCell>
+                        <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-100">
+                          {sumPlanned.toLocaleString()}
+                          <span className="text-gray-500 text-xs">{pct(sumSelected + sumPlanned, sumAvg)}</span>
+                        </TableCell>
+
+                        {ymCols.map(col => (
+                          <TableCell key={col} className="border-r border-gray-200 text-right tabular-nums bg-blue-50">
+                            {rows.reduce((s, r) => s + (Number(r[col]) || 0), 0).toLocaleString()}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    )
+                  })()}
+                </React.Fragment>
+              ))}
             </TableBody>
           </Table>
         </div>
