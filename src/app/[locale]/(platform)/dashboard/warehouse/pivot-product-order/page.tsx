@@ -26,6 +26,8 @@ interface PageProps {
     year: string
     factory?: string
     increase: string
+    selected_month: string
+    selected_year: string
   }>
 }
 
@@ -44,7 +46,9 @@ export default async function Page({ searchParams }: PageProps) {
     day__lte: format(today, 'd'),
     month: '10,11,12',
     year: format(subYears(today, 1), 'yyyy'),
-    increase: 'false'
+    increase: 'false',
+    selected_month: format(today, 'M'),
+    selected_year: format(today, 'yyyy'),
   }
 
   redirectWithDefaults({
@@ -70,15 +74,15 @@ export default async function Page({ searchParams }: PageProps) {
       {
         id: 'year',
         type: 'multiselect',
-        label: t('filter.selectYear'),
-        placeholder: t('filter.selectYear'),
+        label: t('filter.targetYear'),
+        placeholder: t('filter.targetYear'),
         options: getYearOptions()
       },
       {
         id: 'month',
         type: 'multiselect',
-        label: t('filter.selectMonth'),
-        placeholder: t('filter.selectMonth'),
+        label: t('filter.targetMonth'),
+        placeholder: t('filter.targetMonth'),
         options: await getMonthOptions()
       },
       {
@@ -87,6 +91,20 @@ export default async function Page({ searchParams }: PageProps) {
         label: t('filter.selectDay'),
         placeholder: t('filter.selectDay'),
         highlightThreshold: today.getDate()
+      },
+      {
+        id: 'selected_month',
+        type: 'select',
+        label: t('filter.selectMonth'),
+        placeholder: t('filter.selectMonth'),
+        options: await getMonthOptions()
+      },
+      {
+        id: 'selected_year',
+        type: 'select',
+        label: t('filter.selectYear'),
+        placeholder: t('filter.selectYear'),
+        options: getYearOptions()
       },
       {
         id: 'increase',
@@ -103,7 +121,7 @@ export default async function Page({ searchParams }: PageProps) {
 
   const data = await getPivotProductOrder(params)
 
-  const staticCols = ["product_code", "product_name", "factory_code", "factory_name", "total_order", "avg_order"]
+  const staticCols = ["factory_code", "factory_name", "product_code", "product_name", "total_sales", "avg_sales", "selected_month_sales", "planned_deliveries"]
   const ymCols = data.length > 0
     ? Object.keys(data[0]!).filter(k => !staticCols.includes(k)).sort()
     : []
@@ -115,6 +133,8 @@ export default async function Page({ searchParams }: PageProps) {
     { key: 'product_name', header: t('product.productName') },
     { key: 'total_order', header: t('common.total') },
     { key: 'avg_order', header: t('common.average') },
+    { key: 'selected_month_sales', header: t('dashboard.sales.sales') },
+    { key: 'planned_deliveries', header: t('dashboard.sideBar.pendingDelivery') },
     ...ymCols.map(col => ({ key: col, header: col })),
   ]
 
@@ -158,6 +178,13 @@ export default async function Page({ searchParams }: PageProps) {
                   {t('common.average')}
                 </TableHead>
 
+                <TableHead className="text-center font-semibold border-r border-gray-300 border-l-2 bg-green-50 min-w-[100px]">
+                  {t('dashboard.sales.sales')}
+                </TableHead>
+                <TableHead className="text-center font-semibold border-r border-gray-300 bg-yellow-50 min-w-[100px]">
+                  {t('dashboard.sideBar.pendingDelivery')}
+                </TableHead>
+
                 {/* Dynamic year-month columns */}
                 {ymCols.map(col => (
                   <TableHead key={col} className="text-center font-semibold border-r border-gray-200 bg-blue-50 min-w-[100px]">
@@ -185,10 +212,17 @@ export default async function Page({ searchParams }: PageProps) {
                   </TableCell>
 
                   <TableCell className="border-r border-gray-300 border-l-2 text-right font-semibold tabular-nums bg-green-50">
-                    {row.total_order.toLocaleString()}
+                    {row.total_sales.toLocaleString()}
                   </TableCell>
                   <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
-                    {row.avg_order.toLocaleString()}
+                    {row.avg_sales.toLocaleString()}
+                  </TableCell>
+
+                  <TableCell className="border-r border-gray-300 border-l-2 text-right font-semibold tabular-nums bg-green-50">
+                    {row.selected_month_sales.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="border-r border-gray-300 text-right tabular-nums bg-yellow-50">
+                    {row.planned_deliveries.toLocaleString()}
                   </TableCell>
 
                   {/* Dynamic year-month values */}
