@@ -150,12 +150,12 @@ export default async function Page({ searchParams }: PageProps) {
     avg > 0 ? ` (${((val / avg) * 100).toFixed(1)}%)` : ''
 
   const csvData = Object.entries(factoryGroups).flatMap(([factoryCode, rows]) => {
-  const sumTotal = rows.reduce((s, r) => s + r.total_sales, 0)
-  const sumAvg = rows.reduce((s, r) => s + r.avg_sales, 0)
-  const sumSelected = rows.reduce((s, r) => s + r.selected_month_sales, 0)
-  const sumPlanned = rows.reduce((s, r) => s + r.planned_deliveries, 0)
+    const sumTotal = rows.reduce((s, r) => s + r.total_sales, 0)
+    const sumAvg = rows.reduce((s, r) => s + r.avg_sales, 0)
+    const sumSelected = rows.reduce((s, r) => s + r.selected_month_sales, 0)
+    const sumPlanned = rows.reduce((s, r) => s + r.planned_deliveries, 0)
 
-  const summaryRow = {
+    const summaryRow = {
       factory_code: factoryCode,
       factory_name: rows[0]!.factory_name,
       product_code: t('common.total'),
@@ -168,7 +168,20 @@ export default async function Page({ searchParams }: PageProps) {
         ymCols.map(col => [col, rows.reduce((s, r) => s + (Number(r[col]) || 0), 0)])
       ),
     }
-    return [...rows, summaryRow]
+
+    const pctRow = {
+      factory_code: factoryCode,
+      factory_name: rows[0]!.factory_name,
+      product_code: t('common.total') + ' %',
+      product_name: '',
+      total_sales: '',
+      avg_sales: '',
+      selected_month_sales: sumAvg > 0 ? parseFloat(((sumSelected / sumAvg) * 100).toFixed(1)) : '',
+      planned_deliveries: sumAvg > 0 ? parseFloat((((sumSelected + sumPlanned) / sumAvg) * 100).toFixed(1)) : '',
+      ...Object.fromEntries(ymCols.map(col => [col, ''])),
+    }
+
+    return [...rows, summaryRow, pctRow]
   })
 
   return (
