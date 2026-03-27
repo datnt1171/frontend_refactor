@@ -8,7 +8,7 @@ import { getDefaultRoute, DEFAULT_ROUTE } from '@/config/defaultRoute';
 const intlMiddleware = createMiddleware(routing);
 
 // Constants
-const PUBLIC_PATHS = ['/login'];
+const PUBLIC_PATHS = ['/login', '/rd'];
 const DEFAULT_REDIRECT_PATH = '/task-management/processes';
 
 export async function middleware(request: NextRequest) {
@@ -46,12 +46,14 @@ export async function middleware(request: NextRequest) {
 
   // Handle authenticated users accessing public paths
   if (refreshToken && isPublicPath) {
-    // Redirect to their default route based on role + department
-    const defaultRoute = userRole && userDept 
-      ? getDefaultRoute(userDept, userRole)
-      : DEFAULT_ROUTE;
-    
-    return NextResponse.redirect(new URL(`/${locale}${defaultRoute}`, request.url));
+    // Only redirect away from login, not all public paths
+    if (pathWithoutLocale === '/login') {
+      const defaultRoute = userRole && userDept 
+        ? getDefaultRoute(userDept, userRole)
+        : DEFAULT_ROUTE;
+      return NextResponse.redirect(new URL(`/${locale}${defaultRoute}`, request.url));
+    }
+    // Other public paths: fall through to isPublicPath check below
   }
 
   // Skip auth checks for public paths
