@@ -780,16 +780,27 @@ export interface components {
             readonly id: string;
             /** Format: uuid */
             task: string;
+            factory_code: string;
             finishing_code: string;
-            name: string;
-            sheen: string;
-            dft: string;
-            type_of_paint: string;
+            retailer_id?: string;
+            customer_color_name?: string;
+            sample_type: string;
             type_of_substrate: string;
-            finishing_surface_grain: string;
+            collection?: string;
             sampler: string;
-            chemical_waste: string;
-            conveyor_speed: string;
+            type_of_paint: string;
+            finishing_surface_grain: string;
+            sheen_level: string;
+            substrate_surface_treatment: string;
+            panel_category: string;
+            purpose_of_usage: string;
+            furniture_type?: string;
+            dft?: string;
+            chemical_waste?: string;
+            conveyor_speed?: string;
+            color?: string;
+            /** Format: uri */
+            readonly images: components["schemas"]["SheetImage"][] | null;
             with_panel_test: boolean;
             testing: boolean;
             chemical_yellowing: boolean;
@@ -805,8 +816,8 @@ export interface components {
             /** Format: uuid */
             readonly id: string;
             code: string;
-            viscosity: number | null;
-            wft?: number | null;
+            viscosity?: string;
+            wft?: string;
             products: components["schemas"]["ProductTemplate"][];
         };
         /**
@@ -1064,16 +1075,27 @@ export interface components {
             readonly id?: string;
             /** Format: uuid */
             task?: string;
+            factory_code?: string;
             finishing_code?: string;
-            name?: string;
-            sheen?: string;
-            dft?: string;
-            type_of_paint?: string;
+            retailer_id?: string;
+            customer_color_name?: string;
+            sample_type?: string;
             type_of_substrate?: string;
-            finishing_surface_grain?: string;
+            collection?: string;
             sampler?: string;
+            type_of_paint?: string;
+            finishing_surface_grain?: string;
+            sheen_level?: string;
+            substrate_surface_treatment?: string;
+            panel_category?: string;
+            purpose_of_usage?: string;
+            furniture_type?: string;
+            dft?: string;
             chemical_waste?: string;
             conveyor_speed?: string;
+            color?: string;
+            /** Format: uri */
+            image?: string | null;
             with_panel_test?: boolean;
             testing?: boolean;
             chemical_yellowing?: boolean;
@@ -1191,9 +1213,9 @@ export interface components {
             readonly id: string;
             code: string;
             name: string;
-            readonly type_en: string;
-            readonly type_vi: string;
-            readonly type_zh_hant: string;
+            readonly description_en: string;
+            readonly description_vi: string;
+            readonly description_zh_hant: string;
             /** Format: decimal */
             ratio: string;
             unit?: string;
@@ -1226,16 +1248,12 @@ export interface components {
             order: number;
             product_code: string;
             product_name: string;
-            product_type_en: string;
-            product_type_vi: string;
-            product_type_zh_hant: string;
-            ratio: string;
-            qty: string;
-            unit: string;
-            check_result?: string;
-            correct_action?: string;
-            te1_signature?: string;
-            customer_signature?: string;
+            product_description_en: string;
+            product_description_vi: string;
+            product_description_zh_hant: string;
+            ratio?: string;
+            qty?: string;
+            unit?: string;
             /** Format: uuid */
             readonly created_by: string;
             /** Format: date-time */
@@ -1280,6 +1298,17 @@ export interface components {
             readonly updated_at: string;
             readonly updated_by: components["schemas"]["User"];
         };
+        SheetImage: {
+            /** Format: uuid */
+            readonly id: string;
+            /** Format: uri */
+            image: string;
+            caption?: string;
+            /** Format: date-time */
+            readonly created_at: string;
+            /** Format: uuid */
+            readonly created_by: string;
+        };
         SheetRow: {
             /** Format: uuid */
             readonly id: string;
@@ -1287,27 +1316,29 @@ export interface components {
             step_template?: string | null;
             /** Format: uuid */
             formular_template?: string | null;
-            step_num: number;
+            order: number;
             /** Format: decimal */
             spot?: string | null;
-            stepname_en: string;
-            stepname_vi: string;
-            stepname_zh_hant: string;
-            stepname_short_en: string;
-            stepname_short_vi: string;
-            stepname_short_zh_hant: string;
-            sanding_en: string;
-            sanding_vi: string;
-            sanding_zh_hant: string;
-            viscosity_en: string;
-            viscosity_vi: string;
-            viscosity_zh_hant: string;
-            spec_en: string;
-            spec_vi: string;
-            spec_zh_hant: string;
-            hold_time: string;
-            chemical_code: string;
-            consumption: string;
+            name_en: string;
+            name_vi: string;
+            name_zh_hant: string;
+            name_short_en: string;
+            name_short_vi: string;
+            name_short_zh_hant: string;
+            sanding_en?: string;
+            sanding_vi?: string;
+            sanding_zh_hant?: string;
+            viscosity_en?: string;
+            viscosity_vi?: string;
+            viscosity_zh_hant?: string;
+            spec_en?: string;
+            spec_vi?: string;
+            spec_zh_hant?: string;
+            hold_time?: string;
+            chemical_code?: string;
+            consumption?: string;
+            wft?: string;
+            oven_temperature?: string;
             /** Format: date-time */
             readonly created_at: string;
             /** Format: uuid */
@@ -1345,7 +1376,9 @@ export interface components {
             name: string;
             short_name: string;
             spec?: string;
-            hold_time: number;
+            sanding?: string;
+            hold_time?: string;
+            oven_temperature?: string;
             /** Format: decimal */
             consumption: string;
             readonly name_en: string;
