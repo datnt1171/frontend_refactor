@@ -15,15 +15,11 @@ import { Download } from "lucide-react"
 import { useTranslations } from 'next-intl'
 
 interface ThinnerPaintRatioData {
-  thinner_data: {
-    [key: string]: unknown
-  }[]
-  paint_data: {
-    [key: string]: unknown
-  }[]
-  ratio_data: {
-    [key: string]: unknown
-  }[]
+  thinner_data: { [key: string]: unknown }[]
+  paint_data:   { [key: string]: unknown }[]
+  ratio_data:   { [key: string]: unknown }[]
+  thinner_detail_data: { [key: string]: unknown }[]
+  paint_detail_data:   { [key: string]: unknown }[]
 }
 
 interface RatioTableWithSelectProps {

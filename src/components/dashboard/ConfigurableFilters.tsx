@@ -290,6 +290,33 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         );
 
       case 'date':
+        const [localDate, setLocalDate] = React.useState(filters[filter.id] || '');
+
+        // Sync local state when filter changes externally
+        React.useEffect(() => {
+          setLocalDate(filters[filter.id] || '');
+        }, [filters[filter.id]]);
+
+        const validateAndUpdateSingleDate = (value: string) => {
+          // Empty is valid (clearing the field)
+          if (value === '') {
+            handleFilterChange(filter.id, '');
+            return;
+          }
+
+          // Check if it's a valid date format and valid date
+          if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            const date = new Date(value);
+            if (!isNaN(date.getTime())) {
+              handleFilterChange(filter.id, value);
+              return;
+            }
+          }
+
+          // Invalid date - revert to previous valid value
+          setLocalDate(filters[filter.id] || '');
+        };
+
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
@@ -311,6 +338,25 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="center" side="left">
+                <div className="p-3 border-b">
+                  <Input
+                    type="text"
+                    placeholder="YYYY-MM-DD"
+                    value={localDate}
+                    onChange={(e) => {
+                      setLocalDate(e.target.value);
+                    }}
+                    onBlur={() => validateAndUpdateSingleDate(localDate)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        validateAndUpdateSingleDate(localDate);
+                      }
+                    }}
+                    autoFocus={false}
+                    tabIndex={-1}
+                    className="h-9"
+                  />
+                </div>
                 <CalendarComponent
                   mode="single"
                   selected={filters[filter.id] ? new Date(filters[filter.id]) : undefined}
@@ -356,6 +402,48 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
         );
 
       case 'date-range':
+        const [localDateRange, setLocalDateRange] = React.useState({
+          gte: filters[filter.id]?.gte || '',
+          lte: filters[filter.id]?.lte || ''
+        });
+
+        // Sync local state when filter changes externally
+        React.useEffect(() => {
+          setLocalDateRange({
+            gte: filters[filter.id]?.gte || '',
+            lte: filters[filter.id]?.lte || ''
+          });
+        }, [filters[filter.id]?.gte, filters[filter.id]?.lte]);
+
+        const validateAndUpdateDate = (field: 'gte' | 'lte', value: string) => {
+          // Empty is valid (clearing the field)
+          if (value === '') {
+            handleFilterChange(filter.id, { 
+              ...filters[filter.id], 
+              [field]: '' 
+            });
+            return;
+          }
+
+          // Check if it's a valid date format and valid date
+          if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+            const date = new Date(value);
+            if (!isNaN(date.getTime())) {
+              handleFilterChange(filter.id, { 
+                ...filters[filter.id], 
+                [field]: value 
+              });
+              return;
+            }
+          }
+
+          // Invalid date - revert to previous valid value
+          setLocalDateRange({
+            gte: filters[filter.id]?.gte || '',
+            lte: filters[filter.id]?.lte || ''
+          });
+        };
+
         return (
           <div key={filter.id} className="space-y-3">
             <Label className="text-sm font-medium">{filter.label}</Label>
@@ -368,11 +456,11 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                     !filters[filter.id]?.gte && !filters[filter.id]?.lte && "text-muted-foreground"
                   )}
                 >
-                  <Calendar className="h-2 w-2" />
+                  <Calendar className="h-4 w-4 mr-2" />
                   {filters[filter.id]?.gte && filters[filter.id]?.lte ? (
                     <>
                       {formatDateToUTC7(filters[filter.id].gte, 'date')}
-                      →
+                      {' → '}
                       {formatDateToUTC7(filters[filter.id].lte, 'date')}
                     </>
                   ) : (
@@ -381,6 +469,43 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="center" side='left'>
+                <div className="p-3 border-b space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="text"
+                      placeholder="From: YYYY-MM-DD"
+                      value={localDateRange.gte}
+                      onChange={(e) => {
+                        setLocalDateRange(prev => ({ ...prev, gte: e.target.value }));
+                      }}
+                      onBlur={() => validateAndUpdateDate('gte', localDateRange.gte)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          validateAndUpdateDate('gte', localDateRange.gte);
+                        }
+                      }}
+                      autoFocus={false}
+                      className="h-9 flex-1"
+                    />
+                    <span className="text-muted-foreground">→</span>
+                    <Input
+                      type="text"
+                      placeholder="To: YYYY-MM-DD"
+                      value={localDateRange.lte}
+                      onChange={(e) => {
+                        setLocalDateRange(prev => ({ ...prev, lte: e.target.value }));
+                      }}
+                      onBlur={() => validateAndUpdateDate('lte', localDateRange.lte)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          validateAndUpdateDate('lte', localDateRange.lte);
+                        }
+                      }}
+                      autoFocus={false}
+                      className="h-9 flex-1"
+                    />
+                  </div>
+                </div>
                 <CalendarComponent
                   key={`${filters[filter.id]?.gte}-${filters[filter.id]?.lte}`}
                   mode="range"
@@ -398,27 +523,17 @@ export function ConfigurableFilters({ config, onFiltersChange }: ConfigurableFil
                     const clickedDate = format(day, 'yyyy-MM-dd');
                     const fromDate = currentRange.from ? format(currentRange.from, 'yyyy-MM-dd') : undefined;
                     
-                    // If both are set, start new selection
                     if (currentRange.from && currentRange.to) {
                       handleFilterChange(filter.id, { gte: clickedDate });
-                    }
-                    // If only 'from' is set
-                    else if (currentRange.from && !currentRange.to) {
-                      // Clicking same date as 'from' - set as 'to' (allows same-day range)
+                    } else if (currentRange.from && !currentRange.to) {
                       if (clickedDate === fromDate) {
                         handleFilterChange(filter.id, { gte: clickedDate, lte: clickedDate });
-                      }
-                      // Clicking before 'from' - reset
-                      else if (day < currentRange.from) {
+                      } else if (day < currentRange.from) {
                         handleFilterChange(filter.id, { gte: clickedDate });
-                      }
-                      // Clicking after 'from' - set as 'to'
-                      else {
+                      } else {
                         handleFilterChange(filter.id, { gte: fromDate, lte: clickedDate });
                       }
-                    }
-                    // Neither set - set 'from'
-                    else {
+                    } else {
                       handleFilterChange(filter.id, { gte: clickedDate });
                     }
                   }}

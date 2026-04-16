@@ -52,7 +52,6 @@ export default async function Page({ searchParams }: PageProps) {
     showResetButton: false,
     autoApplyFilters: true,
     isPaginated: false,
-    
     filters: [
       {
         id: 'table',
@@ -60,9 +59,11 @@ export default async function Page({ searchParams }: PageProps) {
         label: t('filter.table'),
         placeholder: t('filter.selectTable'),
         options: [
-          { value: 'ratio', label: t('product.ratio') },
-          { value: 'thinner', label: t('product.thinner') },
-          { value: 'paint', label: t('product.paint') },
+          { value: 'ratio',          label: t('product.ratio') },
+          { value: 'thinner',        label: t('product.thinner') },
+          { value: 'paint',          label: t('product.paint') },
+          { value: 'thinner_detail', label: `${t('product.thinner')} (${t('common.detail')})` },
+          { value: 'paint_detail',   label: `${t('product.paint')} (${t('common.detail')})` },
         ]
       },
       {
@@ -92,41 +93,56 @@ export default async function Page({ searchParams }: PageProps) {
   const maxSalesDate = await getMaxSalesDate()
   const thinnerPaintRatio = await getThinnerPaintRatio(params)
 
-  // Parse multiselect table parameter
-  const selectedTables = params.table 
-    ? params.table.split(',').map(t => t.trim()) 
+  const selectedTables = params.table
+    ? params.table.split(',').map(t => t.trim())
     : ['ratio']
 
-  const showThinner = selectedTables.includes('thinner')
-  const showPaint = selectedTables.includes('paint')
-  const showRatio = selectedTables.includes('ratio')
+  const showRatio         = selectedTables.includes('ratio')
+  const showThinner       = selectedTables.includes('thinner')
+  const showPaint         = selectedTables.includes('paint')
+  const showThinnerDetail = selectedTables.includes('thinner_detail')
+  const showPaintDetail   = selectedTables.includes('paint_detail')
 
-  // Extract month columns dynamically from first row
-  const monthColumns = thinnerPaintRatio.thinner_data[0] 
+  // Month columns from summary data
+  const monthColumns = thinnerPaintRatio.thinner_data[0]
     ? Object.keys(thinnerPaintRatio.thinner_data[0])
         .filter(key => key !== 'factory_code' && key !== 'factory_name')
         .sort((a, b) => Number(a) - Number(b))
     : []
 
-  const createThinnerPaintColumns = (monthColumns: string[]): ColumnConfig[] => [
+  // Month columns from detail data (excludes extra index cols)
+  const detailExcludedKeys = new Set(['factory_code', 'factory_name', 'product_type', 'product_name'])
+  const detailMonthColumns = thinnerPaintRatio.thinner_detail_data[0]
+    ? Object.keys(thinnerPaintRatio.thinner_detail_data[0])
+        .filter(key => !detailExcludedKeys.has(key))
+        .sort((a, b) => Number(a) - Number(b))
+    : monthColumns
+
+  const createSummaryColumns = (months: string[]): ColumnConfig[] => [
     { key: 'factory_code', header: t('crm.factories.factoryId') },
     { key: 'factory_name', header: t('crm.factories.factoryName') },
-    ...monthColumns.map(month => ({
-      key: month,
-      header: `${month}`
-    }))
+    ...months.map(month => ({ key: month, header: `${month}` }))
   ]
 
-  const thinnerColumns = createThinnerPaintColumns(monthColumns)
-  const paintColumns = createThinnerPaintColumns(monthColumns)
+  const createDetailColumns = (months: string[]): ColumnConfig[] => [
+    { key: 'factory_code',  header: t('crm.factories.factoryId') },
+    { key: 'factory_name',  header: t('crm.factories.factoryName') },
+    { key: 'product_type',  header: t('product.productType') },
+    { key: 'product_name',  header: t('product.productName') },
+    ...months.map(month => ({ key: month, header: `${month}` }))
+  ]
 
+  const thinnerColumns       = createSummaryColumns(monthColumns)
+  const paintColumns         = createSummaryColumns(monthColumns)
+  const thinnerDetailColumns = createDetailColumns(detailMonthColumns)
+  const paintDetailColumns   = createDetailColumns(detailMonthColumns)
 
   return (
     <SidebarProvider>
       <SidebarInset className="flex flex-col min-w-0">
         <SidebarRightMobileTrigger />
-
         <DataStatusBadge date={maxSalesDate} />
+
         {/* Ratio Table */}
         {showRatio && (
           <RatioTableWithSelect
@@ -143,7 +159,7 @@ export default async function Page({ searchParams }: PageProps) {
               <CSVDownloadButton
                 data={thinnerPaintRatio.thinner_data}
                 columns={thinnerColumns}
-                filename={'thinner'}
+                filename="thinner"
                 buttonText={t('common.download')}
               />
             </div>
@@ -152,9 +168,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <TableRow>
                   <TableHead>{t('crm.factories.factoryId')}</TableHead>
                   <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                  {monthColumns.map(month => (
-                    <TableHead key={month}>{month}</TableHead>
-                  ))}
+                  {monthColumns.map(month => <TableHead key={month}>{month}</TableHead>)}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -180,7 +194,7 @@ export default async function Page({ searchParams }: PageProps) {
               <CSVDownloadButton
                 data={thinnerPaintRatio.paint_data}
                 columns={paintColumns}
-                filename={'paint'}
+                filename="paint"
                 buttonText={t('common.download')}
               />
             </div>
@@ -189,9 +203,7 @@ export default async function Page({ searchParams }: PageProps) {
                 <TableRow>
                   <TableHead>{t('crm.factories.factoryId')}</TableHead>
                   <TableHead>{t('crm.factories.factoryName')}</TableHead>
-                  {monthColumns.map(month => (
-                    <TableHead key={month}>{month}</TableHead>
-                  ))}
+                  {monthColumns.map(month => <TableHead key={month}>{month}</TableHead>)}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -208,8 +220,86 @@ export default async function Page({ searchParams }: PageProps) {
             </Table>
           </div>
         )}
+
+        {/* Thinner Detail Table */}
+        {showThinnerDetail && (
+          <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
+            <div className="flex items-center justify-between px-4 py-2">
+              <h3 className="font-semibold">{t('product.thinner')} ({t('common.detail')})</h3>
+              <CSVDownloadButton
+                data={thinnerPaintRatio.thinner_detail_data}
+                columns={thinnerDetailColumns}
+                filename="thinner-detail"
+                buttonText={t('common.download')}
+              />
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                  <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                  <TableHead>{t('product.productType')}</TableHead>
+                  <TableHead>{t('product.productName')}</TableHead>
+                  {detailMonthColumns.map(month => <TableHead key={month}>{month}</TableHead>)}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {thinnerPaintRatio.thinner_detail_data.map((row, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{String(row.factory_code ?? '')}</TableCell>
+                    <TableCell>{String(row.factory_name ?? '')}</TableCell>
+                    <TableCell>{String(row.product_type ?? '')}</TableCell>
+                    <TableCell>{String(row.product_name ?? '')}</TableCell>
+                    {detailMonthColumns.map(month => (
+                      <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
+        {/* Paint Detail Table */}
+        {showPaintDetail && (
+          <div className="rounded-md border bg-white shadow-sm w-full overflow-x-auto mb-4">
+            <div className="flex items-center justify-between px-4 py-2">
+              <h3 className="font-semibold">{t('product.paint')} ({t('common.detail')})</h3>
+              <CSVDownloadButton
+                data={thinnerPaintRatio.paint_detail_data}
+                columns={paintDetailColumns}
+                filename="paint-detail"
+                buttonText={t('common.download')}
+              />
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('crm.factories.factoryId')}</TableHead>
+                  <TableHead>{t('crm.factories.factoryName')}</TableHead>
+                  <TableHead>{t('product.productType')}</TableHead>
+                  <TableHead>{t('product.productName')}</TableHead>
+                  {detailMonthColumns.map(month => <TableHead key={month}>{month}</TableHead>)}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {thinnerPaintRatio.paint_detail_data.map((row, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{String(row.factory_code ?? '')}</TableCell>
+                    <TableCell>{String(row.factory_name ?? '')}</TableCell>
+                    <TableCell>{String(row.product_type ?? '')}</TableCell>
+                    <TableCell>{String(row.product_name ?? '')}</TableCell>
+                    {detailMonthColumns.map(month => (
+                      <TableCell key={month}>{String(row[month] ?? 0)}</TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
       </SidebarInset>
-      
       <SidebarRight filterConfig={FilterConfig} />
     </SidebarProvider>
   )

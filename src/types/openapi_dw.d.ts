@@ -1267,6 +1267,12 @@ export interface components {
             ratio_data: {
                 [key: string]: unknown;
             }[];
+            thinner_detail_data: {
+                [key: string]: unknown;
+            }[];
+            paint_detail_data: {
+                [key: string]: unknown;
+            }[];
         };
         /** Product */
         Product: {

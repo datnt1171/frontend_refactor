@@ -471,6 +471,7 @@
     "product": "Product",
     "productCode": "Product Code",
     "productName": "Product Name",
+    "productType": "Product Type",
     "thinner": "Thinner",
     "paint": "Paint",
     "ratio": "Ratio"
