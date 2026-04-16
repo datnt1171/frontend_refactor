@@ -2,844 +2,563 @@
 import React, { useState } from 'react';
 import ReactSelect from 'react-select';
 import type { StepTemplate, FormularTemplate, SheetRow, RowProduct, FinishingSheet, TaskDataDetail } from '@/types';
-import { putFinishingSheet, createFinishingSheet } from '@/lib/api/client/api';
+import { createFinishingSheetWithImages, putFinishingSheetWithImages } from '@/lib/api/client/api';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { MultiSelect } from '@/components/ui/multi-select';
-import { generatePDF, generateSimpleFormPDF } from '@/lib/pdf-generator';
-import { MoreVertical, Plus, Trash2, FileText } from "lucide-react";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import PDFGeneratorButton from './PDFGeneratorButton';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 interface CombinedSheetTableProps {
-  data?: FinishingSheet; // Optional for create mode
+  data?: FinishingSheet;
   stepTemplates: StepTemplate[];
   formularTemplates: FormularTemplate[];
   taskId: string;
-  mode?: 'create' | 'edit'; // New prop to determine mode
-  taskDataDetail: TaskDataDetail
+  mode?: 'create' | 'edit';
+  taskDataDetail: TaskDataDetail;
 }
 
-// Generate unique ID for new records
 let idCounter = 0;
 const generateId = () => `temp-${(++idCounter).toString()}`;
 
-// Function to create empty finishing sheet
-const createEmptyFinishingSheet = (taskId: string, taskDataDetail: TaskDataDetail): FinishingSheet => ({
+const createEmptyFinishingSheet = (taskId: string, td: TaskDataDetail): FinishingSheet => ({
   id: generateId(),
   task: taskId,
-  finishing_code: taskDataDetail.finishing_code,
-  name: taskDataDetail.customer_color_name || taskDataDetail.finishing_code,
-  sheen: taskDataDetail.sheen_level,
+  factory_code: td.factory_code || '',
+  finishing_code: td.finishing_code,
+  retailer_id: td.retailer_id || '',
+  customer_color_name: td.customer_color_name || '',
+  sample_type: td.sample_type || '',
+  type_of_substrate: td.type_of_substrate,
+  collection: td.collection || '',
+  sampler: td.sampler,
+  type_of_paint: td.type_of_paint,
+  finishing_surface_grain: td.finishing_surface_grain,
+  sheen_level: td.sheen_level,
+  substrate_surface_treatment: td.substrate_surface_treatment || '',
+  panel_category: td.panel_category || '',
+  purpose_of_usage: td.purpose_of_usage || '',
+  furniture_type: '',
   dft: '250',
-  type_of_paint: taskDataDetail.type_of_paint,
-  type_of_substrate: taskDataDetail.type_of_substrate,
-  finishing_surface_grain: taskDataDetail.finishing_surface_grain,
-  sampler: taskDataDetail.sampler,
   chemical_waste: '0%',
   conveyor_speed: '1.5 METER PER MINUTE',
+  color: '',
+  images: null,
   with_panel_test: false,
   testing: false,
   chemical_yellowing: false,
   created_at: new Date().toISOString(),
-  created_by: {
-    id: '',
-    username: '',
-    first_name: '',
-    last_name: ''
-  },
+  created_by: { id: '', username: '', first_name: '', last_name: '' },
   updated_at: new Date().toISOString(),
-  updated_by: {
-    id: '',
-    username: '',
-    first_name: '',
-    last_name: ''
-  },
-  rows: []
+  updated_by: { id: '', username: '', first_name: '', last_name: '' },
+  rows: [],
 });
 
-// Main Component
-const CombinedSheetTable: React.FC<CombinedSheetTableProps> = ({ 
-  data,
-  stepTemplates, 
-  formularTemplates,
-  taskId,
-  mode,
-  taskDataDetail
-}) => {
-  // Initialize with provided data or empty sheet for create mode
-  const [finishingSheet, setFinishingSheet] = useState<FinishingSheet>(
-    data || createEmptyFinishingSheet(taskId, taskDataDetail)
-  );
+const makeEmptyProduct = (): RowProduct => ({
+  id: generateId(),
+  order: 1,
+  product_code: '',
+  product_name: '',
+  product_description_en: '',
+  product_description_vi: '',
+  product_description_zh_hant: '',
+  ratio: '',
+  qty: '',
+  unit: '',
+  created_by: '',
+  created_at: new Date().toISOString(),
+  updated_by: '',
+  updated_at: new Date().toISOString(),
+});
 
+const makeEmptyRow = (): SheetRow => ({
+  id: generateId(),
+  step_template: null,
+  formular_template: null,
+  order: 0,
+  spot: null,
+  name_en: '', name_vi: '', name_zh_hant: '',
+  name_short_en: '', name_short_vi: '', name_short_zh_hant: '',
+  sanding_en: '', sanding_vi: '', sanding_zh_hant: '',
+  viscosity_en: '', viscosity_vi: '', viscosity_zh_hant: '',
+  spec_en: '', spec_vi: '', spec_zh_hant: '',
+  hold_time: '', chemical_code: '', consumption: '', wft: '', oven_temperature: '',
+  created_at: new Date().toISOString(), created_by: '',
+  updated_at: new Date().toISOString(), updated_by: '',
+  products: [makeEmptyProduct()],
+});
+
+
+
+const calculateProductQuantities = (consumption: string, products: RowProduct[]): RowProduct[] => {
+  const consumptionValue = parseFloat(consumption) || 0;
+  const totalRatio = products.reduce((sum, p) => sum + parseFloat(p.ratio ?? '0'), 0);
+  return products.map(p => ({
+    ...p,
+    qty: totalRatio > 0 ? ((consumptionValue * parseFloat(p.ratio ?? '0')) / totalRatio).toFixed(3) : '0'
+  }));
+};
+
+// Compact field: label on top, full-width input below
+const F = ({ label, children }: { label: string; children: React.ReactNode }) => (
+  <div className="flex flex-col gap-0.5 min-w-0">
+    <Label className="text-[11px] text-muted-foreground leading-none truncate">{label}</Label>
+    {children}
+  </div>
+);
+
+export default function CombinedSheetTable({
+  data, stepTemplates, formularTemplates, taskId, mode, taskDataDetail
+}: CombinedSheetTableProps) {
+  const [sheet, setSheet] = useState<FinishingSheet>(data || createEmptyFinishingSheet(taskId, taskDataDetail));
   const [isSaving, setIsSaving] = useState(false);
-  const [languageSettings, setLanguageSettings] = useState({
-    en: false,
-    vi: true,
-    zh_hant: true
-  });
+  const [collapsedRows, setCollapsedRows] = useState<Set<string>>(new Set());
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    data?.images ? (typeof data.images === 'string' ? data.images : null) : null
+  );
+  const [newImages, setNewImages] = useState<File[]>([])
+  const [deletedImageIds, setDeletedImageIds] = useState<string[]>([])
   const router = useRouter();
   const t = useTranslations();
 
-  // Generic update function for the entire finishing sheet
-  const updateFinishingSheet = (updates: Partial<FinishingSheet>) => {
-    setFinishingSheet(prev => ({ ...prev, ...updates }));
-  };
+  const updateSheet = (updates: Partial<FinishingSheet>) => setSheet(prev => ({ ...prev, ...updates }));
+  const recalcOrder = (rows: SheetRow[]) => rows.map((r, i) => ({ ...r, order: i + 1 }));
+  const addRow = () => setSheet(prev => ({ ...prev, rows: recalcOrder([...prev.rows, makeEmptyRow()]) }));
+  const removeRow = (id: string) => setSheet(prev => ({ ...prev, rows: recalcOrder(prev.rows.filter(r => r.id !== id)) }));
+  const updateRow = (id: string, updates: Partial<SheetRow>) =>
+    setSheet(prev => ({ ...prev, rows: prev.rows.map(r => r.id === id ? { ...r, ...updates } : r) }));
 
-  // Generic update function for records (rows)
-  const updateRecord = (id: string, updates: Partial<SheetRow>) => {
-    setFinishingSheet(prev => ({
+  const addProduct = (rowId: string) => setSheet(prev => ({
+    ...prev,
+    rows: prev.rows.map(r => r.id === rowId
+      ? { ...r, products: [...r.products, { ...makeEmptyProduct(), order: r.products.length + 1 }] }
+      : r)
+  }));
+
+  const removeProduct = (rowId: string, productId: string) => setSheet(prev => ({
+    ...prev,
+    rows: prev.rows.map(r => r.id === rowId
+      ? { ...r, products: r.products.filter(p => p.id !== productId).map((p, i) => ({ ...p, order: i + 1 })) }
+      : r)
+  }));
+
+  const updateProduct = (rowId: string, productId: string, updates: Partial<RowProduct>) =>
+    setSheet(prev => ({
       ...prev,
-      rows: prev.rows.map(record => 
-        record.id === id ? { ...record, ...updates } : record
-      )
+      rows: prev.rows.map(r => r.id === rowId
+        ? { ...r, products: calculateProductQuantities(r.consumption ?? '0', r.products.map(p => p.id === productId ? { ...p, ...updates } : p)) }
+        : r)
     }));
-  };
 
-  // Update specific product within a row
-  const updateProduct = (rowId: string, productId: string, updates: Partial<RowProduct>) => {
-    setFinishingSheet(prev => ({
-      ...prev,
-      rows: prev.rows.map(row => 
-        row.id === rowId 
-          ? {
-              ...row,
-              products: row.products.map(product => 
-                product.id === productId ? { ...product, ...updates } : product
-              )
-            }
-          : row
-      )
-    }));
-  };
-
-  const calculateProductQuantities = (consumption: string, products: RowProduct[]): RowProduct[] => {
-    const consumptionValue = parseFloat(consumption) || 0;
-    const totalRatio = products.reduce((sum, product) => sum + (parseFloat(product.ratio) || 0), 0);
-    
-    return products.map(product => {
-      const ratio = parseFloat(product.ratio) || 0;
-      const qty = totalRatio > 0 ? ((consumptionValue * ratio) / totalRatio).toFixed(3) : '0';
-      return { ...product, qty };
-    });
-  };
-
-  // Helper function to recalculate step numbers after row operations
-  const recalculateStepNumbers = (rows: SheetRow[]): SheetRow[] => {
-    return rows.map((row, index) => ({
-      ...row,
-      step_num: index + 1
-    }));
-  };
-
-  // Create empty product
-  const makeEmptyProduct = (): RowProduct => ({
-    id: generateId(),
-    order: 1,
-    product_code: '',
-    product_name: '',
-    product_type_en: '',
-    product_type_vi: '',
-    product_type_zh_hant: '',
-    ratio: '',
-    qty: '',
-    unit: '',
-    check_result: '',
-    correct_action: '',
-    te1_signature: '',
-    customer_signature: '',
-    created_by: '',
-    created_at: new Date().toISOString(),
-    updated_by: '',
-    updated_at: new Date().toISOString(),
-  });
-
-  // Add new row
-  const addRow = () => {
-    const newRow: SheetRow = {
-      id: generateId(),
-      step_template: null,
-      formular_template: null,
-      step_num: finishingSheet.rows.length + 1,
-      spot: null,
-      stepname_en: '',
-      stepname_vi: '',
-      stepname_zh_hant: '',
-      viscosity_en: '',
-      viscosity_vi: '',
-      viscosity_zh_hant: '',
-      stepname_short_en: '',
-      stepname_short_vi: '',
-      stepname_short_zh_hant: '',
-      sanding_en: '',
-      sanding_vi: '',
-      sanding_zh_hant: '',
-      spec_en: '',
-      spec_vi: '',
-      spec_zh_hant: '',
-      hold_time: '',
-      chemical_code: '',
-      consumption: '',
-      created_at: new Date().toISOString(),
-      created_by: '',
-      updated_at: new Date().toISOString(),
-      updated_by: '',
-      products: [makeEmptyProduct()],
-    };
-
-    setFinishingSheet(prev => ({
-      ...prev,
-      rows: [...prev.rows, newRow]
-    }));
-  };
-
-  // Remove row
-  const removeRow = (rowId: string) => {
-    setFinishingSheet(prev => {
-      const filteredRows = prev.rows.filter(row => row.id !== rowId);
-      // Recalculate step numbers after removal
-      const updatedRows = recalculateStepNumbers(filteredRows);
-      
-      return {
-        ...prev,
-        rows: updatedRows
-      };
-    });
-  };
-
-  const addRowBefore = (targetRowId: string) => {
-    const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
-    if (targetIndex === -1) return;
-
-    const newRow: SheetRow = {
-      id: generateId(),
-      step_template: null,
-      formular_template: null,
-      step_num: targetIndex + 1, // Will be recalculated
-      spot: null,
-      stepname_en: '',
-      stepname_vi: '',
-      stepname_zh_hant: '',
-      viscosity_en: '',
-      viscosity_vi: '',
-      viscosity_zh_hant: '',
-      stepname_short_en: '',
-      stepname_short_vi: '',
-      stepname_short_zh_hant: '',
-      sanding_en: '',
-      sanding_vi: '',
-      sanding_zh_hant: '',
-      spec_en: '',
-      spec_vi: '',
-      spec_zh_hant: '',
-      hold_time: '',
-      chemical_code: '',
-      consumption: '',
-      created_at: new Date().toISOString(),
-      created_by: '',
-      updated_at: new Date().toISOString(),
-      updated_by: '',
-      products: [makeEmptyProduct()],
-    };
-
-    setFinishingSheet(prev => {
-      const newRows = [
-        ...prev.rows.slice(0, targetIndex),
-        newRow,
-        ...prev.rows.slice(targetIndex)
-      ];
-      
-      // Recalculate step numbers after insertion
-      const updatedRows = recalculateStepNumbers(newRows);
-      
-      return {
-        ...prev,
-        rows: updatedRows
-      };
-    });
-  };
-
-  // Add row after specified row
-  const addRowAfter = (targetRowId: string) => {
-    const targetIndex = finishingSheet.rows.findIndex(row => row.id === targetRowId);
-    if (targetIndex === -1) return;
-
-    const newRow: SheetRow = {
-      id: generateId(),
-      step_template: null,
-      formular_template: null,
-      step_num: targetIndex + 2, // Will be recalculated
-      spot: null,
-      stepname_en: '',
-      stepname_vi: '',
-      stepname_zh_hant: '',
-      viscosity_en: '',
-      viscosity_vi: '',
-      viscosity_zh_hant: '',
-      stepname_short_en: '',
-      stepname_short_vi: '',
-      stepname_short_zh_hant: '',
-      sanding_en: '',
-      sanding_vi: '',
-      sanding_zh_hant: '',
-      spec_en: '',
-      spec_vi: '',
-      spec_zh_hant: '',
-      hold_time: '',
-      chemical_code: '',
-      consumption: '',
-      created_at: new Date().toISOString(),
-      created_by: '',
-      updated_at: new Date().toISOString(),
-      updated_by: '',
-      products: [makeEmptyProduct()],
-    };
-
-    setFinishingSheet(prev => {
-      const newRows = [
-        ...prev.rows.slice(0, targetIndex + 1),
-        newRow,
-        ...prev.rows.slice(targetIndex + 1)
-      ];
-      
-      // Recalculate step numbers after insertion
-      const updatedRows = recalculateStepNumbers(newRows);
-      
-      return {
-        ...prev,
-        rows: updatedRows
-      };
-    });
-  };
-
-  // Handle step template dropdown change
-  const handleStepChange = (recordId: string, stepTemplateId: string) => {
-    const step = stepTemplates.find(s => s.id === stepTemplateId);
+  const handleStepChange = (rowId: string, stepId: string) => {
+    const step = stepTemplates.find(s => s.id === stepId);
     if (!step) return;
-
-    setFinishingSheet(prev => ({
-      ...prev,
-      rows: prev.rows.map(record => 
-        record.id === recordId 
-          ? {
-              ...record,
-              step_template: step.id,
-              stepname_en: step.name_en,
-              stepname_vi: step.name_vi,
-              stepname_zh_hant: step.name_zh_hant,
-              stepname_short_en: step.short_name_en,
-              stepname_short_vi: step.short_name_vi,
-              stepname_short_zh_hant: step.short_name_zh_hant,
-              sanding_en: step.sanding_en,
-              sanding_vi: step.sanding_vi,
-              sanding_zh_hant: step.sanding_zh_hant,
-              spec_en: step.spec_en || '',
-              spec_vi: step.spec_vi || '',
-              spec_zh_hant: step.spec_zh_hant || '',
-              hold_time: step.hold_time?.toString() || '',
-              consumption: step.consumption,
-              // Recalculate quantities with new consumption
-              products: calculateProductQuantities(step.consumption, record.products)
-            }
-          : record
-      )
-    }));
+    updateRow(rowId, {
+      step_template: step.id,
+      name_en: step.name_en, name_vi: step.name_vi, name_zh_hant: step.name_zh_hant,
+      name_short_en: step.short_name_en, name_short_vi: step.short_name_vi, name_short_zh_hant: step.short_name_zh_hant,
+      sanding_en: step.sanding_en, sanding_vi: step.sanding_vi, sanding_zh_hant: step.sanding_zh_hant,
+      spec_en: step.spec_en || '', spec_vi: step.spec_vi || '', spec_zh_hant: step.spec_zh_hant || '',
+      hold_time: step.hold_time?.toString() || '',
+      oven_temperature: step.oven_temperature || '',
+      consumption: step.consumption,
+    });
   };
 
-  // Handle formular template dropdown change
-  const handleFormularChange = (recordId: string, formularTemplateId: string) => {
-    const formular = formularTemplates.find(f => f.id === formularTemplateId);
+  const handleFormularChange = (rowId: string, formularId: string) => {
+    const formular = formularTemplates.find(f => f.id === formularId);
     if (!formular) return;
-
-    // Get current row to access its consumption value
-    const currentRow = finishingSheet.rows.find(row => row.id === recordId);
-    const currentConsumption = currentRow?.consumption || '0';
-
-    const products: RowProduct[] = formular.products.map((product, idx) => ({
-      id: generateId(),
-      order: idx + 1,
-      product_code: product.code,
-      product_name: product.name,
-      product_type_en: product.type_en,
-      product_type_vi: product.type_vi,
-      product_type_zh_hant: product.type_zh_hant,
-      ratio: product.ratio?.toString() || '0',
-      qty: '0', // Will be calculated below
-      unit: product.unit || '',
-      check_result: '',
-      correct_action: '',
-      te1_signature: '',
-      customer_signature: '',
-      created_by: '',
-      created_at: new Date().toISOString(),
-      updated_by: '',
-      updated_at: new Date().toISOString(),
+    const currentConsumption = sheet.rows.find(r => r.id === rowId)?.consumption || '0';
+    const products: RowProduct[] = formular.products.map((p, idx) => ({
+      id: generateId(), order: idx + 1,
+      product_code: p.code, product_name: p.name,
+      product_description_en: p.description_en,
+      product_description_vi: p.description_vi,
+      product_description_zh_hant: p.description_zh_hant,
+      ratio: p.ratio?.toString() || '0', qty: '0', unit: p.unit || '',
+      created_by: '', created_at: new Date().toISOString(),
+      updated_by: '', updated_at: new Date().toISOString(),
     }));
-
-    // Calculate quantities for the new products
-    const productsWithQty = calculateProductQuantities(currentConsumption, products);
-
-    updateRecord(recordId, {
+    updateRow(rowId, {
       formular_template: formular.id,
       chemical_code: formular.code,
+      wft: formular.wft || '',
       viscosity_en: formular.viscosity ? `${formular.viscosity} secs` : '',
       viscosity_vi: formular.viscosity ? `${formular.viscosity} giây` : '',
       viscosity_zh_hant: formular.viscosity ? `${formular.viscosity} 秒` : '',
-
-      products: productsWithQty.length > 0 ? productsWithQty : [makeEmptyProduct()],
+      products: calculateProductQuantities(currentConsumption, products.length > 0 ? products : [makeEmptyProduct()]),
     });
   };
 
-  // Create options for dropdowns
-  const stepOptions = stepTemplates.map(step => ({
-    value: step.id.toString(),
-    label: step.short_name,
-    searchValue: `${step.short_name} ${step.name || ''}`.trim()
-  }));
-
-  const formularOptions = formularTemplates.map(formular => ({
-    value: formular.id.toString(),
-    label: formular.code,
-    searchValue: `${formular.code}`.trim()
-  }));
-
-  // Save function - handles both create and update
   const handleSave = async () => {
-    setIsSaving(true);
-    
+    setIsSaving(true)
     try {
-      
       if (mode === 'create') {
-        // Create new finishing sheet
-        await createFinishingSheet(taskId, finishingSheet);
-        alert('Finishing sheet created successfully');
-        router.push(`/task-management/tasks/${taskId}/sheets`);
+        await createFinishingSheetWithImages(taskId, sheet, newImages)
+        router.push(`/task-management/tasks/${taskId}/sheets`)
       } else {
-        // Update existing finishing sheet
-        await putFinishingSheet(taskId, finishingSheet.id, finishingSheet);
-        alert('Finishing sheet saved successfully');
-        router.refresh()
+        await putFinishingSheetWithImages(taskId, sheet.id, sheet, newImages, deletedImageIds)
+        router.push(`/task-management/tasks/${taskId}/sheets`)
       }
-      
-    } catch (error) {
-      alert(`Error ${mode === 'create' ? 'creating' : 'saving'} finishing sheet`);
+    } catch {
+      alert(`Error ${mode === 'create' ? 'creating' : 'saving'} finishing sheet`)
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
+  }
+
+  const handleImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    setNewImages(prev => [...prev, ...files])
+  }
+
+  const handleImageDelete = (imageId: string) => {
+    setDeletedImageIds(prev => [...prev, imageId])
+  }
+
+  const handleNewImageRemove = (index: number) => {
+    setNewImages(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const stepOptions = stepTemplates.map(s => ({ value: s.id.toString(), label: `${s.short_name} — ${s.name}` }));
+  const formularOptions = formularTemplates.map(f => ({ value: f.id.toString(), label: f.code }));
+  const toggleCollapse = (id: string) => setCollapsedRows(prev => {
+    const next = new Set(prev);
+    next.has(id) ? next.delete(id) : next.add(id);
+    return next;
+  });
+
+  const inputCls = "h-7 text-xs px-1.5";
+  const selectStyles = {
+    control: (b: object) => ({ ...b, minHeight: '28px', height: '28px', fontSize: '12px' }),
+    valueContainer: (b: object) => ({ ...b, padding: '0 6px' }),
+    indicatorsContainer: (b: object) => ({ ...b, height: '28px' }),
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   return (
-    <div>
-      <div className="mb-4 flex justify-between items-center">
-        <div className="flex gap-2">
-          <Button onClick={addRow}>
-            {t('common.addRow')}
-          </Button>
-          <Button 
-            onClick={handleSave}
-            disabled={isSaving}
-          >
-            {isSaving ? t('common.processing') : (mode === 'create' ? t('common.create') : t('common.save'))}
-          </Button>
-        </div>
-        <div className="flex gap-2">
-          <div className="min-w-0">
-            <MultiSelect
-              options={[
-                { value: 'en', label: 'English' },
-                { value: 'vi', label: 'Tiếng Việt' },
-                { value: 'zh_hant', label: '繁體中文' }
-              ]}
-              onValueChange={(selectedLanguages) => {
-                const newLanguageSettings = {
-                  en: selectedLanguages.includes('en'),
-                  vi: selectedLanguages.includes('vi'),
-                  zh_hant: selectedLanguages.includes('zh_hant')
-                };
-                setLanguageSettings(newLanguageSettings);
-              }}
-              defaultValue={['vi', 'zh_hant']}
-              disabled={false}
-              responsive={true}
-              modalPopover={true}
-              maxCount={2}
-            />
-          </div>
-          <Button
-            onClick={() => generateSimpleFormPDF(
-              finishingSheet, 
-              taskDataDetail,
-              languageSettings.en, 
-              languageSettings.vi, 
-              languageSettings.zh_hant
-            )}
-            variant="outline"
-            disabled={finishingSheet.rows.length === 0}
-          >
-            <FileText size={16} />
-            {t('common.generateSimplePDF')}
-          </Button>
-          <Button
-            onClick={() => generatePDF(finishingSheet)}
-            variant="outline"
-            disabled={finishingSheet.rows.length === 0}
-          >
-            <FileText size={16} />
-            {t('common.generatePDF')}
-          </Button>
-        </div>
+    
+    <div className="space-y-2 p-2">
+      <div className="flex gap-2">
+        <Button size="sm" className="h-7 text-xs" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? t('common.processing') : (mode === 'create' ? t('common.create') : t('common.save'))}
+        </Button>
+        <PDFGeneratorButton                        // ← add this
+          sheet={sheet}
+          taskDataDetail={taskDataDetail}
+          disabled={sheet.rows.length === 0}
+        />
       </div>
+      {/* ── Sheet Info ── */}
+      <Card className="border shadow-none">
+        <CardHeader className="py-1.5 px-3 border-b">
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Sheet Info</span>
+        </CardHeader>
+        <CardContent className="p-3 space-y-2">
+          {/* 2 cols mobile → 4 cols desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <F label="Finishing Code">
+              <Input className={inputCls} value={sheet.finishing_code} onChange={e => updateSheet({ finishing_code: e.target.value })} />
+            </F>
+            <F label="Factory Code">
+              <Input className={inputCls} value={sheet.factory_code} onChange={e => updateSheet({ factory_code: e.target.value })} />
+            </F>
+            <F label="Customer Color">
+              <Input className={inputCls} value={sheet.customer_color_name} onChange={e => updateSheet({ customer_color_name: e.target.value })} />
+            </F>
+            <F label="Sheen Level">
+              <Input className={inputCls} value={sheet.sheen_level} onChange={e => updateSheet({ sheen_level: e.target.value })} />
+            </F>
+            <F label="Type of Paint">
+              <Input className={inputCls} value={sheet.type_of_paint} onChange={e => updateSheet({ type_of_paint: e.target.value })} />
+            </F>
+            <F label="Type of Substrate">
+              <Input className={inputCls} value={sheet.type_of_substrate} onChange={e => updateSheet({ type_of_substrate: e.target.value })} />
+            </F>
+            <F label="Surface Grain">
+              <Input className={inputCls} value={sheet.finishing_surface_grain} onChange={e => updateSheet({ finishing_surface_grain: e.target.value })} />
+            </F>
+            <F label="Sampler">
+              <Input className={inputCls} value={sheet.sampler} onChange={e => updateSheet({ sampler: e.target.value })} />
+            </F>
+            <F label="DFT">
+              <Input className={inputCls} value={sheet.dft} onChange={e => updateSheet({ dft: e.target.value })} />
+            </F>
+            <F label="Furniture Type">
+              <Input className={inputCls} value={sheet.furniture_type} onChange={e => updateSheet({ furniture_type: e.target.value })} />
+            </F>
+            <F label="Chemical Waste">
+              <Input className={inputCls} value={sheet.chemical_waste} onChange={e => updateSheet({ chemical_waste: e.target.value })} />
+            </F>
+            <F label="Conveyor Speed">
+              <Input className={inputCls} value={sheet.conveyor_speed} onChange={e => updateSheet({ conveyor_speed: e.target.value })} />
+            </F>
+          </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse bordered-table-300-p-1 text-left text-xs">
-          {/* Header Section */}
-          <thead className="bg-gray-100">
-            {/* Product Title Row */}
-            <tr>
-              <td colSpan={19}>
-                <input
-                  type="text"
-                  value={finishingSheet.finishing_code}
-                  onChange={(e) => updateFinishingSheet({ finishing_code: e.target.value })}
-                  className="p-2 w-full text-center font-bold text-lg border-none bg-transparent"
-                  placeholder="Finishing Code"
-                />
-              </td>
-            </tr>
-            
-            {/* Product Details Row - Made editable */}
-            <tr>
-              <td colSpan={3}>
-                <div>
-                  <strong>{t('finishingSheet.name')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.name}
-                    onChange={(e) => updateFinishingSheet({ name: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                  <br/>
-                  <strong>{t('finishingSheet.sheen')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.sheen}
-                    onChange={(e) => updateFinishingSheet({ sheen: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                  <br/>
-                  <strong>{t('finishingSheet.dft')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.dft}
-                    onChange={(e) => updateFinishingSheet({ dft: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                  <br/>
-                  <strong>{t('finishingSheet.typeOfPaint')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.type_of_paint}
-                    onChange={(e) => updateFinishingSheet({ type_of_paint: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                  <br/>
-                  <strong>{t('finishingSheet.typeOfSubstrate')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.type_of_substrate}
-                    onChange={(e) => updateFinishingSheet({ type_of_substrate: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                  <br/>
-                  <strong>{t('finishingSheet.finishingSurfaceGrain')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.finishing_surface_grain}
-                    onChange={(e) => updateFinishingSheet({ finishing_surface_grain: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                  <br/>
-                  <strong>{t('finishingSheet.sampler')}:</strong> 
-                  <input
-                    type="text"
-                    value={finishingSheet.sampler}
-                    onChange={(e) => updateFinishingSheet({ sampler: e.target.value })}
-                    className="ml-1 px-1"
-                  />
-                </div>
-              </td>
-              <td colSpan={1}>
-                <strong>{t('finishingSheet.chemicalWaste')}:</strong> 
-                <input
-                  type="text"
-                  value={finishingSheet.chemical_waste}
-                  onChange={(e) => updateFinishingSheet({ chemical_waste: e.target.value })}
-                  className="ml-1 px-1 w-full"
-                />
-                <br/><br/>
-                <strong>{t('finishingSheet.conveyorSpeed')}:</strong> 
-                <input
-                  type="text"
-                  value={finishingSheet.conveyor_speed}
-                  onChange={(e) => updateFinishingSheet({ conveyor_speed: e.target.value })}
-                  className="ml-1 px-1 w-full"
-                />
-              </td>
-              <td colSpan={3}>
-              </td>
-              <td colSpan={2}>
-                <strong>{t('finishingSheet.withPanelTest')}:</strong> 
-                <input
-                  type="checkbox"
-                  checked={finishingSheet.with_panel_test}
-                  onChange={(e) => updateFinishingSheet({ with_panel_test: e.target.checked })}
-                  className="ml-1"
-                />
-                <br/>
-                <strong>{t('finishingSheet.noPanelTest')}:</strong> 
-                <input
-                  type="checkbox"
-                  checked={!finishingSheet.with_panel_test}
-                  onChange={(e) => updateFinishingSheet({ with_panel_test: !e.target.checked })}
-                  className="ml-1"
-                />
-                <br/>
-                <strong>{t('finishingSheet.testing')}:</strong> 
-                <input
-                  type="checkbox"
-                  checked={finishingSheet.testing}
-                  onChange={(e) => updateFinishingSheet({ testing: e.target.checked })}
-                  className="ml-1"
-                />
-                <br/>
-                <strong>{t('finishingSheet.chemicalYellowing')}:</strong> 
-                <input
-                  type="checkbox"
-                  checked={finishingSheet.chemical_yellowing}
-                  onChange={(e) => updateFinishingSheet({ chemical_yellowing: e.target.checked })}
-                  className="ml-1"
-                />
-              </td>
-              <td colSpan={5}>
-              </td>
-              <td colSpan={4} className="text-center">
-                <div className="font-bold">{t('finishingSheet.dailyCheckList')}</div>
-                <div>Date: _______________</div>
-              </td>
-            </tr>
-
-            {/* Column Headers Row */}
-            <tr className="font-bold text-center">
-              <td style={{ width: '2.39%' }}>{t('finishingSheet.step')}</td>
-              <td style={{ width: '4.14%' }}>{t('finishingSheet.stepName')}</td>
-              <td style={{ width: '7.37%' }}>{t('finishingSheet.viscosity_en')}</td>
-              <td style={{ width: '7.37%' }}>{t('finishingSheet.viscosity_vi')}</td>
-              <td style={{ width: '7.37%' }}>{t('finishingSheet.spec_en')}</td>
-              <td style={{ width: '7.37%' }}>{t('finishingSheet.spec_vi')}</td>
-              <td style={{ width: '3.02%' }}>{t('finishingSheet.holdTime')}</td>
-              <td style={{ width: '5.61%' }}>{t('finishingSheet.chemicalCode')}</td>
-              <td style={{ width: '5.61%' }}>{t('finishingSheet.consumption')}</td>
-              <td style={{ width: '6.74%' }}>{t('finishingSheet.productCode')}</td>
-              <td style={{ width: '7.51%' }}>{t('finishingSheet.productName')}</td>
-              <td style={{ width: '3.51%' }}>{t('finishingSheet.ratio')}</td>
-              <td style={{ width: '3.51%' }}>{t('finishingSheet.qty')}</td>
-              <td style={{ width: '3.51%' }}>{t('finishingSheet.unit')}</td>
-              <td style={{ width: '8%' }}>{t('finishingSheet.checkResult')}</td>
-              <td style={{ width: '8%' }}>C{t('finishingSheet.correctAction')}</td>
-              <td style={{ width: '4.49%' }}>{t('finishingSheet.te1Sign')}</td>
-              <td style={{ width: '4.49%' }}>{t('finishingSheet.customerSign')}</td>
-              <td style={{ width: '3%' }}>{t('finishingSheet.actions')}</td>
-            </tr>
-          </thead>
-
-          {/* Body Section */}
-          <tbody>
-            {finishingSheet.rows.length === 0 ? (
-              <tr>
-                <td colSpan={19} className="text-center py-8 text-gray-500">
-                  {t('finishingSheet.noRow')}
-                </td>
-              </tr>
-            ) : (
-            finishingSheet.rows.map((record) => (
-              <React.Fragment key={record.id}>
-                {record.products.map((product, productIndex) => (
-                  <tr
-                    key={`${record.id}-${productIndex}`}
-                    className={productIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
+          <Separator className="my-1" />
+          
+          <div className="flex flex-wrap gap-2 items-start">
+            {/* Existing images (from backend) */}
+            {sheet.images
+              ?.filter(img => !deletedImageIds.includes(img.id))
+              .map(img => (
+                <div key={img.id} className="relative inline-block">
+                  <a href={img.image} target="_blank" rel="noopener noreferrer">
+                    <img
+                      src={img.image}
+                      alt={img.caption || 'Sheet image'}
+                      className="h-14 w-14 object-cover rounded border hover:opacity-80 transition-opacity"
+                    />
+                  </a>
+                  <button
+                    onClick={() => handleImageDelete(img.id)}
+                    className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-white text-[10px] flex items-center justify-center hover:opacity-80"
                   >
-                    {/* Step Number - only show on first product row */}
-                    {productIndex === 0 && (
-                      <td rowSpan={record.products.length}>
-                        <div>{t('finishingSheet.step')} {record.step_num}</div>
-                        {t('finishingSheet.booth')}
-                        <input
-                          type="text"
-                          value={record.spot || ''}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            updateRecord(record.id, {
-                              spot: val === '' ? null : val,
-                            });
-                          }}
-                          className="w-full mt-1"
-                          placeholder="Spot"
-                        />
-                      </td>
-                    )}
+                    ×
+                  </button>
+                </div>
+              ))
+            }
 
-                    {/* Step Name Dropdown - only show on first product row */}
-                    {productIndex === 0 && (
-                      <td rowSpan={record.products.length}>
-                        <ReactSelect
-                          options={stepOptions}
-                          value={stepOptions.find(option => option.value === record.step_template?.toString()) || null}
-                          onChange={(selectedOption) => handleStepChange(record.id, selectedOption?.value || "")}
-                          noOptionsMessage={() => t('common.noDataFound')}
-                          isSearchable={true}
-                          isClearable={true}
-                        />
-                      </td>
-                    )}
+            {/* Newly picked files (not yet uploaded) */}
+            {newImages.map((file, index) => (
+              <div key={index} className="relative inline-block">
+                <img
+                  src={URL.createObjectURL(file)}
+                  alt={file.name}
+                  className="h-14 w-14 object-cover rounded border opacity-60"
+                />
+                {/* Dashed border indicates pending upload */}
+                <div className="absolute inset-0 rounded border-2 border-dashed border-primary pointer-events-none" />
+                <button
+                  onClick={() => handleNewImageRemove(index)}
+                  className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-white text-[10px] flex items-center justify-center hover:opacity-80"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
 
-                    {/* Viscosity & Wet Mill Thickness - only show on first product row */}
-                    {productIndex === 0 && (
-                      <>
-                        <td rowSpan={record.products.length}>
-                          {record.viscosity_en}
-                        </td>
-                        <td rowSpan={record.products.length}>
-                          {record.viscosity_vi}
-                        </td>
-                      </>
-                    )}
+            {/* Upload input */}
+            <label className="h-14 w-14 rounded border-2 border-dashed border-muted-foreground/30 flex items-center justify-center cursor-pointer hover:border-primary transition-colors shrink-0">
+              <Plus className="h-4 w-4 text-muted-foreground" />
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageAdd}
+                className="hidden"
+              />
+            </label>
+          </div>
 
-                    {/* SPEC - only show on first product row */}
-                    {productIndex === 0 && (
-                      <>
-                        <td rowSpan={record.products.length}>
-                          <div>{record.spec_en}</div>
-                        </td>
-                        <td rowSpan={record.products.length}>
-                          <div>{record.spec_vi}</div>
-                        </td>
-                      </>
-                    )}
+          <Separator className="my-1" />
 
-                    {/* Hold Time - only show on first product row */}
-                    {productIndex === 0 && (
-                      <td rowSpan={record.products.length}>
-                        {record.hold_time}
-                      </td>
-                    )}
+          <div className="flex flex-wrap gap-4">
+            {([
+              ['with_panel_test', 'With Panel Test'],
+              ['testing', 'Testing'],
+              ['chemical_yellowing', 'Chemical Yellowing'],
+            ] as const).map(([key, label]) => (
+              <label key={key} className="flex items-center gap-1.5 cursor-pointer">
+                <Checkbox
+                  id={key}
+                  checked={sheet[key] as boolean}
+                  onCheckedChange={val => updateSheet({ [key]: val })}
+                  className="h-3.5 w-3.5"
+                />
+                <span className="text-xs">{label}</span>
+              </label>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-                    {/* Chemical Mixing Code Dropdown - only show on first product row */}
-                    {productIndex === 0 && (
-                      <td rowSpan={record.products.length}>
-                        <ReactSelect
-                          options={formularOptions}
-                          value={formularOptions.find(option => option.value === record.formular_template?.toString()) || null}
-                          onChange={(selectedOption) => handleFormularChange(record.id, selectedOption?.value || "")}
-                          noOptionsMessage={() => t('common.noDataFound')}
-                          isSearchable={true}
-                          isClearable={true}
-                        />
-                      </td>
-                    )}
+      {/* ── Rows ── */}
+      {sheet.rows.map((row) => {
+        const collapsed = collapsedRows.has(row.id);
+        return (
+          <Card key={row.id} className="border shadow-none border-l-2 border-l-primary rounded-sm">
+            {/* Row header */}
+            <div className="flex items-center justify-between px-2 py-1 border-b bg-muted/40">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-mono text-xs font-bold text-muted-foreground shrink-0">#{row.order}</span>
+                <span className="text-xs font-medium truncate">
+                  {row.name_en || <span className="text-muted-foreground italic">No step</span>}
+                </span>
+                {row.chemical_code && (
+                  <span className="text-[10px] bg-muted border px-1 rounded shrink-0">{row.chemical_code}</span>
+                )}
+              </div>
+              <div className="flex items-center gap-1 shrink-0">
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0" onClick={() => toggleCollapse(row.id)}>
+                  {collapsed ? <ChevronDown className="h-3 w-3" /> : <ChevronUp className="h-3 w-3" />}
+                </Button>
+                <Button variant="ghost" size="sm" className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                  onClick={() => removeRow(row.id)} disabled={sheet.rows.length <= 1}>
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
 
-                    {/* Consumption - only show on first product row */}
-                    {productIndex === 0 && (
-                      <td rowSpan={record.products.length}>
-                        {record.consumption}
-                      </td>
-                    )}
+            {!collapsed && (
+              <CardContent className="p-2 space-y-2">
+                {/* Template selectors — 1 col mobile, 2 col desktop */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <F label="Step Template">
+                    <ReactSelect
+                      options={stepOptions}
+                      value={stepOptions.find(o => o.value === row.step_template?.toString()) || null}
+                      onChange={sel => sel && handleStepChange(row.id, sel.value)}
+                      placeholder="Select step..."
+                      isClearable isSearchable
+                      styles={selectStyles}
+                    />
+                  </F>
+                  <F label="Formula Template">
+                    <ReactSelect
+                      options={formularOptions}
+                      value={formularOptions.find(o => o.value === row.formular_template?.toString()) || null}
+                      onChange={sel => sel && handleFormularChange(row.id, sel.value)}
+                      placeholder="Select formula..."
+                      isClearable isSearchable
+                      styles={selectStyles}
+                    />
+                  </F>
+                </div>
 
-                    {/* Product Data - show for each product*/}
-                    <td>{product.product_code}</td>
-                    <td>{product.product_name}</td>
-                    <td>{product.ratio}</td>
-                    <td>{product.qty}</td>
-                    <td>{product.unit}</td>
-                    <td>
-                      <input
-                        type="text"
-                        value={product.check_result}
-                        onChange={(e) => updateProduct(record.id, product.id, { check_result: e.target.value })}
-                        className="w-full"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={product.correct_action}
-                        onChange={(e) => updateProduct(record.id, product.id, { correct_action: e.target.value })}
-                        className="w-full"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={product.te1_signature}
-                        onChange={(e) => updateProduct(record.id, product.id, { te1_signature: e.target.value })}
-                        className="w-full"
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={product.customer_signature}
-                        onChange={(e) => updateProduct(record.id, product.id, { customer_signature: e.target.value })}
-                        className="w-full"
-                      />
-                    </td>
+                <Separator className="my-1" />
 
-                    {/* Actions Column */}
-                    {productIndex === 0 && (
-                      <td rowSpan={record.products.length}>
-                        <div className="flex flex-col gap-1">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => addRowBefore(record.id)}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                {t('common.addRowBefore')}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => addRowAfter(record.id)}>
-                                <Plus className="mr-2 h-4 w-4" />
-                                {t('common.addRowAfter')}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                onClick={() => removeRow(record.id)}
-                                disabled={finishingSheet.rows.length <= 1}
-                                className="text-red-600 focus:text-red-600"
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                {t('common.removeRow')}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    )}
-                  </tr>
-                ))}
-              </React.Fragment>
-            ))
+                {/* Step fields — 2 col mobile → 4 col desktop */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                  <F label="Name (EN)">
+                    <Input className={inputCls} value={row.name_en} onChange={e => updateRow(row.id, { name_en: e.target.value })} />
+                  </F>
+                  <F label="Name (VI)">
+                    <Input className={inputCls} value={row.name_vi} onChange={e => updateRow(row.id, { name_vi: e.target.value })} />
+                  </F>
+                  <F label="Name (ZH)">
+                    <Input className={inputCls} value={row.name_zh_hant} onChange={e => updateRow(row.id, { name_zh_hant: e.target.value })} />
+                  </F>
+                  <F label="Short (EN)">
+                    <Input className={inputCls} value={row.name_short_en} onChange={e => updateRow(row.id, { name_short_en: e.target.value })} />
+                  </F>
+                  <F label="Short (VI)">
+                    <Input className={inputCls} value={row.name_short_vi} onChange={e => updateRow(row.id, { name_short_vi: e.target.value })} />
+                  </F>
+                  <F label="Short (ZH)">
+                    <Input className={inputCls} value={row.name_short_zh_hant} onChange={e => updateRow(row.id, { name_short_zh_hant: e.target.value })} />
+                  </F>
+                  <F label="Viscosity (EN)">
+                    <Input className={inputCls} value={row.viscosity_en} onChange={e => updateRow(row.id, { viscosity_en: e.target.value })} />
+                  </F>
+                  <F label="Viscosity (VI)">
+                    <Input className={inputCls} value={row.viscosity_vi} onChange={e => updateRow(row.id, { viscosity_vi: e.target.value })} />
+                  </F>
+                  <F label="Viscosity (ZH)">
+                    <Input className={inputCls} value={row.viscosity_zh_hant} onChange={e => updateRow(row.id, { viscosity_zh_hant: e.target.value })} />
+                  </F>
+                  <F label="Spec (EN)">
+                    <Input className={inputCls} value={row.spec_en} onChange={e => updateRow(row.id, { spec_en: e.target.value })} />
+                  </F>
+                  <F label="Spec (VI)">
+                    <Input className={inputCls} value={row.spec_vi} onChange={e => updateRow(row.id, { spec_vi: e.target.value })} />
+                  </F>
+                  <F label="Spec (ZH)">
+                    <Input className={inputCls} value={row.spec_zh_hant} onChange={e => updateRow(row.id, { spec_zh_hant: e.target.value })} />
+                  </F>
+                  {/* remaining single fields stay in the same grid */}
+                  <F label="Hold Time">
+                    <Input className={inputCls} value={row.hold_time} onChange={e => updateRow(row.id, { hold_time: e.target.value })} />
+                  </F>
+                  <F label="Oven Temp">
+                    <Input className={inputCls} value={row.oven_temperature} onChange={e => updateRow(row.id, { oven_temperature: e.target.value })} />
+                  </F>
+                  <F label="Consumption">
+                    <Input className={inputCls} value={row.consumption}
+                      onChange={e => updateRow(row.id, {
+                        consumption: e.target.value,
+                        products: calculateProductQuantities(e.target.value, row.products)
+                      })} />
+                  </F>
+                  <F label="WFT">
+                    <Input className={inputCls} value={row.wft} onChange={e => updateRow(row.id, { wft: e.target.value })} />
+                  </F>
+                  <F label="Chemical Code">
+                    <Input className={inputCls} value={row.chemical_code} onChange={e => updateRow(row.id, { chemical_code: e.target.value })} />
+                  </F>
+                  <F label="Spot">
+                    <Input className={inputCls} value={row.spot ?? ''} onChange={e => updateRow(row.id, { spot: e.target.value || null })} />
+                  </F>
+                </div>
+
+                <Separator className="my-1" />
+
+                {/* Products */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Products</span>
+                    <Button variant="outline" size="sm" className="h-6 text-xs px-2" onClick={() => addProduct(row.id)}>
+                      <Plus className="h-3 w-3 mr-1" />Add
+                    </Button>
+                  </div>
+
+                  {/* Product header — hidden on mobile, shown on sm+ */}
+                  <div className="hidden sm:grid sm:grid-cols-[2fr_2fr_1fr_2fr_1fr_1fr_1fr_28px] gap-1 px-1 text-[10px] text-muted-foreground">
+                    <span>Code</span><span>Name</span><span>Desc(EN)</span><span>Desc(VI)</span><span>Desc(ZH)</span><span>Ratio</span><span>Qty</span><span>Unit</span><span />
+                  </div>
+
+                  {row.products.map(product => (
+                    <div key={product.id} className="grid grid-cols-2 sm:grid-cols-[2fr_2fr_1fr_2fr_1fr_1fr_1fr_28px] gap-1 items-center bg-muted/20 rounded px-1 py-1">
+                      <Input className={inputCls} value={product.product_code}
+                        onChange={e => updateProduct(row.id, product.id, { product_code: e.target.value })} placeholder="Code" />
+                      <Input className={inputCls} value={product.product_name}
+                        onChange={e => updateProduct(row.id, product.id, { product_name: e.target.value })} placeholder="Name" />
+                      <Input className={inputCls} value={product.product_description_en}
+                        onChange={e => updateProduct(row.id, product.id, { product_description_en: e.target.value })} placeholder="Desc EN" />
+                      <Input className={inputCls} value={product.product_description_vi}
+                        onChange={e => updateProduct(row.id, product.id, { product_description_vi: e.target.value })} placeholder="Desc VI" />
+                      <Input className={inputCls} value={product.product_description_zh_hant}
+                        onChange={e => updateProduct(row.id, product.id, { product_description_zh_hant: e.target.value })} placeholder="Desc ZH" />
+                      <Input className={inputCls} value={product.ratio ?? ''}
+                        onChange={e => updateProduct(row.id, product.id, { ratio: e.target.value })} placeholder="Ratio" />
+                      <Input className={`${inputCls} bg-muted cursor-not-allowed`} value={product.qty} readOnly placeholder="Auto" />
+                      <Input className={inputCls} value={product.unit}
+                        onChange={e => updateProduct(row.id, product.id, { unit: e.target.value })} placeholder="Unit" />
+                      <Button variant="ghost" size="sm" className="h-6 w-7 p-0 text-destructive hover:text-destructive col-span-2 sm:col-span-1 justify-self-end"
+                        onClick={() => removeProduct(row.id, product.id)} disabled={row.products.length <= 1}>
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
             )}
-          </tbody>
-        </table>
+          </Card>
+        );
+      })}
+
+      {/* ── Actions ── */}
+      <div className="flex items-center gap-2 pt-1">
+        <Button variant="outline" size="sm" className="h-7 text-xs" onClick={addRow}>
+          <Plus className="h-3 w-3 mr-1" />Add Step
+        </Button>
+        <Button size="sm" className="h-7 text-xs" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? t('common.processing') : (mode === 'create' ? t('common.create') : t('common.save'))}
+        </Button>
       </div>
     </div>
   );
-};
-
-export default CombinedSheetTable;
+}

@@ -387,3 +387,84 @@ export async function uploadOrderFile(file: File) {
 
   return response.data
 }
+
+export const getSheetImages = async (taskId: string, sheetId: string) => {
+  const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}/images`)
+  if (!response.ok) throw new Error(`Failed to fetch sheet images: ${response.status}`)
+  return response.data
+}
+
+export const uploadSheetImage = async (
+  taskId: string,
+  sheetId: string,
+  file: File,
+  caption?: string
+) => {
+  const formData = new FormData()
+  formData.append('image', file)
+  if (caption) formData.append('caption', caption)
+
+  const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}/images`, {
+    method: 'POST',
+    body: formData,
+    // No headers — let browser set Content-Type with boundary automatically
+  })
+
+  if (!response.ok) throw new Error(`Failed to upload image: ${response.status}`)
+  return response.data
+}
+
+export const deleteSheetImage = async (
+  taskId: string,
+  sheetId: string,
+  imageId: string
+) => {
+  const response = await apiClient(`/tasks/${taskId}/sheets/${sheetId}/images/${imageId}`, {
+    method: 'DELETE',
+  })
+  if (!response.ok) throw new Error(`Failed to delete image: ${response.status}`)
+  return response.data
+}
+
+// Combined create: sheet + images
+export const createFinishingSheetWithImages = async (
+  taskId: string,
+  data: FinishingSheet,
+  newImages: File[],           // files to upload
+) => {
+  // 1. Create sheet first
+  const sheet = await createFinishingSheet(taskId, data)
+
+  // 2. Upload all images in parallel
+  if (newImages.length > 0) {
+    await Promise.all(
+      newImages.map(file => uploadSheetImage(taskId, sheet.id, file))
+    )
+  }
+
+  return sheet
+}
+
+// Combined update: sheet + images
+export const putFinishingSheetWithImages = async (
+  taskId: string,
+  sheetId: string,
+  data: FinishingSheet,
+  newImages: File[],           // new files to upload
+  deletedImageIds: string[],   // existing images user removed
+) => {
+  // Run sheet update + image deletions in parallel
+  const [sheet] = await Promise.all([
+    putFinishingSheet(taskId, sheetId, data),
+    ...deletedImageIds.map(id => deleteSheetImage(taskId, sheetId, id)),
+  ])
+
+  // Upload new images after (need sheetId which we already have)
+  if (newImages.length > 0) {
+    await Promise.all(
+      newImages.map(file => uploadSheetImage(taskId, sheetId, file))
+    )
+  }
+
+  return sheet
+}

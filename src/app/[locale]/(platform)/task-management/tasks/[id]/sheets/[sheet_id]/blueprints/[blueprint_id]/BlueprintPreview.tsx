@@ -158,9 +158,9 @@ const BlueprintViewer: React.FC<BlueprintViewerProps> = ({
         
         return {
           spot: normalizedSpot,
-          stepname: language === 'vi' ? row.stepname_vi : 
-                   language === 'zh_hant' ? row.stepname_zh_hant : 
-                   row.stepname_en
+          stepname: language === 'vi' ? row.name_vi : 
+                   language === 'zh_hant' ? row.name_zh_hant : 
+                   row.name_en
         };
       });
   };
