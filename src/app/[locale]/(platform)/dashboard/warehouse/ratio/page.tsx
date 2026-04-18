@@ -5,7 +5,7 @@ import { SidebarRightMobileTrigger } from '@/components/dashboard/SidebarRightMo
 import { SidebarRight } from "@/components/dashboard/RightSidebar"
 import type { PageFilterConfig } from "@/types"
 import { getCurrentYear } from '@/lib/utils/date'
-import { getYearOptions, THINNER_PAINT_OPTIONS, redirectWithDefaults } from '@/lib/utils/filter'
+import { getYearOptions, THINNER_PAINT_OPTIONS, redirectWithDefaults, getFactoryOptions } from '@/lib/utils/filter'
 import {
   Table,
   TableHeader,
@@ -18,9 +18,11 @@ import { CSVDownloadButton } from '@/components/ui/CSVDownloadButton'
 import type { ColumnConfig } from '@/types'
 import { RatioTableWithSelect } from './RatioTableWithSelect';
 import { DataStatusBadge } from '@/components/ui/DataStatusBadge';
+import { SummaryByTypeTable } from './SummaryByTypeTable'
 
 interface PageProps {
   searchParams: Promise<{
+    factory: string,
     year: string,
     thinner: string,
     paint: string,
@@ -64,7 +66,15 @@ export default async function Page({ searchParams }: PageProps) {
           { value: 'paint',          label: t('product.paint') },
           { value: 'thinner_detail', label: `${t('product.thinner')} (${t('common.detail')})` },
           { value: 'paint_detail',   label: `${t('product.paint')} (${t('common.detail')})` },
+          { value: 'summary_by_type', label: `${t('product.thinner')}/${t('product.paint')} summary` },
         ]
+      },
+      {
+        id: 'factory',
+        type: 'combobox',
+        label: t('filter.selectFactory'),
+        placeholder: t('filter.selectFactory'),
+        options: await getFactoryOptions()
       },
       {
         id: 'year',
@@ -136,6 +146,16 @@ export default async function Page({ searchParams }: PageProps) {
   const paintColumns         = createSummaryColumns(monthColumns)
   const thinnerDetailColumns = createDetailColumns(detailMonthColumns)
   const paintDetailColumns   = createDetailColumns(detailMonthColumns)
+
+  const thinnerParams = params.thinner
+  ? params.thinner.split(',').map(s => s.trim()).filter(Boolean)
+  : defaultParams.thinner.split(',').map(s => s.trim())
+
+  const paintParams = params.paint
+    ? params.paint.split(',').map(s => s.trim()).filter(Boolean)
+    : defaultParams.paint.split(',').map(s => s.trim())
+
+  const showSummaryByType = selectedTables.includes('summary_by_type')
 
   return (
     <SidebarProvider>
@@ -297,6 +317,16 @@ export default async function Page({ searchParams }: PageProps) {
               </TableBody>
             </Table>
           </div>
+        )}
+        
+        {showSummaryByType && (
+          <SummaryByTypeTable
+            thinnerDetailData={thinnerPaintRatio.thinner_detail_data}
+            paintDetailData={thinnerPaintRatio.paint_detail_data}
+            monthColumns={detailMonthColumns}
+            thinnerParams={thinnerParams}
+            paintParams={paintParams}
+          />
         )}
 
       </SidebarInset>
