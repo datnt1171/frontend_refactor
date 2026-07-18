@@ -892,6 +892,21 @@ export interface components {
              */
             has_onsite: boolean;
         };
+        FactoryBreakdown: {
+            /** Factory Code */
+            factory_code: string;
+            factory_name: string;
+            /**
+             * Sales Quantity
+             * @default 0
+             */
+            sales_quantity: number | null;
+            /**
+             * Order Quantity
+             * @default 0
+             */
+            order_quantity: number | null;
+        };
         /**
          * FactoryDetail
          * @description Detailed factory view - for single factory endpoint
@@ -1132,6 +1147,8 @@ export interface components {
              * @default 0
              */
             order_target_pct: number | null;
+            /** Factory Breakdown */
+            factory_breakdown: components["schemas"]["FactoryBreakdown"][];
         };
         /** PaginatedResponse[Factory] */
         PaginatedFactoryList: {

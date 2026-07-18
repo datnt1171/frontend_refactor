@@ -94,7 +94,7 @@ export default async function Page({ searchParams }: PageProps) {
       },
       {
         id: 'exclude_factory',
-        type: 'combobox',
+        type: 'multiselect',
         label: t('filter.excludedFactory'),
         placeholder: t('filter.selectFactory'),
         options: await getFactoryOptions()

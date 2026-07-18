@@ -9,6 +9,16 @@ interface OverallChartProps {
   data: Overall[];
 }
 
+// Fixed palette for excluded-factory breakout bars. Color assignment is
+// based on the sorted factory code, not selection order, so a given
+// factory always renders the same color regardless of pick order.
+const PALETTE = ['#f7f5bc', '#f1ee8e', '#ece75f', '#e8e337', '#e5de00', '#e6cc00', '#e6b400', '#e69b00',];
+
+function colorForFactory(factoryCode: string, allCodes: string[]) {
+  const sorted = [...allCodes].sort();
+  return PALETTE[sorted.indexOf(factoryCode) % PALETTE.length];
+}
+
 export default function OverallChart({ data }: OverallChartProps) {
 
   const searchParams = useSearchParams();
@@ -28,12 +38,29 @@ export default function OverallChart({ data }: OverallChartProps) {
     const months = data.map(item => item.month);
     const sales = data.map(item => item.sales_quantity);
     const remainSales = data.map(item => item.remain_sales_quantity);
-    const excludeFactorySales = data.map(item => item.exclude_factory_sales_quantity);
     const orders = data.map(item => item.order_quantity);
     const remainOrders = data.map(item => item.remain_order_quantity);
-    const excludeFactoryOrders = data.map(item => item.exclude_factory_order_quantity);
     const salesTargetPct = data.map(item => item.sales_target_pct);
     const orderTargetPct = data.map(item => item.order_target_pct);
+
+    // All factory codes present across the excluded set, sorted for stable coloring
+    const factoryCodes = Array.from(
+      new Set(data.flatMap(item => item.factory_breakdown.map(f => f.factory_code)))
+    ).sort();
+
+    // code -> display name lookup (falls back to code if name is missing)
+    const factoryNameByCode = new Map(
+      data.flatMap(item =>
+        item.factory_breakdown.map(f => [f.factory_code, f.factory_name || f.factory_code] as const)
+      )
+    );
+
+    // Built once, used for both legend entries and series names so they
+    // can never drift out of sync with each other.
+    const factoryDisplay = factoryCodes.map(code => ({
+      code,
+      name: factoryNameByCode.get(code) ?? code
+    }));
 
     // Create data with dynamic label positions
     const orderTargetData = orderTargetPct.map((value, index) => ({
@@ -56,6 +83,55 @@ export default function OverallChart({ data }: OverallChartProps) {
     const yAxisMax = maxPct + 0.05; // Add 5% buffer
     const yAxisMin = Math.max(minPct - 0.05, 0); // Subtract 5% but floor at 0%
 
+    // Helper to look up a factory's quantity for a given month row
+    const factoryValue = (item: Overall, factoryCode: string, field: 'sales_quantity' | 'order_quantity') =>
+      item.factory_breakdown.find(f => f.factory_code === factoryCode)?.[field] ?? 0;
+
+    const salesBreakdownSeries = factoryDisplay.map(({ code, name }, idx) => {
+      const isLast = idx === factoryDisplay.length - 1;
+      return {
+        name: `${name} - SL GH 送貨量`,
+        type: 'bar',
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        stack: 'sales',
+        data: data.map(item => factoryValue(item, code, 'sales_quantity')),
+        itemStyle: { color: colorForFactory(code, factoryCodes) },
+        label: isLast
+          ? {
+              show: true,
+              position: 'top',
+              color: 'green',
+              formatter: (params: any) => Math.round(sales[params.dataIndex]!).toLocaleString()
+            }
+          : undefined
+      };
+    });
+
+    const orderBreakdownSeries = factoryDisplay.map(({ code, name }, idx) => {
+      const isLast = idx === factoryDisplay.length - 1;
+      return {
+        name: `${name} - SL ĐĐH 訂單量`,
+        type: 'bar',
+        xAxisIndex: 1,
+        yAxisIndex: 1,
+        stack: 'orders',
+        data: data.map(item => factoryValue(item, code, 'order_quantity')),
+        itemStyle: { color: colorForFactory(code, factoryCodes) },
+        label: isLast
+          ? {
+              show: true,
+              position: 'top',
+              color: 'blue',
+              formatter: (params: any) => Math.round(orders[params.dataIndex]!).toLocaleString()
+            }
+          : undefined
+      };
+    });
+
+    // If nothing is excluded, the remain bar carries the total label itself
+    const noBreakdown = factoryDisplay.length === 0;
+
     const option = {
       legend: [
         {
@@ -70,13 +146,19 @@ export default function OverallChart({ data }: OverallChartProps) {
         {
           data: [
             '年的每月送貨量 - SL giao hàng mỗi tháng',
-            'TIMBER每月的大森的送貨量 - SL giao hàng TIMBER',
             '年的每月訂單量 - SL ĐĐH mỗi tháng',
-            'TIMBER每月的大森的訂單量 - SL ĐĐH TIMBER'
+            ...factoryDisplay.map(f => `${f.name} - SL GH 送貨量`),
+            ...factoryDisplay.map(f => `${f.name} - SL ĐĐH 訂單量`)
           ],
           orient: 'vertical',
+          type: 'scroll',
           top: 0,
-          left: '5%'
+          bottom: 20,
+          left: '5%',
+          width: '55%',
+          textStyle: {
+            fontSize: 12
+          }
         }
       ],
       grid: [
@@ -190,28 +272,17 @@ export default function OverallChart({ data }: OverallChartProps) {
           data: remainSales,
           itemStyle: {
             color: '#72BF78'
-          }
-        },
-        {
-          name: 'TIMBER每月的大森的送貨量 - SL giao hàng TIMBER',
-          type: 'bar',
-          xAxisIndex: 1,
-          yAxisIndex: 1,
-          stack: 'sales',
-          data: excludeFactorySales,
-          itemStyle: {
-            color: '#C1FFC1'
           },
-          label: {
-            show: true,
-            position: 'top',
-            color: 'green',
-            formatter: (params: any) => {
-              const totalIndex = params.dataIndex;
-              return Math.round(sales[totalIndex]!).toLocaleString();
-            }
-          }
+          label: noBreakdown
+            ? {
+                show: true,
+                position: 'top',
+                color: 'green',
+                formatter: (params: any) => Math.round(sales[params.dataIndex]!).toLocaleString()
+              }
+            : undefined
         },
+        ...salesBreakdownSeries,
         {
           name: '年的每月訂單量 - SL ĐĐH mỗi tháng',
           type: 'bar',
@@ -221,32 +292,21 @@ export default function OverallChart({ data }: OverallChartProps) {
           data: remainOrders,
           itemStyle: {
             color: '#7AB2D3'
-          }
-        },
-        {
-          name: 'TIMBER每月的大森的訂單量 - SL ĐĐH TIMBER',
-          type: 'bar',
-          xAxisIndex: 1,
-          yAxisIndex: 1,
-          stack: 'orders',
-          data: excludeFactoryOrders,
-          itemStyle: {
-            color: '#DFF2EB'
           },
-          label: {
-            show: true,
-            position: 'top',
-            color: 'blue',
-            formatter: (params: any) => {
-              const totalIndex = params.dataIndex;
-              return Math.round(orders[totalIndex]!).toLocaleString();
-            }
-          }
+          label: noBreakdown
+            ? {
+                show: true,
+                position: 'top',
+                color: 'blue',
+                formatter: (params: any) => Math.round(orders[params.dataIndex]!).toLocaleString()
+              }
+            : undefined
         },
+        ...orderBreakdownSeries,
       ]
     };
 
-    chart.setOption(option);
+    chart.setOption(option, true); // true = don't merge stale series from a previous factory selection
 
     // ResizeObserver to detect container size changes
     const resizeObserver = new ResizeObserver(() => {
